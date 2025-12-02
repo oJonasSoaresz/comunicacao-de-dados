@@ -218,787 +218,787 @@
 <script>
     // Dados do Quiz (as 30 perguntas geradas)
     const quizData = [
-        {
-            "questionNumber": 1,
-            "question": "Qual dos itens abaixo representa o componente físico, palpável, que faz parte da estrutura de um computador?",
-            "answerOptions": [
+{
+              "questionNumber": 1,
+              "question": "Qual dos tipos de rede abaixo possui a menor abrangência geográfica, sendo tipicamente utilizada para conectar dispositivos em um único prédio ou campus universitário?",
+              "answerOptions": [
                 {
-                    "text": "Firmware",
-                    "rationale": "Firmware é um tipo de software de baixo nível que controla o hardware, não sendo o componente físico em si.",
-                    "isCorrect": false
+                  "text": "PAN (Personal Area Network)",
+                  "rationale": "A PAN tem uma abrangência ainda menor, limitada a um espaço pessoal (como a comunicação entre um celular e um fone de ouvido).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Hardware",
-                    "rationale": "Hardware é o termo correto para descrever a parte física e tangível do computador, como o teclado, mouse e placa-mãe.",
-                    "isCorrect": true
+                  "text": "MAN (Metropolitan Area Network)",
+                  "rationale": "A MAN abrange uma área metropolitana, conectando LANs em uma cidade, sendo maior que a área de um único campus.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Driver",
-                    "rationale": "Driver é um software que permite ao sistema operacional interagir com um dispositivo de hardware específico.",
-                    "isCorrect": false
+                  "text": "WAN (Wide Area Network)",
+                  "rationale": "A WAN conecta áreas geográficas vastas, como países ou continentes, sendo muito maior que um campus ou prédio.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Software",
-                    "rationale": "Software é o conjunto de instruções e programas, a parte não-física do computador.",
-                    "isCorrect": false
+                  "text": "LAN (Local Area Network)",
+                  "rationale": "A LAN é a rede local, usada para interligar dispositivos em uma área geográfica limitada, como uma casa, prédio ou campus universitário, o que se encaixa na descrição.",
+                  "isCorrect": true
                 }
-            ]
-        },
-        {
-            "questionNumber": 2,
-            "question": "A Manutenção Corretiva é o tipo de serviço de suporte que é aplicado:",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 2,
+              "question": "No Modelo OSI, qual camada é responsável por estabelecer, gerenciar e encerrar as conexões entre duas aplicações em hosts distintos?",
+              "answerOptions": [
                 {
-                    "text": "Para fazer melhorias e upgrades de desempenho no hardware.",
-                    "rationale": "Essa descrição se encaixa na Manutenção Evolutiva ou nos upgrades gerais.",
-                    "isCorrect": false
+                  "text": "Camada de Sessão (Camada 5)",
+                  "rationale": "A Camada de Sessão (Camada 5) é a responsável por iniciar, manter e sincronizar o diálogo (sessão) entre as aplicações do emissor e do receptor.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Apenas na instalação inicial de um sistema operacional ou programa.",
-                    "rationale": "A instalação inicial é um processo de implantação, não uma manutenção reativa.",
-                    "isCorrect": false
+                  "text": "Camada de Transporte (Camada 4)",
+                  "rationale": "A Camada de Transporte é responsável pela comunicação fim a fim e segmentação de dados, mas não pelo gerenciamento direto do diálogo entre as aplicações.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Após a falha de um componente ou software, visando restaurar a operação normal do sistema.",
-                    "rationale": "A Manutenção Corretiva é realizada para corrigir falhas, ou seja, 'após' a ocorrência de um problema.",
-                    "isCorrect": true
+                  "text": "Camada de Apresentação (Camada 6)",
+                  "rationale": "A Camada de Apresentação (Camada 6) lida com a sintaxe e a semântica dos dados, como compressão e criptografia, mas não com o gerenciamento da conexão.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Periodicamente, para evitar futuros problemas, como limpeza interna de componentes.",
-                    "rationale": "Esta é a definição de Manutenção Preventiva.",
-                    "isCorrect": false
+                  "text": "Camada de Rede (Camada 3)",
+                  "rationale": "A Camada de Rede (Camada 3) é responsável pelo endereçamento lógico (IP) e roteamento de pacotes, não pelo gerenciamento da sessão de aplicações.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 3,
-            "question": "Qual componente é considerado uma das peças mais importantes do computador, conectando e permitindo a comunicação entre o Processador, a Memória RAM e os demais periféricos?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 3,
+              "question": "O Roteador é um dispositivo de rede cuja principal função é:",
+              "answerOptions": [
                 {
-                    "text": "Disco Rígido (HD/SSD)",
-                    "rationale": "O Disco Rígido/SSD é um dispositivo de armazenamento de dados e não o centro de comunicação entre os demais componentes.",
-                    "isCorrect": false
+                  "text": "Repetir o sinal elétrico em longas distâncias na Camada Física.",
+                  "rationale": "Esta é a função principal de um repetidor ou de um Hub, que operam na Camada Física (Camada 1).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Fonte de Alimentação",
-                    "rationale": "A Fonte de Alimentação apenas fornece energia e não atua como o 'hub' de comunicação dos dados.",
-                    "isCorrect": false
+                  "text": "Interligar dispositivos dentro da mesma rede local (LAN) usando endereços MAC.",
+                  "rationale": "Esta é a função de um Switch (Comutador), que opera na Camada de Enlace (Camada 2).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Memória RAM",
-                    "rationale": "A Memória RAM armazena dados temporariamente para o processador, mas não é o componente que interliga fisicamente todos os outros.",
-                    "isCorrect": false
+                  "text": "Conectar redes distintas (sub-redes) e determinar o melhor caminho para o tráfego de dados usando endereços IP.",
+                  "rationale": "O Roteador é um dispositivo de Camada 3 (Rede) que usa endereços IP para tomar decisões de encaminhamento entre redes diferentes (roteamento).",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Placa-Mãe (Motherboard)",
-                    "rationale": "A Placa-Mãe (Motherboard) é o circuito principal que conecta e coordena a comunicação de todos os componentes essenciais do computador.",
-                    "isCorrect": true
+                  "text": "Traduzir o nome de domínio (URL) para um endereço IP.",
+                  "rationale": "Esta é a função do protocolo/serviço DNS (Domain Name System), que opera na Camada de Aplicação (Camada 7).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 4,
-            "question": "Um dos problemas mais comuns em computadores é o seu aquecimento excessivo. Qual tipo de manutenção é ideal para prevenir que este problema ocorra?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 4,
+              "question": "Na Camada de Transporte (Camada 4) do Modelo OSI, quais são os dois protocolos principais utilizados para a comunicação fim a fim?",
+              "answerOptions": [
                 {
-                    "text": "Manutenção Evolutiva, atualizando o sistema operacional.",
-                    "rationale": "A Manutenção Evolutiva foca em adicionar novos recursos ou melhorar funcionalidades, não na prevenção física de problemas.",
-                    "isCorrect": false
+                  "text": "IP e ARP",
+                  "rationale": "IP e ARP são protocolos da Camada de Rede (Camada 3) e da Camada de Enlace (Camada 2), respectivamente.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Manutenção Preditiva, usando softwares para prever o problema com precisão.",
-                    "rationale": "A Preditiva utiliza monitoramento para prever, mas a ação de limpeza e troca de pasta térmica é classificada como Preventiva.",
-                    "isCorrect": false
+                  "text": "TCP e UDP",
+                  "rationale": "TCP (Transmission Control Protocol) e UDP (User Datagram Protocol) são os protocolos centrais da Camada de Transporte, responsáveis pela comunicação entre processos/aplicações.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Manutenção Preventiva, realizando a limpeza interna dos coolers e trocando a pasta térmica periodicamente.",
-                    "rationale": "Manutenção Preventiva é o conjunto de ações realizadas periodicamente para evitar que falhas e problemas, como o superaquecimento, ocorram.",
-                    "isCorrect": true
+                  "text": "HTTP e FTP",
+                  "rationale": "HTTP e FTP são protocolos da Camada de Aplicação (Camada 7).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Manutenção Corretiva, trocando o processador depois que ele queima.",
-                    "rationale": "A Manutenção Corretiva ocorre após a falha; o objetivo é 'prevenir' o problema, não corrigi-lo depois de acontecer.",
-                    "isCorrect": false
+                  "text": "Ethernet e Wi-Fi",
+                  "rationale": "Ethernet e Wi-Fi são padrões relacionados principalmente à Camada de Enlace (Camada 2) e Camada Física (Camada 1).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 5,
-            "question": "O Processador (CPU) é o 'cérebro' do computador. Para que o computador funcione, o Processador deve ser complementado por qual componente de hardware essencial para o armazenamento temporário de dados e instruções em execução?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 5,
+              "question": "Qual é a principal responsabilidade da Camada de Rede (Camada 3) no Modelo OSI?",
+              "answerOptions": [
                 {
-                    "text": "Modem",
-                    "rationale": "O Modem é um dispositivo para conexão de rede, não tendo a função principal de armazenamento temporário para o processador.",
-                    "isCorrect": false
+                  "text": "Controlar o acesso ao meio físico (ex: CSMA/CD) usando endereços MAC.",
+                  "rationale": "Esta é a responsabilidade da subcamada de Controle de Acesso ao Meio (MAC) da Camada de Enlace (Camada 2).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Placa de Vídeo Dedicada",
-                    "rationale": "A Placa de Vídeo processa e armazena dados gráficos, mas a memória principal para o Processador e o Sistema Operacional é outra.",
-                    "isCorrect": false
+                  "text": "Definir o formato do sinal elétrico e as especificações do cabeamento.",
+                  "rationale": "Esta é a responsabilidade da Camada Física (Camada 1).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Memória RAM (Random Access Memory)",
-                    "rationale": "A Memória RAM é essencial, pois armazena de forma volátil os dados e instruções que o processador está usando ativamente, garantindo velocidade.",
-                    "isCorrect": true
+                  "text": "Oferecer serviços de rede ao usuário final, como navegação web e email.",
+                  "rationale": "Esta é a responsabilidade da Camada de Aplicação (Camada 7).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Monitor",
-                    "rationale": "O Monitor é um periférico de saída que exibe informações, não um componente de armazenamento temporário de execução.",
-                    "isCorrect": false
+                  "text": "Endereçamento lógico (IP) e a escolha do caminho (roteamento) para os dados através de múltiplas redes.",
+                  "rationale": "A Camada de Rede (Camada 3) usa o endereço IP (lógico) para encaminhar pacotes de dados de uma rede de origem para uma rede de destino, usando roteadores.",
+                  "isCorrect": true
                 }
-            ]
-        },
-        {
-            "questionNumber": 6,
-            "question": "Qual é a principal função da Fonte de Alimentação (Power Supply) em um computador desktop?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 6,
+              "question": "Qual característica é fundamental para definir uma Rede de Computadores?",
+              "answerOptions": [
                 {
-                    "text": "Processar dados e executar programas.",
-                    "rationale": "Esta é a função principal do Processador (CPU).",
-                    "isCorrect": false
+                  "text": "A capacidade de compartilhar recursos e informações entre dois ou mais dispositivos interconectados.",
+                  "rationale": "A interconexão de dispositivos com o propósito de compartilhar recursos (hardware, software e dados) é a definição essencial de uma rede de computadores.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Armazenar dados de forma permanente.",
-                    "rationale": "Esta é a função do Disco Rígido (HD/SSD).",
-                    "isCorrect": false
+                  "text": "Estar sempre conectada à internet.",
+                  "rationale": "Uma rede local (LAN) ou metropolitana (MAN) pode existir sem uma conexão ativa à Internet, que é apenas um recurso compartilhado.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Converter a energia da tomada (AC) para a voltagem adequada (DC) que os componentes internos utilizam.",
-                    "rationale": "A Fonte de Alimentação tem a função vital de regular e fornecer a corrente contínua (DC) com a voltagem correta para a Placa-Mãe e outros componentes.",
-                    "isCorrect": true
+                  "text": "A utilização obrigatória de fibra óptica como meio de transmissão.",
+                  "rationale": "Redes podem usar cabos de par trançado (UTP), coaxial, rádio (Wi-Fi) ou outros meios de transmissão, não se limitando à fibra óptica.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Gerenciar a comunicação entre o processador e a memória RAM.",
-                    "rationale": "Esta é a função dos chipsets da Placa-Mãe.",
-                    "isCorrect": false
+                  "text": "A presença de um servidor central que armazena todos os dados.",
+                  "rationale": "Existem redes ponto a ponto (peer-to-peer) que não dependem de um servidor central para operar, pois o compartilhamento é feito diretamente entre os nós.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 7,
-            "question": "O que o termo 'Sistema Operacional' (SO) representa na estrutura de software de um computador?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 7,
+              "question": "No processo de transmissão, o que é o 'endereçamento físico' (MAC Address) e em qual camada do Modelo OSI ele é utilizado?",
+              "answerOptions": [
                 {
-                    "text": "Qualquer programa instalado, como um jogo ou um editor de texto.",
-                    "rationale": "Jogos e editores de texto são 'softwares de aplicação', que dependem do SO para rodar.",
-                    "isCorrect": false
+                  "text": "Endereço lógico usado para roteamento de pacotes; Camada de Rede (Camada 3).",
+                  "rationale": "Esta descrição corresponde ao endereço IP (lógico), usado na Camada de Rede (Camada 3).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "O conjunto de softwares antivírus e de segurança.",
-                    "rationale": "Antivírus são utilitários, não o núcleo do Sistema Operacional.",
-                    "isCorrect": false
+                  "text": "Identificador globalmente único, gravado na placa de rede; Camada de Enlace (Camada 2).",
+                  "rationale": "O MAC Address é o endereço físico de 48 bits usado pela Camada de Enlace para identificar o próximo nó (hop) na rede local.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "O software essencial que gerencia o hardware e os recursos, fornecendo uma interface para o usuário e para outros programas.",
-                    "rationale": "O SO é a camada fundamental que permite o funcionamento do computador, gerenciando memória, processos e dispositivos.",
-                    "isCorrect": true
+                  "text": "Identificador de porta usado para multiplexação de aplicações; Camada de Transporte (Camada 4).",
+                  "rationale": "Esta descrição corresponde ao número de porta, usado na Camada de Transporte (Camada 4).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Apenas o conjunto de drivers que controlam os periféricos.",
-                    "rationale": "Drivers são um tipo de software de sistema, mas o SO é o software mestre que os gerencia.",
-                    "isCorrect": false
+                  "text": "Identificador de recursos na web (URL); Camada de Aplicação (Camada 7).",
+                  "rationale": "Esta descrição se refere aos localizadores de recursos, gerenciados na Camada de Aplicação (Camada 7).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 8,
-            "question": "Um usuário relata que seu computador não inicia e ouve bipes contínuos ou irregulares. Qual tipo de falha de hardware é o mais provável?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 8,
+              "question": "Qual é a função primordial da Camada Física (Camada 1) no Modelo OSI?",
+              "answerOptions": [
                 {
-                    "text": "Falha no cabo de rede.",
-                    "rationale": "Um cabo de rede desconectado apenas impediria o acesso à internet, não a inicialização do computador.",
-                    "isCorrect": false
+                  "text": "Controle de fluxo e detecção/correção de erros dentro de um único link.",
+                  "rationale": "Esta é a função da Camada de Enlace (Camada 2).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Falha na Memória RAM ou na Placa de Vídeo.",
-                    "rationale": "Bipes durante a inicialização são códigos de erro (POST) que frequentemente indicam problemas críticos no hardware principal, como a Memória RAM, Processador ou a Placa de Vídeo.",
-                    "isCorrect": true
+                  "text": "Estabelecer a conexão, o diálogo e a sincronização entre hosts.",
+                  "rationale": "Esta é a função da Camada de Sessão (Camada 5).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Disco Rígido cheio ou fragmentado.",
-                    "rationale": "Um HD cheio ou fragmentado causa lentidão, mas o computador geralmente ainda inicializa o sistema operacional.",
-                    "isCorrect": false
+                  "text": "Definir as especificações elétricas, mecânicas e de procedimento para a transmissão de bits brutos pelo meio.",
+                  "rationale": "A Camada Física é a responsável por transmitir o fluxo de bits, definindo os níveis de tensão, a duração do bit, e as especificações de cabeamento e conectores.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Bateria do mouse sem carga.",
-                    "rationale": "O computador inicializa perfeitamente mesmo sem um mouse funcionando.",
-                    "isCorrect": false
+                  "text": "Fragmentar e reordenar segmentos de dados (datagramas).",
+                  "rationale": "Esta é uma das funções do protocolo IP na Camada de Rede (Camada 3) ou da Camada de Transporte (segmentação).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 9,
-            "question": "Qual termo descreve o serviço de suporte realizado para otimizar um sistema, como desfragmentar um disco rígido ou remover programas desnecessários da inicialização?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 9,
+              "question": "O que o processo de 'encapsulamento' representa na comunicação de dados em camadas?",
+              "answerOptions": [
                 {
-                    "text": "Manutenção Corretiva de Software",
-                    "rationale": "A Corretiva é para falhas, como um erro de arquivo, não para otimização geral do desempenho.",
-                    "isCorrect": false
+                  "text": "A tradução de um endereço IP para um endereço MAC.",
+                  "rationale": "Esta é a função do protocolo ARP (Address Resolution Protocol).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Manutenção Evolutiva de Hardware",
-                    "rationale": "A Evolutiva envolve adicionar novos recursos, e as ações listadas são de software, não de hardware.",
-                    "isCorrect": false
+                  "text": "A remoção de informações de cabeçalho (header) de uma PDU à medida que ela sobe pelas camadas no receptor.",
+                  "rationale": "Esta é a definição do processo inverso, o 'desencapsulamento'.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Manutenção Preventiva de Software",
-                    "rationale": "Ações como desfragmentação, limpeza e gerenciamento de inicialização são práticas de rotina para prevenir lentidão e instabilidade futuras, enquadrando-se na Manutenção Preventiva de software.",
-                    "isCorrect": true
+                  "text": "A adição de informações de cabeçalho de protocolo (e, às vezes, de rodapé) a uma unidade de dados à medida que ela desce pelas camadas no transmissor.",
+                  "rationale": "Cada camada no emissor anexa seu próprio cabeçalho à unidade de dados da camada superior, empacotando-a antes de passá-la para a camada inferior.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Manutenção Preditiva de Hardware",
-                    "rationale": "A Preditiva envolve monitoramento contínuo de sinais, o que é diferente da intervenção ativa de otimização descrita.",
-                    "isCorrect": false
+                  "text": "A compactação de dados para reduzir o tamanho do pacote antes da transmissão.",
+                  "rationale": "A compressão de dados é uma função da Camada de Apresentação (Camada 6) e não o encapsulamento em si.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 10,
-            "question": "Qual componente de hardware tem como principal responsabilidade o armazenamento de longo prazo, mantendo os dados mesmo quando o computador está desligado?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 10,
+              "question": "Qual a principal desvantagem de utilizar o protocolo **UDP** (User Datagram Protocol) na Camada de Transporte?",
+              "answerOptions": [
                 {
-                    "text": "Memória RAM",
-                    "rationale": "A RAM é volátil; ela perde todos os dados quando o computador é desligado.",
-                    "isCorrect": false
+                  "text": "Ser orientado à conexão, exigindo um 'handshake' complexo.",
+                  "rationale": "Esta é uma característica do TCP, o UDP é 'não orientado à conexão', o que é uma vantagem em termos de velocidade.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Processador (CPU)",
-                    "rationale": "O Processador executa instruções, ele não é um dispositivo de armazenamento de longo prazo.",
-                    "isCorrect": false
+                  "text": "Baixa velocidade de transmissão devido ao grande 'overhead' de cabeçalho.",
+                  "rationale": "O UDP tem um cabeçalho muito pequeno, o que o torna rápido e com baixo 'overhead'.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Disco Rígido (HD) ou Unidade de Estado Sólido (SSD)",
-                    "rationale": "O HD e o SSD são os dispositivos de armazenamento não-volátil (permanente) onde o Sistema Operacional e todos os arquivos são guardados.",
-                    "isCorrect": true
+                  "text": "Não garantir a entrega, a ordem, nem realizar controle de fluxo ou de congestionamento.",
+                  "rationale": "O UDP não oferece mecanismos de confiabilidade, resultando em potencial perda, duplicação ou desordem de datagramas, sendo ideal apenas para aplicações que toleram erros.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Placa-Mãe (Motherboard)",
-                    "rationale": "A Placa-Mãe conecta os componentes, mas o armazenamento persistente é responsabilidade do HD/SSD.",
-                    "isCorrect": false
+                  "text": "Utilizar endereçamento IP em vez de endereçamento MAC.",
+                  "rationale": "O uso de endereços IP é função da Camada de Rede, e não uma desvantagem intrínseca ao UDP, que usa números de porta.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 11,
-            "question": "Um 'Driver' pode ser definido como:",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 11,
+              "question": "Os padrões Ethernet (IEEE 802.3) e Wi-Fi (IEEE 802.11) definem protocolos que atuam em qual combinação de camadas do Modelo OSI?",
+              "answerOptions": [
                 {
-                    "text": "Um tipo de software de aplicação para edição de vídeo.",
-                    "rationale": "Um editor de vídeo é um software de aplicação, não um driver.",
-                    "isCorrect": false
+                  "text": "Camada de Transporte e Camada de Rede (4 e 3).",
+                  "rationale": "A Camada de Transporte lida com TCP/UDP e a Camada de Rede com IP, protocolos não definidos por Ethernet ou Wi-Fi.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Um componente físico (hardware) que controla a ventilação do PC.",
-                    "rationale": "Um driver é software, e o controle de ventilação é feito por hardware como coolers e controladores.",
-                    "isCorrect": false
+                  "text": "Camada de Sessão e Camada de Apresentação (5 e 6).",
+                  "rationale": "Estas camadas lidam com o diálogo e formatação de dados, conceitos não relacionados diretamente a padrões de acesso ao meio físico.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Um programa que traduz comandos do sistema operacional para uma linguagem que um dispositivo de hardware específico entenda.",
-                    "rationale": "Drivers são essenciais para que o Sistema Operacional possa usar corretamente e se comunicar com placas de vídeo, impressoras, placas de rede, etc.",
-                    "isCorrect": true
+                  "text": "Camada de Enlace e Camada Física (2 e 1).",
+                  "rationale": "Estes padrões definem tanto o Controle de Acesso ao Meio (MAC) na Camada 2 quanto as especificações elétricas/físicas na Camada 1.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "O software de segurança responsável por bloquear vírus.",
-                    "rationale": "Antivírus e Firewall são os softwares responsáveis por bloquear vírus e acessos não autorizados.",
-                    "isCorrect": false
+                  "text": "Camada de Aplicação e Camada de Apresentação (7 e 6).",
+                  "rationale": "Estas são as camadas superiores, lidando com serviços ao usuário e sintaxe de dados, e não com a interconexão física.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 12,
-            "question": "Qual dos seguintes softwares é um exemplo de 'Software de Aplicação'?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 12,
+              "question": "Qual topologia de rede física é a mais comum em redes locais (LANs) modernas, onde todos os dispositivos se conectam a um ponto central (Hub ou Switch)?",
+              "answerOptions": [
                 {
-                    "text": "Kernel do Linux",
-                    "rationale": "O Kernel é a parte central de um Sistema Operacional (Software de Sistema).",
-                    "isCorrect": false
+                  "text": "Topologia em Barramento (Bus).",
+                  "rationale": "A topologia em Barramento é obsoleta, onde todos os nós compartilham um único cabo principal.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Microsoft Word ou LibreOffice Writer.",
-                    "rationale": "Processadores de texto são programas que permitem ao usuário realizar tarefas específicas e produtivas, sendo um exemplo claro de Software de Aplicação.",
-                    "isCorrect": true
+                  "text": "Topologia em Anel (Ring).",
+                  "rationale": "A topologia em Anel conecta os dispositivos sequencialmente, onde a falha de um link quebra o anel (exceto em implementações duplas).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "BIOS/UEFI",
-                    "rationale": "BIOS/UEFI é um Firmware, um software de baixo nível para iniciar o hardware.",
-                    "isCorrect": false
+                  "text": "Topologia em Malha (Mesh).",
+                  "rationale": "A Malha é comum em WANs ou redes sem fio, conectando cada nó a vários outros, mas não é o padrão de LAN mais usado (que é a Estrela).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Driver da Placa de Rede.",
-                    "rationale": "Drivers são Softwares de Sistema, essenciais para a operação do hardware.",
-                    "isCorrect": false
+                  "text": "Topologia em Estrela (Star).",
+                  "rationale": "A Estrela é a topologia dominante em LANs, pois isola a falha de um único dispositivo e centraliza o gerenciamento do tráfego.",
+                  "isCorrect": true
                 }
-            ]
-        },
-        {
-            "questionNumber": 13,
-            "question": "A 'Tela Azul da Morte' (Blue Screen of Death - BSOD) no Windows é um indicador comum de qual tipo de problema?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 13,
+              "question": "Em redes TCP/IP, qual máscara de sub-rede é tipicamente utilizada para uma rede de Classe C (por padrão, sem subnetting)?",
+              "answerOptions": [
                 {
-                    "text": "Cabo de alimentação solto.",
-                    "rationale": "Um cabo de alimentação solto faria o computador desligar imediatamente ou não ligar, não gerando uma tela de erro de software/sistema.",
-                    "isCorrect": false
+                  "text": "$255.0.0.0$",
+                  "rationale": "Esta é a máscara padrão para redes de Classe A, com apenas o primeiro octeto reservado para a porção de rede.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Falha crítica de sistema, geralmente causada por drivers incompatíveis, falha de hardware ou erros graves na memória (RAM).",
-                    "rationale": "O BSOD é o mecanismo do Windows para relatar um erro irrecuperável que requer o encerramento imediato do sistema para proteger o hardware.",
-                    "isCorrect": true
+                  "text": "$255.255.0.0$",
+                  "rationale": "Esta é a máscara padrão para redes de Classe B, com os dois primeiros octetos reservados para a porção de rede.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Espaço de armazenamento esgotado.",
-                    "rationale": "HD/SSD cheio causa lentidão ou impede salvar arquivos, mas raramente um BSOD.",
-                    "isCorrect": false
+                  "text": "$255.255.255.0$",
+                  "rationale": "Em uma rede de Classe C, os três primeiros octetos (24 bits) são reservados para a porção de rede, e o último octeto (8 bits) é para os hosts.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Conexão lenta com a internet.",
-                    "rationale": "A velocidade da internet não é uma falha de sistema operacional que causa um erro fatal (BSOD).",
-                    "isCorrect": false
+                  "text": "$0.0.0.0$",
+                  "rationale": "Este endereço é usado como endereço de origem em certas condições, mas não como uma máscara de sub-rede padrão.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 14,
-            "question": "Qual das seguintes ações NÃO é uma característica da Manutenção Preventiva de Hardware?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 14,
+              "question": "O que o protocolo **ARP** (Address Resolution Protocol) faz?",
+              "answerOptions": [
                 {
-                    "text": "Limpeza interna do gabinete e remoção de poeira.",
-                    "rationale": "Esta é uma ação de rotina para evitar superaquecimento, sendo, portanto, preventiva.",
-                    "isCorrect": false
+                  "text": "Traduz um endereço IP para um nome de domínio.",
+                  "rationale": "Esta é uma função do DNS reverso (Domain Name System).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Substituição de um disco rígido danificado por um novo.",
-                    "rationale": "A substituição de um componente 'danificado' é uma correção após a falha, caracterizando-se como Manutenção Corretiva.",
-                    "isCorrect": true
+                  "text": "Atribui um endereço IP dinamicamente a um host.",
+                  "rationale": "Esta é a função do protocolo DHCP (Dynamic Host Configuration Protocol).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Verificação do estado dos cabos e conexões para garantir o encaixe seguro.",
-                    "rationale": "Verificar conexões é uma forma de prevenir problemas de contato ou falhas de energia, sendo preventiva.",
-                    "isCorrect": false
+                  "text": "Associa um endereço IP (lógico, Camada 3) ao endereço MAC correspondente (físico, Camada 2) na mesma rede local.",
+                  "rationale": "O ARP é crucial para o envio de pacotes dentro de uma LAN, pois ele descobre o endereço físico do próximo dispositivo que receberá o pacote.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Troca da pasta térmica do processador em intervalos regulares.",
-                    "rationale": "A troca de pasta térmica é uma medida planejada para prevenir superaquecimento, sendo preventiva.",
-                    "isCorrect": false
+                  "text": "Gerencia e encaminha pacotes entre redes distintas.",
+                  "rationale": "Esta é a função do roteamento, realizado pelo protocolo IP na Camada de Rede.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 15,
-            "question": "Um usuário liga o computador, mas o monitor não exibe nada (fica 'Sem Sinal'). O que é mais provável causar este problema, ignorando o cabo de alimentação do monitor?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 15,
+              "question": "Em qual camada do Modelo OSI é realizado o 'Three-Way Handshake' (Aperto de Mão Triplo) para estabelecer uma conexão confiável no protocolo TCP?",
+              "answerOptions": [
                 {
-                    "text": "Falha no Mouse ou no Teclado.",
-                    "rationale": "O computador inicializa mesmo que mouse e teclado não estejam conectados ou funcionando.",
-                    "isCorrect": false
+                  "text": "Camada de Rede (Camada 3).",
+                  "rationale": "A Camada de Rede não é orientada à conexão, sendo responsável apenas pelo roteamento de pacotes (IP).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Problema na Placa de Vídeo (GPU) ou no cabo de vídeo (HDMI/VGA/DisplayPort).",
-                    "rationale": "A falta de imagem é tipicamente causada por uma falha no componente responsável por gerar o sinal (GPU) ou na conexão física (cabo de vídeo) que o leva ao monitor.",
-                    "isCorrect": true
+                  "text": "Camada de Aplicação (Camada 7).",
+                  "rationale": "Protocolos da Camada de Aplicação, como HTTP, usam o TCP, mas a conexão confiável é estabelecida pela Camada de Transporte.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Disco Rígido com bad blocks.",
-                    "rationale": "Bad blocks afetam o carregamento de dados e a inicialização do SO, mas o BIOS/UEFI geralmente ainda exibiria o início do POST (Power-On Self-Test).",
-                    "isCorrect": false
+                  "text": "Camada de Transporte (Camada 4).",
+                  "rationale": "O TCP é o protocolo orientado à conexão na Camada de Transporte, e o 'handshake' (troca de SYN, SYN-ACK e ACK) é o mecanismo para estabelecer essa conexão antes da transmissão de dados.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Excesso de arquivos temporários.",
-                    "rationale": "Excesso de arquivos temporários causa lentidão, não impede a exibição da tela.",
-                    "isCorrect": false
+                  "text": "Camada de Sessão (Camada 5).",
+                  "rationale": "A Camada de Sessão gerencia o diálogo, mas a confiabilidade e o estabelecimento da conexão fim a fim são responsabilidade da Camada de Transporte.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 16,
-            "question": "Na resolução de problemas de software (troubleshooting), qual é a primeira e mais simples ação que um técnico deve sugerir ao usuário?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 16,
+              "question": "Qual dispositivo de rede opera na Camada de Enlace (Camada 2) e usa a tabela de endereços MAC para encaminhar quadros (frames) seletivamente a uma porta de destino?",
+              "answerOptions": [
                 {
-                    "text": "Reinstalar o sistema operacional.",
-                    "rationale": "Reinstalar o SO é um último recurso, complexo e demorado.",
-                    "isCorrect": false
+                  "text": "Hub (Concentrador).",
+                  "rationale": "O Hub opera na Camada Física (Camada 1) e simplesmente repete o sinal para todas as portas.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Realizar um backup completo dos dados.",
-                    "rationale": "O backup é uma boa prática, mas não é a primeira ação para resolver um problema de mau funcionamento imediato.",
-                    "isCorrect": false
+                  "text": "Modem (Modulador/Demodulador).",
+                  "rationale": "O Modem converte sinais digitais para analógicos e vice-versa, permitindo a transmissão por linhas telefônicas ou a cabo.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Reiniciar o computador (reboot).",
-                    "rationale": "A reinicialização encerra processos travados, libera a memória e resolve a grande maioria dos problemas temporários de software, sendo o passo inicial ideal.",
-                    "isCorrect": true
+                  "text": "Roteador (Router).",
+                  "rationale": "O Roteador opera na Camada de Rede (Camada 3) e usa endereços IP para roteamento entre redes.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Substituir a memória RAM.",
-                    "rationale": "A substituição de hardware é uma ação para problemas físicos, não para a maioria dos problemas iniciais de software.",
-                    "isCorrect": false
+                  "text": "Switch (Comutador).",
+                  "rationale": "O Switch opera na Camada de Enlace (Camada 2) e usa o endereço MAC de destino para encaminhar o quadro apenas para a porta correta, segmentando o domínio de colisão.",
+                  "isCorrect": true
                 }
-            ]
-        },
-        {
-            "questionNumber": 17,
-            "question": "Qual é a definição de Manutenção Evolutiva?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 17,
+              "question": "A que se refere o termo 'throughput' (vazão) na comunicação de dados?",
+              "answerOptions": [
                 {
-                    "text": "Intervenção após a falha para restabelecer a operação normal.",
-                    "rationale": "Esta é a definição de Manutenção Corretiva.",
-                    "isCorrect": false
+                  "text": "A capacidade máxima teórica de transmissão de dados em um canal (em bits/segundo), medida em Hertz (Hz).",
+                  "rationale": "Esta é a definição de 'largura de banda' (bandwidth), que é medida em bits/segundo, não em Hertz (Hz).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Monitoramento contínuo para antecipar possíveis falhas em componentes.",
-                    "rationale": "Esta é a definição de Manutenção Preditiva.",
-                    "isCorrect": false
+                  "text": "O tempo que o primeiro bit leva para viajar do transmissor ao receptor.",
+                  "rationale": "Esta é a definição de 'latência' ou 'tempo de propagação'.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Alteração no sistema para atender a novos requisitos, regulamentos ou adicionar funcionalidades que não existiam antes.",
-                    "rationale": "A Manutenção Evolutiva consiste em aprimorar o sistema (software ou hardware) para que ele continue útil e atualizado às novas demandas.",
-                    "isCorrect": true
+                  "text": "O número de pacotes de dados perdidos durante a transmissão.",
+                  "rationale": "Isto se refere à 'taxa de perda de pacotes' (packet loss rate).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Limpeza periódica e verificação de integridade dos componentes.",
-                    "rationale": "Esta é a definição de Manutenção Preventiva.",
-                    "isCorrect": false
+                  "text": "A taxa real de transferência de dados efetivamente alcançada, incluindo a sobrecarga de protocolo e atrasos, e que geralmente é menor que a largura de banda.",
+                  "rationale": "O 'throughput' mede o desempenho real da rede, ou seja, quantos bits úteis chegam ao destino por unidade de tempo.",
+                  "isCorrect": true
                 }
-            ]
-        },
-        {
-            "questionNumber": 18,
-            "question": "O que a sigla CPU representa e qual é a sua função primária?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 18,
+              "question": "Qual camada do Modelo OSI lida com a formatação, a sintaxe e a semântica dos dados, garantindo que o sistema receptor consiga interpretar a informação enviada pelo emissor?",
+              "answerOptions": [
                 {
-                    "text": "Componente de Processamento Único; armazena dados de forma permanente.",
-                    "rationale": "Armazenamento permanente é função do HD/SSD. A sigla correta é Central Processing Unit.",
-                    "isCorrect": false
+                  "text": "Camada de Sessão (Camada 5).",
+                  "rationale": "A Camada de Sessão gerencia o diálogo e a sincronização, não a formatação dos dados em si.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Unidade Central de Processamento; interpreta e executa as instruções dos programas de computador.",
-                    "rationale": "A CPU é o 'cérebro' que realiza todos os cálculos e operações lógicas necessárias para a execução de tarefas.",
-                    "isCorrect": true
+                  "text": "Camada de Apresentação (Camada 6).",
+                  "rationale": "A Camada de Apresentação trata da codificação, criptografia/descriptografia e compressão, atuando como um 'tradutor' para garantir a interoperabilidade da sintaxe dos dados.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Unidade de Controle de Periféricos; gerencia a comunicação com dispositivos externos.",
-                    "rationale": "Embora a CPU gerencie, o controle direto de periféricos é mais relacionado aos chipsets da Placa-Mãe.",
-                    "isCorrect": false
+                  "text": "Camada de Aplicação (Camada 7).",
+                  "rationale": "A Camada de Aplicação fornece serviços de rede aos usuários, mas não lida com a representação de dados entre diferentes sistemas de forma genérica.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Cache de Processamento Útil; armazena dados temporários em alta velocidade.",
-                    "rationale": "Isso se refere à Memória Cache, que é uma parte da CPU, mas não a sua sigla nem função primária.",
-                    "isCorrect": false
+                  "text": "Camada de Transporte (Camada 4).",
+                  "rationale": "A Camada de Transporte é responsável pela comunicação fim a fim e confiabilidade, não pela sintaxe do conteúdo da mensagem.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 19,
-            "question": "Em um cenário de lentidão, se o Gerenciador de Tarefas do Windows mostra que o uso do disco (HD/SSD) está consistentemente em 100%, qual é a causa mais provável?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 19,
+              "question": "O que a multiplexação de portas na Camada de Transporte permite?",
+              "answerOptions": [
                 {
-                    "text": "Problema na Placa de Vídeo.",
-                    "rationale": "A Placa de Vídeo afetaria o uso da GPU, não o uso do disco.",
-                    "isCorrect": false
+                  "text": "Que vários dispositivos usem o mesmo endereço MAC em uma rede.",
+                  "rationale": "Endereços MAC são únicos, e a colisão de MACs é um problema, não uma função da Camada de Transporte.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Um processo em segundo plano, como um antivírus realizando uma varredura completa ou uma falha no próprio disco.",
-                    "rationale": "O uso de disco em 100% indica que há um gargalo na leitura/escrita de dados, frequentemente causado por processos com alta demanda de I/O ou por um disco antigo/lento (HD) lutando para acompanhar.",
-                    "isCorrect": true
+                  "text": "Que vários pacotes de diferentes redes (origem/destino) sejam combinados em um único quadro (frame).",
+                  "rationale": "A combinação de pacotes em um quadro é o encapsulamento, mas não o que a multiplexação de portas permite.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Configuração errada do monitor.",
-                    "rationale": "A configuração do monitor não impacta o desempenho do disco.",
-                    "isCorrect": false
+                  "text": "Que vários serviços ou aplicações usem simultaneamente o mesmo endereço IP de um host.",
+                  "rationale": "O número de porta (associado a um serviço/aplicação) permite que o sistema operacional entregue segmentos TCP/UDP que chegam ao processo correto no host de destino (multiplexação).",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Temperatura da CPU acima do limite.",
-                    "rationale": "O superaquecimento causa lentidão porque a CPU diminui a frequência (thermal throttling), mas a causa raiz seria o uso da CPU, não do disco.",
-                    "isCorrect": false
+                  "text": "Que um único meio de transmissão (cabo) seja usado para várias topologias de rede.",
+                  "rationale": "Isto se refere ao uso compartilhado do meio físico, não à multiplexação de portas.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 20,
-            "question": "Qual é a principal função do BIOS ou UEFI (Firmware) de um computador?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 20,
+              "question": "Qual das seguintes combinações de camadas do Modelo OSI representa o nível de 'Software/Aplicações' (top layers)?",
+              "answerOptions": [
                 {
-                    "text": "Permitir ao usuário navegar na internet.",
-                    "rationale": "O navegador e o Sistema Operacional são necessários para navegação na internet.",
-                    "isCorrect": false
+                  "text": "Rede e Enlace (Camadas 3 e 2).",
+                  "rationale": "Estas são camadas de 'suporte de rede', lidando com roteamento e acesso ao meio físico, e não com software de aplicação.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Gerenciar o sistema de arquivos do disco rígido.",
-                    "rationale": "O Sistema Operacional é quem gerencia o sistema de arquivos após a inicialização.",
-                    "isCorrect": false
+                  "text": "Transporte e Sessão (Camadas 4 e 5).",
+                  "rationale": "Estas são camadas de 'transporte/comunicação', que suportam as aplicações, mas não são as camadas de software finais.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Realizar o teste inicial de hardware (POST) e carregar o Sistema Operacional.",
-                    "rationale": "O BIOS/UEFI é o primeiro software a rodar; ele inicializa e testa os componentes críticos (POST) e, em seguida, transfere o controle para o SO.",
-                    "isCorrect": true
+                  "text": "Aplicação, Apresentação e Sessão (Camadas 7, 6 e 5).",
+                  "rationale": "Estas são as camadas superiores, lidando com serviços ao usuário, representação de dados e gerenciamento de diálogo.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Converter energia AC para DC.",
-                    "rationale": "Esta é a função da Fonte de Alimentação.",
-                    "isCorrect": false
+                  "text": "Enlace e Física (Camadas 2 e 1).",
+                  "rationale": "Estas são as camadas inferiores, lidando com hardware e transmissão de bits.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 21,
-            "question": "Em 'Suporte ao Usuário', a prática de 'Backup' é essencial. O que constitui um backup eficaz?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 21,
+              "question": "Um Hub de rede e um Repetidor operam em qual camada do Modelo OSI, e qual é sua principal limitação?",
+              "answerOptions": [
                 {
-                    "text": "Salvar todos os arquivos em uma única pasta dentro do próprio disco rígido principal.",
-                    "rationale": "Salvar no mesmo disco rígido não protege contra falha total do disco ou desastres físicos (incêndio, roubo).",
-                    "isCorrect": false
+                  "text": "Camada de Enlace (Camada 2); Eles leem o endereço MAC, mas não o usam para encaminhamento seletivo.",
+                  "rationale": "O Hub/Repetidor opera na Camada 1, não na Camada 2, e não lê o endereço MAC.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Copiar os arquivos importantes para um local externo, como um HD externo ou serviço de nuvem (cloud).",
-                    "rationale": "Um backup eficaz exige redundância, armazenando os dados em um local fisicamente separado do sistema original.",
-                    "isCorrect": true
+                  "text": "Camada de Rede (Camada 3); Eles não conseguem realizar o roteamento de pacotes.",
+                  "rationale": "Eles operam na Camada 1, e não se espera que realizem roteamento (função da Camada 3).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Apenas desfragmentar o disco rígido regularmente.",
-                    "rationale": "Desfragmentar melhora o desempenho, mas não é uma cópia de segurança dos dados.",
-                    "isCorrect": false
+                  "text": "Camada Física (Camada 1); Eles apenas regeneram o sinal elétrico e repetem para todas as portas, aumentando o domínio de colisão.",
+                  "rationale": "Ao replicar o sinal para todas as portas, eles aumentam a chance de colisões, o que limita o desempenho da rede.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Instalar um software antivírus no computador.",
-                    "rationale": "O antivírus protege contra ameaças, mas não restaura dados perdidos após uma falha de hardware ou roubo.",
-                    "isCorrect": false
+                  "text": "Camada de Transporte (Camada 4); Eles não implementam o protocolo TCP para confiabilidade.",
+                  "rationale": "Eles operam na Camada 1, e a confiabilidade do TCP é uma função da Camada 4.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 22,
-            "question": "Qual periférico é classificado como apenas de 'Entrada' (Input)?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 22,
+              "question": "Qual protocolo da Camada de Aplicação permite que um host obtenha um endereço IP, máscara de sub-rede e outras informações de configuração de rede de forma automática?",
+              "answerOptions": [
                 {
-                    "text": "Impressora",
-                    "rationale": "Impressora é um dispositivo de Saída, pois produz um documento físico.",
-                    "isCorrect": false
+                  "text": "FTP (File Transfer Protocol).",
+                  "rationale": "O FTP é usado para transferir arquivos entre hosts.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Monitor Touchscreen",
-                    "rationale": "Um monitor touchscreen é de Entrada e Saída (I/O).",
-                    "isCorrect": false
+                  "text": "DNS (Domain Name System).",
+                  "rationale": "O DNS é usado para traduzir nomes de domínio para endereços IP.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Webcam (Câmera)",
-                    "rationale": "A Webcam captura dados de imagem ou vídeo e os envia ao computador, sendo puramente de Entrada.",
-                    "isCorrect": true
+                  "text": "DHCP (Dynamic Host Configuration Protocol).",
+                  "rationale": "O DHCP é o protocolo que aloca dinamicamente os endereços IP e as configurações de rede essenciais para os hosts se conectarem à rede.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Placa de Rede",
-                    "rationale": "Placas de Rede são dispositivos de Entrada e Saída (I/O).",
-                    "isCorrect": false
+                  "text": "HTTP (Hypertext Transfer Protocol).",
+                  "rationale": "O HTTP é usado para navegar na web (transferência de páginas web).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 23,
-            "question": "Um usuário percebe que a tela inicial do seu navegador foi alterada para um site desconhecido e pop-ups irritantes aparecem constantemente. O que mais provavelmente causou esse comportamento?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 23,
+              "question": "Em termos de confiabilidade e overhead (sobrecarga), qual é a principal característica do protocolo **TCP** (Transmission Control Protocol)?",
+              "answerOptions": [
                 {
-                    "text": "Superaquecimento da CPU.",
-                    "rationale": "O superaquecimento causaria lentidão ou desligamento, mas não alteraria configurações do navegador ou geraria pop-ups.",
-                    "isCorrect": false
+                  "text": "É não orientado à conexão, com baixo overhead.",
+                  "rationale": "Esta característica é do UDP; o TCP é orientado à conexão e tem maior overhead.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Instalação de um software malicioso (Malware) do tipo Adware ou Hijacker.",
-                    "rationale": "Adware e Browser Hijackers são softwares maliciosos projetados para exibir anúncios indesejados e alterar configurações do navegador, como a página inicial.",
-                    "isCorrect": true
+                  "text": "É orientado à conexão, garantindo entrega confiável e ordenada dos dados.",
+                  "rationale": "O TCP usa mecanismos como o 'handshake' e confirmações (ACKs) para garantir que todos os dados cheguem corretamente e na ordem em que foram enviados.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Falta de memória RAM no sistema.",
-                    "rationale": "A falta de RAM causa lentidão e travamentos, mas não instala software malicioso ou altera a página inicial.",
-                    "isCorrect": false
+                  "text": "Utiliza o melhor esforço (best-effort) para roteamento de pacotes.",
+                  "rationale": "O 'best-effort' é uma característica do protocolo IP (Camada 3).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Cabo de vídeo mal conectado.",
-                    "rationale": "O cabo de vídeo afeta apenas a exibição da imagem.",
-                    "isCorrect": false
+                  "text": "Seu cabeçalho (header) é menor que o cabeçalho do UDP.",
+                  "rationale": "O cabeçalho do TCP é significativamente maior que o cabeçalho do UDP, devido aos campos necessários para o controle de fluxo, congestionamento e confiabilidade.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 24,
-            "question": "Qual é o termo para o processo de instalar um novo sistema operacional em um computador, apagando completamente o sistema e os dados anteriores?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 24,
+              "question": "O que um roteador faz quando recebe um pacote de dados cujo endereço IP de destino não está em sua tabela de roteamento?",
+              "answerOptions": [
                 {
-                    "text": "Desfragmentação.",
-                    "rationale": "Desfragmentação é a reorganização de dados no disco para otimização de velocidade.",
-                    "isCorrect": false
+                  "text": "Encaminha o pacote para o Switch (Camada 2) para que ele tome a decisão de encaminhamento.",
+                  "rationale": "O Switch (Camada 2) não toma decisões de roteamento, apenas de comutação em redes locais.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Restauração de Sistema.",
-                    "rationale": "A Restauração de Sistema reverte o SO para um estado anterior, sem apagar tudo.",
-                    "isCorrect": false
+                  "text": "Descarta o pacote e envia uma mensagem de erro (ICMP) de volta à origem, ou o envia para o 'gateway' padrão (default gateway) ou 'próximo salto' (next hop) configurado como rota padrão.",
+                  "rationale": "Quando não há uma rota específica, o roteador envia para a rota padrão (se houver) ou descarta (se não houver rota padrão), notificando ou não o remetente.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Instalação limpa (ou Formatação e Instalação).",
-                    "rationale": "Este processo envolve formatar a partição principal (apagando os dados) e instalar o SO do zero, sendo a solução para muitos problemas graves de software.",
-                    "isCorrect": true
+                  "text": "Usa o protocolo ARP para descobrir o endereço MAC do destino na rede remota e envia o pacote.",
+                  "rationale": "O ARP só é usado para descobrir MACs na rede local do roteador, e não em redes remotas, que requerem roteamento.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Manutenção Preditiva.",
-                    "rationale": "Manutenção Preditiva é monitoramento, não instalação.",
-                    "isCorrect": false
+                  "text": "Transmite o pacote para todas as portas, operando como um Hub (Concentrador).",
+                  "rationale": "Transmite para todas as portas é uma característica do Hub (Camada 1), o que é ineficiente e não faz parte da função de roteamento de um roteador (Camada 3).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 25,
-            "question": "O que o Firewall (Parede de Fogo) faz para proteger um computador ou rede?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 25,
+              "question": "Qual é a principal vantagem da Fibra Óptica em comparação com o cabo de par trançado (UTP) na transmissão de dados?",
+              "answerOptions": [
                 {
-                    "text": "Ele remove vírus já instalados no disco rígido.",
-                    "rationale": "Remover vírus é a função do software antivírus.",
-                    "isCorrect": false
+                  "text": "Custo de instalação e manutenção mais baixo, e maior flexibilidade na instalação.",
+                  "rationale": "O UTP geralmente tem menor custo e maior flexibilidade de instalação do que a fibra óptica.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Ele funciona como uma barreira que monitora e controla o tráfego de dados de entrada e saída da rede, baseado em regras de segurança.",
-                    "rationale": "O Firewall é essencial para bloquear acessos não autorizados de fora (ou de dentro) e controlar quais programas podem se comunicar com a internet.",
-                    "isCorrect": true
+                  "text": "Capacidade de transmitir dados por meio de sinais elétricos em longas distâncias sem atenuação.",
+                  "rationale": "A fibra transmite o sinal por meio de pulsos de luz (não eletricidade), o que resulta em muito menos atenuação em longas distâncias.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Ele otimiza o uso da memória RAM para acelerar o sistema.",
-                    "rationale": "A otimização de RAM é feita pelo Sistema Operacional ou utilitários de terceiros.",
-                    "isCorrect": false
+                  "text": "Imunidade a interferência eletromagnética (EMI) e capacidade de transmissão em longas distâncias com maior largura de banda.",
+                  "rationale": "Como a fibra usa luz, ela é imune a EMI, permitindo também taxas de transmissão muito mais altas (maior largura de banda) e maior alcance.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Ele traduz o código binário da máquina para linguagem humana.",
-                    "rationale": "Essa função é complexa e não é a principal função de um firewall de rede.",
-                    "isCorrect": false
+                  "text": "Maior segurança de acesso físico, pois o sinal pode ser facilmente 'grampeado' (tapped) sem detecção.",
+                  "rationale": "O grampeamento ('tapped') em fibra é muito mais difícil de realizar e detectar do que em cabos elétricos, o que a torna mais segura (o oposto da afirmação).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 26,
-            "question": "Qual dos seguintes é um periférico classificado como 'Saída' (Output)?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 26,
+              "question": "A que se refere o termo 'domínio de colisão' (collision domain) em uma rede Ethernet?",
+              "answerOptions": [
                 {
-                    "text": "Scanner.",
-                    "rationale": "O Scanner envia dados (imagem) para o computador, sendo de Entrada.",
-                    "isCorrect": false
+                  "text": "A área geográfica total que a rede abrange, como um campus ou cidade.",
+                  "rationale": "Isto se refere à abrangência de um tipo de rede (LAN, MAN, etc.), e não ao domínio de colisão.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Microfone.",
-                    "rationale": "O Microfone envia dados (áudio) para o computador, sendo de Entrada.",
-                    "isCorrect": false
+                  "text": "O segmento de rede onde quadros de dados podem colidir se dois dispositivos transmitirem simultaneamente.",
+                  "rationale": "Em um domínio de colisão, se dois dispositivos transmitirem ao mesmo tempo, seus sinais se misturam (colidem), exigindo retransmissão, o que reduz a eficiência da rede.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Caixa de Som (Speaker).",
-                    "rationale": "A Caixa de Som recebe o sinal de áudio do computador e o reproduz para o usuário, sendo puramente de Saída.",
-                    "isCorrect": true
+                  "text": "O conjunto de dispositivos que recebem um quadro de broadcast (transmissão geral).",
+                  "rationale": "Isto se refere ao 'domínio de broadcast', que é segmentado por roteadores (Camada 3).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Teclado.",
-                    "rationale": "O Teclado envia dados (comandos/texto) para o computador, sendo de Entrada.",
-                    "isCorrect": false
+                  "text": "A porção de rede isolada por um Switch (Comutador).",
+                  "rationale": "O Switch segmenta o domínio de colisão, ou seja, cada porta do Switch é um domínio de colisão próprio, reduzindo o problema.",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 27,
-            "question": "Um técnico de suporte usa o protocolo RDP (Remote Desktop Protocol) ou VNC. Qual tipo de suporte está sendo realizado?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 27,
+              "question": "Qual é a principal desvantagem da Topologia em Barramento (Bus)?",
+              "answerOptions": [
                 {
-                    "text": "Suporte Local de Hardware.",
-                    "rationale": "Suporte Local implica a presença física do técnico.",
-                    "isCorrect": false
+                  "text": "Alto custo de cabeamento por usar múltiplos cabos para cada conexão.",
+                  "rationale": "A Topologia em Barramento é uma das mais baratas em termos de cabeamento, pois usa apenas um cabo principal compartilhado.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Manutenção Preditiva (Monitoramento de Rede).",
-                    "rationale": "A manutenção preditiva foca em ferramentas de monitoramento para prever falhas.",
-                    "isCorrect": false
+                  "text": "Requer um dispositivo central (Switch) complexo para gerenciar o tráfego.",
+                  "rationale": "A Topologia em Barramento não usa um dispositivo central, ao contrário da Topologia em Estrela.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Suporte Remoto de Software.",
-                    "rationale": "O RDP/VNC permite que o técnico acesse e controle o computador do usuário pela rede ou internet para diagnosticar e corrigir problemas sem estar fisicamente presente.",
-                    "isCorrect": true
+                  "text": "Dificuldade de isolar falhas, e uma ruptura no cabo principal (backbone) paralisa toda a rede.",
+                  "rationale": "Devido à sua dependência de um cabo principal compartilhado, a falha nesse cabo (ou em uma terminação) afeta todos os nós da rede, o que dificulta o diagnóstico e a correção.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Manutenção Corretiva (Substituição de Peças).",
-                    "rationale": "Substituir peças requer presença física e é Manutenção Corretiva de Hardware.",
-                    "isCorrect": false
+                  "text": "Transmissão ineficiente, pois cada nó precisa esperar um token para transmitir (acesso sequencial).",
+                  "rationale": "O uso de tokens é típico da Topologia em Anel e não do Barramento (que usava o CSMA/CD).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 28,
-            "question": "Qual é o propósito principal da 'pasta térmica' aplicada entre a CPU e o dissipador de calor (cooler)?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 28,
+              "question": "O que o protocolo **ICMP** (Internet Control Message Protocol) é usado para fazer?",
+              "answerOptions": [
                 {
-                    "text": "Fixar o cooler na CPU para evitar que ele se solte.",
-                    "rationale": "A fixação é feita por travas, parafusos ou presilhas.",
-                    "isCorrect": false
+                  "text": "Gerenciar a atribuição dinâmica de endereços IP (DHCP).",
+                  "rationale": "O DHCP é um protocolo diferente, usado para atribuir endereços IP automaticamente.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Isolar a CPU da eletricidade estática do cooler.",
-                    "rationale": "A pasta térmica é condutora de calor, mas não tem como foco principal a isolação elétrica.",
-                    "isCorrect": false
+                  "text": "Garantir a entrega confiável e ordenada de pacotes na Camada de Transporte (TCP).",
+                  "rationale": "Esta é a função do TCP (Transmission Control Protocol).",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Preencher as microimperfeições das superfícies, maximizando a transferência de calor da CPU para o cooler.",
-                    "rationale": "A pasta térmica é uma interface de alta condutividade térmica que elimina bolsas de ar (que isolam o calor), permitindo uma refrigeração eficiente.",
-                    "isCorrect": true
+                  "text": "Reportar erros e enviar mensagens operacionais sobre as condições da rede, como a inacessibilidade de um host (usado por ferramentas como 'ping' e 'traceroute').",
+                  "rationale": "O ICMP é crucial para diagnósticos e gerenciamento de erros na Camada de Rede (Camada 3), informando sobre problemas de roteamento ou destino.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Lubrificar as ventoinhas do cooler para que girem mais rápido.",
-                    "rationale": "A pasta é aplicada no chip, não nas ventoinhas; a lubrificação das ventoinhas é feita com óleo ou graxa no eixo.",
-                    "isCorrect": false
+                  "text": "Traduzir nomes de domínio para endereços IP (DNS).",
+                  "rationale": "Esta é a função do DNS (Domain Name System).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 29,
-            "question": "Um 'Trojan' (Cavalo de Troia) é um tipo de Malware que se caracteriza por:",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 29,
+              "question": "Qual dos seguintes protocolos de Camada de Aplicação (Camada 7) é usado para a **transferência de páginas web** (texto, imagens, vídeos) em um navegador?",
+              "answerOptions": [
                 {
-                    "text": "Replicar-se rapidamente, infectando outros arquivos e computadores em rede sem intervenção humana.",
-                    "rationale": "Esta é a definição de um Vírus ou Worm.",
-                    "isCorrect": false
+                  "text": "SMTP (Simple Mail Transfer Protocol).",
+                  "rationale": "O SMTP é usado para o envio de e-mails.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Bloquear o acesso aos arquivos do usuário, exigindo um resgate em dinheiro para liberá-los.",
-                    "rationale": "Esta é a definição de Ransomware.",
-                    "isCorrect": false
+                  "text": "HTTP (Hypertext Transfer Protocol).",
+                  "rationale": "O HTTP é a base da comunicação de dados na World Wide Web, usado para carregar páginas web e recursos relacionados.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "Parecer um software útil e legítimo para induzir o usuário a instalá-lo, mas escondendo uma função maliciosa.",
-                    "rationale": "Os Trojans se disfarçam para entrar no sistema e conceder acesso remoto, roubar dados ou instalar outros malwares.",
-                    "isCorrect": true
+                  "text": "POP3 (Post Office Protocol version 3).",
+                  "rationale": "O POP3 é usado para receber (baixar) e-mails do servidor para o cliente.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Monitorar a digitação do teclado para roubar senhas (Keylogger).",
-                    "rationale": "Keylogger é uma funcionalidade comum em muitos malwares, mas a característica de disfarce é o que define o Trojan.",
-                    "isCorrect": false
+                  "text": "TELNET (Telecommunication Network).",
+                  "rationale": "O TELNET é usado para emular um terminal em um host remoto (acesso remoto via linha de comando).",
+                  "isCorrect": false
                 }
-            ]
-        },
-        {
-            "questionNumber": 30,
-            "question": "O que deve ser verificado primeiro se um computador não conseguir se conectar à internet através de um cabo de rede (Ethernet)?",
-            "answerOptions": [
+              ]
+            },
+            {
+              "questionNumber": 30,
+              "question": "O que o mecanismo de **Janela Deslizante** (Sliding Window) em TCP é usado para controlar?",
+              "answerOptions": [
                 {
-                    "text": "A bateria interna (CMOS) da Placa-Mãe.",
-                    "rationale": "A bateria afeta o relógio e as configurações do BIOS, mas não a conectividade da rede.",
-                    "isCorrect": false
+                  "text": "O tamanho máximo de um pacote IP (MTU).",
+                  "rationale": "O MTU é um limite de tamanho de pacote, mas a Janela Deslizante é usada para o controle de fluxo na Camada de Transporte.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "O driver da placa de som.",
-                    "rationale": "O driver de som não tem relação com a placa de rede.",
-                    "isCorrect": false
+                  "text": "O número de portas TCP que podem ser abertas simultaneamente em um host.",
+                  "rationale": "O número de portas abertas simultaneamente é limitado pelos recursos do sistema operacional.",
+                  "isCorrect": false
                 },
                 {
-                    "text": "Se o cabo está firmemente conectado tanto no computador quanto no roteador/switch, e se as luzes da porta de rede estão acesas.",
-                    "rationale": "A falha de conexão mais comum é física. Checar a integridade da conexão (cabo e luzes indicadoras) é o primeiro passo para o diagnóstico.",
-                    "isCorrect": true
+                  "text": "O controle de fluxo e o controle de congestionamento, permitindo que o emissor envie vários segmentos de dados antes de receber uma confirmação (ACK).",
+                  "rationale": "A Janela Deslizante aumenta a eficiência ao permitir o envio de múltiplos segmentos, mas também protege o receptor (controle de fluxo) e a rede (controle de congestionamento) contra sobrecarga.",
+                  "isCorrect": true
                 },
                 {
-                    "text": "A quantidade de memória RAM instalada no sistema.",
-                    "rationale": "A RAM insuficiente causaria lentidão, mas não impediria a conexão física de rede.",
-                    "isCorrect": false
+                  "text": "A tradução de endereço IP para endereço MAC (ARP).",
+                  "rationale": "Esta é a função do protocolo ARP (Address Resolution Protocol).",
+                  "isCorrect": false
                 }
-            ]
-        }
-    ];
+              ]
+            }
+          ];
 
     let currentQuestionIndex = 0;
     let score = 0;
@@ -1118,3 +1118,4 @@
 
 </body>
 </html>
+
