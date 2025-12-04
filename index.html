@@ -428,84 +428,6 @@
             },
             {
               "questionNumber": 9,
-              "question": "O que o processo de 'encapsulamento' representa na comunicação de dados em camadas?",
-              "answerOptions": [
-                {
-                  "text": "A tradução de um endereço IP para um endereço MAC.",
-                  "rationale": "Esta é a função do protocolo ARP (Address Resolution Protocol).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "A remoção de informações de cabeçalho (header) de uma PDU à medida que ela sobe pelas camadas no receptor.",
-                  "rationale": "Esta é a definição do processo inverso, o 'desencapsulamento'.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "A adição de informações de cabeçalho de protocolo (e, às vezes, de rodapé) a uma unidade de dados à medida que ela desce pelas camadas no transmissor.",
-                  "rationale": "Cada camada no emissor anexa seu próprio cabeçalho à unidade de dados da camada superior, empacotando-a antes de passá-la para a camada inferior.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "A compactação de dados para reduzir o tamanho do pacote antes da transmissão.",
-                  "rationale": "A compressão de dados é uma função da Camada de Apresentação (Camada 6) e não o encapsulamento em si.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 10,
-              "question": "Qual a principal desvantagem de utilizar o protocolo **UDP** (User Datagram Protocol) na Camada de Transporte?",
-              "answerOptions": [
-                {
-                  "text": "Ser orientado à conexão, exigindo um 'handshake' complexo.",
-                  "rationale": "Esta é uma característica do TCP, o UDP é 'não orientado à conexão', o que é uma vantagem em termos de velocidade.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Baixa velocidade de transmissão devido ao grande 'overhead' de cabeçalho.",
-                  "rationale": "O UDP tem um cabeçalho muito pequeno, o que o torna rápido e com baixo 'overhead'.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Não garantir a entrega, a ordem, nem realizar controle de fluxo ou de congestionamento.",
-                  "rationale": "O UDP não oferece mecanismos de confiabilidade, resultando em potencial perda, duplicação ou desordem de datagramas, sendo ideal apenas para aplicações que toleram erros.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Utilizar endereçamento IP em vez de endereçamento MAC.",
-                  "rationale": "O uso de endereços IP é função da Camada de Rede, e não uma desvantagem intrínseca ao UDP, que usa números de porta.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 11,
-              "question": "Os padrões Ethernet (IEEE 802.3) e Wi-Fi (IEEE 802.11) definem protocolos que atuam em qual combinação de camadas do Modelo OSI?",
-              "answerOptions": [
-                {
-                  "text": "Camada de Transporte e Camada de Rede (4 e 3).",
-                  "rationale": "A Camada de Transporte lida com TCP/UDP e a Camada de Rede com IP, protocolos não definidos por Ethernet ou Wi-Fi.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Camada de Sessão e Camada de Apresentação (5 e 6).",
-                  "rationale": "Estas camadas lidam com o diálogo e formatação de dados, conceitos não relacionados diretamente a padrões de acesso ao meio físico.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Camada de Enlace e Camada Física (2 e 1).",
-                  "rationale": "Estes padrões definem tanto o Controle de Acesso ao Meio (MAC) na Camada 2 quanto as especificações elétricas/físicas na Camada 1.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Camada de Aplicação e Camada de Apresentação (7 e 6).",
-                  "rationale": "Estas são as camadas superiores, lidando com serviços ao usuário e sintaxe de dados, e não com a interconexão física.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 12,
               "question": "Qual topologia de rede física é a mais comum em redes locais (LANs) modernas, onde todos os dispositivos se conectam a um ponto central (Hub ou Switch)?",
               "answerOptions": [
                 {
@@ -531,85 +453,7 @@
               ]
             },
             {
-              "questionNumber": 13,
-              "question": "Em redes TCP/IP, qual máscara de sub-rede é tipicamente utilizada para uma rede de Classe C (por padrão, sem subnetting)?",
-              "answerOptions": [
-                {
-                  "text": "$255.0.0.0$",
-                  "rationale": "Esta é a máscara padrão para redes de Classe A, com apenas o primeiro octeto reservado para a porção de rede.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "$255.255.0.0$",
-                  "rationale": "Esta é a máscara padrão para redes de Classe B, com os dois primeiros octetos reservados para a porção de rede.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "$255.255.255.0$",
-                  "rationale": "Em uma rede de Classe C, os três primeiros octetos (24 bits) são reservados para a porção de rede, e o último octeto (8 bits) é para os hosts.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "$0.0.0.0$",
-                  "rationale": "Este endereço é usado como endereço de origem em certas condições, mas não como uma máscara de sub-rede padrão.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 14,
-              "question": "O que o protocolo **ARP** (Address Resolution Protocol) faz?",
-              "answerOptions": [
-                {
-                  "text": "Traduz um endereço IP para um nome de domínio.",
-                  "rationale": "Esta é uma função do DNS reverso (Domain Name System).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Atribui um endereço IP dinamicamente a um host.",
-                  "rationale": "Esta é a função do protocolo DHCP (Dynamic Host Configuration Protocol).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Associa um endereço IP (lógico, Camada 3) ao endereço MAC correspondente (físico, Camada 2) na mesma rede local.",
-                  "rationale": "O ARP é crucial para o envio de pacotes dentro de uma LAN, pois ele descobre o endereço físico do próximo dispositivo que receberá o pacote.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Gerencia e encaminha pacotes entre redes distintas.",
-                  "rationale": "Esta é a função do roteamento, realizado pelo protocolo IP na Camada de Rede.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 15,
-              "question": "Em qual camada do Modelo OSI é realizado o 'Three-Way Handshake' (Aperto de Mão Triplo) para estabelecer uma conexão confiável no protocolo TCP?",
-              "answerOptions": [
-                {
-                  "text": "Camada de Rede (Camada 3).",
-                  "rationale": "A Camada de Rede não é orientada à conexão, sendo responsável apenas pelo roteamento de pacotes (IP).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Camada de Aplicação (Camada 7).",
-                  "rationale": "Protocolos da Camada de Aplicação, como HTTP, usam o TCP, mas a conexão confiável é estabelecida pela Camada de Transporte.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Camada de Transporte (Camada 4).",
-                  "rationale": "O TCP é o protocolo orientado à conexão na Camada de Transporte, e o 'handshake' (troca de SYN, SYN-ACK e ACK) é o mecanismo para estabelecer essa conexão antes da transmissão de dados.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Camada de Sessão (Camada 5).",
-                  "rationale": "A Camada de Sessão gerencia o diálogo, mas a confiabilidade e o estabelecimento da conexão fim a fim são responsabilidade da Camada de Transporte.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 16,
+              "questionNumber": 10,
               "question": "Qual dispositivo de rede opera na Camada de Enlace (Camada 2) e usa a tabela de endereços MAC para encaminhar quadros (frames) seletivamente a uma porta de destino?",
               "answerOptions": [
                 {
@@ -634,34 +478,9 @@
                 }
               ]
             },
+
             {
-              "questionNumber": 17,
-              "question": "A que se refere o termo 'throughput' (vazão) na comunicação de dados?",
-              "answerOptions": [
-                {
-                  "text": "A capacidade máxima teórica de transmissão de dados em um canal (em bits/segundo), medida em Hertz (Hz).",
-                  "rationale": "Esta é a definição de 'largura de banda' (bandwidth), que é medida em bits/segundo, não em Hertz (Hz).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "O tempo que o primeiro bit leva para viajar do transmissor ao receptor.",
-                  "rationale": "Esta é a definição de 'latência' ou 'tempo de propagação'.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "O número de pacotes de dados perdidos durante a transmissão.",
-                  "rationale": "Isto se refere à 'taxa de perda de pacotes' (packet loss rate).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "A taxa real de transferência de dados efetivamente alcançada, incluindo a sobrecarga de protocolo e atrasos, e que geralmente é menor que a largura de banda.",
-                  "rationale": "O 'throughput' mede o desempenho real da rede, ou seja, quantos bits úteis chegam ao destino por unidade de tempo.",
-                  "isCorrect": true
-                }
-              ]
-            },
-            {
-              "questionNumber": 18,
+              "questionNumber": 11,
               "question": "Qual camada do Modelo OSI lida com a formatação, a sintaxe e a semântica dos dados, garantindo que o sistema receptor consiga interpretar a informação enviada pelo emissor?",
               "answerOptions": [
                 {
@@ -687,33 +506,7 @@
               ]
             },
             {
-              "questionNumber": 19,
-              "question": "O que a multiplexação de portas na Camada de Transporte permite?",
-              "answerOptions": [
-                {
-                  "text": "Que vários dispositivos usem o mesmo endereço MAC em uma rede.",
-                  "rationale": "Endereços MAC são únicos, e a colisão de MACs é um problema, não uma função da Camada de Transporte.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Que vários pacotes de diferentes redes (origem/destino) sejam combinados em um único quadro (frame).",
-                  "rationale": "A combinação de pacotes em um quadro é o encapsulamento, mas não o que a multiplexação de portas permite.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Que vários serviços ou aplicações usem simultaneamente o mesmo endereço IP de um host.",
-                  "rationale": "O número de porta (associado a um serviço/aplicação) permite que o sistema operacional entregue segmentos TCP/UDP que chegam ao processo correto no host de destino (multiplexação).",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Que um único meio de transmissão (cabo) seja usado para várias topologias de rede.",
-                  "rationale": "Isto se refere ao uso compartilhado do meio físico, não à multiplexação de portas.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 20,
+              "questionNumber": 12,
               "question": "Qual das seguintes combinações de camadas do Modelo OSI representa o nível de 'Software/Aplicações' (top layers)?",
               "answerOptions": [
                 {
@@ -739,7 +532,7 @@
               ]
             },
             {
-              "questionNumber": 21,
+              "questionNumber": 13,
               "question": "Um Hub de rede e um Repetidor operam em qual camada do Modelo OSI, e qual é sua principal limitação?",
               "answerOptions": [
                 {
@@ -765,138 +558,8 @@
               ]
             },
             {
-              "questionNumber": 22,
-              "question": "Qual protocolo da Camada de Aplicação permite que um host obtenha um endereço IP, máscara de sub-rede e outras informações de configuração de rede de forma automática?",
-              "answerOptions": [
-                {
-                  "text": "FTP (File Transfer Protocol).",
-                  "rationale": "O FTP é usado para transferir arquivos entre hosts.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "DNS (Domain Name System).",
-                  "rationale": "O DNS é usado para traduzir nomes de domínio para endereços IP.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "DHCP (Dynamic Host Configuration Protocol).",
-                  "rationale": "O DHCP é o protocolo que aloca dinamicamente os endereços IP e as configurações de rede essenciais para os hosts se conectarem à rede.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "HTTP (Hypertext Transfer Protocol).",
-                  "rationale": "O HTTP é usado para navegar na web (transferência de páginas web).",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 23,
-              "question": "Em termos de confiabilidade e overhead (sobrecarga), qual é a principal característica do protocolo **TCP** (Transmission Control Protocol)?",
-              "answerOptions": [
-                {
-                  "text": "É não orientado à conexão, com baixo overhead.",
-                  "rationale": "Esta característica é do UDP; o TCP é orientado à conexão e tem maior overhead.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "É orientado à conexão, garantindo entrega confiável e ordenada dos dados.",
-                  "rationale": "O TCP usa mecanismos como o 'handshake' e confirmações (ACKs) para garantir que todos os dados cheguem corretamente e na ordem em que foram enviados.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Utiliza o melhor esforço (best-effort) para roteamento de pacotes.",
-                  "rationale": "O 'best-effort' é uma característica do protocolo IP (Camada 3).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Seu cabeçalho (header) é menor que o cabeçalho do UDP.",
-                  "rationale": "O cabeçalho do TCP é significativamente maior que o cabeçalho do UDP, devido aos campos necessários para o controle de fluxo, congestionamento e confiabilidade.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 24,
-              "question": "O que um roteador faz quando recebe um pacote de dados cujo endereço IP de destino não está em sua tabela de roteamento?",
-              "answerOptions": [
-                {
-                  "text": "Encaminha o pacote para o Switch (Camada 2) para que ele tome a decisão de encaminhamento.",
-                  "rationale": "O Switch (Camada 2) não toma decisões de roteamento, apenas de comutação em redes locais.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Descarta o pacote e envia uma mensagem de erro (ICMP) de volta à origem, ou o envia para o 'gateway' padrão (default gateway) ou 'próximo salto' (next hop) configurado como rota padrão.",
-                  "rationale": "Quando não há uma rota específica, o roteador envia para a rota padrão (se houver) ou descarta (se não houver rota padrão), notificando ou não o remetente.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Usa o protocolo ARP para descobrir o endereço MAC do destino na rede remota e envia o pacote.",
-                  "rationale": "O ARP só é usado para descobrir MACs na rede local do roteador, e não em redes remotas, que requerem roteamento.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Transmite o pacote para todas as portas, operando como um Hub (Concentrador).",
-                  "rationale": "Transmite para todas as portas é uma característica do Hub (Camada 1), o que é ineficiente e não faz parte da função de roteamento de um roteador (Camada 3).",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 25,
-              "question": "Qual é a principal vantagem da Fibra Óptica em comparação com o cabo de par trançado (UTP) na transmissão de dados?",
-              "answerOptions": [
-                {
-                  "text": "Custo de instalação e manutenção mais baixo, e maior flexibilidade na instalação.",
-                  "rationale": "O UTP geralmente tem menor custo e maior flexibilidade de instalação do que a fibra óptica.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Capacidade de transmitir dados por meio de sinais elétricos em longas distâncias sem atenuação.",
-                  "rationale": "A fibra transmite o sinal por meio de pulsos de luz (não eletricidade), o que resulta em muito menos atenuação em longas distâncias.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Imunidade a interferência eletromagnética (EMI) e capacidade de transmissão em longas distâncias com maior largura de banda.",
-                  "rationale": "Como a fibra usa luz, ela é imune a EMI, permitindo também taxas de transmissão muito mais altas (maior largura de banda) e maior alcance.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Maior segurança de acesso físico, pois o sinal pode ser facilmente 'grampeado' (tapped) sem detecção.",
-                  "rationale": "O grampeamento ('tapped') em fibra é muito mais difícil de realizar e detectar do que em cabos elétricos, o que a torna mais segura (o oposto da afirmação).",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 26,
-              "question": "A que se refere o termo 'domínio de colisão' (collision domain) em uma rede Ethernet?",
-              "answerOptions": [
-                {
-                  "text": "A área geográfica total que a rede abrange, como um campus ou cidade.",
-                  "rationale": "Isto se refere à abrangência de um tipo de rede (LAN, MAN, etc.), e não ao domínio de colisão.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "O segmento de rede onde quadros de dados podem colidir se dois dispositivos transmitirem simultaneamente.",
-                  "rationale": "Em um domínio de colisão, se dois dispositivos transmitirem ao mesmo tempo, seus sinais se misturam (colidem), exigindo retransmissão, o que reduz a eficiência da rede.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "O conjunto de dispositivos que recebem um quadro de broadcast (transmissão geral).",
-                  "rationale": "Isto se refere ao 'domínio de broadcast', que é segmentado por roteadores (Camada 3).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "A porção de rede isolada por um Switch (Comutador).",
-                  "rationale": "O Switch segmenta o domínio de colisão, ou seja, cada porta do Switch é um domínio de colisão próprio, reduzindo o problema.",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 27,
-              "question": "Qual é a principal desvantagem da Topologia em Barramento (Bus)?",
+              "questionNumber": 14,
+              "question": "Qual é a principal desvantagem da Topologia em Barramento?",
               "answerOptions": [
                 {
                   "text": "Alto custo de cabeamento por usar múltiplos cabos para cada conexão.",
@@ -916,84 +579,6 @@
                 {
                   "text": "Transmissão ineficiente, pois cada nó precisa esperar um token para transmitir (acesso sequencial).",
                   "rationale": "O uso de tokens é típico da Topologia em Anel e não do Barramento (que usava o CSMA/CD).",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 28,
-              "question": "O que o protocolo **ICMP** (Internet Control Message Protocol) é usado para fazer?",
-              "answerOptions": [
-                {
-                  "text": "Gerenciar a atribuição dinâmica de endereços IP (DHCP).",
-                  "rationale": "O DHCP é um protocolo diferente, usado para atribuir endereços IP automaticamente.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Garantir a entrega confiável e ordenada de pacotes na Camada de Transporte (TCP).",
-                  "rationale": "Esta é a função do TCP (Transmission Control Protocol).",
-                  "isCorrect": false
-                },
-                {
-                  "text": "Reportar erros e enviar mensagens operacionais sobre as condições da rede, como a inacessibilidade de um host (usado por ferramentas como 'ping' e 'traceroute').",
-                  "rationale": "O ICMP é crucial para diagnósticos e gerenciamento de erros na Camada de Rede (Camada 3), informando sobre problemas de roteamento ou destino.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "Traduzir nomes de domínio para endereços IP (DNS).",
-                  "rationale": "Esta é a função do DNS (Domain Name System).",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 29,
-              "question": "Qual dos seguintes protocolos de Camada de Aplicação (Camada 7) é usado para a **transferência de páginas web** (texto, imagens, vídeos) em um navegador?",
-              "answerOptions": [
-                {
-                  "text": "SMTP (Simple Mail Transfer Protocol).",
-                  "rationale": "O SMTP é usado para o envio de e-mails.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "HTTP (Hypertext Transfer Protocol).",
-                  "rationale": "O HTTP é a base da comunicação de dados na World Wide Web, usado para carregar páginas web e recursos relacionados.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "POP3 (Post Office Protocol version 3).",
-                  "rationale": "O POP3 é usado para receber (baixar) e-mails do servidor para o cliente.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "TELNET (Telecommunication Network).",
-                  "rationale": "O TELNET é usado para emular um terminal em um host remoto (acesso remoto via linha de comando).",
-                  "isCorrect": false
-                }
-              ]
-            },
-            {
-              "questionNumber": 30,
-              "question": "O que o mecanismo de **Janela Deslizante** (Sliding Window) em TCP é usado para controlar?",
-              "answerOptions": [
-                {
-                  "text": "O tamanho máximo de um pacote IP (MTU).",
-                  "rationale": "O MTU é um limite de tamanho de pacote, mas a Janela Deslizante é usada para o controle de fluxo na Camada de Transporte.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "O número de portas TCP que podem ser abertas simultaneamente em um host.",
-                  "rationale": "O número de portas abertas simultaneamente é limitado pelos recursos do sistema operacional.",
-                  "isCorrect": false
-                },
-                {
-                  "text": "O controle de fluxo e o controle de congestionamento, permitindo que o emissor envie vários segmentos de dados antes de receber uma confirmação (ACK).",
-                  "rationale": "A Janela Deslizante aumenta a eficiência ao permitir o envio de múltiplos segmentos, mas também protege o receptor (controle de fluxo) e a rede (controle de congestionamento) contra sobrecarga.",
-                  "isCorrect": true
-                },
-                {
-                  "text": "A tradução de endereço IP para endereço MAC (ARP).",
-                  "rationale": "Esta é a função do protocolo ARP (Address Resolution Protocol).",
                   "isCorrect": false
                 }
               ]
@@ -1118,6 +703,7 @@
 
 </body>
 </html>
+
 
 
 
