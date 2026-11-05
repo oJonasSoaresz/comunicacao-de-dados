@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d0b14"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Arena de Ki Online</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
@@ -12,7 +13,7 @@
   /* nada na página pode ser selecionado, arrastado ou ampliado (só os campos de texto) */
   *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;-webkit-user-drag:none}
   input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
-  html,body{margin:0;position:fixed;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--bg);color:var(--fg);font-family:"Press Start 2P",monospace;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0;position:fixed;inset:0;width:100%;height:100%;background-color:#0d0b14;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--bg);color:var(--fg);font-family:"Press Start 2P",monospace;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   /* o jogo ocupa a tela inteira, em qualquer formato */
   #wrap{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;--u:1px}
   canvas{width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges;background:#000}
@@ -192,6 +193,15 @@ function layoutFrame() {
 function isTouchDevice() { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0; }
 /* converte um toque da tela para as coordenadas do jogo (considerando o giro) */
 function toLocal(cx, cy) { return ROT ? { x: cy, y: window.innerWidth - cx } : { x: cx, y: cy }; }
+/* tela cheia no celular (esconde hora, bateria e barra do navegador) — precisa de um toque do jogador */
+function goFullscreen() {
+  if (!isTouchDevice()) return;
+  const el = document.documentElement;
+  if (document.fullscreenElement || document.webkitFullscreenElement) { tryLandscape(); return; }
+  const req = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (!req) return;
+  try { const r = req.call(el, { navigationUI: 'hide' }); if (r && r.then) r.then(() => { tryLandscape(); setTimeout(resizeCanvas, 200); }, () => {}); } catch (e) {}
+}
 function tryLandscape() {
   try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch (e) {}
 }
@@ -511,7 +521,7 @@ class Fighter {
       this.vx = approach(this.vx, mx * WALK, 9, dt);
       // VOAR: depois de pular, segurar PULAR no ar liga o voo (sobe enquanto segura, gastando energia).
       // Soltou o botão ou a energia acabou: para de voar e cai.
-      const wantFly = inp.up && (this.flying || inp.upP || this.vy > -90);
+      const wantFly = inp.up && (this.flying || inp.upP); // precisa apertar o pulo já no ar
       if (wantFly && this.ki > 0) {
         if (!this.flying) { this.flying = true; ring(this.x, this.y - 4, this.pal_.aura[1], 3, 18, 0.25); if (nearCam(this.x, this.y)) SFX.flap(); }
         if (!this.infiniteKi) this.ki = Math.max(0, this.ki - 11 * dt);
@@ -683,6 +693,26 @@ class Fighter {
     handleKill(msg); net.send(msg);
   }
 
+  /* ---------- previsão: mostra o dano na hora em quem está em outro computador ---------- */
+  predictHit(dmg, kind, src) {
+    if (this.dead) return;
+    this.hp = Math.max(1, this.hp - dmg); this.predT = performance.now();
+    this.flash = 0.09;
+    if (kind === 'block') { if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 58, 'DEFESA', '#9fe8ff', 5); return; }
+    popup(this.x + rnd(-6, 6), this.y - 58, '-' + Math.round(dmg), kind === 'hit' ? '#ffffff' : '#ffd23a', kind === 'hit' ? 6 : 8);
+    if (nearCam(this.x, this.y)) (kind === 'hit' ? SFX.hit : SFX.heavy)();
+    if (src === game.me) { hitstop = kind === 'hit' ? 0.05 : 0.1; shake = Math.max(shake, kind === 'hit' ? 2 : 6); src.hits++; src.hitsT = 1.1; }
+  }
+  predictBeam(dt, src) {
+    if (this.dead) return;
+    const guard = this.state === 'guard' && sign(src.x - this.x) === this.facing;
+    const d = 140 * dt * (guard ? 0.2 : 1);
+    this.hp = Math.max(1, this.hp - d); this.predT = performance.now();
+    if (!guard) { this.beamPred = (this.beamPred || 0) + d; if (Math.random() < 0.3) this.flash = 0.05; }
+    this.beamPredT = (this.beamPredT || 0) - dt;
+    if (this.beamPredT <= 0 && this.beamPred > 0) { popup(this.x, this.y - 58, '-' + Math.round(this.beamPred), '#ffd23a', 6); this.beamPred = 0; this.beamPredT = 0.3; }
+  }
+
   /* ---------- lutador remoto: suaviza a posição recebida ---------- */
   updateRemote(dt) {
     const n = this.net; if (!n) return;
@@ -704,8 +734,10 @@ class Fighter {
     const prevSt = this.net ? this.net.st : null;
     this.net = { ...m };
     this.name = String(m.n || '?').slice(0, 12); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); this.isBot = !!m.bt; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
-    if (m.hp < this.hp - 0.5) this.flash = 0.08;
-    this.hp = m.hp; this.beamLen = m.bl; this.combo = m.cb; this.pose_ = m.po;
+    const predicting = this.predT && performance.now() - this.predT < 600;
+    if (m.hp < this.hp - 0.5 && !predicting) this.flash = 0.08;
+    // enquanto a rede não confirma, mantém o dano que já mostrei (não "devolve" a vida)
+    this.hp = predicting ? Math.min(m.hp, this.hp) : m.hp; this.beamLen = m.bl; this.combo = m.cb; this.pose_ = m.po;
     if (prevSt !== m.st) {
       this.stateAge = 0;
       if (nearCam(m.x, m.y)) {
@@ -788,7 +820,7 @@ class Fighter {
     const aSc = (this.stateAge < 0.14 ? lerp(0.45, 1.15, this.stateAge / 0.14) : this.stateAge < 0.24 ? lerp(1.15, 1, (this.stateAge - 0.14) / 0.1) : 1 + Math.sin(t * 18) * 0.025) * (charging ? 1 : 0.82);
     if (auraOn) drawAura(px, py + oy, this.pal, t, aSc, false);
 
-    if (this.invuln > 0 && this.state !== 'dash' && Math.floor(t * 16) % 2 === 0) ctx.globalAlpha = 0.35;
+    if (this.invuln > 0 && this.state !== 'dash') ctx.globalAlpha = 0.5; // invulnerável: meio transparente
     if (this.state === 'dash') ctx.globalAlpha = 0.45;
     blit(this.spr[pose], px + ox, py + oy, this.facing, sx, sy, rot);
     if (this.flash > 0) blit(SPR.white[pose], px + ox, py + oy, this.facing, sx, sy, rot);
@@ -972,7 +1004,11 @@ class Projectile {
         if (f.local) {
           const res = f.takeHit({ dmg: this.dmg, kbx: sign(this.vx) * (this.big ? 270 : 110), kby: this.big ? -170 : 0, stun: this.big ? 0.65 : 0.32, kind: this.big ? 'heavy' : 'hit' }, src);
           this.explode(res === 'block');
-        } else this.explode(f.state === 'guard');
+        } else {
+          const blocked = f.state === 'guard' && sign(src.x - f.x) === f.facing;
+          if (src.local) f.predictHit(blocked ? this.dmg * 0.15 : this.dmg, blocked ? 'block' : this.big ? 'heavy' : 'hit', src);
+          this.explode(blocked);
+        }
         return;
       }
     }
@@ -1013,7 +1049,10 @@ function deliverHit(target, p, src) {
   if (target.local) return target.takeHit(p, src);
   if (target.invuln > 0) return false;
   net.send({ t: 'hit', tg: target.id, from: src.id, ...p });
-  return target.state === 'guard' && sign(src.x - target.x) === target.facing ? 'block' : 'hit';
+  const blocked = target.state === 'guard' && sign(src.x - target.x) === target.facing;
+  // quem ataca já vê o dano na hora (sem esperar a resposta da rede)
+  target.predictHit(blocked ? p.dmg * 0.15 : p.dmg, blocked ? 'block' : p.kind, src);
+  return blocked ? 'block' : 'hit';
 }
 function handleKill(m) {
   if (m.k !== m.v) {
@@ -1057,6 +1096,7 @@ class Bot {
     if (this.t > 0) { const o = { ...this.plan }; o.upP = 0; o.punchP = 0; o.kiP = 0; o.bigP = 0; o.dashP = 0;
       // continuar voando para alcançar alvo acima
       o.up = (dy < -20 && me.ki > 12) ? 1 : 0; // segura o pulo para voar até o alvo
+      if (o.up && !me.onGround && !me.flying && me.vy > -120) o.upP = 1; // aperta de novo no ar
       return o; }
     this.t = rnd(0.15, 0.3);
     const plan = emptyInput();
@@ -1551,8 +1591,7 @@ game = {
     document.getElementById('menu').classList.add('hidden');
     if (document.activeElement) document.activeElement.blur();
     updateTouchUI();
-    if (isTouch && document.documentElement.requestFullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().then(tryLandscape, () => {});
-    else tryLandscape();
+    goFullscreen();
   },
   addBot(mode, name) {
     const id = 'b-' + uid() + uid();
@@ -1599,10 +1638,13 @@ function update(dt) {
     if (src.state !== 'beam' || src.beamLen <= 0 || src.dead) continue;
     const r = src.beamRect();
     for (const v of game.fighters) {
-      if (v === src || !v.local || v.dead) continue;
+      if (v === src || v.dead || (!v.local && !src.local)) continue;
       const b = v.body();
       const rr = { x0: r.x0 - (src.facing < 0 ? 0 : 14), x1: r.x1 + (src.facing > 0 ? 0 : 14) }; // inclui a mão (inimigo colado)
-      if (rr.x0 < b.x1 + 4 && rr.x1 > b.x0 - 4 && r.y0 < b.y1 && r.y1 > b.y0) v.takeBeam(dt, src);
+      if (rr.x0 < b.x1 + 4 && rr.x1 > b.x0 - 4 && r.y0 < b.y1 && r.y1 > b.y0) {
+        if (v.local) v.takeBeam(dt, src);
+        else if (v.invuln <= 0) v.predictBeam(dt, src); // meu raio num jogador de outro computador: mostro o dano já
+      }
     }
   }
   // empurra corpos que se sobrepõem (apenas os locais se movem)
@@ -1711,6 +1753,9 @@ function buildMenu() {
 
 /* ---------------- sem zoom, sem seleção, sem menu de toque longo ---------------- */
 function lockPage() {
+  // o primeiro toque em qualquer lugar já coloca em tela cheia
+  document.addEventListener('pointerup', () => goFullscreen(), true);
+  document.addEventListener('fullscreenchange', () => setTimeout(resizeCanvas, 150));
   const isInput = e => { const t = e.target && (e.target.nodeType === 1 ? e.target : e.target.parentElement); return !!(t && t.closest && t.closest('input')); };
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
   document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
