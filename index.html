@@ -9,12 +9,15 @@
 <style>
   :root{--bg:#0d0b14;--fg:#efeaff;--muted:#8d86a8;--panel:#1a1528;--line:#3a2e58;--acc:#ffd23a;--acc2:#ff8a2a}
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:"Press Start 2P",monospace}
-  body{display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-  #wrap{position:relative;width:min(100vw, calc(100dvh * 16 / 9));aspect-ratio:16/9;max-height:100dvh;box-shadow:0 0 0 2px var(--line),0 10px 40px #000;--u:1px}
+  /* nada na página pode ser selecionado, arrastado ou ampliado (só os campos de texto) */
+  *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;-webkit-user-drag:none}
+  input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+  html,body{margin:0;position:fixed;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--bg);color:var(--fg);font-family:"Press Start 2P",monospace;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  /* o jogo ocupa a tela inteira, em qualquer formato */
+  #wrap{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;--u:1px}
   canvas{width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges;background:#000}
   /* controles de toque */
-  #touch{position:absolute;inset:0;pointer-events:none}
+  #touch{position:absolute;inset:0;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
   #touch.hidden{display:none}
   #touch button{position:absolute;pointer-events:auto;touch-action:none;font-family:inherit;color:#fff;border:calc(var(--u)*0.5) solid rgba(255,255,255,.55);background:rgba(20,14,36,.3);border-radius:50%;
     width:calc(var(--u)*13);height:calc(var(--u)*13);font-size:calc(var(--u)*2.4);line-height:1.1;padding:0;text-shadow:0 1px 0 #000;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;text-align:center}
@@ -29,17 +32,30 @@
   /* menu */
   #menu{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(20,12,40,.55),rgba(8,5,16,.85))}
   #menu.hidden{display:none}
-  .card{max-height:96%;overflow:auto;width:min(92%,640px);background:rgba(26,21,40,.94);border:3px solid var(--line);box-shadow:0 0 0 3px #000,0 12px 40px #000;padding:clamp(12px,2.4vw,26px);display:flex;flex-direction:column;gap:clamp(8px,1.4vw,14px)}
+  .card{max-height:96%;overflow:auto;touch-action:pan-y;width:min(94%,900px);background:rgba(26,21,40,.94);border:3px solid var(--line);box-shadow:0 0 0 3px #000,0 12px 40px #000;padding:clamp(12px,2.4vw,26px);display:flex;flex-direction:column;gap:clamp(8px,1.4vw,14px)}
   .title{text-align:center;line-height:1.25}
   .title b{display:block;font-size:clamp(18px,3.4vw,34px);color:var(--acc);text-shadow:3px 3px 0 #3a1206}
   .title small{display:block;margin-top:6px;font-size:clamp(7px,.9vw,9px);color:var(--muted)}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .row label{font-size:clamp(7px,.9vw,9px);color:var(--muted);min-width:70px}
-  input[type=text]{flex:1;min-width:120px;background:#0f0b19;border:2px solid var(--line);color:var(--fg);font-family:inherit;font-size:clamp(9px,1.1vw,11px);padding:8px;outline:none}
+  /* 16px evita o zoom automático do iPhone ao tocar no campo */
+  input[type=text]{flex:1;min-width:0;background:#0f0b19;border:2px solid var(--line);color:var(--fg);font-family:inherit;font-size:16px;padding:7px 8px;outline:none;border-radius:0}
   input[type=text]:focus{border-color:var(--acc)}
-  .sw{width:28px;height:28px;border:2px solid #000;box-shadow:0 0 0 2px var(--line);cursor:pointer;padding:0}
-  .sw.sel{box-shadow:0 0 0 3px var(--acc)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,22px)}
+  @media (max-width:560px){.cols{grid-template-columns:1fr}}
+  .col{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .lh{display:flex;justify-content:space-between;align-items:center;font-size:clamp(8px,1vw,10px);color:var(--acc)}
+  #lobbyState{font-size:clamp(6px,.75vw,8px);color:var(--muted)}
+  #lobbyState.ok{color:#7dff6a}
+  #rooms{display:flex;flex-direction:column;gap:6px;min-height:110px;max-height:min(42vh,260px);overflow:auto;touch-action:pan-y;background:#0f0b19;border:2px solid var(--line);padding:6px}
+  #rooms .empty{margin:auto;text-align:center;font-size:clamp(7px,.85vw,9px);color:var(--muted);line-height:1.9}
+  button.room{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:4px 8px;text-align:left;font-family:inherit;background:#2b2244;color:var(--fg);border:2px solid #000;box-shadow:0 0 0 2px var(--line);padding:8px;cursor:pointer}
+  button.room:hover{background:#3a2e5c}
+  button.room .rn{font-size:clamp(8px,1vw,10px);color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  button.room .rc{font-size:clamp(6px,.75vw,8px);color:var(--muted)}
+  button.room .rj{grid-row:1/3;grid-column:2;align-self:center;font-size:clamp(7px,.9vw,9px);background:#c4661b;padding:6px 8px;box-shadow:0 0 0 2px #ffb15a}
   .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btns .wide{grid-column:1/3}
   button.b{font-family:inherit;font-size:clamp(8px,1vw,10px);padding:12px 8px;background:#2b2244;color:var(--fg);border:2px solid #000;box-shadow:inset 0 -4px 0 rgba(0,0,0,.35),0 0 0 2px var(--line);cursor:pointer}
   button.b:hover{background:#3a2e5c}
   button.b.pri{background:#c4661b;box-shadow:inset 0 -4px 0 rgba(0,0,0,.3),0 0 0 2px #ffb15a}
@@ -54,16 +70,22 @@
   <div id="menu">
     <div class="card">
       <div class="title"><b>ARENA DE KI</b><small>batalha livre online · jogo de estudo</small></div>
-      <div class="row"><label>NOME</label><input id="name" type="text" maxlength="12" placeholder="seu nome"></div>
-      <div class="row"><label>COR</label><div id="pals" class="row" style="gap:10px"></div></div>
-      <div class="btns">
-        <button class="b" id="bTrain">MODO TREINO</button>
-        <button class="b" id="bBots">CONTRA BOTS</button>
-        <button class="b pri" id="bHost">CRIAR SALA ONLINE</button>
-        <div class="row" style="gap:6px;flex-wrap:nowrap"><input id="code" type="text" maxlength="5" placeholder="CÓDIGO" style="text-transform:uppercase;min-width:0"><button class="b pri" id="bJoin">ENTRAR</button></div>
+      <div class="cols">
+        <div class="col">
+          <div class="row"><label>NOME</label><input id="name" type="text" maxlength="12" placeholder="seu nome" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+          <div class="btns">
+            <button class="b" id="bTrain">MODO TREINO</button>
+            <button class="b" id="bBots">CONTRA BOTS</button>
+            <button class="b pri wide" id="bHost">CRIAR SALA ONLINE</button>
+          </div>
+          <div class="row" style="gap:6px;flex-wrap:nowrap"><input id="code" type="text" maxlength="4" placeholder="CÓDIGO" autocomplete="off" autocorrect="off" spellcheck="false" style="text-transform:uppercase"><button class="b" id="bJoin">ENTRAR</button></div>
+        </div>
+        <div class="col">
+          <div class="lh"><span>SALAS ABERTAS</span><span id="lobbyState">conectando...</span></div>
+          <div id="rooms"><div class="empty">Procurando salas...</div></div>
+        </div>
       </div>
       <div id="status"></div>
-      <div class="hint">Online: quem cria a sala passa o código para os amigos. Todos abrem este mesmo arquivo e entram com o código.</div>
     </div>
   </div>
   <div id="touch" class="hidden">
@@ -105,7 +127,7 @@ const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
-const VW = 480, VH = 270;
+let VW = 480, VH = 270; // tamanho interno da tela: a altura é fixa e a largura acompanha o formato do aparelho
 const WW = 1800, WH = 760, GROUND = 720, TOP = 50;
 const GRAV = 900;
 const WALK = 178; // velocidade andando
@@ -115,11 +137,18 @@ const FONT = (s) => `${s}px "Press Start 2P", "Lucida Console", Consolas, "Couri
 let S = 1;
 function resizeCanvas() {
   const wrap = document.getElementById('wrap'), r = wrap.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  S = clamp(Math.ceil(r.width * dpr / VW), 1, 4);
-  if (cv.width !== VW * S) { cv.width = VW * S; cv.height = VH * S; }
+  if (!r.width || !r.height) return;
+  const dpr = window.devicePixelRatio || 1, a = r.width / r.height;
+  let vw = Math.round(270 * a), vh = 270;
+  if (vw > 720) { vw = 720; vh = Math.round(720 / a); }
+  if (vw < 320) { vw = 320; vh = Math.min(WH, Math.round(320 / a)); }
+  const s = clamp(Math.ceil(r.height * dpr / vh), 1, 4);
+  if (vw !== VW || vh !== VH || s !== S) {
+    VW = vw; VH = vh; S = s; cv.width = VW * S; cv.height = VH * S;
+    if (BG) buildBackground();
+  }
   ctx.imageSmoothingEnabled = false;
-  wrap.style.setProperty('--u', (r.height / 100) + 'px');
+  wrap.style.setProperty('--u', (Math.min(r.height, r.width * 0.56) / 100) + 'px');
 }
 const PLATFORMS = [
   { x: 260, y: 580, w: 150 }, { x: 640, y: 495, w: 180 }, { x: 1040, y: 585, w: 150 },
@@ -150,22 +179,16 @@ function hslToRgb(h, s, l) {
   return [f(h + 1/3) * 255, f(h) * 255, f(h - 1/3) * 255];
 }
 
-/* ---------------- paletas (cores dos jogadores) ---------------- */
-const PALETTES = [
-  { name: 'Laranja', swatch: '#ff6a2c', gi: null,                         shirt: null, aura: ['#fffbe0', '#ffe14d', '#ffffff'], ki: ['#fffbe0', '#ffd83a', '#ff9a1f'] },
-  { name: 'Azul',    swatch: '#3d6bff', gi: { h: 218, s: 0.95, l: 0.92 }, shirt: 22,  aura: ['#e6fbff', '#6fe3ff', '#ffffff'], ki: ['#f0fdff', '#62d6ff', '#1d7bff'] },
-  { name: 'Verde',   swatch: '#2fbf4a', gi: { h: 128, s: 0.8,  l: 0.85 }, shirt: 48,  aura: ['#eaffea', '#7dff8a', '#ffffff'], ki: ['#f2fff2', '#6dff7e', '#16b83a'] },
-  { name: 'Roxo',    swatch: '#9b4dff', gi: { h: 278, s: 0.85, l: 0.9 },  shirt: 186, aura: ['#f4e9ff', '#c08bff', '#ffffff'], ki: ['#f6eeff', '#b88cff', '#6a3cff'] },
-  { name: 'Preto',   swatch: '#3a3a44', gi: { h: 230, s: 0.12, l: 0.48 }, shirt: 0,   aura: ['#ffe9e9', '#ff5a4a', '#ffffff'], ki: ['#fff0f0', '#ff6a5a', '#d11a1a'] },
-];
-function paletteFn(pal) {
-  return (r, g, b, a) => {
-    if (!pal.gi) return [r, g, b, a];
-    const [h, s, l] = rgbToHsl(r, g, b);
-    if ((h <= 26 || h >= 338) && s > 0.45 && l > 0.36 && l < 0.72) { const c = hslToRgb(pal.gi.h, s * pal.gi.s, l * pal.gi.l); return [c[0], c[1], c[2], a]; }
-    if (h >= 195 && h <= 236 && s > 0.38 && l > 0.3) { const c = hslToRgb(pal.shirt, s, l + 0.05); return [c[0], c[1], c[2], a]; }
-    return [r, g, b, a];
-  };
+/* ---------------- cores dos jogadores ----------------
+   A cor é escolhida automaticamente e aparece só no NOME (e no placar).
+   O sprite, a aura e os poderes são iguais para todos. */
+const KI_COLORS = { aura: ['#fffbe0', '#ffe14d', '#ffffff'], ki: ['#fffbe0', '#ffd83a', '#ff9a1f'] };
+const NAME_COLORS = ['#ff9a3d', '#5aa9ff', '#5dff7a', '#c99bff', '#ff6b8a', '#ffe14d', '#3df0e0', '#ff9be0', '#b6ff4d', '#ffffff'];
+const PALETTES = NAME_COLORS.map(c => ({ swatch: c, aura: KI_COLORS.aura, ki: KI_COLORS.ki }));
+function freeColor(except) {
+  const used = new Set(game.fighters.filter(f => f !== except).map(f => f.pal));
+  const free = NAME_COLORS.map((_, i) => i).filter(i => !used.has(i));
+  return free.length ? free[(Math.random() * free.length) | 0] : (Math.random() * NAME_COLORS.length) | 0;
 }
 function recolor(img, fn) {
   const c = makeCanvas(img.width, img.height), x = c.getContext('2d');
@@ -174,14 +197,13 @@ function recolor(img, fn) {
   for (let i = 0; i < p.length; i += 4) { if (!p[i + 3]) continue; const o = fn(p[i], p[i + 1], p[i + 2], p[i + 3]); p[i] = o[0]; p[i + 1] = o[1]; p[i + 2] = o[2]; }
   x.putImageData(d, 0, 0); return c;
 }
-const SPR = { pal: [], white: {} };
+const SPR = { base: {}, white: {} };
 function loadSprites() {
   const keys = Object.keys(SPRITE_SRC);
-  PALETTES.forEach((_, i) => SPR.pal[i] = {});
   return Promise.all(keys.map(k => new Promise((res, rej) => {
     const im = new Image();
     im.onload = () => {
-      PALETTES.forEach((p, i) => SPR.pal[i][k] = p.gi ? recolor(im, paletteFn(p)) : im);
+      SPR.base[k] = im;
       SPR.white[k] = recolor(im, (r, g, b, a) => [255, 255, 255, a]);
       res();
     };
@@ -291,7 +313,7 @@ class Fighter {
     this.net = null; this.lastSeen = performance.now(); this.infiniteKi = false;
   }
   get pal_() { return PALETTES[this.pal] || PALETTES[0]; }
-  get spr() { return SPR.pal[this.pal] || SPR.pal[0]; }
+  get spr() { return SPR.base; }
   get dead() { return this.state === 'ko'; }
   setState(s, t = 0) { this.state = s; this.stateT = t; this.stateAge = 0; }
   body() { return { x0: this.x - 10, x1: this.x + 10, y0: this.y - 44, y1: this.y }; }
@@ -299,6 +321,11 @@ class Fighter {
   others() { return game.fighters.filter(f => f !== this && !f.dead); }
 
   spawn() {
+    if (this.home) { // o boneco de treino volta sempre para o mesmo lugar
+      this.x = this.home.x; this.y = this.home.y; this.vx = this.vy = 0; this.hp = this.hpShown = this.maxHp; this.ki = 50;
+      this.setState('idle'); this.invuln = 0.5; this.lastHitBy = null; this.beamLen = 0;
+      ring(this.x, this.y - 22, this.pal_.aura[1], 4, 34, 0.5); return;
+    }
     // escolhe o ponto de nascimento mais longe dos outros
     const pts = [{ x: 140, y: GROUND }, { x: 900, y: GROUND }, { x: 1660, y: GROUND }, { x: 715, y: 495 }, { x: 1440, y: 470 }, { x: 335, y: 580 }, { x: 1115, y: 585 }];
     let best = pts[0], bd = -1;
@@ -584,7 +611,7 @@ class Fighter {
     if (!this.net) { this.x = m.x; this.y = m.y; }
     const prevSt = this.net ? this.net.st : null;
     this.net = { ...m };
-    this.name = m.n; this.pal = m.p; this.isBot = !!m.bt; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
+    this.name = String(m.n || '?').slice(0, 12); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); this.isBot = !!m.bt; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
     if (m.hp < this.hp - 0.5) this.flash = 0.08;
     this.hp = m.hp; this.beamLen = m.bl; this.combo = m.cb; this.pose_ = m.po;
     if (prevSt !== m.st) {
@@ -707,8 +734,7 @@ class Fighter {
   drawOverhead(cam) {
     if (this.dead) return;
     const x = Math.round(this.x - cam.x), y = Math.round(this.y - cam.y - 54);
-    const me = this === game.me;
-    text(this.name, x, y - 9, 5, me ? '#ffe680' : '#ffffff', 'center', '#120c1c', 1);
+    text(this.name, x, y - 9, 5, this.pal_.swatch, 'center', '#120c1c', 1.2);
     const w = 26, r = clamp(this.hp / this.maxHp, 0, 1);
     ctx.fillStyle = '#120c1c'; ctx.fillRect(x - w / 2 - 1, y - 1, w + 2, 5);
     ctx.fillStyle = '#ffffff'; ctx.fillRect(x - w / 2, y, Math.round(w * clamp(this.hpShown / this.maxHp, 0, 1)), 3);
@@ -809,7 +835,7 @@ function makeAuraFrame(colors, f) {
   x.putImageData(img, 0, 0);
   return c;
 }
-function buildAuras() { PALETTES.forEach((p, i) => { AURA[i] = []; for (let f = 0; f < AURA_FRAMES; f++) AURA[i].push(makeAuraFrame(p.aura, f)); }); }
+function buildAuras() { const fr = []; for (let f = 0; f < AURA_FRAMES; f++) fr.push(makeAuraFrame(KI_COLORS.aura, f)); PALETTES.forEach((_, i) => AURA[i] = fr); }
 function drawAura(x, y, pal, t, sc, front) {
   const frames = AURA[pal] || AURA[0]; if (!frames) return;
   const fr = frames[Math.floor(t * 18) % AURA_FRAMES];
@@ -915,23 +941,8 @@ class Bot {
   think(dt) {
     const me = this.me; const out = emptyInput();
     if (me.dead) return out;
-    // ---- boneco de treino: só anda, pula e defende de vez em quando; nunca ataca ----
-    if (this.mode === 'dummy') {
-      this.t -= dt;
-      if (this.t <= 0) {
-        this.t = rnd(0.8, 2.2);
-        const r = Math.random();
-        this.plan = emptyInput();
-        if (r < 0.45) {} // fica parado
-        else if (r < 0.75) { const tg = clamp(game.me.x + rnd(-160, 160), 60, WW - 60); this.plan.left = tg < me.x; this.plan.right = tg > me.x; }
-        else if (r < 0.88) this.plan.down = 1; // defende
-        else this.plan.jump = 1;
-      }
-      out.left = this.plan.left; out.right = this.plan.right; out.down = this.plan.down;
-      if (this.plan.jump && me.onGround) { out.upP = 1; this.plan.jump = 0; }
-      if (game.me && !me.dead && Math.abs(game.me.x - me.x) < 30 && Math.random() < 0.02) { out.right = me.x > game.me.x; out.left = !out.right; }
-      return out;
-    }
+    // ---- boneco de treino: saco de pancada. Não anda, não pula, não defende, não ataca. ----
+    if (this.mode === 'dummy') { if (game.me && !game.me.dead) out.face = sign(game.me.x - me.x); return out; }
     // ---- bot de combate ----
     const tg = this.target(); if (!tg) return out;
     const dx = tg.x - me.x, adx = Math.abs(dx), dy = tg.y - me.y, dir = sign(dx);
@@ -972,65 +983,220 @@ class Bot {
   }
 }
 
-/* ---------------- rede (PeerJS: um jogador hospeda, os outros conectam) ---------------- */
-const PREFIX = 'arenadeki-v1-';
-const net = {
-  role: 'off', peer: null, conns: [], host: null, code: '', sendT: 0,
-  peerOpts() {
-    const q = new URLSearchParams(location.search).get('peer');
-    if (q) { const [host, port] = q.split(':'); return { host, port: +port || 9000, path: '/', secure: false, debug: 0 }; }
-    return { debug: 0 };
-  },
-  send(m) {
-    if (this.role === 'host') for (const c of this.conns) { if (c.open) c.send(m); }
-    else if (this.role === 'client' && this.host && this.host.open) this.host.send(m);
-  },
-  hostRoom(onOk, onErr) {
-    this.close();
-    const code = Array.from({ length: 4 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ'[(Math.random() * 24) | 0]).join('');
-    const peer = new Peer(PREFIX + code, this.peerOpts());
-    this.peer = peer; this.code = code;
-    peer.on('open', () => { this.role = 'host'; onOk(code); });
-    peer.on('connection', c => {
-      c.ids = new Set();
-      c.on('open', () => { this.conns.push(c); });
-      c.on('data', m => {
-        if (m && m.t === 's') c.ids.add(m.id);
-        for (const o of this.conns) if (o !== c && o.open) o.send(m); // repassa para os outros
-        handleNet(m);
-      });
-      c.on('close', () => {
-        this.conns = this.conns.filter(o => o !== c);
-        for (const id of c.ids) { const msg = { t: 'leave', id }; handleNet(msg); this.send(msg); }
-      });
+/* ---------------- rede ----------------
+   Tudo usa PeerJS (conexão direta entre navegadores).
+   • LOBBY: o primeiro jogador que abre o jogo vira o "quadro de salas" (um ID fixo).
+     Quem cria uma sala se anuncia nele a cada 2s; todo mundo recebe a lista.
+     Se quem segura o quadro sair, outro jogador assume sozinho.
+   • SALA: quem cria a sala é o anfitrião e repassa as mensagens entre os jogadores.
+     Se o anfitrião sair, o próximo jogador da lista assume o mesmo código e os outros reconectam. */
+const PREFIX = 'arenadeki-v2-';
+const LOBBY_ID = PREFIX + 'quadro-de-salas';
+const BOT_NAMES = ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann'];
+function peerOpts() {
+  const q = new URLSearchParams(location.search).get('peer');
+  if (q) { const [host, port] = q.split(':'); return { host, port: +port || 9000, path: '/', secure: false, debug: 0 }; }
+  return { debug: 0 };
+}
+function esc(t) { return String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+const lobby = {
+  peer: null, conn: null, conns: [], isServer: false, status: 'off', rooms: [], regs: new Map(), timer: null, retryT: null, myRoom: null, gen: 0,
+  start() {
+    if (typeof Peer === 'undefined') { this.status = 'erro'; renderRooms(); return; }
+    this.stop(); const gen = ++this.gen;
+    this.status = 'conectando'; renderRooms();
+    const p = new Peer(LOBBY_ID, peerOpts()); this.peer = p;
+    p.on('open', () => { if (gen !== this.gen) return; this.isServer = true; this.status = 'ok'; this.serverLoop(); });
+    p.on('connection', c => {
+      c.on('open', () => { this.conns.push(c); c.send({ t: 'rooms', list: this.list() }); });
+      c.on('data', m => this.onReg(m));
+      c.on('close', () => { this.conns = this.conns.filter(o => o !== c); });
       c.on('error', () => {});
     });
-    peer.on('error', e => onErr(e.type === 'unavailable-id' ? 'Código em uso, tente de novo.' : 'Erro de rede: ' + e.type));
-    peer.on('disconnected', () => { try { peer.reconnect(); } catch (e) {} });
+    p.on('error', e => {
+      if (gen !== this.gen) return;
+      if (e.type === 'unavailable-id') { this.dropPeer(); this.joinAsClient(gen); }
+      else if (!this.isServer) this.retry();
+    });
+    p.on('disconnected', () => { if (gen === this.gen) try { p.reconnect(); } catch (_) {} });
+  },
+  joinAsClient(gen) {
+    const p = new Peer(undefined, peerOpts()); this.peer = p;
+    p.on('open', () => {
+      if (gen !== this.gen) return;
+      const c = p.connect(LOBBY_ID, { reliable: true, serialization: 'json' }); this.conn = c;
+      const to = setTimeout(() => { if (gen === this.gen && !c.open) this.retry(); }, 7000);
+      c.on('open', () => { clearTimeout(to); if (gen !== this.gen) return; this.status = 'ok'; renderRooms(); this.flush(); });
+      c.on('data', m => { if (gen === this.gen && m && m.t === 'rooms' && Array.isArray(m.list)) { this.rooms = m.list; renderRooms(); } });
+      c.on('close', () => { if (gen === this.gen) this.retry(rnd(150, 1500)); });
+    });
+    p.on('error', () => { if (gen === this.gen) this.retry(); });
+    p.on('disconnected', () => { if (gen === this.gen) try { p.reconnect(); } catch (_) {} });
+  },
+  retry(delay = rnd(700, 2000)) {
+    this.stop(); this.status = 'conectando'; renderRooms();
+    const gen = this.gen; clearTimeout(this.retryT);
+    this.retryT = setTimeout(() => { if (gen === this.gen) this.start(); }, delay);
+  },
+  dropPeer() { const p = this.peer; this.peer = null; this.conn = null; if (p) try { p.destroy(); } catch (_) {} },
+  stop() { this.gen++; clearInterval(this.timer); this.dropPeer(); this.conns = []; this.isServer = false; this.regs.clear(); },
+  serverLoop() {
+    clearInterval(this.timer); this.flush(); this.tickServer();
+    this.timer = setInterval(() => this.tickServer(), 1500);
+  },
+  tickServer() {
+    const now = Date.now();
+    for (const [k, r] of this.regs) if (now - r.t > 7000) this.regs.delete(k);
+    const list = this.list(); this.rooms = list; renderRooms();
+    for (const c of this.conns) if (c.open) c.send({ t: 'rooms', list });
+  },
+  list() { return [...this.regs.values()].sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n })); },
+  onReg(m) {
+    if (!m) return;
+    if (m.t === 'reg' && m.room && /^[A-Z]{4}$/.test(m.room.code)) {
+      const old = this.regs.get(m.room.code);
+      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 12), n: clamp(m.room.n | 0, 1, 99), t: Date.now(), since: old ? old.since : Date.now() });
+    } else if (m.t === 'unreg') this.regs.delete(m.code);
+  },
+  send(m) { if (this.isServer) { this.onReg(m); this.tickServer(); } else if (this.conn && this.conn.open) this.conn.send(m); },
+  register(room) { this.myRoom = room; this.flush(); },
+  unregister(code) { this.myRoom = null; this.send({ t: 'unreg', code }); },
+  flush() { if (this.myRoom) this.send({ t: 'reg', room: this.myRoom }); }
+};
+let roomsKey = '';
+function renderRooms() {
+  const el = document.getElementById('rooms'), st = document.getElementById('lobbyState');
+  if (!el) return;
+  st.textContent = lobby.status === 'ok' ? '● online' : lobby.status === 'erro' ? 'sem rede' : 'conectando...';
+  st.classList.toggle('ok', lobby.status === 'ok');
+  const list = lobby.rooms.filter(r => !(net.role === 'host' && r.code === net.code));
+  const key = lobby.status + JSON.stringify(list);
+  if (key === roomsKey) return; roomsKey = key;
+  if (!list.length) el.innerHTML = `<div class="empty">${lobby.status === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : lobby.status === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
+  else el.innerHTML = list.map(r => `<button class="room" data-code="${esc(r.code)}"><span class="rn">Sala de ${esc(r.host)}</span><span class="rc">${esc(r.code)} · ${r.n} jogador${r.n > 1 ? 'es' : ''}</span><span class="rj">ENTRAR</span></button>`).join('');
+}
+
+const net = {
+  role: 'off', peer: null, conns: [], host: null, code: '', sendT: 0, regT: 0, members: [], pending: null, pendingBots: 0, gen: 0,
+  send(m) {
+    if (this.role === 'host') { for (const c of this.conns) if (c.open) c.send(m); }
+    else if (this.role === 'client' && this.host && this.host.open) this.host.send(m);
+  },
+  newCode() { return Array.from({ length: 4 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ'[(Math.random() * 24) | 0]).join(''); },
+  hostRoom(onOk, onErr) {
+    this.close(); const code = this.newCode();
+    this.claim(code, () => onOk(code), t => onErr(t === 'unavailable-id' ? 'Código em uso, tente de novo.' : 'Erro de rede: ' + t));
+  },
+  /* tenta assumir o ID da sala (criar a sala ou herdar como novo anfitrião) */
+  claim(code, onOk, onErr) {
+    const gen = this.gen, peer = new Peer(PREFIX + code, peerOpts()); let opened = false;
+    peer.on('open', () => {
+      if (gen !== this.gen) { try { peer.destroy(); } catch (_) {} return; }
+      opened = true; const old = this.peer;
+      this.peer = peer; this.code = code; this.role = 'host'; this.host = null; this.conns = []; this.members = []; this.regT = 0;
+      if (old && old !== peer) try { old.destroy(); } catch (_) {}
+      onOk();
+    });
+    peer.on('connection', c => this.accept(c));
+    peer.on('error', e => { if (!opened) { try { peer.destroy(); } catch (_) {} onErr(e.type); } });
+    peer.on('disconnected', () => { if (this.peer === peer) try { peer.reconnect(); } catch (_) {} });
+  },
+  accept(c) {
+    c.ids = new Set();
+    c.on('open', () => { this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members }); });
+    c.on('data', m => {
+      if (!m || this.role !== 'host') return;
+      if (m.t === 's') c.ids.add(m.id); else if (m.t === 'leave') c.ids.delete(m.id);
+      for (const o of this.conns) if (o !== c && o.open) o.send(m); // repassa para os outros
+      handleNet(m);
+    });
+    c.on('close', () => {
+      if (!this.conns.includes(c)) return;
+      this.conns = this.conns.filter(o => o !== c); this.members = this.members.filter(id => id !== c.peer);
+      this.send({ t: 'members', list: this.members });
+      for (const id of c.ids) { const msg = { t: 'leave', id }; handleNet(msg); this.send(msg); }
+    });
+    c.on('error', () => {});
   },
   joinRoom(code, onOk, onErr) {
-    this.close();
-    const peer = new Peer(undefined, this.peerOpts());
-    this.peer = peer; this.code = code;
-    let done = false;
-    peer.on('open', () => {
-      const c = peer.connect(PREFIX + code, { reliable: true, serialization: 'json' });
-      this.host = c;
-      c.on('open', () => { done = true; this.role = 'client'; onOk(code); });
-      c.on('data', m => handleNet(m));
-      c.on('close', () => { if (this.role === 'client') { this.role = 'off'; game.disconnected('A conexão com a sala caiu.'); } });
-      setTimeout(() => { if (!done) onErr('Não foi possível conectar. Confira o código.'); }, 9000);
+    this.close(); this.code = code;
+    const gen = this.gen, peer = new Peer(undefined, peerOpts()); this.peer = peer;
+    peer.on('open', () => { if (gen === this.gen) this.connectTo(code, 9000, onOk, onErr); });
+    peer.on('error', e => {
+      if (gen !== this.gen) return;
+      if (e.type === 'peer-unavailable') { if (this.pending) this.pending('Sala não encontrada.'); }
+      else if (!peer.open) onErr('Erro de rede: ' + e.type);
     });
-    peer.on('error', e => { if (!done) onErr(e.type === 'peer-unavailable' ? 'Sala não encontrada.' : 'Erro de rede: ' + e.type); });
+    peer.on('disconnected', () => { if (this.peer === peer) try { peer.reconnect(); } catch (_) {} });
+  },
+  connectTo(code, timeout, onOk, onFail) {
+    const gen = this.gen, c = this.peer.connect(PREFIX + code, { reliable: true, serialization: 'json' });
+    let done = false;
+    const fail = msg => { if (done) return; done = true; this.pending = null; clearTimeout(to); try { c.close(); } catch (_) {} if (gen === this.gen) onFail(msg); };
+    this.pending = fail;
+    const to = setTimeout(() => fail('Não foi possível conectar. Confira o código.'), timeout);
+    c.on('open', () => {
+      if (done || gen !== this.gen) return; done = true; this.pending = null; clearTimeout(to);
+      this.host = c; this.role = 'client'; onOk(code);
+    });
+    c.on('data', m => {
+      if (this.host !== c || !m) return;
+      if (m.t === 'members') this.members = Array.isArray(m.list) ? m.list : [];
+      else if (m.t === 'hostleave') this.pendingBots = clamp(m.bots | 0, 0, 6);
+      else handleNet(m);
+    });
+    c.on('close', () => { if (this.host === c) { this.host = null; this.hostLost(); } });
+  },
+  /* o anfitrião saiu: o 1º da lista assume a sala; os outros reconectam no mesmo código */
+  hostLost() {
+    if (this.role !== 'client' || game.phase !== 'play') return;
+    this.role = 'migrating';
+    killfeed.unshift({ sys: 'O anfitrião saiu. Passando a sala...', life: 6 });
+    const gen = this.gen, rank = Math.max(0, this.members.indexOf(this.peer && this.peer.id)), t0 = performance.now();
+    const tryConnect = () => {
+      if (gen !== this.gen || this.role !== 'migrating') return;
+      this.connectTo(this.code, 2500, () => killfeed.unshift({ sys: 'Reconectado à sala', life: 4 }), () => setTimeout(attempt, 300));
+    };
+    const attempt = () => {
+      if (gen !== this.gen || this.role !== 'migrating') return;
+      const el = performance.now() - t0;
+      if (el > 25000) { game.toMenu('A sala fechou.'); return; }
+      if (el >= rank * 2000) this.claim(this.code, () => this.becameHost(), tryConnect);
+      else tryConnect();
+    };
+    setTimeout(attempt, rank === 0 ? 100 : 800);
+  },
+  becameHost() {
+    killfeed.unshift({ sys: 'Agora você é o anfitrião da sala', life: 6 });
+    const n = this.pendingBots; this.pendingBots = 0;
+    for (let i = 0; i < n; i++) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
+    roomsKey = '';
+  },
+  /* sair da sala sem derrubar os outros */
+  leave() {
+    if (this.role === 'host' || this.role === 'client') {
+      for (const f of game.fighters) if (f.local) this.send({ t: 'leave', id: f.id });
+      if (this.role === 'host') {
+        if (this.conns.length) this.send({ t: 'hostleave', bots: game.bots.length });
+        else lobby.unregister(this.code);
+      }
+    }
+    const p = this.peer; this.gen++; this.role = 'off'; this.conns = []; this.host = null; this.peer = null; this.members = []; this.pending = null;
+    if (p) setTimeout(() => { try { p.destroy(); } catch (_) {} }, 120);
   },
   close() {
-    const p = this.peer; this.role = 'off'; this.conns = []; this.host = null; this.peer = null;
-    if (p) try { p.destroy(); } catch (e) {}
+    const p = this.peer; this.gen++; this.role = 'off'; this.conns = []; this.host = null; this.peer = null; this.members = []; this.pending = null;
+    if (p) try { p.destroy(); } catch (_) {}
   },
   tick(dt) {
-    if (this.role === 'off') return;
+    if (this.role === 'off' || this.role === 'migrating') return;
     this.sendT -= dt;
     if (this.sendT <= 0) { this.sendT = 0.05; for (const f of game.fighters) if (f.local) this.send(f.snapshot()); }
+    if (this.role === 'host') {
+      this.regT -= dt;
+      if (this.regT <= 0) { this.regT = 2; lobby.register({ code: this.code, host: game.me.name, n: game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length }); }
+    }
   }
 };
 function handleNet(m) {
@@ -1039,8 +1205,8 @@ function handleNet(m) {
     case 's': {
       let f = game.byId(m.id);
       if (f && f.local) return;
-      if (!f) { f = new Fighter({ id: m.id, name: m.n, pal: m.p, local: false, ctrl: 'remote' }); game.fighters.push(f);
-        killfeed.unshift({ sys: m.n + ' entrou na arena', life: 5 }); }
+      if (!f) { f = new Fighter({ id: m.id, name: String(m.n || '?').slice(0, 12), pal: m.p | 0, local: false, ctrl: 'remote' }); game.fighters.push(f);
+        killfeed.unshift({ sys: f.name + ' entrou na arena', life: 5 }); }
       f.applyNet(m); break;
     }
     case 'pj': spawnProjectile(m, false); break;
@@ -1168,7 +1334,7 @@ function drawHUD() {
   // marcas de custo: raio (20) e especial (35)
   ctx.fillStyle = '#ffdf5a'; ctx.fillRect(42 + 26, 20, 1, 10); ctx.fillRect(42 + Math.round(130 * 0.35), 20, 1, 10);
   text((me.infiniteKi ? 'MAX' : Math.floor(me.ki)) + ' KI', 176, 22, 5, kiR >= 0.35 ? '#ffe86b' : '#bfefff', 'left', '#120c1c', 1);
-  text(me.name, 42, 32, 5, '#ffffff', 'left', '#120c1c', 1);
+  text(me.name, 42, 32, 5, me.pal_.swatch, 'left', '#120c1c', 1);
   if (me.hits >= 2) text(me.hits + ' HITS!', 8, 54, 8, '#ffd23a', 'left', '#3a0d0d', 2);
 
   // placar
@@ -1181,7 +1347,7 @@ function drawHUD() {
   list.forEach((f, i) => {
     const y = by + 12 + i * 9;
     ctx.fillStyle = f.pal_.swatch; ctx.fillRect(bx + 4, y + 1, 4, 4);
-    text(f.name.slice(0, 10), bx + 11, y, 5, f === me ? '#ffe680' : '#ffffff', 'left', null);
+    text(f.name.slice(0, 10) + (f === me ? ' ◄' : ''), bx + 11, y, 5, f.pal_.swatch, 'left', null);
     text(f.kills + '/' + f.deaths, bx + 104, y, 5, '#cfc6ff', 'right', null);
   });
   // feed de eliminações
@@ -1224,16 +1390,16 @@ game = {
   start(mode) {
     this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
     const name = (document.getElementById('name').value.trim() || 'Jogador').slice(0, 12);
-    try { localStorage.setItem('adk_name', name); localStorage.setItem('adk_pal', String(chosenPal)); } catch (e) {}
-    const myId = (net.peer && net.peer.id) || 'me-' + uid();
-    this.me = new Fighter({ id: myId, name, pal: chosenPal, local: true, ctrl: 'human' });
-    this.fighters = [this.me]; this.bots = [];
-    if (mode === 'treino') this.addBot('dummy', 'Boneco', (chosenPal + 1) % PALETTES.length);
-    if (mode === 'bots') for (let i = 0; i < 3; i++) this.addBot('fight', ['Kaiko', 'Ranzo', 'Mibu'][i], (chosenPal + 1 + i) % PALETTES.length);
+    try { localStorage.setItem('adk_name', name); } catch (e) {}
+    this.fighters = []; this.bots = [];
+    this.me = new Fighter({ id: 'p-' + uid() + uid(), name, pal: 0, local: true, ctrl: 'human' });
+    this.me.pal = freeColor(this.me); this.fighters.push(this.me);
+    if (mode === 'treino') this.addBot('dummy', 'Boneco');
+    if (mode === 'bots') for (let i = 0; i < 3; i++) this.addBot('fight', BOT_NAMES[i]);
     this.me.spawn();
     for (const b of this.bots) b.me.spawn();
     if (mode === 'treino') { this.me.x = WW / 2; this.me.y = GROUND; }
-    if (mode === 'treino') { const d = this.bots[0].me; d.x = this.me.x + 90 * (this.me.x < WW / 2 ? 1 : -1); d.y = this.me.y; d.facing = -sign(d.x - this.me.x); }
+    if (mode === 'treino') { const d = this.bots[0].me; d.x = this.me.x + 90; d.y = GROUND; d.facing = -1; d.home = { x: d.x, y: d.y }; }
     this.cam.x = clamp(this.me.x - VW / 2, 0, WW - VW); this.cam.y = clamp(this.me.y - 170, 0, WH - VH);
     this.phase = 'play';
     document.getElementById('menu').classList.add('hidden');
@@ -1241,9 +1407,10 @@ game = {
     updateTouchUI();
     if (isTouch && document.documentElement.requestFullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
   },
-  addBot(mode, name, pal) {
-    const id = (net.peer && net.peer.id ? net.peer.id : 'local') + '-bot' + uid().slice(0, 4);
-    const f = new Fighter({ id, name, pal, local: true, ctrl: 'ai-' + mode });
+  addBot(mode, name) {
+    const id = 'b-' + uid() + uid();
+    const f = new Fighter({ id, name, pal: 0, local: true, ctrl: 'ai-' + mode });
+    f.pal = freeColor(f);
     f.ai = new Bot(f, mode);
     this.fighters.push(f); this.bots.push(f.ai);
     if (this.phase === 'play') f.spawn();
@@ -1255,7 +1422,7 @@ game = {
     const msg = { t: 'leave', id: b.me.id }; net.send(msg);
   },
   toMenu(msg) {
-    net.close(); this.phase = 'menu'; this.fighters = []; this.me = null;
+    net.leave(); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; renderRooms();
     document.getElementById('menu').classList.remove('hidden');
     for (const k in keys) keys[k] = false;
     setStatus(msg || ''); updateTouchUI();
@@ -1269,7 +1436,7 @@ function update(dt) {
   if (tap('Escape')) { game.toMenu(); return; }
   if (game.mode === 'treino' && tap('KeyE')) game.me.infiniteKi = !game.me.infiniteKi;
   if (game.mode === 'online' && net.role === 'host') {
-    if (tap('KeyB') && game.bots.length < 6) game.addBot('fight', ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann'][game.bots.length], (game.bots.length + 1) % PALETTES.length);
+    if (tap('KeyB') && game.bots.length < 6) game.addBot('fight', BOT_NAMES[game.bots.length]);
     if (tap('KeyN')) game.removeBot();
   }
   if (hitstop > 0) { hitstop -= dt; return; }
@@ -1297,7 +1464,9 @@ function update(dt) {
   }
   // remove remotos que sumiram
   const now = performance.now();
-  game.fighters = game.fighters.filter(f => f.local || now - f.lastSeen < 5000);
+  game.fighters = game.fighters.filter(f => f.local || now - f.lastSeen < 9000);
+  // cores repetidas no online: quem tem o ID "maior" troca de cor
+  if (game.mode === 'online' && Math.random() < 0.02) for (const f of game.fighters) if (f.local && game.fighters.some(o => o !== f && o.pal === f.pal && o.id < f.id)) f.pal = freeColor(f);
 
   for (const p of projectiles) p.update(dt);
   for (let i = 0; i < projectiles.length; i++) for (let j = i + 1; j < projectiles.length; j++) {
@@ -1358,33 +1527,45 @@ function render(dt) {
 }
 
 /* ---------------- menu (HTML) ---------------- */
-let chosenPal = 0;
 function setStatus(s) { document.getElementById('status').textContent = s; }
 function buildMenu() {
-  const pals = document.getElementById('pals');
-  try { chosenPal = +(localStorage.getItem('adk_pal') || 0) || 0; document.getElementById('name').value = localStorage.getItem('adk_name') || ''; } catch (e) {}
-  PALETTES.forEach((p, i) => {
-    const b = document.createElement('button'); b.className = 'sw' + (i === chosenPal ? ' sel' : ''); b.style.background = p.swatch; b.title = p.name;
-    b.onclick = () => { chosenPal = i; [...pals.children].forEach((c, j) => c.classList.toggle('sel', j === i)); };
-    pals.appendChild(b);
-  });
+  try { document.getElementById('name').value = localStorage.getItem('adk_name') || ''; } catch (e) {}
   const needNet = () => { if (typeof Peer === 'undefined') { setStatus('Biblioteca de rede não carregou.'); return false; } return true; };
+  let busy = false;
   document.getElementById('bTrain').onclick = () => { initAudio(); net.close(); game.start('treino'); };
   document.getElementById('bBots').onclick = () => { initAudio(); net.close(); game.start('bots'); };
   document.getElementById('bHost').onclick = () => {
-    initAudio(); if (!needNet()) return; setStatus('Criando sala...');
-    net.hostRoom(code => { game.start('online'); killfeed.unshift({ sys: 'Sala criada! Código: ' + code, life: 12 }); }, err => setStatus(err));
+    if (busy) return; initAudio(); if (!needNet()) return; setStatus('Criando sala...'); busy = true;
+    net.hostRoom(code => { busy = false; setStatus(''); game.start('online'); killfeed.unshift({ sys: 'Sala criada! Código: ' + code, life: 12 }); net.regT = 0; },
+      err => { busy = false; setStatus(err); });
   };
-  const join = () => {
-    initAudio(); if (!needNet()) return;
-    const code = document.getElementById('code').value.trim().toUpperCase();
-    if (code.length < 4) { setStatus('Digite o código da sala.'); return; }
-    setStatus('Conectando na sala ' + code + '...');
-    net.joinRoom(code, () => game.start('online'), err => { net.close(); setStatus(err); });
+  const join = code => {
+    if (busy) return; initAudio(); if (!needNet()) return;
+    code = String(code || '').trim().toUpperCase();
+    if (!/^[A-Z]{4}$/.test(code)) { setStatus('Digite o código da sala (4 letras).'); return; }
+    setStatus('Entrando na sala ' + code + '...'); busy = true;
+    net.joinRoom(code, () => { busy = false; setStatus(''); game.start('online'); }, err => { busy = false; net.close(); setStatus(err); });
   };
-  document.getElementById('bJoin').onclick = join;
-  document.getElementById('code').addEventListener('keydown', e => { if (e.key === 'Enter') join(); });
+  document.getElementById('bJoin').onclick = () => join(document.getElementById('code').value);
+  document.getElementById('code').addEventListener('keydown', e => { if (e.key === 'Enter') join(e.target.value); });
+  document.getElementById('rooms').addEventListener('click', e => { const b = e.target.closest('button.room'); if (b) join(b.dataset.code); });
   const p = new URLSearchParams(location.search).get('sala'); if (p) document.getElementById('code').value = p.toUpperCase();
+}
+
+/* ---------------- sem zoom, sem seleção, sem menu de toque longo ---------------- */
+function lockPage() {
+  const isInput = e => { const t = e.target && (e.target.nodeType === 1 ? e.target : e.target.parentElement); return !!(t && t.closest && t.closest('input')); };
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
+  document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
+  let lastEnd = 0;
+  document.addEventListener('touchend', e => { const now = Date.now(); if (now - lastEnd < 350 && !isInput(e)) e.preventDefault(); lastEnd = now; }, { passive: false });
+  document.addEventListener('touchmove', e => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, { passive: false });
+  document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+  document.addEventListener('selectstart', e => { if (!isInput(e)) e.preventDefault(); });
+  document.addEventListener('contextmenu', e => { if (!isInput(e)) e.preventDefault(); });
+  document.addEventListener('dragstart', e => e.preventDefault());
+  addEventListener('orientationchange', () => setTimeout(resizeCanvas, 250));
+  if (window.visualViewport) visualViewport.addEventListener('resize', resizeCanvas);
 }
 
 /* ---------------- controles de toque (celular) ---------------- */
@@ -1400,6 +1581,7 @@ function setupTouch() {
     b.addEventListener('pointerdown', down);
     b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
     b.addEventListener('contextmenu', e => e.preventDefault());
+    b.addEventListener('touchstart', e => e.preventDefault(), { passive: false }); // impede seleção/zoom no toque
   });
   addEventListener('touchstart', () => { if (!isTouch) { isTouch = true; updateTouchUI(); } }, { passive: true });
 }
@@ -1416,10 +1598,11 @@ function frame(now) {
   render(dt);
   requestAnimationFrame(frame);
 }
-buildBackground(); buildMenu(); setupTouch();
+buildBackground(); buildMenu(); setupTouch(); lockPage();
 resizeCanvas(); addEventListener('resize', resizeCanvas); setTimeout(resizeCanvas, 300);
+addEventListener('pagehide', () => { if (game.phase === 'play') net.leave(); lobby.stop(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
-loadSprites().then(() => { buildAuras(); if (game.phase === 'loading') game.phase = 'menu'; updateTouchUI(); }).catch(e => console.error(e));
+loadSprites().then(() => { buildAuras(); if (game.phase === 'loading') game.phase = 'menu'; updateTouchUI(); lobby.start(); }).catch(e => console.error(e));
 requestAnimationFrame(frame);
 </script>
 </body>
