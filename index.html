@@ -16,22 +16,44 @@
   /* o jogo ocupa a tela inteira, em qualquer formato */
   #wrap{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;--u:1px}
   canvas{width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges;background:#000}
+  /* ÁREA PROTEGIDA: HUD, textos e botões ficam só aqui dentro, longe das bordas e do entalhe da tela */
+  #safe{position:absolute;pointer-events:none;--px:max(16px,2.6vw);--py:max(12px,2.8vh);
+    left:calc(env(safe-area-inset-left) + var(--px));right:calc(env(safe-area-inset-right) + var(--px));
+    top:calc(env(safe-area-inset-top) + var(--py));bottom:calc(env(safe-area-inset-bottom) + var(--py))}
+  @media (pointer:coarse){#safe{--px:max(26px,5.2vw);--py:max(16px,4.8vh)}}
   /* controles de toque */
-  #touch{position:absolute;inset:0;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  #touch{position:absolute;inset:0;pointer-events:none}
   #touch.hidden{display:none}
-  #touch button{position:absolute;pointer-events:auto;touch-action:none;font-family:inherit;color:#fff;border:calc(var(--u)*0.5) solid rgba(255,255,255,.55);background:rgba(20,14,36,.3);border-radius:50%;
-    width:calc(var(--u)*13);height:calc(var(--u)*13);font-size:calc(var(--u)*2.4);line-height:1.1;padding:0;text-shadow:0 1px 0 #000;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;text-align:center}
-  #touch button{cursor:pointer}
+  #touch button{position:absolute;pointer-events:auto;touch-action:none;font-family:inherit;color:#fff;border:2px solid rgba(255,255,255,.55);background:rgba(20,14,36,.3);border-radius:50%;
+    line-height:1.1;padding:0;text-shadow:0 1px 0 #000;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer}
   #touch button:hover{background:rgba(60,44,100,.45)}
   #touch button.on{background:rgba(255,210,58,.5);border-color:#ffe680}
-  #touch button.big{width:calc(var(--u)*17);height:calc(var(--u)*17);font-size:calc(var(--u)*2.8)}
-  #touch button.sm{width:calc(var(--u)*10);height:calc(var(--u)*10);font-size:calc(var(--u)*2.1);border-radius:calc(var(--u)*2)}
-  #touch .arrow{font-size:calc(var(--u)*6)}
+  #touch button.sm{border-radius:18%}
+  #touch.edit button{border:2px dashed rgba(255,255,255,.8);cursor:move}
+  #touch.edit button.sel{border-color:#ffd23a;background:rgba(255,210,58,.35);box-shadow:0 0 0 3px rgba(255,210,58,.35)}
+  #editbar{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;background:rgba(26,21,40,.95);border:3px solid var(--line);box-shadow:0 0 0 3px #000;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:center;max-width:94%}
+  #editbar.hidden{display:none}
+  #editbar p{margin:0;font-size:clamp(7px,.9vw,9px);color:var(--muted);text-align:center;line-height:1.7}
+  #editbar .row{justify-content:center}
+  #selName{font-size:clamp(8px,1vw,10px);color:var(--acc);min-width:110px;text-align:center}
   #rotate{position:fixed;inset:0;z-index:9;display:none;align-items:center;justify-content:center;text-align:center;background:#0d0b14;color:#ffd23a;font-size:12px;line-height:2;padding:20px}
   @media (orientation:portrait) and (pointer:coarse){#rotate{display:flex}}
-  /* menu */
-  #menu{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(20,12,40,.55),rgba(8,5,16,.85))}
-  #menu.hidden{display:none}
+  /* menus (telas por cima do jogo) */
+  .ovl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(20,12,40,.55),rgba(8,5,16,.85));
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .ovl.hidden{display:none}
+  .card.small{width:min(90%,420px)}
+  .one{grid-template-columns:1fr}
+  .set{display:flex;flex-direction:column;gap:8px}
+  .set label{display:flex;justify-content:space-between;font-size:clamp(8px,1vw,10px);color:var(--fg)}
+  .set label span{color:var(--acc)}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;touch-action:pan-x}
+  input[type=range]::-webkit-slider-runnable-track{height:8px;background:#0f0b19;border:2px solid var(--line)}
+  input[type=range]::-moz-range-track{height:8px;background:#0f0b19;border:2px solid var(--line)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-9px;background:var(--acc);border:2px solid #000}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;background:var(--acc);border:2px solid #000;border-radius:0}
+  button.room.full{opacity:.55;cursor:not-allowed}
+  button.room.full .rj{background:#555;box-shadow:0 0 0 2px #888}
   .card{max-height:96%;overflow:auto;touch-action:pan-y;width:min(94%,900px);background:rgba(26,21,40,.94);border:3px solid var(--line);box-shadow:0 0 0 3px #000,0 12px 40px #000;padding:clamp(12px,2.4vw,26px);display:flex;flex-direction:column;gap:clamp(8px,1.4vw,14px)}
   .title{text-align:center;line-height:1.25}
   .title b{display:block;font-size:clamp(18px,3.4vw,34px);color:var(--acc);text-shadow:3px 3px 0 #3a1206}
@@ -67,7 +89,7 @@
 <body>
 <div id="wrap">
   <canvas id="c" width="480" height="270"></canvas>
-  <div id="menu">
+  <div id="menu" class="ovl">
     <div class="card">
       <div class="title"><b>ARENA DE KI</b><small>batalha livre online · jogo de estudo</small></div>
       <div class="cols">
@@ -77,6 +99,7 @@
             <button class="b" id="bTrain">MODO TREINO</button>
             <button class="b" id="bBots">CONTRA BOTS</button>
             <button class="b pri wide" id="bHost">CRIAR SALA ONLINE</button>
+            <button class="b wide" id="bSettings">⚙ CONFIGURAÇÕES</button>
           </div>
           <div class="row" style="gap:6px;flex-wrap:nowrap"><input id="code" type="text" maxlength="4" placeholder="CÓDIGO" autocomplete="off" autocorrect="off" spellcheck="false" style="text-transform:uppercase"><button class="b" id="bJoin">ENTRAR</button></div>
         </div>
@@ -88,19 +111,35 @@
       <div id="status"></div>
     </div>
   </div>
-  <div id="touch" class="hidden">
-    <button data-k="KeyA" class="arrow" style="left:calc(var(--u)*3);bottom:calc(var(--u)*4)">◀</button>
-    <button data-k="KeyD" class="arrow" style="left:calc(var(--u)*18);bottom:calc(var(--u)*4)">▶</button>
-    <button data-k="KeyS" style="left:calc(var(--u)*10.5);bottom:calc(var(--u)*18.5)">DEFESA</button>
-    <button data-k="KeyW" class="big" style="right:calc(var(--u)*2.5);bottom:calc(var(--u)*3)">PULAR</button>
-    <button data-k="KeyJ" style="right:calc(var(--u)*20.5);bottom:calc(var(--u)*2.5)">SOCO</button>
-    <button data-k="KeyK" style="right:calc(var(--u)*18.5);bottom:calc(var(--u)*16.5)">KI</button>
-    <button data-k="KeyL" style="right:calc(var(--u)*4.5);bottom:calc(var(--u)*21.5)">ESPE-<br>CIAL</button>
-    <button data-k="KeyI" style="right:calc(var(--u)*34.5);bottom:calc(var(--u)*2.5)">RAIO</button>
-    <button data-k="Space" style="right:calc(var(--u)*32.5);bottom:calc(var(--u)*16.5)">CARGA</button>
-    <button data-k="ShiftLeft" style="right:calc(var(--u)*17);bottom:calc(var(--u)*30.5)">TELE-<br>PORTE</button>
-    <button data-k="Escape" class="sm" style="left:50%;transform:translateX(-50%);bottom:calc(var(--u)*2)">MENU</button>
-    <button data-k="KeyE" id="tKi" class="sm" style="left:calc(var(--u)*3);top:calc(var(--u)*20)">∞ KI</button>
+  <div id="safe">
+    <div id="touch" class="hidden"></div>
+    <div id="editbar" class="hidden">
+      <p>Arraste os botões para onde quiser.<br>Toque em um botão para mudar o tamanho só dele.</p>
+      <div class="row"><button class="b" id="eMinus">−</button><span id="selName">—</span><button class="b" id="ePlus">+</button></div>
+      <div class="row"><button class="b" id="eReset">PADRÃO</button><button class="b pri" id="eDone">CONCLUIR</button></div>
+    </div>
+  </div>
+  <div id="pause" class="ovl hidden">
+    <div class="card small">
+      <div class="title"><b>PAUSA</b><small id="pauseInfo"></small></div>
+      <div class="btns one">
+        <button class="b pri" id="pContinue">CONTINUAR</button>
+        <button class="b" id="pSettings">⚙ CONFIGURAÇÕES</button>
+        <button class="b" id="pExit">SAIR DA PARTIDA</button>
+      </div>
+    </div>
+  </div>
+  <div id="settings" class="ovl hidden">
+    <div class="card small">
+      <div class="title"><b>CONFIGURAÇÕES</b><small>botões na tela</small></div>
+      <div class="set"><label>Tamanho dos botões <span id="vSize"></span></label><input type="range" id="rSize" min="60" max="170" step="5"></div>
+      <div class="set"><label>Visibilidade dos botões <span id="vOp"></span></label><input type="range" id="rOp" min="25" max="100" step="5"></div>
+      <div class="btns one">
+        <button class="b" id="bEdit">POSICIONAR BOTÕES</button>
+        <button class="b" id="bReset">RESTAURAR PADRÃO</button>
+        <button class="b pri" id="bBack">VOLTAR</button>
+      </div>
+    </div>
   </div>
 </div>
 <div id="rotate">Gire o celular<br>para jogar na horizontal ↻</div>
@@ -134,7 +173,7 @@ const WALK = 178; // velocidade andando
 const FONT = (s) => `${s}px "Press Start 2P", "Lucida Console", Consolas, "Courier New", monospace`;
 /* o canvas é desenhado em alta resolução (escala inteira S) para os textos ficarem nítidos
    e os sprites continuarem com pixels retos */
-let S = 1;
+let S = 1, U_PX = 4; const SAFE = { l: 12, t: 10, r: 12, b: 10 }; // margens da área protegida (em pixels do jogo)
 function resizeCanvas() {
   const wrap = document.getElementById('wrap'), r = wrap.getBoundingClientRect();
   if (!r.width || !r.height) return;
@@ -148,7 +187,12 @@ function resizeCanvas() {
     if (BG) buildBackground();
   }
   ctx.imageSmoothingEnabled = false;
-  wrap.style.setProperty('--u', (Math.min(r.height, r.width * 0.56) / 100) + 'px');
+  U_PX = Math.min(r.height, r.width * 0.56) / 100;
+  wrap.style.setProperty('--u', U_PX + 'px');
+  const sr = document.getElementById('safe').getBoundingClientRect();
+  SAFE.l = (sr.left - r.left) / r.width * VW; SAFE.r = (r.right - sr.right) / r.width * VW;
+  SAFE.t = (sr.top - r.top) / r.height * VH; SAFE.b = (r.bottom - sr.bottom) / r.height * VH;
+  if (typeof layoutButtons === 'function') layoutButtons();
 }
 const PLATFORMS = [
   { x: 260, y: 580, w: 150 }, { x: 640, y: 495, w: 180 }, { x: 1040, y: 585, w: 150 },
@@ -260,6 +304,7 @@ const keys = {}, pressed = {};
 const BLOCKED = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 addEventListener('keydown', e => {
   initAudio(); if (actx && actx.state === 'suspended') actx.resume();
+  if (e.code === 'Escape') { onEscape(); return; }
   if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
   if (BLOCKED.includes(e.code)) e.preventDefault();
   if (!keys[e.code]) pressed[e.code] = true;
@@ -333,7 +378,7 @@ class Fighter {
       let d = 1e9; for (const f of game.fighters) if (f !== this && !f.dead) d = Math.min(d, Math.hypot(f.x - p.x, f.y - p.y));
       d += rnd(0, 120); if (d > bd) { bd = d; best = p; }
     }
-    this.x = best.x; this.y = best.y; this.vx = this.vy = 0;
+    this.x = clamp(best.x + rnd(-55, 55), 30, WW - 30); this.y = best.y; this.vx = this.vy = 0;
     this.hp = this.hpShown = this.maxHp; this.ki = 50;
     this.setState('idle'); this.invuln = 2; this.lastHitBy = null; this.beamLen = 0;
     ring(this.x, this.y - 22, this.pal_.aura[1], 4, 34, 0.5); spark(this.x, this.y - 22, 14, this.pal_.aura[1], 120, 0.5);
@@ -368,7 +413,7 @@ class Fighter {
         this.vx = approach(this.vx, 0, 10, dt); airHover();
         if (el > 0.05 && el < 0.15) this.checkPunch();
         if (inp.punchP && this.combo < 3) this.queued = true;
-        if (this.stateT <= 0) { this.comboT = 0.4; if (this.queued) { this.queued = false; this.startPunch(); } else this.setState('idle'); }
+        if (this.stateT <= 0) { this.comboT = 0.4; if (this.queued && this.punchHit) { this.queued = false; this.startPunch(); } else { this.queued = false; this.setState('idle'); } }
         this.physics(dt, false, true); return;
       }
       case 'kiball': case 'bigfire':
@@ -411,6 +456,8 @@ class Fighter {
       case 'charge': {
         this.vx = approach(this.vx, 0, 12, dt); airHover();
         this.ki = Math.min(this.maxKi, this.ki + 14 * dt); // carga lenta
+        if (this.ki >= this.maxKi) { this.ki = this.maxKi; this.setState('idle'); this.fullMsg(); this.physics(dt, false); return; }
+        if (!this.onGround) { this.setState('idle'); this.physics(dt, false); return; }
         this.chargeSnd -= dt; if (this.chargeSnd <= 0) { if (nearCam(this.x, this.y)) SFX.charge(); this.chargeSnd = 0.14; }
         this.auraParticles(1);
         if (this === game.me) shake = Math.max(shake, 0.8);
@@ -451,11 +498,12 @@ class Fighter {
     else if (inp.kiP && this.kiCd <= 0) { if (this.ki >= 10) this.fireKi(); else popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
     else if (inp.beam && this.state === 'idle') { if (this.ki >= 20) { this.setState('beamwind', 0.5); if (nearCam(this.x, this.y)) SFX.beamWind(); } else if (inp.beamTap !== false && tapBeamCooldown(this)) popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
     else if (inp.dashP && this.dashCd <= 0 && this.ki >= 12) this.startDash(mx);
-    else if (inp.charge) { this.setState('charge'); chargeBurst(this); }
+    else if (inp.charge && this.onGround) { if (this.ki >= this.maxKi) this.fullMsg(); else { this.setState('charge'); chargeBurst(this); } }
 
     this.physics(dt, false);
   }
 
+  fullMsg() { const n = performance.now(); if (!this._fullT || n - this._fullT > 1500) { this._fullT = n; popup(this.x, this.y - 66, 'ENERGIA CHEIA', '#9ff3ff', 5); } }
   onPlatform() {
     if (this.y >= GROUND) return false;
     return PLATFORMS.some(p => Math.abs(this.y - p.y) < 1 && this.x >= p.x && this.x <= p.x + p.w);
@@ -484,7 +532,9 @@ class Fighter {
   }
 
   startPunch() {
-    if (this.comboT > 0 && this.combo > 0 && this.combo < 3) this.combo++; else this.combo = 1;
+    // o combo só continua se o soco anterior acertou alguém
+    if (this.comboT > 0 && this.combo > 0 && this.combo < 3 && this.punchHit) this.combo++; else this.combo = 1;
+    this.punchHit = false;
     this.setState('punch', this.combo === 3 ? 0.32 : 0.24);
     this.hitSet = new Set(); this.punchCd = 0.1;
     this.vx = this.facing * (this.combo === 3 ? 150 : 70);
@@ -501,6 +551,7 @@ class Fighter {
         const c = this.combo;
         const p = { dmg: [0, 38, 44, 80][c], kbx: f * [0, 70, 80, 300][c], kby: c === 3 ? -220 : 0, stun: [0, 0.3, 0.32, 0.6][c], kind: c === 3 ? 'heavy' : 'hit' };
         const res = deliverHit(o, p, this);
+        if (res === 'hit') this.punchHit = true;
         const px = this.x + f * 22, py = this.y - 30;
         if (res === 'block') spark(px, py, 6, '#9fe8ff', 90, 0.2);
         else if (res) { spark(px, py, c === 3 ? 16 : 9, '#fff3a0', c === 3 ? 200 : 140, 0.3); ring(px, py, '#ffffff', 2, c === 3 ? 26 : 16, 0.18); }
@@ -924,6 +975,11 @@ function deliverHit(target, p, src) {
   return target.state === 'guard' && sign(src.x - target.x) === target.facing ? 'block' : 'hit';
 }
 function handleKill(m) {
+  if (m.k !== m.v) {
+    const victim = game.byId(m.v);
+    killBadges.push({ k: m.k, name: String(m.vn || '?').slice(0, 12), color: victim ? victim.pal_.swatch : '#ffffff', life: 1.9, max: 1.9 });
+    if (game.me && m.k === game.me.id) { tone('square', 660, 990, 0.12, 0.12); tone('square', 990, 1320, 0.16, 0.1); }
+  }
   killfeed.unshift({ k: m.kn, v: m.vn, life: 6 });
   if (killfeed.length > 5) killfeed.pop();
   const killer = game.byId(m.k);
@@ -992,7 +1048,8 @@ class Bot {
      Se o anfitrião sair, o próximo jogador da lista assume o mesmo código e os outros reconectam. */
 const PREFIX = 'arenadeki-v2-';
 const LOBBY_ID = PREFIX + 'quadro-de-salas';
-const BOT_NAMES = ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann'];
+const BOT_NAMES = ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann', 'Nilo', 'Yara', 'Ozzo'];
+const MAX_PLAYERS = 10;
 function peerOpts() {
   const q = new URLSearchParams(location.search).get('peer');
   if (q) { const [host, port] = q.split(':'); return { host, port: +port || 9000, path: '/', secure: false, debug: 0 }; }
@@ -1074,7 +1131,8 @@ function renderRooms() {
   const key = lobby.status + JSON.stringify(list);
   if (key === roomsKey) return; roomsKey = key;
   if (!list.length) el.innerHTML = `<div class="empty">${lobby.status === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : lobby.status === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
-  else el.innerHTML = list.map(r => `<button class="room" data-code="${esc(r.code)}"><span class="rn">Sala de ${esc(r.host)}</span><span class="rc">${esc(r.code)} · ${r.n} jogador${r.n > 1 ? 'es' : ''}</span><span class="rj">ENTRAR</span></button>`).join('');
+  else el.innerHTML = list.map(r => { const full = r.n >= MAX_PLAYERS;
+    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}><span class="rn">Sala de ${esc(r.host)}</span><span class="rc">${esc(r.code)} · ${r.n}/${MAX_PLAYERS} jogadores</span><span class="rj">${full ? 'CHEIA' : 'ENTRAR'}</span></button>`; }).join('');
 }
 
 const net = {
@@ -1104,9 +1162,16 @@ const net = {
   },
   accept(c) {
     c.ids = new Set();
-    c.on('open', () => { this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members }); });
+    c.on('open', () => {
+      if (this.role !== 'host') { try { c.close(); } catch (_) {} return; }
+      const humans = this.conns.length + 1;
+      if (humans >= MAX_PLAYERS) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
+      if (humans + 1 + game.bots.length > MAX_PLAYERS) game.removeBot(); // abre espaço tirando um bot
+      c.send({ t: 'welcome' });
+      this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
+    });
     c.on('data', m => {
-      if (!m || this.role !== 'host') return;
+      if (!m || this.role !== 'host' || !this.conns.includes(c)) return;
       if (m.t === 's') c.ids.add(m.id); else if (m.t === 'leave') c.ids.delete(m.id);
       for (const o of this.conns) if (o !== c && o.open) o.send(m); // repassa para os outros
       handleNet(m);
@@ -1136,12 +1201,15 @@ const net = {
     const fail = msg => { if (done) return; done = true; this.pending = null; clearTimeout(to); try { c.close(); } catch (_) {} if (gen === this.gen) onFail(msg); };
     this.pending = fail;
     const to = setTimeout(() => fail('Não foi possível conectar. Confira o código.'), timeout);
-    c.on('open', () => {
-      if (done || gen !== this.gen) return; done = true; this.pending = null; clearTimeout(to);
-      this.host = c; this.role = 'client'; onOk(code);
-    });
     c.on('data', m => {
-      if (this.host !== c || !m) return;
+      if (!m) return;
+      if (!done) { // espera o anfitrião aceitar (ou dizer que está cheia)
+        if (gen !== this.gen) return;
+        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; onOk(code); }
+        else if (m.t === 'full') fail('Sala cheia (' + MAX_PLAYERS + ' jogadores).');
+        return;
+      }
+      if (this.host !== c) return;
       if (m.t === 'members') this.members = Array.isArray(m.list) ? m.list : [];
       else if (m.t === 'hostleave') this.pendingBots = clamp(m.bots | 0, 0, 6);
       else handleNet(m);
@@ -1195,7 +1263,7 @@ const net = {
     if (this.sendT <= 0) { this.sendT = 0.05; for (const f of game.fighters) if (f.local) this.send(f.snapshot()); }
     if (this.role === 'host') {
       this.regT -= dt;
-      if (this.regT <= 0) { this.regT = 2; lobby.register({ code: this.code, host: game.me.name, n: game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length }); }
+      if (this.regT <= 0) { this.regT = 2; lobby.register({ code: this.code, host: game.me.name, n: this.conns.length + 1 }); }
     }
   }
 };
@@ -1318,67 +1386,97 @@ function drawBar(x, y, w, h, ratio, ghost, color, dark) {
 }
 function drawHUD() {
   const me = game.me; if (!me) return;
+  // tudo dentro da área protegida
+  const L = Math.round(SAFE.l), T = Math.round(SAFE.t), RT = Math.round(VW - SAFE.r), BT = Math.round(VH - SAFE.b);
   // faceset
-  ctx.fillStyle = '#120c1c'; ctx.fillRect(4, 4, 32, 32);
-  ctx.fillStyle = me.pal_.swatch; ctx.fillRect(5, 5, 30, 30);
-  ctx.fillStyle = '#2a1f3d'; ctx.fillRect(6, 6, 28, 28);
-  ctx.save(); ctx.beginPath(); ctx.rect(6, 6, 28, 28); ctx.clip();
-  const face = me.dead ? me.spr.dano : me.spr.parado; ctx.drawImage(face, 6 + 14 - 16, 8); ctx.restore();
-  // barras
+  ctx.fillStyle = '#120c1c'; ctx.fillRect(L, T, 32, 32);
+  ctx.fillStyle = me.pal_.swatch; ctx.fillRect(L + 1, T + 1, 30, 30);
+  ctx.fillStyle = '#2a1f3d'; ctx.fillRect(L + 2, T + 2, 28, 28);
+  ctx.save(); ctx.beginPath(); ctx.rect(L + 2, T + 2, 28, 28); ctx.clip();
+  const face = me.dead ? me.spr.dano : me.spr.parado; ctx.drawImage(face, L + 2 + 14 - 16, T + 4); ctx.restore();
+  // barras de vida e energia
+  const bx = L + 38, bw = 136;
   const hpR = me.hp / me.maxHp, hpG = me.hpShown / me.maxHp;
-  drawBar(42, 7, 170, 10, hpR, hpG, hpR > 0.5 ? '#7dff6a' : hpR > 0.25 ? '#ffb02e' : '#ff4a3a', hpR > 0.5 ? '#2fbf3c' : hpR > 0.25 ? '#d8661b' : '#c4231c');
-  text('HP ' + Math.ceil(me.hp), 216, 9, 5, '#ffffff', 'left', '#120c1c', 1);
+  drawBar(bx, T + 2, bw, 11, hpR, hpG, hpR > 0.5 ? '#7dff6a' : hpR > 0.25 ? '#ffb02e' : '#ff4a3a', hpR > 0.5 ? '#2fbf3c' : hpR > 0.25 ? '#d8661b' : '#c4231c');
+  text('HP ' + Math.ceil(me.hp), bx + 3, T + 5, 5, '#ffffff', 'left', '#120c1c', 1.2);
   const kiR = me.ki / me.maxKi;
-  drawBar(42, 22, 130, 6, kiR, null, '#9ff3ff', '#2fb6e6');
-  ctx.fillStyle = '#120c1c'; for (let i = 1; i < 10; i++) ctx.fillRect(42 + Math.round(130 * i / 10), 22, 1, 6);
-  // marcas de custo: raio (20) e especial (35)
-  ctx.fillStyle = '#ffdf5a'; ctx.fillRect(42 + 26, 20, 1, 10); ctx.fillRect(42 + Math.round(130 * 0.35), 20, 1, 10);
-  text((me.infiniteKi ? 'MAX' : Math.floor(me.ki)) + ' KI', 176, 22, 5, kiR >= 0.35 ? '#ffe86b' : '#bfefff', 'left', '#120c1c', 1);
-  text(me.name, 42, 32, 5, me.pal_.swatch, 'left', '#120c1c', 1);
-  if (me.hits >= 2) text(me.hits + ' HITS!', 8, 54, 8, '#ffd23a', 'left', '#3a0d0d', 2);
+  drawBar(bx, T + 18, bw, 7, kiR, null, '#9ff3ff', '#2fb6e6');
+  text('KI ' + (me.infiniteKi ? 'MAX' : Math.floor(me.ki)), bx + 3, T + 19, 5, '#ffffff', 'left', '#0b3550', 1.2);
+  text(me.name, bx, T + 30, 5, me.pal_.swatch, 'left', '#120c1c', 1.2);
+  const humans = game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length;
+  const footer = game.mode === 'online' ? `SALA ${net.code} · ${humans}/${MAX_PLAYERS} jogadores`
+    : game.mode === 'treino' ? 'TREINO · energia infinita ' + (me.infiniteKi ? 'LIGADA' : 'DESLIGADA') : 'CONTRA BOTS';
+  text(footer, bx, T + 39, 5, '#cfc6ff', 'left', '#120c1c', 1);
+  if (me.hits >= 2) text(me.hits + ' HITS!', L, T + 52, 8, '#ffd23a', 'left', '#3a0d0d', 2);
 
-  // placar
-  const list = [...game.fighters].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths).slice(0, 6);
-  const bx = VW - 112, by = 4, bh = 12 + list.length * 9;
-  ctx.fillStyle = 'rgba(18,12,28,0.72)'; ctx.fillRect(bx, by, 108, bh);
-  ctx.fillStyle = '#3a2e52'; ctx.fillRect(bx, by, 108, 1);
-  text('PLACAR', bx + 4, by + 3, 5, '#ffd23a', 'left', null);
-  text('K/M', bx + 104, by + 3, 5, '#8d86a8', 'right', null);
+  // placar (até 10 jogadores)
+  const list = [...game.fighters].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths).slice(0, MAX_PLAYERS);
+  const pw = 104, px0 = RT - pw, bh = 12 + list.length * 8;
+  ctx.fillStyle = 'rgba(18,12,28,0.72)'; ctx.fillRect(px0, T, pw, bh);
+  ctx.fillStyle = '#3a2e52'; ctx.fillRect(px0, T, pw, 1);
+  text('PLACAR', px0 + 4, T + 3, 5, '#ffd23a', 'left', null);
+  text('K/M', RT - 4, T + 3, 5, '#8d86a8', 'right', null);
   list.forEach((f, i) => {
-    const y = by + 12 + i * 9;
-    ctx.fillStyle = f.pal_.swatch; ctx.fillRect(bx + 4, y + 1, 4, 4);
-    text(f.name.slice(0, 10) + (f === me ? ' ◄' : ''), bx + 11, y, 5, f.pal_.swatch, 'left', null);
-    text(f.kills + '/' + f.deaths, bx + 104, y, 5, '#cfc6ff', 'right', null);
+    const y = T + 12 + i * 8;
+    ctx.fillStyle = f.pal_.swatch; ctx.fillRect(px0 + 4, y + 1, 4, 4);
+    text(f.name.slice(0, 10) + (f === me ? ' ◄' : ''), px0 + 11, y, 5, f.pal_.swatch, 'left', null);
+    text(f.kills + '/' + f.deaths, RT - 4, y, 5, '#cfc6ff', 'right', null);
   });
-  // feed de eliminações
-  let fy = by + bh + 6;
+  // avisos / eliminações
+  let fy = T + bh + 6;
   for (const k of killfeed) {
+    if (fy > BT - 70) break;
     ctx.globalAlpha = clamp(k.life, 0, 1);
-    if (k.sys) text(k.sys, VW - 6, fy, 5, '#9fe8ff', 'right', '#120c1c', 1);
-    else text(k.k + ' derrotou ' + k.v, VW - 6, fy, 5, '#ffffff', 'right', '#120c1c', 1);
+    if (k.sys) text(k.sys, RT, fy, 5, '#9fe8ff', 'right', '#120c1c', 1);
+    else text(k.k + ' derrotou ' + k.v, RT, fy, 5, '#ffffff', 'right', '#120c1c', 1);
     fy += 9;
   }
   ctx.globalAlpha = 1;
-  // rodapé
-  const footer = game.mode === 'online' ? `SALA ${net.code} · ${game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length} jogador(es)` + (net.role === 'host' ? ' · B/N: +/- bot' : '')
-    : game.mode === 'treino' ? 'MODO TREINO · energia infinita ' + (me.infiniteKi ? 'LIGADA' : 'DESLIGADA')  : 'CONTRA BOTS';
-  text(footer, 42, 41, 5, '#cfc6ff', 'left', '#120c1c', 1);
   // renascimento
   if (me.dead) {
-    ctx.fillStyle = 'rgba(10,6,20,0.55)'; ctx.fillRect(0, 108, VW, 46);
-    text('DERROTADO' + (me.lastHitBy ? ' POR ' + me.lastHitBy.name.toUpperCase() : ''), VW / 2, 116, 9, '#ff6a5a', 'center', '#1a0f24', 2);
-    text('renascendo em ' + Math.max(1, Math.ceil(me.deadT)), VW / 2, 136, 6, '#ffffff', 'center', '#1a0f24', 1);
+    const cy = Math.round(VH / 2 - 30);
+    ctx.fillStyle = 'rgba(10,6,20,0.55)'; ctx.fillRect(0, cy, VW, 46);
+    text('DERROTADO' + (me.lastHitBy ? ' POR ' + me.lastHitBy.name.toUpperCase() : ''), VW / 2, cy + 8, 9, '#ff6a5a', 'center', '#1a0f24', 2);
+    text('renascendo em ' + Math.max(1, Math.ceil(me.deadT)), VW / 2, cy + 28, 6, '#ffffff', 'center', '#1a0f24', 1);
   }
-  // indicadores de lutadores fora da tela
+  // setas para lutadores fora da tela
   for (const f of game.fighters) {
     if (f === me || f.dead) continue;
     const sx = f.x - game.cam.x, sy = f.y - 22 - game.cam.y;
     if (sx >= 0 && sx <= VW && sy >= 0 && sy <= VH) continue;
-    const cx = clamp(sx, 8, VW - 8), cy = clamp(sy, 44, VH - 16);
+    const cx = clamp(sx, L + 8, RT - 8), cy = clamp(sy, T + 50, BT - 8);
     const a = Math.atan2(sy - cy, sx - cx);
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(a);
     ctx.fillStyle = '#120c1c'; ctx.beginPath(); ctx.moveTo(7, 0); ctx.lineTo(-5, -6); ctx.lineTo(-5, 6); ctx.fill();
     ctx.fillStyle = f.pal_.swatch; ctx.beginPath(); ctx.moveTo(5, 0); ctx.lineTo(-4, -4); ctx.lineTo(-4, 4); ctx.fill();
+    ctx.restore();
+  }
+}
+
+/* ---------------- aviso de eliminação: caveira subindo sobre quem derrotou ---------------- */
+let killBadges = [];
+const SKULL = ['.wwwww.', 'wwwwwww', 'w..w..w', 'w..w..w', 'wwwwwww', '.ww.ww.', '.w.w.w.'];
+function drawSkull(x, y) {
+  const px = (col, ox, oy) => { ctx.fillStyle = col; SKULL.forEach((row, j) => { for (let i = 0; i < row.length; i++) if (row[i] === 'w') ctx.fillRect(x + i + ox, y + j + oy, 1, 1); }); };
+  for (const [ox, oy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) px('#120c1c', ox, oy);
+  px('#f4efe6', 0, 0);
+  ctx.fillStyle = '#120c1c'; // olhos e nariz
+  [[1, 2], [2, 2], [1, 3], [2, 3], [4, 2], [5, 2], [4, 3], [5, 3], [3, 5]].forEach(([i, j]) => ctx.fillRect(x + i, y + j, 1, 1));
+}
+function drawKillBadges(cam) {
+  const count = {};
+  for (const kb of killBadges) {
+    const f = game.byId(kb.k); if (!f) continue;
+    const i = count[kb.k] = (count[kb.k] || 0) + 1;
+    const age = kb.max - kb.life, rise = Math.min(1, age / kb.max) * 16;
+    const sc = age < 0.14 ? lerp(1.9, 1, age / 0.14) : 1;
+    ctx.save();
+    ctx.globalAlpha = clamp(kb.life / 0.5, 0, 1);
+    ctx.translate(Math.round(f.x - cam.x), Math.round(f.y - cam.y - 76 - rise - (i - 1) * 11));
+    ctx.scale(sc * 1.4, sc * 1.4);
+    ctx.font = FONT(5); const w = ctx.measureText(kb.name).width, total = 7 + 3 + w, x0 = Math.round(-total / 2);
+    drawSkull(x0, -4);
+    text(kb.name, x0 + 10, -3, 5, kb.color, 'left', '#120c1c', 1.2);
     ctx.restore();
   }
 }
@@ -1422,7 +1520,8 @@ game = {
     const msg = { t: 'leave', id: b.me.id }; net.send(msg);
   },
   toMenu(msg) {
-    net.leave(); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; renderRooms();
+    net.leave(); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; renderRooms(); killBadges = [];
+    overlay = null; editMode = false; ['pause', 'settings'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById('editbar').classList.add('hidden');
     document.getElementById('menu').classList.remove('hidden');
     for (const k in keys) keys[k] = false;
     setStatus(msg || ''); updateTouchUI();
@@ -1433,17 +1532,17 @@ game = {
 function update(dt) {
   game.t += dt;
   if (game.phase !== 'play') return;
-  if (tap('Escape')) { game.toMenu(); return; }
+  if (overlay && game.mode !== 'online') return; // offline: a pausa congela o jogo
   if (game.mode === 'treino' && tap('KeyE')) game.me.infiniteKi = !game.me.infiniteKi;
   if (game.mode === 'online' && net.role === 'host') {
-    if (tap('KeyB') && game.bots.length < 6) game.addBot('fight', BOT_NAMES[game.bots.length]);
+    if (tap('KeyB') && net.conns.length + 1 + game.bots.length < MAX_PLAYERS) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
     if (tap('KeyN')) game.removeBot();
   }
   if (hitstop > 0) { hitstop -= dt; return; }
 
   for (const f of game.fighters) {
     if (!f.local) { f.updateRemote(dt); continue; }
-    const inp = f === game.me ? humanInput() : f.ai ? f.ai.think(dt) : emptyInput();
+    const inp = f === game.me ? (overlay ? emptyInput() : humanInput()) : f.ai ? f.ai.think(dt) : emptyInput();
     f.update(dt, inp);
   }
   // raios: cada computador calcula o dano nos SEUS lutadores
@@ -1460,7 +1559,12 @@ function update(dt) {
   for (const a of game.fighters) for (const b of game.fighters) {
     if (a === b || !a.local || a.dead || b.dead) continue;
     const A = a.body(), B = b.body();
-    if (A.x0 < B.x1 && A.x1 > B.x0 && A.y0 < B.y1 && A.y1 > B.y0) a.x += (a.x <= b.x ? -1 : 1) * Math.min(A.x1 - B.x0, B.x1 - A.x0) * (b.local ? 0.5 : 1) * 0.5;
+    if (A.x0 < B.x1 && A.x1 > B.x0 && A.y0 < B.y1 && A.y1 > B.y0) {
+      // lado decidido igual nos dois computadores (pela posição, ou pelo ID se estiverem no mesmo ponto)
+      const dir = Math.abs(a.x - b.x) > 0.5 ? sign(a.x - b.x) : (a.id < b.id ? -1 : 1);
+      const ov = Math.min(A.x1 - B.x0, B.x1 - A.x0) * 0.5;
+      a.x = clamp(a.x + dir * Math.min(ov, 70 * dt), 14, WW - 14); // empurrão suave, sem "deslizar"
+    }
   }
   // remove remotos que sumiram
   const now = performance.now();
@@ -1481,6 +1585,7 @@ function update(dt) {
   for (const p of popups) { p.life -= dt; p.y -= 22 * dt; }
   popups = popups.filter(p => p.life > 0);
   for (const k of killfeed) k.life -= dt;
+  for (const kb of killBadges) kb.life -= dt; killBadges = killBadges.filter(kb => kb.life > 0);
   killfeed = killfeed.filter(k => k.life > 0);
 
   const me = game.me;
@@ -1521,6 +1626,7 @@ function render(dt) {
   }
   drawForeground(cam);
   for (const f of order) f.drawOverhead(cam);
+  drawKillBadges(cam);
   for (const p of popups) { ctx.globalAlpha = clamp(p.life / p.max * 2, 0, 1); text(p.text, p.x - cam.x, p.y - cam.y, p.size, p.color, 'center', '#1a0f24', 1); }
   ctx.globalAlpha = 1;
   drawHUD();
@@ -1534,6 +1640,7 @@ function buildMenu() {
   let busy = false;
   document.getElementById('bTrain').onclick = () => { initAudio(); net.close(); game.start('treino'); };
   document.getElementById('bBots').onclick = () => { initAudio(); net.close(); game.start('bots'); };
+  document.getElementById('bSettings').onclick = () => openSettings('menu');
   document.getElementById('bHost').onclick = () => {
     if (busy) return; initAudio(); if (!needNet()) return; setStatus('Criando sala...'); busy = true;
     net.hostRoom(code => { busy = false; setStatus(''); game.start('online'); killfeed.unshift({ sys: 'Sala criada! Código: ' + code, life: 12 }); net.regT = 0; },
@@ -1548,7 +1655,7 @@ function buildMenu() {
   };
   document.getElementById('bJoin').onclick = () => join(document.getElementById('code').value);
   document.getElementById('code').addEventListener('keydown', e => { if (e.key === 'Enter') join(e.target.value); });
-  document.getElementById('rooms').addEventListener('click', e => { const b = e.target.closest('button.room'); if (b) join(b.dataset.code); });
+  document.getElementById('rooms').addEventListener('click', e => { const b = e.target.closest('button.room'); if (!b) return; if (b.dataset.full) { setStatus('Essa sala está cheia.'); return; } join(b.dataset.code); });
   const p = new URLSearchParams(location.search).get('sala'); if (p) document.getElementById('code').value = p.toUpperCase();
 }
 
@@ -1558,7 +1665,9 @@ function lockPage() {
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
   document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
   let lastEnd = 0;
-  document.addEventListener('touchend', e => { const now = Date.now(); if (now - lastEnd < 350 && !isInput(e)) e.preventDefault(); lastEnd = now; }, { passive: false });
+  const isCtl = e => { const t = e.target && (e.target.nodeType === 1 ? e.target : e.target.parentElement); return !!(t && t.closest && t.closest('input,button,select,label')); };
+  // toque duplo em área "vazia" não dá zoom (botões já usam touch-action, então continuam respondendo rápido)
+  document.addEventListener('touchend', e => { const now = Date.now(); if (now - lastEnd < 350 && !isCtl(e)) e.preventDefault(); lastEnd = now; }, { passive: false });
   document.addEventListener('touchmove', e => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, { passive: false });
   document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
   document.addEventListener('selectstart', e => { if (!isInput(e)) e.preventDefault(); });
@@ -1568,26 +1677,137 @@ function lockPage() {
   if (window.visualViewport) visualViewport.addEventListener('resize', resizeCanvas);
 }
 
-/* ---------------- controles de toque (celular) ---------------- */
+/* ---------------- botões na tela (celular e PC) ----------------
+   Posição = fração da área protegida (0 a 1). Tamanho = base × tamanho geral × tamanho do botão. */
+const BTN_DEFS = [
+  { k: 'KeyA', label: '◀', base: 13, x: .05, y: .88, arrow: 1, name: 'ESQUERDA' },
+  { k: 'KeyD', label: '▶', base: 13, x: .18, y: .88, arrow: 1, name: 'DIREITA' },
+  { k: 'KeyS', label: 'DEFESA', base: 13, x: .115, y: .6, name: 'DEFESA' },
+  { k: 'KeyW', label: 'PULAR', base: 17, x: .95, y: .86, name: 'PULAR' },
+  { k: 'KeyJ', label: 'SOCO', base: 13, x: .8, y: .92, name: 'SOCO' },
+  { k: 'KeyK', label: 'KI', base: 13, x: .8, y: .64, name: 'KI' },
+  { k: 'KeyL', label: 'ESPE-<br>CIAL', base: 13, x: .95, y: .5, name: 'ESPECIAL' },
+  { k: 'KeyI', label: 'RAIO', base: 13, x: .66, y: .92, name: 'RAIO' },
+  { k: 'Space', label: 'CARGA', base: 13, x: .66, y: .64, name: 'CARGA' },
+  { k: 'ShiftLeft', label: 'TELE-<br>PORTE', base: 13, x: .8, y: .36, name: 'TELEPORTE' },
+  { k: 'Escape', label: 'MENU', base: 10, x: .5, y: .97, sq: 1, name: 'MENU' },
+  { k: 'KeyE', label: '∞ KI', base: 10, x: .02, y: .34, sq: 1, name: '∞ KI', id: 'tKi' },
+];
+const settings = { size: 100, op: 100, btn: {} };
+function loadSettings() {
+  try { const o = JSON.parse(localStorage.getItem('adk_ui') || '{}'); if (o && typeof o === 'object') Object.assign(settings, o); } catch (e) {}
+  if (!settings.btn || typeof settings.btn !== 'object') settings.btn = {};
+}
+function saveSettings() { try { localStorage.setItem('adk_ui', JSON.stringify(settings)); } catch (e) {} }
+const btnEls = {};
 let isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window;
-function setupTouch() {
-  const box = document.getElementById('touch');
-  box.querySelectorAll('button').forEach(b => {
-    const code = b.dataset.k; let pid = null;
-    const down = e => { e.preventDefault(); initAudio(); if (actx && actx.state === 'suspended') actx.resume();
+let overlay = null, settingsBack = 'menu', editMode = false, selBtn = null;
+function safeRect() { return document.getElementById('safe').getBoundingClientRect(); }
+function layoutButtons() {
+  const R = safeRect(); if (!R.width || !BTN_DEFS.length || !btnEls.KeyA) return;
+  for (const d of BTN_DEFS) {
+    const c = settings.btn[d.k] || {}, sz = U_PX * d.base * (settings.size / 100) * (c.s || 1);
+    const fx = c.x != null ? c.x : d.x, fy = c.y != null ? c.y : d.y;
+    const cx = clamp(fx * R.width, sz / 2, R.width - sz / 2), cy = clamp(fy * R.height, sz / 2, R.height - sz / 2);
+    const b = btnEls[d.k];
+    b.style.width = b.style.height = sz + 'px';
+    b.style.left = (cx - sz / 2) + 'px'; b.style.top = (cy - sz / 2) + 'px';
+    b.style.fontSize = (sz * (d.arrow ? 0.42 : d.sq ? 0.2 : 0.18)) + 'px';
+  }
+  document.getElementById('touch').style.opacity = editMode ? 1 : settings.op / 100;
+}
+function buildButtons() {
+  const box = document.getElementById('touch'); box.innerHTML = '';
+  for (const d of BTN_DEFS) {
+    const b = document.createElement('button'); b.innerHTML = d.label; b.dataset.k = d.k;
+    if (d.sq) b.classList.add('sm'); if (d.id) b.id = d.id;
+    box.appendChild(b); btnEls[d.k] = b;
+    let pid = null, drag = null;
+    const down = e => {
+      e.preventDefault(); initAudio(); if (actx && actx.state === 'suspended') actx.resume();
       pid = e.pointerId; try { b.setPointerCapture(pid); } catch (_) {}
-      if (!keys[code]) pressed[code] = true; keys[code] = true; b.classList.add('on'); };
-    const up = e => { if (pid !== null && e.pointerId !== pid) return; pid = null; keys[code] = false; b.classList.remove('on'); };
-    b.addEventListener('pointerdown', down);
+      if (editMode) { // arrastar para posicionar
+        selectBtn(d.k); const br = b.getBoundingClientRect();
+        drag = { dx: e.clientX - (br.left + br.width / 2), dy: e.clientY - (br.top + br.height / 2) }; return;
+      }
+      if (d.k === 'Escape') { onEscape(); return; }
+      if (!keys[d.k]) pressed[d.k] = true; keys[d.k] = true; b.classList.add('on');
+    };
+    const move = e => {
+      if (!editMode || !drag || e.pointerId !== pid) return;
+      const R = safeRect(), c = settings.btn[d.k] = settings.btn[d.k] || {};
+      c.x = clamp((e.clientX - drag.dx - R.left) / R.width, 0, 1); c.y = clamp((e.clientY - drag.dy - R.top) / R.height, 0, 1);
+      layoutButtons();
+    };
+    const up = e => {
+      if (pid !== null && e.pointerId !== pid) return; pid = null;
+      if (drag) { drag = null; saveSettings(); return; }
+      keys[d.k] = false; b.classList.remove('on');
+    };
+    b.addEventListener('pointerdown', down); b.addEventListener('pointermove', move);
     b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
     b.addEventListener('contextmenu', e => e.preventDefault());
     b.addEventListener('touchstart', e => e.preventDefault(), { passive: false }); // impede seleção/zoom no toque
-  });
-  addEventListener('touchstart', () => { if (!isTouch) { isTouch = true; updateTouchUI(); } }, { passive: true });
+  }
+  layoutButtons();
+}
+function selectBtn(k) {
+  selBtn = k; for (const d of BTN_DEFS) btnEls[d.k].classList.toggle('sel', d.k === k);
+  const d = BTN_DEFS.find(d => d.k === k), s = (settings.btn[k] && settings.btn[k].s) || 1;
+  document.getElementById('selName').textContent = d ? d.name + ' ' + Math.round(s * 100) + '%' : '—';
 }
 function updateTouchUI() {
-  document.getElementById('touch').classList.toggle('hidden', game.phase !== 'play'); // botões na tela no celular e no PC
-  document.getElementById('tKi').style.display = game.mode === 'treino' ? '' : 'none';
+  const show = editMode || (game.phase === 'play' && !overlay);
+  document.getElementById('touch').classList.toggle('hidden', !show);
+  document.getElementById('touch').classList.toggle('edit', editMode);
+  const tk = document.getElementById('tKi'); if (tk) tk.style.display = (editMode || game.mode === 'treino') ? '' : 'none';
+  layoutButtons();
+}
+function show(id, on) { document.getElementById(id).classList.toggle('hidden', !on); }
+function openPause() {
+  if (game.phase !== 'play') return;
+  overlay = 'pause'; for (const k in keys) keys[k] = false;
+  document.getElementById('pauseInfo').textContent = game.mode === 'online' ? 'a partida continua para os outros jogadores' : 'jogo pausado';
+  show('pause', true); updateTouchUI();
+}
+function closePause() { overlay = null; show('pause', false); updateTouchUI(); }
+function openSettings(from) {
+  settingsBack = from; show('menu', false); show('pause', false); show('settings', true);
+  if (game.phase === 'play') overlay = 'settings';
+  syncSettingsUI(); updateTouchUI();
+}
+function closeSettings() {
+  show('settings', false);
+  if (settingsBack === 'menu') show('menu', true); else { overlay = 'pause'; show('pause', true); }
+  updateTouchUI();
+}
+function syncSettingsUI() {
+  document.getElementById('rSize').value = settings.size; document.getElementById('vSize').textContent = settings.size + '%';
+  document.getElementById('rOp').value = settings.op; document.getElementById('vOp').textContent = settings.op + '%';
+}
+function startEdit() { editMode = true; show('settings', false); show('editbar', true); selectBtn(null); updateTouchUI(); }
+function finishEdit() { editMode = false; selectBtn(null); saveSettings(); show('editbar', false); show('settings', true); updateTouchUI(); }
+function onEscape() {
+  if (editMode) finishEdit();
+  else if (!document.getElementById('settings').classList.contains('hidden')) closeSettings();
+  else if (game.phase === 'play') { if (overlay === 'pause') closePause(); else openPause(); }
+}
+function setupTouch() {
+  loadSettings(); buildButtons();
+  document.getElementById('rSize').addEventListener('input', e => { settings.size = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
+  document.getElementById('rOp').addEventListener('input', e => { settings.op = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
+  document.getElementById('bEdit').onclick = startEdit;
+  document.getElementById('bReset').onclick = () => { settings.size = 100; settings.op = 100; settings.btn = {}; saveSettings(); syncSettingsUI(); layoutButtons(); };
+  document.getElementById('bBack').onclick = closeSettings;
+  document.getElementById('eDone').onclick = finishEdit;
+  document.getElementById('eReset').onclick = () => { settings.btn = {}; saveSettings(); selectBtn(null); layoutButtons(); };
+  const resize = f => { if (!selBtn) return; const c = settings.btn[selBtn] = settings.btn[selBtn] || {}; c.s = clamp(Math.round(((c.s || 1) + f) * 10) / 10, 0.6, 1.8); selectBtn(selBtn); layoutButtons(); saveSettings(); };
+  document.getElementById('eMinus').onclick = () => resize(-0.1);
+  document.getElementById('ePlus').onclick = () => resize(0.1);
+  document.getElementById('pContinue').onclick = closePause;
+  document.getElementById('pSettings').onclick = () => openSettings('pause');
+  document.getElementById('pExit').onclick = () => game.toMenu();
+  addEventListener('touchstart', () => { isTouch = true; }, { passive: true });
 }
 
 /* ---------------- loop ---------------- */
