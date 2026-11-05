@@ -334,6 +334,9 @@ const SFX = {
   dash() { noise(0.15, 0.3, 'bandpass', 1800); tone('sine', 1400, 300, 0.12, 0.1); },
   jump() { tone('square', 220, 440, 0.08, 0.08); },
   flap() { tone('square', 260, 520, 0.07, 0.07); },
+  zap() { noise(0.06, 0.12, 'highpass', 3500); tone('square', rnd(900, 1600), rnd(300, 600), 0.05, 0.05); },
+  awakenStart() { tone('sawtooth', 60, 220, 1.8, 0.1); },
+  awaken() { noise(0.6, 0.6, 'lowpass', 900); tone('sawtooth', 120, 40, 0.7, 0.3); tone('square', 880, 1760, 0.25, 0.12); },
   chargeStart() { noise(0.45, 0.4, 'bandpass', 500); tone('sawtooth', 70, 160, 0.4, 0.12); },
   charge() { tone('sawtooth', 55, 70, 0.13, 0.07); noise(0.12, 0.06, 'bandpass', 400); },
   ko() { tone('sawtooth', 400, 40, 1.0, 0.25); noise(0.6, 0.4, 'lowpass', 500); },
@@ -357,19 +360,19 @@ addEventListener('keyup', e => { keys[e.code] = false; });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 const held = (...c) => c.some(k => keys[k]);
 const tap = (...c) => c.some(k => pressed[k]);
-const emptyInput = () => ({ left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0, kiP: 0, bigP: 0, beam: 0, charge: 0, dashP: 0, face: 0 });
+const emptyInput = () => ({ left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0, kiP: 0, bigP: 0, beam: 0, charge: 0, chargeP: 0, dashP: 0, face: 0 });
 function humanInput() {
   return {
     left: held('KeyA', 'ArrowLeft'), right: held('KeyD', 'ArrowRight'),
     down: held('KeyS', 'ArrowDown'), up: held('KeyW', 'ArrowUp'), upP: tap('KeyW', 'ArrowUp'),
     punchP: tap('KeyJ'), kiP: tap('KeyK'), bigP: tap('KeyL'),
-    beam: held('KeyI'), charge: held('Space'), dashP: tap('ShiftLeft', 'ShiftRight'), face: 0,
+    beam: held('KeyI'), charge: held('Space'), chargeP: tap('Space'), dashP: tap('ShiftLeft', 'ShiftRight'), face: 0,
   };
 }
 
 /* ---------------- efeitos ---------------- */
 let particles = [], projectiles = [], popups = [], killfeed = [];
-let shake = 0, hitstop = 0;
+let shake = 0, hitstop = 0, flashT = 0;
 function spark(x, y, n, color, speed = 120, life = 0.35, size = 2) {
   for (let i = 0; i < n; i++) { const a = rnd(0, Math.PI * 2), v = rnd(speed * 0.3, speed);
     particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: rnd(life * 0.5, life), max: life, size, color, glow: true }); }
@@ -437,6 +440,8 @@ class Fighter {
     if (this.beamPopT <= 0 && this.beamDmgAcc > 0) { popup(this.x, this.y - 58, '-' + Math.round(this.beamDmgAcc), '#ffd23a', 6); this.beamDmgAcc = 0; this.beamPopT = 0.3; }
     this.hpShown = this.hpShown > this.hp ? Math.max(this.hp, this.hpShown - 300 * dt) : this.hp;
     if (this.infiniteKi) this.ki = this.maxKi;
+    if (this.awakenT > 0 && Math.random() < 0.08 && nearCam(this.x, this.y) && !this.dead) SFX.zap();
+    if (this.awakenT > 0) { this.awakenT -= dt; if (this.awakenT <= 0) { this.awakenT = 0; popup(this.x, this.y - 60, 'fim do despertar', '#cfc6ff', 5); } }
 
     if (this.state !== 'idle' && this.state !== 'guard') this.flying = false;
     if (this.state === 'ko') {
@@ -517,6 +522,16 @@ class Fighter {
         if (!inp.charge) this.setState('idle');
         this.physics(dt, false, true); return;
       }
+      case 'awaken': { // segurando a carga com a energia cheia: raios vão aumentando até despertar
+        this.vx = approach(this.vx, 0, 12, dt);
+        this.auraParticles(0.8);
+        if (Math.random() < 0.5) particles.push({ x: this.x + rnd(-18, 18), y: this.y - rnd(0, 50), vx: 0, vy: rnd(-200, -120), life: 0.2, max: 0.2, streak: rnd(5, 10) | 0, color: '#ffffff', glow: true });
+        this.chargeSnd -= dt; if (this.chargeSnd <= 0) { if (nearCam(this.x, this.y)) SFX.zap(); this.chargeSnd = 0.12; }
+        if (this === game.me) shake = Math.max(shake, 0.6 + this.stateAge);
+        if (!inp.charge || !this.onGround || inp.punchP || inp.kiP || inp.bigP || inp.dashP || inp.beam || inp.upP) { const quick = this.stateAge < 0.4; this.setState('idle'); if (quick) this.fullMsg(); break; }
+        if (this.stateT <= 0) { this.setState('idle'); this.awaken(); }
+        this.physics(dt, false); return;
+      }
       case 'guard':
         this.vx = approach(this.vx, 0, 14, dt);
         if (inp.punchP || inp.kiP || inp.bigP || inp.dashP || inp.beam || inp.upP || inp.charge) { this.setState('idle'); break; }
@@ -525,20 +540,26 @@ class Fighter {
     }
 
     // ---------- estado livre ----------
-    if (this.onGround) this.flying = false;
+    if (this.onGround) { this.flying = false; this.jumps = 0; }
+    else if (!this.jumps) this.jumps = 1; // caiu da plataforma sem pular: conta como o 1º pulo
     if (mx) this.facing = mx; else if (inp.face) this.facing = inp.face;
     if (this.onGround) {
-      this.vx = approach(this.vx, mx * WALK, 14, dt);
+      this.vx = approach(this.vx, mx * WALK * (this.awakenT > 0 ? 1.15 : 1), 14, dt);
       if (inp.upP && inp.down && this.onPlatform()) { this.dropT = 0.3; this.onGround = false; this.y += 2; }
-      else if (inp.upP) { this.vy = -330; this.onGround = false; this.glideT = 0; if (nearCam(this.x, this.y)) SFX.jump(); dust(this.x, this.y, 6); }
+      else if (inp.upP) { this.vy = -330; this.onGround = false; this.jumps = 1; if (nearCam(this.x, this.y)) SFX.jump(); dust(this.x, this.y, 6); }
       else if (inp.down && mx === 0) { this.setState('guard'); this.vx = 0; }
     } else {
-      this.vx = approach(this.vx, mx * WALK, 9, dt);
-      // VOAR: depois de pular, segurar PULAR no ar liga o voo (sobe enquanto segura, gastando energia).
-      // Soltou o botão ou a energia acabou: para de voar e cai.
-      const wantFly = inp.up && (this.flying || inp.upP); // precisa apertar o pulo já no ar
+      this.vx = approach(this.vx, mx * WALK * (this.awakenT > 0 ? 1.15 : 1), 9, dt);
+      // PULO: 1º toque pula, 2º toque (no ar) faz o pulo duplo, 3º toque (segurando) VOA.
+      // Voando: sobe enquanto segura, gastando energia. Soltou ou acabou a energia: cai.
+      if (inp.upP && this.jumps < 2 && !this.flying) {
+        this.jumps = 2; this.vy = -300; this._jumpedNow = true;
+        ring(this.x, this.y - 2, '#ffffff', 3, 14, 0.2); if (nearCam(this.x, this.y)) SFX.jump();
+      }
+      const wantFly = inp.up && (this.flying || (inp.upP && this.jumps >= 2 && !this._jumpedNow));
+      this._jumpedNow = false;
       if (wantFly && this.ki > 0) {
-        if (!this.flying) { this.flying = true; ring(this.x, this.y - 4, '#ffffff', 3, 18, 0.25); if (nearCam(this.x, this.y)) SFX.flap(); }
+        if (!this.flying) { this.flying = true; this.jumps = 3; ring(this.x, this.y - 4, '#ffffff', 3, 18, 0.25); if (nearCam(this.x, this.y)) SFX.flap(); }
         if (!this.infiniteKi) this.ki = Math.max(0, this.ki - 11 * dt);
         this.vy = approach(this.vy, -150, 5, dt);
         this.flyFx(dt);
@@ -554,7 +575,12 @@ class Fighter {
     else if (inp.kiP && this.kiCd <= 0) { if (this.ki >= 10) this.fireKi(); else popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
     else if (inp.beam && this.state === 'idle') { if (this.ki >= 20) { this.setState('beamwind', 0.5); if (nearCam(this.x, this.y)) SFX.beamWind(); } else if (inp.beamTap !== false && tapBeamCooldown(this)) popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
     else if (inp.dashP && this.dashCd <= 0 && this.ki >= 12) this.startDash(mx);
-    else if (inp.charge && this.onGround) { if (this.ki >= this.maxKi) this.fullMsg(); else { this.setState('charge'); chargeBurst(this); } }
+    else if (inp.charge && this.onGround) {
+      if (this.ki < this.maxKi) { this.setState('charge'); chargeBurst(this); }
+      // energia cheia + apertar carga DE NOVO e segurar = começa o despertar
+      else if (inp.chargeP && !(this.awakenT > 0) && !this.ctrl.startsWith('ai')) { this.setState('awaken', AWAKEN_HOLD); if (nearCam(this.x, this.y)) SFX.awakenStart(); }
+      else if (!(this.awakenT > AWAKEN_TIME - 1.5)) this.fullMsg(); // logo após despertar não repete o aviso
+    }
 
     this.physics(dt, false);
   }
@@ -565,6 +591,15 @@ class Fighter {
     if (Math.random() < 0.7) particles.push({ x: this.x + rnd(-6, 6), y: this.y - 2, vx: rnd(-20, 20), vy: rnd(50, 90), life: 0.25, max: 0.25, size: 2, color: '#ffffff', glow: true });
   }
   /* aviso de energia cheia: um anel branco, um "plim" e o texto ENERGIA MÁXIMA */
+  awaken() {
+    this.awakenT = AWAKEN_TIME;
+    popup(this.x, this.y - 70, 'DESPERTAR!', '#ffffff', 9);
+    ring(this.x, this.y - 24, '#ffffff', 6, 70, 0.5); ring(this.x, this.y - 24, '#bfe9ff', 4, 45, 0.35);
+    spark(this.x, this.y - 26, 30, '#ffffff', 260, 0.6, 2);
+    for (let i = 0; i < 18; i++) { const d = i % 2 ? 1 : -1; particles.push({ x: this.x + d * rnd(4, 14), y: this.y - rnd(0, 4), vx: d * rnd(150, 300), vy: rnd(-50, -5), life: rnd(0.3, 0.6), max: 0.6, size: rnd(2, 5) | 0, color: '#d9bf98', g: 30, grow: true }); }
+    if (this === game.me) { shake = Math.max(shake, 8); flashT = 0.25; }
+    if (nearCam(this.x, this.y)) SFX.awaken();
+  }
   fullMsg(stopped) {
     const n = performance.now();
     if (this._fullT && n - this._fullT < 1200) return;
@@ -573,6 +608,7 @@ class Fighter {
     if (stopped) { ring(this.x, this.y - 24, '#ffffff', 8, 40, 0.4); spark(this.x, this.y - 26, 10, '#ffffff', 120, 0.4); }
     if (this === game.me) { tone('triangle', 880, 880, 0.12, 0.14); setTimeout(() => tone('triangle', 1320, 1320, 0.2, 0.12), 90); }
   }
+  dmgMul() { return this.awakenT > 0 ? 1.2 : 1; }
   onPlatform() {
     if (this.y >= GROUND) return false;
     return PLATFORMS.some(p => Math.abs(this.y - p.y) < 1 && this.x >= p.x && this.x <= p.x + p.w);
@@ -620,7 +656,7 @@ class Fighter {
       if (hx0 < b.x1 && hx1 > b.x0 && hy0 < b.y1 && hy1 > b.y0) {
         this.hitSet.add(o.id);
         const c = this.combo;
-        const p = { dmg: [0, 38, 44, 80][c], kbx: f * [0, 70, 80, 300][c], kby: c === 3 ? -220 : 0, stun: [0, 0.3, 0.32, 0.6][c], kind: c === 3 ? 'heavy' : 'hit' };
+        const p = { dmg: [0, 38, 44, 80][c] * this.dmgMul(), kbx: f * [0, 70, 80, 300][c], kby: c === 3 ? -220 : 0, stun: [0, 0.3, 0.32, 0.6][c], kind: c === 3 ? 'heavy' : 'hit' };
         const res = deliverHit(o, p, this);
         if (res === 'hit') this.punchHit = true;
         const px = this.x + f * 22, py = this.y - 30;
@@ -632,13 +668,13 @@ class Fighter {
   fireKi() {
     if (!this.infiniteKi) this.ki -= 10; this.kiCd = 0.3; this.setState('kiball', 0.26);
     const h = this.handPos();
-    spawnProjectile({ id: uid(), o: this.id, x: h.x, y: h.y, vx: this.facing * 320, r: 5, dmg: 55, big: 0, pal: this.pal }, true);
+    spawnProjectile({ id: uid(), o: this.id, x: h.x, y: h.y, vx: this.facing * 320, r: 5, dmg: 55 * this.dmgMul(), big: 0, pal: this.pal }, true);
     ring(h.x, h.y, this.pal_.ki[1], 2, 12, 0.15);
   }
   fireBig() {
     this.setState('bigfire', 0.36);
     const h = this.handPos();
-    spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 6, y: h.y, vx: this.facing * 235, r: 13, dmg: 170, big: 1, pal: this.pal }, true);
+    spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 6, y: h.y, vx: this.facing * 235, r: 13, dmg: 170 * this.dmgMul(), big: 1, pal: this.pal }, true);
     ring(h.x, h.y, this.pal_.ki[1], 6, 40, 0.3); shake = Math.max(shake, this === game.me ? 4 : 0);
   }
   startDash(mx) {
@@ -697,7 +733,7 @@ class Fighter {
       if (Math.random() < 0.4) spark(this.x + this.facing * 12, this.y - 30, 2, '#9fe8ff', 80, 0.2);
       return;
     }
-    const d = 140 * dt;
+    const d = 140 * dt * src.dmgMul();
     if (this.beamDmgAcc === 0 && this.beamPopT <= 0) this.beamPopT = 0.3;
     this.hp -= d; this.beamDmgAcc += d; this.lastHitBy = { id: src.id, name: src.name };
     if (this.state !== 'hurt') this.setState('hurt', 0.2); else this.stateT = Math.max(this.stateT, 0.15);
@@ -708,6 +744,7 @@ class Fighter {
     if (this.hp <= 0) this.die(src);
   }
   die(src) {
+    this.awakenT = 0;
     this.hp = 0; this.setState('ko'); this.deadT = game.mode === 'treino' && this !== game.me ? 1.6 : 3.2;
     this.deaths++; this.beamLen = 0;
     this.vx = sign(this.x - src.x) * 170; this.vy = -230; this.onGround = false;
@@ -730,7 +767,7 @@ class Fighter {
   predictBeam(dt, src) {
     if (this.dead) return;
     const guard = this.state === 'guard' && sign(src.x - this.x) === this.facing;
-    const d = 140 * dt * (guard ? 0.2 : 1);
+    const d = 140 * dt * (guard ? 0.2 : 1) * src.dmgMul();
     this.hp = Math.max(1, this.hp - d); this.predT = performance.now();
     if (!guard) { this.beamPred = (this.beamPred || 0) + d; if (Math.random() < 0.3) this.flash = 0.05; }
     this.beamPredT = (this.beamPredT || 0) - dt;
@@ -761,11 +798,14 @@ class Fighter {
     const predicting = this.predT && performance.now() - this.predT < 600;
     if (m.hp < this.hp - 0.5 && !predicting) this.flash = 0.08;
     // enquanto a rede não confirma, mantém o dano que já mostrei (não "devolve" a vida)
+    this.awakenT = m.aw ? 1 : 0;
     this.hp = predicting ? Math.min(m.hp, this.hp) : m.hp; this.beamLen = m.bl; this.combo = m.cb; this.pose_ = m.po;
     if (prevSt !== m.st) {
       this.stateAge = 0;
       if (nearCam(m.x, m.y)) {
         if (m.st === 'punch') SFX.swing();
+        if (m.st === 'awaken') SFX.awakenStart();
+        if (prevSt === 'awaken' && m.aw) this.awaken();
         if (m.st === 'charge') chargeBurst(this);
         if (m.st === 'beamwind') SFX.beamWind();
         if (m.st === 'beam') SFX.beamFire();
@@ -779,7 +819,7 @@ class Fighter {
     return { t: 's', id: this.id, n: this.name, p: this.pal, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
       ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
-      bt: this.ctrl.startsWith('ai') ? 1 : 0, iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0 };
+      bt: this.ctrl.startsWith('ai') ? 1 : 0, iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? 1 : 0 };
   }
 
   pushTrail(every) {
@@ -805,7 +845,7 @@ class Fighter {
       case 'ko': case 'hurt': return 'dano';
       case 'punch': return ['golpe1', 'golpe1', 'golpe2', 'golpe3'][this.combo] || 'golpe1';
       case 'kiball': case 'bigfire': case 'beam': return 'kiball';
-      case 'charge': return 'carga2'; // novo frame de carga de energia
+      case 'charge': case 'awaken': return 'carga2'; // frame de carga de energia
       case 'bigwind': case 'beamwind': return 'carga';
       case 'dash': return 'frente';
       case 'guard': return 'defesa'; // novo frame de defesa
@@ -836,7 +876,7 @@ class Fighter {
     else if (this.state === 'hurt') ox = (Math.random() - 0.5) * 2.5;
     else if (pose === 'parado' && this.onGround) { sy = 1 + Math.sin(t * 4) * 0.025; sx = 1 - Math.sin(t * 4) * 0.012; }
     else if (pose === 'frente' && this.onGround) oy = -Math.abs(Math.sin(t * 13)) * 2;
-    if (this.state === 'charge' || this.state === 'beamwind') ox = (Math.random() - 0.5) * 1.5;
+    if (this.state === 'charge' || this.state === 'beamwind' || this.state === 'awaken') ox = (Math.random() - 0.5) * (this.state === 'awaken' ? 2.5 : 1.5);
 
     const px = this.x - cam.x, py = this.y - cam.y;
     const charging = this.state === 'charge', winding = this.state === 'beamwind' || this.state === 'bigwind';
@@ -844,6 +884,8 @@ class Fighter {
     // a aura "explode" ao começar e depois pulsa
     const aSc = (this.stateAge < 0.14 ? lerp(0.45, 1.15, this.stateAge / 0.14) : this.stateAge < 0.24 ? lerp(1.15, 1, (this.stateAge - 0.14) / 0.1) : 1 + Math.sin(t * 18) * 0.025) * (charging ? 1 : 0.82);
     if (auraOn) drawAura(px, py + oy, this.pal, t, aSc, false);
+    const awakening = this.state === 'awaken', awake = this.awakenT > 0;
+    if (awake || awakening) drawAwakenGlow(px, py + oy, t, awakening ? 0.4 + 0.6 * clamp(this.stateAge / AWAKEN_HOLD, 0, 1) : 1);
 
     if (this.invuln > 0 && this.state !== 'dash') ctx.globalAlpha = 0.5; // invulnerável: meio transparente
     if (this.state === 'dash') ctx.globalAlpha = 0.45;
@@ -851,6 +893,12 @@ class Fighter {
     if (this.flash > 0) blit(SPR.white[pose], px + ox, py + oy, this.facing, sx, sy, rot);
     ctx.globalAlpha = 1;
     if (auraOn) drawAura(px, py + oy, this.pal, t, aSc, true); // véu da aura na frente do corpo
+    if (awake || awakening) drawBolts(px, py + oy, awakening ? 0.3 + 0.7 * clamp(this.stateAge / AWAKEN_HOLD, 0, 1) : 1);
+    if (awakening) { // anel de progresso: quando fecha, desperta
+      const k = clamp(this.stateAge / AWAKEN_HOLD, 0, 1);
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py - 24 + oy, 30, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = '#ffffff'; ctx.beginPath(); ctx.arc(px, py - 24 + oy, 30, -Math.PI / 2, -Math.PI / 2 + k * Math.PI * 2); ctx.stroke();
+    }
 
     if (this.state === 'guard') {
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -1000,6 +1048,31 @@ function drawAura(x, y, pal, t, sc, front) {
   ctx.drawImage(fr, Math.round(x - w / 2), Math.round(y - AURA_FEET * sc + 1), w, h);
   ctx.restore();
 }
+/* ---------------- MODO DESPERTAR: raios ao redor do personagem ---------------- */
+const AWAKEN_HOLD = 2.0, AWAKEN_TIME = 25;
+function drawBolts(x, y, k) {
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineJoin = 'miter';
+  const n = Math.round(1 + 4 * k);
+  for (let i = 0; i < n; i++) {
+    if (Math.random() < 0.35) continue; // piscar
+    const a = rnd(0, Math.PI * 2), r0 = rnd(4, 12), r1 = rnd(20, 34);
+    const sx = x + Math.cos(a) * r0, sy = y - 26 + Math.sin(a) * r0 * 1.7, ex = x + Math.cos(a) * r1, ey = y - 26 + Math.sin(a) * r1 * 1.4;
+    const pts = [[sx, sy]];
+    for (let s2 = 1; s2 <= 4; s2++) { const f = s2 / 4; pts.push([lerp(sx, ex, f) + (s2 < 4 ? rnd(-5, 5) : 0), lerp(sy, ey, f) + (s2 < 4 ? rnd(-5, 5) : 0)]); }
+    for (const [w, c] of [[3, 'rgba(150,210,255,0.35)'], [1.2, 'rgba(255,255,255,0.95)']]) {
+      ctx.strokeStyle = c; ctx.lineWidth = w; ctx.beginPath(); pts.forEach(([px, py], j) => j ? ctx.lineTo(px, py) : ctx.moveTo(px, py)); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+function drawAwakenGlow(x, y, t, k) {
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createRadialGradient(x, y - 24, 3, x, y - 24, 40);
+  g.addColorStop(0, `rgba(220,240,255,${0.28 * k * (0.8 + Math.sin(t * 20) * 0.2)})`); g.addColorStop(1, 'rgba(180,220,255,0)');
+  ctx.fillStyle = g; ctx.fillRect(x - 42, y - 66, 84, 84);
+  ctx.restore();
+}
+
 /* explosão de energia no início da carga */
 function chargeBurst(f) {
   const c = f.pal_.aura;
@@ -1519,6 +1592,7 @@ function drawHUD() {
   if (fx) text('ENERGIA MÁXIMA!', bx + bw + 6, T + 19, 5, '#ffffff', 'left', '#120c1c', 1.2);
   text('KI ' + (me.infiniteKi ? 'MAX' : Math.floor(me.ki)), bx + 3, T + 19, 5, '#ffffff', 'left', '#0b3550', 1.2);
   text(me.name, bx, T + 30, 5, me.pal_.swatch, 'left', '#120c1c', 1.2);
+  if (me.awakenT > 0) { ctx.font = FONT(5); text('⚡ DESPERTAR ' + Math.ceil(me.awakenT) + 's', bx + ctx.measureText(me.name).width + 8, T + 30, 5, '#ffffff', 'left', '#1b3550', 1.2); }
   const humans = game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length;
   const footer = game.mode === 'online' ? `SALA ${net.code} · ${humans}/${MAX_PLAYERS} jogadores`
     : game.mode === 'treino' ? 'TREINO · energia infinita ' + (me.infiniteKi ? 'LIGADA' : 'DESLIGADA') : 'CONTRA BOTS';
@@ -1832,7 +1906,7 @@ function update(dt) {
   const me = game.me;
   game.cam.x = approach(game.cam.x, clamp(me.x - VW / 2 + me.facing * 30, 0, WW - VW), 6, dt);
   game.cam.y = approach(game.cam.y, clamp(me.y - 160, 0, WH - VH), 5, dt);
-  shake = approach(shake, 0, 8, dt);
+  shake = approach(shake, 0, 8, dt); flashT = Math.max(0, flashT - dt);
   net.tick(dt);
 }
 
@@ -1870,6 +1944,7 @@ function render(dt) {
   drawKillBadges(cam);
   for (const p of popups) { ctx.globalAlpha = clamp(p.life / p.max * 2, 0, 1); text(p.text, p.x - cam.x, p.y - cam.y, p.size, p.color, 'center', '#1a0f24', 1); }
   ctx.globalAlpha = 1;
+  if (flashT > 0) { ctx.fillStyle = `rgba(255,255,255,${clamp(flashT * 3, 0, 0.75)})`; ctx.fillRect(0, 0, VW, VH); }
   drawHUD();
 }
 
