@@ -6,6 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d0b14"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Arena de Ki Online</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#0d0b14;--fg:#efeaff;--muted:#8d86a8;--panel:#1a1528;--line:#3a2e58;--acc:#ffd23a;--acc2:#ff8a2a}
@@ -2825,5 +2826,6 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
 loadSprites().then(() => { buildAuras(); buildCharPicker(); buildMapPicker(); if (game.phase === 'loading') game.phase = 'menu'; updateTouchUI(); lobby.start(); }).catch(e => console.error(e));
 requestAnimationFrame(frame);
 </script>
+<script>if ('serviceWorker' in navigator && location.protocol.startsWith('http')) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script>
 </body>
 </html>
