@@ -2935,7 +2935,8 @@ function update(dt) {
   const me = game.me;
   game.cam.x = approach(game.cam.x, clamp(me.x - VW / 2 + me.facing * 30, 0, WW - VW), 6, dt);
   game.cam.y = approach(game.cam.y, clamp(me.y - 160, 0, WH - VH), 5, dt);
-  shake = approach(shake, 0, 8, dt); flashT = Math.max(0, flashT - dt);
+  shake = approach(shake, 0, 8, dt); if (shake < 0.15) shake = 0; // zera de vez: restos minúsculos faziam a tela tremer 1px por muito tempo
+  flashT = Math.max(0, flashT - dt);
   net.tick(dt);
 }
 
@@ -2947,7 +2948,7 @@ function render(dt) {
     drawBackground(cam, dt);
     return;
   }
-  const cam = { x: game.cam.x + (Math.random() - 0.5) * shake, y: game.cam.y + (Math.random() - 0.5) * shake };
+  const cam = shake > 0 ? { x: game.cam.x + (Math.random() - 0.5) * shake, y: game.cam.y + (Math.random() - 0.5) * shake } : { x: game.cam.x, y: game.cam.y };
   drawBackground(cam, dt);
   for (const f of game.fighters) f.drawShadow(cam);
   const order = game.fighters.filter(f => f !== game.me); if (game.me) order.push(game.me);
