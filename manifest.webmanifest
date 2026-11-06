@@ -1,0 +1,20 @@
+{
+  "name": "Arena de Ki Online",
+  "short_name": "Arena de Ki",
+  "description": "Jogo de luta 2D online (fan game de estudo).",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "landscape",
+  "background_color": "#0d0b14",
+  "theme_color": "#0d0b14",
+  "lang": "pt-BR",
+  "categories": ["games"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
