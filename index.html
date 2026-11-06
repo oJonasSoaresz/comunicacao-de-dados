@@ -73,6 +73,11 @@
   button.char{flex:1;min-width:84px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px;font-family:inherit;font-size:clamp(7px,.85vw,9px);color:var(--fg);background:#0f0b19;border:2px solid var(--line);cursor:pointer}
   button.char canvas{width:64px;height:64px;image-rendering:pixelated;image-rendering:crisp-edges;background:transparent}
   button.char:hover{background:#221a36}
+  #maps{display:flex;gap:8px;flex:1;flex-wrap:wrap}
+  button.mapb{flex:1;min-width:84px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px;font-family:inherit;font-size:clamp(7px,.85vw,9px);color:var(--fg);background:#0f0b19;border:2px solid var(--line);cursor:pointer}
+  button.mapb canvas{width:100%;max-width:120px;aspect-ratio:16/9;image-rendering:pixelated;background:#000}
+  button.mapb:hover{background:#221a36}
+  button.mapb.sel{border-color:var(--acc);background:#2b2244;box-shadow:0 0 0 2px rgba(255,210,58,.35);color:var(--acc)}
   button.char.sel{border-color:var(--acc);background:#2b2244;box-shadow:0 0 0 2px rgba(255,210,58,.35);color:var(--acc)}
   /* 16px evita o zoom automático do iPhone ao tocar no campo */
   input[type=text]{flex:1;min-width:0;background:#0f0b19;border:2px solid var(--line);color:var(--fg);font-family:inherit;font-size:16px;padding:7px 8px;outline:none;border-radius:0}
@@ -114,6 +119,7 @@
         <div class="col">
           <div class="row"><label>NOME</label><input id="name" type="text" maxlength="12" placeholder="seu nome" autocomplete="off" autocorrect="off" spellcheck="false"></div>
           <div class="row" style="align-items:stretch"><label style="align-self:center">PERSONAGEM</label><div id="chars"></div></div>
+          <div class="row" style="align-items:stretch"><label style="align-self:center">MAPA</label><div id="maps"></div></div>
           <div class="btns">
             <button class="b" id="bTrain">MODO TREINO</button>
             <button class="b" id="bBots">CONTRA BOTS</button>
@@ -232,7 +238,7 @@ const CHARS = {
 const CHAR_IDS = Object.keys(CHARS);
 
 const cv = document.getElementById('c');
-const ctx = cv.getContext('2d');
+let ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
 let VW = 480, VH = 270; // tamanho interno da tela: a altura é fixa e a largura acompanha o formato do aparelho
@@ -289,10 +295,22 @@ function resizeCanvas() {
   SAFE.t = sf.offsetTop / r.height * VH; SAFE.b = (r.height - sf.offsetTop - sf.offsetHeight) / r.height * VH;
   if (typeof layoutButtons === 'function') { layoutButtons(); placeEditbar(); }
 }
-const PLATFORMS = [
-  { x: 260, y: 580, w: 150 }, { x: 640, y: 495, w: 180 }, { x: 1040, y: 585, w: 150 },
-  { x: 1360, y: 470, w: 170 }, { x: 860, y: 350, w: 150 }, { x: 160, y: 400, w: 130 }, { x: 1570, y: 330, w: 130 },
-];
+/* ---------------- MAPAS: cenário + plataformas de cada um ---------------- */
+const MAPS = {
+  canyon: { name: 'Cânion Rochoso', desc: 'Rochedos e plataformas de pedra',
+    sky: [[0, '#2747a8'], [0.5, '#6fa8ec'], [0.85, '#f7cf9a'], [1, '#f5a86b']], suns: [[380, 120, 18, 'rgba(255,240,200,0.9)']],
+    far: ['peaks', '#7d8fc4'], mid: 'mesas', cloud: 'rgba(255,255,255,0.85)',
+    ground: ['#c99a6a', '#e2b886', '#a77a50', '#b5875a', '#d8ab7a', '#94683f'], plat: ['#7a4f30', '#c99a6a', '#e2b886', '#5f9a3a', '#5e3a22'], rock: '#7a4f30',
+    platforms: [{ x: 260, y: 580, w: 150 }, { x: 640, y: 495, w: 180 }, { x: 1040, y: 585, w: 150 }, { x: 1360, y: 470, w: 170 }, { x: 860, y: 350, w: 150 }, { x: 160, y: 400, w: 130 }, { x: 1570, y: 330, w: 130 }] },
+  namek: { name: 'Planeta Namekusei', desc: 'Céu verde, três sóis e árvores redondas',
+    sky: [[0, '#16705f'], [0.45, '#4fbf9a'], [0.85, '#c9f2c4'], [1, '#eaffd9']], suns: [[300, 70, 10, 'rgba(255,255,230,0.95)'], [345, 98, 7, 'rgba(255,255,230,0.9)'], [420, 58, 13, 'rgba(255,255,225,0.95)']],
+    far: ['hills', '#3f8f86'], mid: 'namek', cloud: 'rgba(235,255,245,0.75)',
+    ground: ['#4f7486', '#86d65a', '#3f6a3a', '#5c8798', '#6b97a8', '#3e5f70'], plat: ['#4d6c7c', '#7fcf52', '#b9f28a', '#3f9a3a', '#36505e'], rock: '#3e5f70',
+    platforms: [{ x: 180, y: 585, w: 150 }, { x: 470, y: 490, w: 150 }, { x: 800, y: 400, w: 200 }, { x: 1180, y: 490, w: 150 }, { x: 1470, y: 585, w: 150 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 120 }, { x: 1570, y: 380, w: 120 }] },
+};
+const MAP_IDS = Object.keys(MAPS);
+let MAP_ID = 'canyon', PLATFORMS = MAPS.canyon.platforms;
+function setMap(id) { MAP_ID = MAPS[id] ? id : 'canyon'; PLATFORMS = MAPS[MAP_ID].platforms; buildBackground(); }
 
 /* ---------------- utilidades ---------------- */
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -494,7 +512,7 @@ class Fighter {
       ring(this.x, this.y - 22, this.pal_.aura[1], 4, 34, 0.5); return;
     }
     // escolhe o ponto de nascimento mais longe dos outros
-    const pts = [{ x: 140, y: GROUND }, { x: 900, y: GROUND }, { x: 1660, y: GROUND }, { x: 715, y: 495 }, { x: 1440, y: 470 }, { x: 335, y: 580 }, { x: 1115, y: 585 }];
+    const pts = [{ x: 140, y: GROUND }, { x: 900, y: GROUND }, { x: 1660, y: GROUND }, ...PLATFORMS.map(p => ({ x: p.x + p.w / 2, y: p.y }))];
     let best = pts[0], bd = -1;
     for (const p of pts) {
       let d = 1e9; for (const f of game.fighters) if (f !== this && !f.dead) d = Math.min(d, Math.hypot(f.x - p.x, f.y - p.y));
@@ -1816,12 +1834,12 @@ const lobby = {
     const list = this.list(); this.rooms = list; renderRooms();
     for (const c of this.conns) if (c.open) c.send({ t: 'rooms', list });
   },
-  list() { return [...this.regs.values()].sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n })); },
+  list() { return [...this.regs.values()].sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map })); },
   onReg(m) {
     if (!m) return;
     if (m.t === 'reg' && m.room && /^[A-Z]{4}$/.test(m.room.code)) {
       const old = this.regs.get(m.room.code);
-      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 12), n: clamp(m.room.n | 0, 1, 99), t: Date.now(), since: old ? old.since : Date.now() });
+      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 12), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', t: Date.now(), since: old ? old.since : Date.now() });
     } else if (m.t === 'unreg') this.regs.delete(m.code);
   },
   send(m) { if (this.isServer) { this.onReg(m); this.tickServer(); } else if (this.conn && this.conn.open) this.conn.send(m); },
@@ -1844,7 +1862,7 @@ function renderRooms() {
     : `Cada sala tem até ${MAX_PLAYERS} jogadores.`;
   if (!list.length) el.innerHTML = `<div class="empty">${lobby.status === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : lobby.status === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
   else el.innerHTML = list.map(r => { const full = r.n >= MAX_PLAYERS;
-    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}><span class="rn">Sala de ${esc(r.host)}</span><span class="rc">código ${esc(r.code)}</span><span class="cnt">👥 ${r.n}/${MAX_PLAYERS}</span><span class="rj">${full ? 'CHEIA' : 'ENTRAR'}</span></button>`; }).join('');
+    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}><span class="rn">Sala de ${esc(r.host)}</span><span class="rc">código ${esc(r.code)} · ${esc((MAPS[r.map] || MAPS.canyon).name)}</span><span class="cnt">👥 ${r.n}/${MAX_PLAYERS}</span><span class="rj">${full ? 'CHEIA' : 'ENTRAR'}</span></button>`; }).join('');
 }
 
 const net = {
@@ -1879,7 +1897,7 @@ const net = {
       const humans = this.conns.length + 1;
       if (humans >= MAX_PLAYERS) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
       if (humans + 1 + game.bots.length > MAX_PLAYERS) game.removeBot(); // abre espaço tirando um bot
-      c.send({ t: 'welcome' });
+      c.send({ t: 'welcome', map: game.map || 'canyon' });
       this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
     });
     c.on('data', m => {
@@ -1917,7 +1935,7 @@ const net = {
       if (!m) return;
       if (!done) { // espera o anfitrião aceitar (ou dizer que está cheia)
         if (gen !== this.gen) return;
-        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; onOk(code); }
+        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; onOk(code); }
         else if (m.t === 'full') fail('Sala cheia (' + MAX_PLAYERS + ' jogadores).');
         return;
       }
@@ -1978,7 +1996,7 @@ const net = {
     if (this.sendT <= 0) { this.sendT = 0.05; for (const f of game.fighters) if (f.local) this.send(f.snapshot()); }
     if (this.role === 'host') {
       this.regT -= dt;
-      if (this.regT <= 0) { this.regT = 2; lobby.register({ code: this.code, host: game.me.name, n: this.conns.length + 1 }); }
+      if (this.regT <= 0) { this.regT = 2; lobby.register({ code: this.code, host: game.me.name, n: this.conns.length + 1, map: game.map || 'canyon' }); }
     }
   }
 };
@@ -2015,25 +2033,40 @@ function handleNet(m) {
 let BG = null;
 function seeded(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
 function buildBackground() {
-  const R = seeded(1337), L = {};
+  const M = MAPS[MAP_ID], R = seeded(1337 + MAP_ID.length * 97), L = {};
+  // céu
   const sky = makeCanvas(VW, VH), s = sky.getContext('2d');
-  const g = s.createLinearGradient(0, 0, 0, VH);
-  g.addColorStop(0, '#2747a8'); g.addColorStop(0.5, '#6fa8ec'); g.addColorStop(0.85, '#f7cf9a'); g.addColorStop(1, '#f5a86b');
+  const g = s.createLinearGradient(0, 0, 0, VH); for (const [o, c] of M.sky) g.addColorStop(o, c);
   s.fillStyle = g; s.fillRect(0, 0, VW, VH);
+  if (M.stars) for (let i = 0; i < 90; i++) { s.fillStyle = `rgba(255,255,255,${0.3 + R() * 0.7})`; s.fillRect((R() * VW) | 0, (R() * VH * 0.6) | 0, 1, 1); }
   L.sky = sky;
-  // montanhas distantes
+  // fundo distante
   const fw = Math.ceil(VW + (WW - VW) * 0.2) + 20, fh = Math.ceil(VH + (WH - VH) * 0.3) + 10;
   const far = makeCanvas(fw, fh), f = far.getContext('2d');
-  f.fillStyle = '#7d8fc4'; f.beginPath(); f.moveTo(0, fh); let y = fh - 90;
-  for (let x = 0; x <= fw; x += 8) { y = clamp(y + (R() - 0.5) * 28, fh - 140, fh - 50); f.lineTo(x, y); }
-  f.lineTo(fw, fh); f.fill();
-  f.fillStyle = '#e8eefc'; // neve
+  const [ftype, fcol] = M.far; f.fillStyle = fcol;
+  if (ftype === 'peaks') {
+    f.beginPath(); f.moveTo(0, fh); let y = fh - 90;
+    for (let x = 0; x <= fw; x += 8) { y = clamp(y + (R() - 0.5) * 28, fh - 140, fh - 50); f.lineTo(x, y); }
+    f.lineTo(fw, fh); f.fill();
+  } else if (ftype === 'hills') {
+    f.beginPath(); f.moveTo(0, fh);
+    for (let x = 0; x <= fw; x += 4) f.lineTo(x, fh - 80 - Math.sin(x * 0.012) * 30 - Math.sin(x * 0.031 + 1) * 14);
+    f.lineTo(fw, fh); f.fill();
+    f.fillStyle = 'rgba(255,255,255,0.08)'; for (let i = 0; i < 6; i++) { f.beginPath(); f.ellipse(R() * fw, fh - 60 - R() * 40, 40 + R() * 40, 10, 0, 0, Math.PI * 2); f.fill(); }
+  } else if (ftype === 'skyline') {
+    let x = 0;
+    while (x < fw) {
+      const w = 18 + R() * 34, h = 60 + R() * 120; f.fillStyle = fcol; f.fillRect(x, fh - h, w, h);
+      f.fillStyle = 'rgba(255,214,110,0.5)'; for (let wy = fh - h + 6; wy < fh - 6; wy += 7) for (let wx = x + 3; wx < x + w - 3; wx += 5) if (R() < 0.25) f.fillRect(wx, wy, 2, 3);
+      x += w + 2 + R() * 6;
+    }
+  }
   L.far = far;
-  // rochedos (mesas)
+  // meio
   const mw = Math.ceil(VW + (WW - VW) * 0.5) + 40, mh = Math.ceil(VH + (WH - VH) * 0.6) + 10;
   const mid = makeCanvas(mw, mh), m = mid.getContext('2d');
   const base = mh - 35; let mx = -20;
-  while (mx < mw) {
+  if (M.mid === 'mesas') while (mx < mw) {
     const w = 30 + R() * 70, h = 60 + R() * 110, top = base - h, x0 = mx;
     m.fillStyle = '#b9714a';
     m.beginPath(); m.moveTo(x0, mh); m.lineTo(x0 + 6, top + 8); m.lineTo(x0 + 12, top); m.lineTo(x0 + w - 10, top); m.lineTo(x0 + w - 4, top + 10); m.lineTo(x0 + w, mh); m.fill();
@@ -2042,30 +2075,55 @@ function buildBackground() {
     m.fillStyle = '#8a4f33'; m.fillRect(x0 + w - 8, top + 10, 4, mh - top);
     mx += w + 20 + R() * 90;
   }
+  if (M.mid === 'namek') while (mx < mw) { // árvores de Namekusei: tronco fino e copa redonda
+    const h = 70 + R() * 120, x0 = mx, top = base - h, r = 12 + R() * 10;
+    m.fillStyle = '#5b7f6a'; m.fillRect(x0 - 2, top, 4, mh - top);
+    m.fillStyle = '#2f8f5a'; m.beginPath(); m.arc(x0, top, r, 0, Math.PI * 2); m.fill();
+    m.fillStyle = '#4fbf6a'; m.beginPath(); m.arc(x0 - r * 0.3, top - r * 0.3, r * 0.6, 0, Math.PI * 2); m.fill();
+    if (R() < 0.5) { m.fillStyle = '#6a8fa0'; m.beginPath(); m.ellipse(x0 + 30, base + 10, 26, 18, 0, Math.PI, 0); m.fill(); }
+    mx += 34 + R() * 70;
+  }
+  if (M.mid === 'city') while (mx < mw) { // prédios com janelas acesas
+    const w = 30 + R() * 50, h = 80 + R() * 150, top = base - h, x0 = mx;
+    m.fillStyle = '#262c55'; m.fillRect(x0, top, w, mh - top);
+    m.fillStyle = '#323a6e'; m.fillRect(x0, top, w, 3);
+    for (let wy = top + 8; wy < mh - 10; wy += 9) for (let wx = x0 + 4; wx < x0 + w - 4; wx += 7) { m.fillStyle = R() < 0.35 ? '#ffd86a' : '#1a1f40'; m.fillRect(wx, wy, 3, 4); }
+    if (R() < 0.3) { m.fillStyle = '#ff4a5a'; m.fillRect(x0 + w / 2, top - 10, 1, 10); m.fillRect(x0 + w / 2 - 1, top - 11, 3, 2); }
+    mx += w + 4 + R() * 30;
+  }
   L.mid = mid;
   // chão
+  const [gBase, gTop, gLine, gS1, gS2, gCrack] = M.ground;
   const gr = makeCanvas(WW, WH - GROUND + 10), q = gr.getContext('2d');
-  q.fillStyle = '#c99a6a'; q.fillRect(0, 0, WW, gr.height);
-  q.fillStyle = '#e2b886'; q.fillRect(0, 0, WW, 3); q.fillStyle = '#a77a50'; q.fillRect(0, 3, WW, 2);
-  for (let i = 0; i < 320; i++) { q.fillStyle = R() < 0.5 ? '#b5875a' : '#d8ab7a'; q.fillRect((R() * WW) | 0, (6 + R() * 30) | 0, 2 + (R() * 4 | 0), 1 + (R() * 2 | 0)); }
-  q.strokeStyle = '#94683f'; q.lineWidth = 1;
-  for (let i = 0; i < 30; i++) { let x = R() * WW, yy = 6 + R() * 18; q.beginPath(); q.moveTo(x, yy); for (let k = 0; k < 4; k++) { x += (R() - 0.3) * 16; yy += R() * 5; q.lineTo(x | 0, yy | 0); } q.stroke(); }
+  q.fillStyle = gBase; q.fillRect(0, 0, WW, gr.height);
+  q.fillStyle = gTop; q.fillRect(0, 0, WW, 3); q.fillStyle = gLine; q.fillRect(0, 3, WW, 2);
+  for (let i = 0; i < 320; i++) { q.fillStyle = R() < 0.5 ? gS1 : gS2; q.fillRect((R() * WW) | 0, (6 + R() * 30) | 0, 2 + (R() * 4 | 0), 1 + (R() * 2 | 0)); }
+  if (M.road) { q.fillStyle = '#e6c23a'; for (let x = 0; x < WW; x += 34) q.fillRect(x, 20, 18, 2); }
+  else { q.strokeStyle = gCrack; q.lineWidth = 1; for (let i = 0; i < 30; i++) { let x = R() * WW, yy = 6 + R() * 18; q.beginPath(); q.moveTo(x, yy); for (let k = 0; k < 4; k++) { x += (R() - 0.3) * 16; yy += R() * 5; q.lineTo(x | 0, yy | 0); } q.stroke(); } }
   L.ground = gr;
-  // plataformas de pedra flutuantes
+  // plataformas
+  const [pBody, pTop, pHi, pAcc, pDot] = M.plat;
   L.plats = PLATFORMS.map(p => {
     const c = makeCanvas(p.w + 8, 40), x = c.getContext('2d');
-    x.fillStyle = '#7a4f30';
+    if (M.girder) { // vigas de metal com faixa de aviso
+      x.fillStyle = pBody; x.fillRect(0, 0, p.w + 8, 11);
+      x.fillStyle = pHi; x.fillRect(0, 0, p.w + 8, 2);
+      for (let i = 0; i < p.w + 8; i += 8) { x.fillStyle = (i / 8) % 2 ? pAcc : '#1a1a1a'; x.fillRect(i, 3, 8, 3); }
+      x.fillStyle = pDot; for (let i = 6; i < p.w; i += 22) { x.fillRect(i, 11, 3, 18); x.fillRect(i - 2, 28, 7, 2); }
+      return c;
+    }
+    x.fillStyle = pBody;
     x.beginPath(); x.moveTo(0, 6); x.lineTo(p.w + 8, 6);
     for (let i = p.w + 8; i >= 0; i -= 10) x.lineTo(i, 14 + R() * 18 * Math.sin(Math.PI * i / (p.w + 8)));
     x.fill();
-    x.fillStyle = '#c99a6a'; x.fillRect(0, 0, p.w + 8, 7); x.fillStyle = '#e2b886'; x.fillRect(0, 0, p.w + 8, 2);
-    x.fillStyle = '#5f9a3a'; for (let i = 0; i < p.w; i += 6) if (R() < 0.5) x.fillRect(i + 2, 0, 3, 2);
-    x.fillStyle = '#5e3a22'; for (let i = 0; i < 8; i++) x.fillRect(4 + R() * p.w, 9 + R() * 10, 3, 2);
+    x.fillStyle = pTop; x.fillRect(0, 0, p.w + 8, 7); x.fillStyle = pHi; x.fillRect(0, 0, p.w + 8, 2);
+    x.fillStyle = pAcc; for (let i = 0; i < p.w; i += 6) if (R() < 0.5) x.fillRect(i + 2, 0, 3, 2);
+    x.fillStyle = pDot; for (let i = 0; i < 8; i++) x.fillRect(4 + R() * p.w, 9 + R() * 10, 3, 2);
     return c;
   });
   L.clouds = [];
   for (let i = 0; i < 8; i++) {
-    const c = makeCanvas(70, 24), cc = c.getContext('2d'); cc.fillStyle = 'rgba(255,255,255,0.85)';
+    const c = makeCanvas(70, 24), cc = c.getContext('2d'); cc.fillStyle = M.cloud;
     for (let k = 0; k < 6; k++) { cc.beginPath(); cc.arc(12 + k * 9 + R() * 4, 15 - R() * 6, 6 + R() * 5, 0, Math.PI * 2); cc.fill(); }
     L.clouds.push({ img: c, x: R() * (WW * 0.5), y: 20 + R() * 150, sp: 4 + R() * 8, par: 0.1 + R() * 0.15 });
   }
@@ -2073,8 +2131,9 @@ function buildBackground() {
   BG = L;
 }
 function drawBackground(cam, dt) {
+  const M = MAPS[MAP_ID];
   ctx.drawImage(BG.sky, 0, 0);
-  ctx.fillStyle = 'rgba(255,240,200,0.9)'; ctx.beginPath(); ctx.arc(380, 120 - cam.y * 0.05, 18, 0, Math.PI * 2); ctx.fill();
+  for (const [x, y, r, c] of M.suns) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x * VW / 480, y - cam.y * 0.05, r, 0, Math.PI * 2); ctx.fill(); }
   for (const c of BG.clouds) { c.x += c.sp * dt; if (c.x > WW * 0.5 + 80) c.x = -80; ctx.drawImage(c.img, Math.round(c.x - cam.x * c.par), Math.round(c.y - cam.y * 0.15)); }
   ctx.drawImage(BG.far, Math.round(-cam.x * 0.2), Math.round(-cam.y * 0.3));
   ctx.drawImage(BG.mid, Math.round(-cam.x * 0.5), Math.round(-cam.y * 0.6));
@@ -2082,11 +2141,23 @@ function drawBackground(cam, dt) {
   PLATFORMS.forEach((p, i) => ctx.drawImage(BG.plats[i], Math.round(p.x - 4 - cam.x), Math.round(p.y - cam.y)));
 }
 function drawForeground(cam) {
+  const col = MAPS[MAP_ID].rock;
   for (const r of BG.rocks) {
     const x = Math.round(r.x - cam.x * 1.15), y = Math.round(GROUND + 30 - cam.y);
     if (x < -40 || x > VW + 40 || y > VH + 20) continue;
-    ctx.fillStyle = '#7a4f30'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 4, y - r.h); ctx.lineTo(x + r.w - 3, y - r.h + 2); ctx.lineTo(x + r.w, y); ctx.fill();
+    ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 4, y - r.h); ctx.lineTo(x + r.w - 3, y - r.h + 2); ctx.lineTo(x + r.w, y); ctx.fill();
   }
+}
+/* miniatura do mapa (para os cartões de mapa e de sala) */
+const MAP_THUMBS = {};
+function renderMapThumb(id) {
+  const save = { BG, PLATFORMS, MAP_ID, ctx, VW, VH };
+  VW = 480; VH = 270; MAP_ID = id; PLATFORMS = MAPS[id].platforms; buildBackground();
+  const c = makeCanvas(480, 270); ctx = c.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  const cam = { x: 660, y: WH - VH - 40 };
+  drawBackground(cam, 0); drawForeground(cam);
+  ({ BG, PLATFORMS, MAP_ID, ctx, VW, VH } = save);
+  return c.toDataURL('image/png');
 }
 
 /* ---------------- HUD ---------------- */
@@ -2326,6 +2397,8 @@ game = {
   phase: 'loading', mode: null, fighters: [], bots: [], me: null, cam: { x: 0, y: 0 }, t: 0,
   byId(id) { return this.fighters.find(f => f.id === id); },
   start(mode) {
+    const map = mode === 'online' && net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
+    setMap(map); this.map = map;
     this.mode = mode; projectiles = []; stomps = []; lasers = []; blasts = []; soqFx = []; particles = []; popups = []; killfeed = [];
     const name = (document.getElementById('name').value.trim() || 'Jogador').slice(0, 12);
     try { localStorage.setItem('adk_name', name); } catch (e) {}
@@ -2360,7 +2433,7 @@ game = {
     const msg = { t: 'leave', id: b.me.id }; net.send(msg);
   },
   toMenu(msg) {
-    net.leave(); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; renderRooms(); killBadges = []; chatLog = []; closeChat();
+    net.leave(); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
     overlay = null; editMode = false; ['pause', 'settings'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById('editbar').classList.add('hidden');
     document.getElementById('menu').classList.remove('hidden');
     for (const k in keys) keys[k] = false;
@@ -2485,7 +2558,28 @@ function render(dt) {
 
 /* ---------------- menu (HTML) ---------------- */
 function setStatus(s) { document.getElementById('status').textContent = s; }
-let chosenChar = 'goku';
+let chosenChar = 'goku', chosenMap = 'canyon';
+try { if (MAPS[localStorage.getItem('adk_map')]) chosenMap = localStorage.getItem('adk_map'); } catch (e) {}
+/* escolha de mapa: miniatura de cada cenário */
+function renderMapThumb(id, c) {
+  const save = { BG, PLATFORMS, MAP_ID, ctx, VW, VH };
+  VW = 480; VH = 270; MAP_ID = id; PLATFORMS = MAPS[id].platforms; buildBackground();
+  const big = makeCanvas(480, 270); ctx = big.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  const cam = { x: 660, y: WH - VH - 40 }; drawBackground(cam, 0); drawForeground(cam);
+  ({ BG, PLATFORMS, MAP_ID, ctx, VW, VH } = save);
+  const x = c.getContext('2d'); x.drawImage(big, 0, 0, c.width, c.height);
+}
+function buildMapPicker() {
+  const box = document.getElementById('maps'); box.innerHTML = '';
+  for (const id of MAP_IDS) {
+    const b = document.createElement('button'); b.className = 'mapb' + (id === chosenMap ? ' sel' : ''); b.dataset.m = id;
+    const c = makeCanvas(160, 90); renderMapThumb(id, c); b.appendChild(c);
+    const sp = document.createElement('span'); sp.textContent = MAPS[id].name; b.appendChild(sp);
+    b.onclick = () => { chosenMap = id; try { localStorage.setItem('adk_map', id); } catch (e) {} setMap(id); box.querySelectorAll('button.mapb').forEach(o => o.classList.toggle('sel', o.dataset.m === id)); };
+    box.appendChild(b);
+  }
+  setMap(chosenMap);
+}
 try { if (CHARS[localStorage.getItem('adk_char')]) chosenChar = localStorage.getItem('adk_char'); } catch (e) {}
 function buildCharPicker() {
   const box = document.getElementById('chars'); box.innerHTML = '';
@@ -2508,6 +2602,7 @@ function buildMenu() {
   document.getElementById('bSettings').onclick = () => openSettings('menu');
   document.getElementById('bHost').onclick = () => {
     if (busy) return; initAudio(); if (!needNet()) return; setStatus('Criando sala...'); busy = true;
+    setStatus('Criando sala (' + MAPS[chosenMap].name + ')...');
     net.hostRoom(code => { busy = false; setStatus(''); game.start('online'); killfeed.unshift({ sys: 'Sala criada! Código: ' + code, life: 12 }); net.regT = 0; },
       err => { busy = false; setStatus(err); });
   };
@@ -2727,7 +2822,7 @@ buildBackground(); buildMenu(); setupTouch(); lockPage(); setupChat();
 resizeCanvas(); addEventListener('resize', resizeCanvas); setTimeout(resizeCanvas, 300);
 addEventListener('pagehide', () => { if (game.phase === 'play') net.leave(true); lobby.stop(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
-loadSprites().then(() => { buildAuras(); buildCharPicker(); if (game.phase === 'loading') game.phase = 'menu'; updateTouchUI(); lobby.start(); }).catch(e => console.error(e));
+loadSprites().then(() => { buildAuras(); buildCharPicker(); buildMapPicker(); if (game.phase === 'loading') game.phase = 'menu'; updateTouchUI(); lobby.start(); }).catch(e => console.error(e));
 requestAnimationFrame(frame);
 </script>
 </body>
