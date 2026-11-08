@@ -825,6 +825,203 @@
   #wrap.rot .gacha-item{height:84px}
   #wrap.rot .menu-hud{top:8px;right:8px}
 
+
+/* =============================================================
+   V16 | Interface compacta para celular, tablet e teclado virtual
+   ============================================================= */
+#wrap.typing:not(.rot){
+  top:var(--keyboard-view-top,0px)!important;
+  height:var(--keyboard-view-height,100dvh)!important;
+  bottom:auto!important;
+}
+@media (pointer:coarse), (max-width:760px){
+  html,body{overscroll-behavior:none}
+  #wrap:not(.rot) .ovl{
+    padding:56px 10px 12px!important;
+    overflow:hidden;align-items:center;justify-content:center;
+    touch-action:auto;
+  }
+  #wrap:not(.rot) .ovl .card{
+    width:min(90%,610px)!important;
+    max-width:610px!important;
+    height:auto!important;
+    max-height:min(100%,610px)!important;
+    min-height:0!important;
+    padding:12px!important;
+    gap:9px!important;
+    border-radius:18px!important;
+    display:flex;flex-direction:column;
+    flex-shrink:1;overflow-x:hidden;overflow-y:auto;
+    overscroll-behavior-y:contain;touch-action:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #wrap:not(.rot) .ovl .home-card,
+  #wrap:not(.rot) .ovl .solo-card,
+  #wrap:not(.rot) .ovl .card.small,
+  #wrap:not(.rot) .ovl .password-modal-card,
+  #wrap:not(.rot) .ovl .code-modal-card{
+    max-width:440px!important;
+    width:min(90%,440px)!important;
+  }
+  #wrap:not(.rot) .ovl .screen-card{max-width:660px!important}
+  #wrap:not(.rot) .ovl .gacha-card{max-width:550px!important}
+  #wrap:not(.rot) .ovl .card.cust{max-width:620px!important}
+  /* Os cabeçalhos não reservam 60px vazios: HUD fica fora do cartão. */
+  #wrap:not(.rot) .screen-card,
+  #wrap:not(.rot) .home-card,
+  #wrap:not(.rot) .solo-card{padding-top:12px!important}
+  .screen-head,.char-toolbar,.gacha-collection-head{flex:0 0 auto;gap:7px!important}
+  .screen-head .title{min-width:0;max-width:100%}
+  .title b{font-size:clamp(11px,2.4vw,17px)!important;line-height:1.5!important;overflow-wrap:anywhere}
+  .title small{font-size:7px!important;line-height:1.65!important;overflow-wrap:anywhere}
+  .ctitle{font-size:12px!important;margin:0 0 6px}
+  .section-label,.section-row label,.row label,.create-input-row label,.player-name-setting label,
+  .set>label,.lh span:first-child{font-size:7px!important;line-height:1.45!important;letter-spacing:0!important}
+  .row label{min-width:0!important;max-width:100%;flex:0 0 auto}
+  .hint,.status-extra,.password-help,.settings-note,.player-name-setting small{
+    font-size:6.5px!important;line-height:1.65!important;overflow-wrap:anywhere;
+  }
+  .screen-value{font-size:8px!important;line-height:1.55;min-width:0;overflow-wrap:anywhere}
+  .btns,.home-actions{gap:8px!important;flex:0 0 auto}
+  button.b,.home-actions button,.solo-modes button,.char-screen-actions button{
+    font-size:clamp(7px,1vw,9px)!important;
+    min-height:40px!important;padding:9px 8px!important;
+    line-height:1.45!important;border-radius:11px!important;
+    white-space:normal;overflow-wrap:anywhere;
+  }
+  button.b:focus-visible,button.char:focus-visible,button.mapb:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  /* Digitação: texto com fonte nativa, sem zoom de Safari; labels pequenos. */
+  input[type=text],input[type=password],input[type=email],textarea,select,
+  #roomPasswordInput,#roomName,#roomPass,#code,#menuCode,#playerName,#chatIn{
+    box-sizing:border-box!important;width:100%;max-width:100%;min-width:0!important;
+    min-height:42px!important;height:42px!important;
+    padding:9px 11px!important;border-radius:10px!important;
+    font:600 16px/1.25 system-ui,-apple-system,'Segoe UI',sans-serif!important;
+    letter-spacing:.2px!important;text-align:left!important;
+    -webkit-user-select:text!important;user-select:text!important;
+    caret-color:#ffd23a;scroll-margin:14px;
+  }
+  input[type=text]::placeholder,input[type=password]::placeholder,textarea::placeholder{
+    font:400 13px/1.2 system-ui,-apple-system,'Segoe UI',sans-serif!important;
+    color:#9891af;opacity:1;
+  }
+  .create-input-row,.player-name-setting{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:5px!important}
+  .create-input-row label,.player-name-setting label{width:auto!important;min-height:0!important}
+  .create-input-row input{flex:0 0 auto!important}
+  .create-char-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  .create-char-row label{grid-column:1/-1;font-size:7px!important}
+  .create-char-row button{grid-column:1/-1;width:100%;min-width:0}
+  .create-char-row strong{grid-column:1/-1;font-size:8px!important}
+  #createScreen .row:not(.create-input-row):not(.create-char-row){gap:6px}
+  #createScreen .row:not(.create-input-row):not(.create-char-row) label{max-width:100%}
+  /* Gacha: não comprimir o portal dentro do painel flex, pois isso recortava a esfera. */
+  #gachaScreen .card{overscroll-behavior:contain}
+  .gacha-shop-hero{
+    display:grid!important;
+    grid-template-columns:82px minmax(0,1fr)!important;
+    align-items:center!important;
+    width:100%;min-width:0;
+    flex:0 0 auto!important;
+    min-height:0!important;height:auto!important;
+    gap:9px!important;padding:12px!important;
+    overflow:visible!important;
+    border-radius:16px!important;
+  }
+  .gacha-shop-orb{
+    width:70px!important;height:70px!important;
+    min-width:70px!important;min-height:70px!important;
+    flex:0 0 70px!important;
+    margin:8px auto;justify-self:center;align-self:center;
+  }
+  .gacha-shop-orb:before{inset:-15%!important}
+  .gacha-shop-copy{
+    width:100%;min-width:0!important;max-width:none!important;gap:7px!important;
+    align-items:flex-start!important;text-align:left!important;
+    flex-shrink:0!important;
+  }
+  .gacha-shop-kicker{font-size:7px!important;line-height:1.5;letter-spacing:0!important}
+  .gacha-shop-copy>strong{font-size:clamp(10px,1.8vw,14px)!important;line-height:1.4!important;overflow-wrap:anywhere}
+  .gacha-shop-copy p{font-size:7px!important;line-height:1.65!important;max-width:100%;overflow-wrap:anywhere}
+  .gacha-shop-price{gap:5px!important;flex-wrap:wrap}
+  .gacha-shop-price span{font-size:12px!important}
+  .gacha-shop-price small{font-size:7px!important}
+  #bBuyGacha{display:block;width:100%!important;min-height:42px!important}
+  #gachaPool{flex:0 0 105px!important;height:105px!important;min-height:105px!important;max-height:105px!important}
+  .gacha-item{flex:0 0 104px!important;height:87px!important;min-height:87px!important}
+  .gacha-item canvas{width:41px;height:41px}
+  .gacha-collection-head{flex-wrap:wrap;gap:6px!important}
+  .gacha-count{font-size:7px}
+  /* Carrosséis: gestos verticais são permitidos, com fallback JS no contêiner. */
+  #chars,#createMaps,#gachaPool,
+  #chars button.char,#createMaps button.mapb,#gachaPool .gacha-item{
+    touch-action:auto!important;
+    overscroll-behavior-y:auto!important;
+  }
+  #chars,#createMaps,#gachaPool{overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain!important}
+  #chars{flex:0 0 141px!important;height:141px!important;min-height:141px!important;max-height:141px!important}
+  button.char{flex:0 0 126px!important;width:126px!important;min-width:126px!important;height:124px!important;min-height:124px!important;padding:6px 4px!important;border-radius:12px!important}
+  button.char canvas{width:57px!important;height:57px!important;flex:0 0 57px!important}
+  button.char>span:not(.char-state){font-size:7px!important;max-width:100%;overflow-wrap:anywhere}
+  button.char .char-state{font-size:6px!important}
+  #createMaps{flex:0 0 128px!important;height:128px!important;min-height:128px!important;max-height:128px!important}
+  #createMaps button.mapb{flex:0 0 174px!important;width:174px!important;min-width:174px!important;height:110px!important;min-height:110px!important;border-radius:12px!important;padding:5px!important;gap:4px!important}
+  #createMaps button.mapb canvas{width:100%!important;height:auto!important;max-height:78px!important;aspect-ratio:16/9!important;background:transparent!important}
+  #createMaps button.mapb span{font-size:7px!important;line-height:1.4!important}
+  #rooms{min-height:85px!important;max-height:28vh!important}
+  .code-row{gap:7px}
+  .code-row button{min-width:0!important}
+  .char-screen-actions,.char-screen-back{gap:8px!important}
+  .char-screen-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .char-screen-actions button{width:100%;min-width:0}
+  /* Configurações e modal de senha legíveis sem extrapolar o teclado. */
+  #roomPasswordModal .card,#codeModal .card,#settings .card{max-width:410px!important;max-height:min(100%,540px)!important}
+  #roomPasswordModal .title b,#codeModal .title b{font-size:12px!important}
+  #roomPasswordModal .title small,#codeModal .title small{font-size:7px!important}
+  #roomPasswordModal .modal-top{padding:0 30px!important}
+  #roomPasswordModal .set{gap:8px!important;padding:10px!important;border-radius:12px}
+  #roomPasswordModal .lh{flex-wrap:wrap!important;gap:6px!important}
+  #roomPasswordModal .locked-note,#roomPasswordCodeLabel{font-size:7px!important}
+  #roomPasswordModal .password-help{font-size:6.5px!important}
+  .player-name-setting{min-width:0}
+  #menuHud{top:8px;right:8px;gap:6px}
+  .mini-wallet{min-height:36px!important;min-width:70px!important;padding:7px 10px!important}
+  .mini-wallet strong{font-size:12px!important}
+  .gear-button{width:38px!important;height:38px!important;font-size:19px!important;flex-basis:38px!important}
+  .cwrap{gap:9px!important}
+  .cpanel{max-height:32vh!important;min-height:0!important}
+  /* Evita que o cartão e o menu se expandam quando o teclado abre. */
+  #wrap.typing:not(.rot) .ovl{padding-top:8px!important;padding-bottom:8px!important}
+  #wrap.typing:not(.rot) .ovl .card{max-height:calc(100% - 4px)!important;scrollbar-width:none!important}
+  #wrap.typing:not(.rot) #menuHud{display:none!important}
+  #wrap.typing:not(.rot) .ovl .gacha-shop-hero{overflow:visible!important}
+}
+@media (pointer:coarse) and (max-width:420px){
+  #wrap:not(.rot) .ovl .card{width:92%!important;max-width:92%!important}
+  #wrap:not(.rot) .ovl .home-card{max-width:420px!important}
+  .home-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .home-actions .wide{grid-column:1/-1!important}
+  .home-actions button{min-width:0}
+  .gacha-shop-hero{grid-template-columns:67px minmax(0,1fr)!important;padding:9px!important}
+  .gacha-shop-orb{width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;flex-basis:58px!important}
+  .gacha-shop-copy p{font-size:6.5px!important}
+  .gacha-shop-price span{font-size:10px!important}
+  .create-char-row{grid-template-columns:1fr!important}
+}
+@media (pointer:coarse) and (max-height:430px){
+  #wrap:not(.rot) .ovl{padding:45px 8px 7px!important}
+  #wrap:not(.rot) .ovl .card{max-width:min(90%,650px)!important;padding:9px!important;gap:7px!important}
+  .gacha-shop-hero{grid-template-columns:70px minmax(0,1fr)!important}
+  .gacha-shop-orb{width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important}
+  #createMaps{flex-basis:113px!important;height:113px!important;min-height:113px!important}
+  #createMaps button.mapb{height:95px!important}
+  #createMaps button.mapb canvas{max-height:66px!important}
+  #chars{flex-basis:124px!important;height:124px!important;min-height:124px!important}
+  button.char{height:107px!important;min-height:107px!important}
+  #gachaPool{flex-basis:88px!important;height:88px!important;min-height:88px!important}
+  .gacha-item{height:70px!important;min-height:70px!important}
+  .gacha-item canvas{width:32px!important;height:32px!important}
+}
+
 </style>
 </head>
 <body>
@@ -906,7 +1103,7 @@
         <div class="gacha-shop-copy">
           <span class="gacha-shop-kicker">PORTAL DE RECRUTAMENTO</span>
           <strong>ESFERA DO DESTINO</strong>
-          <p>Compre uma abertura. A esfera surgirá no centro da tela: toque nela três vezes para rompê-la e revelar um guerreiro.</p>
+          <p>Compre uma abertura e toque três vezes na esfera para revelar seu guerreiro.</p>
           <div class="gacha-shop-price"><span>◈ 100</span><small>POR ABERTURA</small></div>
           <button class="b pri gacha-buy" id="bBuyGacha" type="button">COMPRAR GACHA · 100 ◈</button>
         </div>
@@ -1386,10 +1583,16 @@ let ROT = false;
 function layoutFrame() {
   const wrap = document.getElementById('wrap');
   const W = window.innerWidth, H = window.innerHeight;
-  ROT = (isTouchDevice() && H > W);
+  const editing = document.activeElement && /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  const menuOverlay = ['settings', 'codeModal', 'roomPasswordModal', 'pause']
+    .some(id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); });
+  const chatVisible = document.getElementById('chatbar') && !document.getElementById('chatbar').classList.contains('hidden');
+  // Apenas o combate precisa girar: menus e teclados ficam na orientação real do celular.
+  ROT = !!(isTouchDevice() && H > W && game.phase === 'play' && !editing && !menuOverlay && !chatVisible);
   wrap.classList.toggle('rot', ROT);
   if (ROT) { wrap.style.width = H + 'px'; wrap.style.height = W + 'px'; wrap.style.transform = `translateX(${W}px) rotate(90deg)`; }
   else { wrap.style.width = ''; wrap.style.height = ''; wrap.style.transform = ''; }
+  syncKeyboardViewport(false);
 }
 function isTouchDevice() { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0; }
 /* converte um toque da tela para as coordenadas do jogo (considerando o giro) */
@@ -1406,6 +1609,62 @@ function goFullscreen() {
 function tryLandscape() {
   try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch (e) {}
 }
+
+/* Ajusta formulários à área VISÍVEL quando o teclado virtual abre.
+   Não desloca toda a página: rola apenas o painel que contém o campo. */
+let keyboardFocusTimer = 0;
+function activeTextField() {
+  const e = document.activeElement;
+  return e && e.matches && e.matches('input:not([type=range]):not([type=color]),textarea,select') ? e : null;
+}
+function revealFocusedField() {
+  const input = activeTextField();
+  if (!input) return;
+  const card = input.closest('.card');
+  if (!card) return;
+  const viewportRect = card.getBoundingClientRect();
+  const inputRect = input.getBoundingClientRect();
+  const margin = 16;
+  const wantedBottom = viewportRect.bottom - margin;
+  const wantedTop = viewportRect.top + margin;
+  if (inputRect.bottom > wantedBottom) card.scrollTop += inputRect.bottom - wantedBottom;
+  if (inputRect.top < wantedTop) card.scrollTop -= wantedTop - inputRect.top;
+}
+function syncKeyboardViewport(shouldScroll = true) {
+  const wrap = document.getElementById('wrap');
+  if (!wrap) return;
+  const input = activeTextField();
+  const mobile = isTouchDevice();
+  const vv = window.visualViewport;
+  const open = !!(mobile && input);
+  wrap.classList.toggle('typing', open);
+  const visibleHeight = vv ? vv.height : window.innerHeight;
+  const visibleTop = vv ? vv.offsetTop : 0;
+  wrap.style.setProperty('--keyboard-view-height', Math.max(180,Math.round(visibleHeight)) + 'px');
+  wrap.style.setProperty('--keyboard-view-top', Math.max(0,Math.round(visibleTop)) + 'px');
+  if (open && shouldScroll) {
+    clearTimeout(keyboardFocusTimer);
+    keyboardFocusTimer = setTimeout(revealFocusedField, 70);
+  }
+}
+function setupKeyboardVisibility() {
+  document.addEventListener('focusin', e => {
+    if (!e.target.matches || !e.target.matches('input,textarea,select')) return;
+    syncKeyboardViewport();
+    if (isTouchDevice()) resizeCanvas();
+    setTimeout(() => { syncKeyboardViewport(); revealFocusedField(); }, 260);
+  });
+  document.addEventListener('focusout', e => {
+    if (!e.target.matches || !e.target.matches('input,textarea,select')) return;
+    clearTimeout(keyboardFocusTimer);
+    setTimeout(() => { syncKeyboardViewport(false); if (isTouchDevice()) resizeCanvas(); }, 90);
+  });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => { syncKeyboardViewport(); });
+    window.visualViewport.addEventListener('scroll', () => syncKeyboardViewport());
+  }
+}
+
 function resizeCanvas() {
   layoutFrame();
   const wrap = document.getElementById('wrap'), r = { width: wrap.offsetWidth, height: wrap.offsetHeight };
@@ -4196,12 +4455,12 @@ function openChat() {
   if (game.phase !== 'play' || game.mode !== 'online' || overlay) return;
   chatOpen = true; for (const k in keys) keys[k] = false;
   show('chatbar', true); updateTouchUI(); updateChatBtn();
-  const inp = document.getElementById('chatIn'); inp.value = ''; updateChatCount(); setTimeout(() => inp.focus(), 30);
+  const inp = document.getElementById('chatIn'); inp.value = ''; updateChatCount(); resizeCanvas(); setTimeout(() => inp.focus(), 30);
 }
 function updateChatCount() { const n = document.getElementById('chatIn').value.length, el = document.getElementById('chatCount'); el.textContent = n + '/' + CHAT_MAX; el.classList.toggle('lim', n >= CHAT_MAX - 10); }
 function closeChat() {
   chatOpen = false; const inp = document.getElementById('chatIn'); if (inp) inp.blur();
-  show('chatbar', false); for (const k in keys) keys[k] = false; updateTouchUI();
+  show('chatbar', false); for (const k in keys) keys[k] = false; updateTouchUI(); resizeCanvas();
 }
 function updateChatBtn() {
   const b = document.getElementById('chatSend'); if (!b) return;
@@ -4348,6 +4607,7 @@ game = {
     document.getElementById('menuHud').classList.add('hidden');
     if (document.activeElement) document.activeElement.blur();
     updateTouchUI();
+    resizeCanvas();
     goFullscreen();
   },
   addBot(mode, name, char) {
@@ -4372,7 +4632,7 @@ game = {
     document.getElementById('menu').classList.remove('hidden');
     document.getElementById('menuHud').classList.remove('hidden');
     for (const k in keys) keys[k] = false;
-    setStatus(msg || ''); updateTouchUI();
+    setStatus(msg || ''); updateTouchUI(); resizeCanvas();
   },
   disconnected(msg) { this.toMenu(msg); }
 };
@@ -4500,7 +4760,11 @@ function setStatus(s) {
 }
 function showMenuScreen(id) {
   for (const screen of ['menu', 'charScreen', 'soloScreen', 'createScreen', 'roomsScreen', 'gachaScreen', 'gachaOpening', 'custom', 'codeModal', 'roomPasswordModal']) show(screen, false);
-  if (id) show(id, true);
+  if (id) {
+    show(id, true);
+    const panel = document.getElementById(id).querySelector('.card');
+    if (panel) panel.scrollTop = 0;
+  }
   const menuHud = document.getElementById('menuHud'); if (menuHud) menuHud.classList.toggle('hidden', !id);
   if (id === 'roomsScreen') { roomsKey = ''; renderRooms(); }
   if (id === 'createScreen') { buildMapPicker(); syncEconomyUI(); }
@@ -4544,7 +4808,7 @@ function buildMapPicker() {
     const b = document.createElement('button'); b.className = 'mapb' + (id === chosenMap ? ' sel' : ''); b.dataset.m = id;
     const c = makeCanvas(160, 90); renderMapThumb(id, c); b.appendChild(c);
     const sp = document.createElement('span'); sp.textContent = MAPS[id].name; b.appendChild(sp);
-    b.onclick = () => { chosenMap = id; try { localStorage.setItem('adk_map', id); } catch (e) {} setMap(id); box.querySelectorAll('button.mapb').forEach(o => o.classList.toggle('sel', o.dataset.m === id)); };
+    b.onclick = () => { chosenMap = id; try { localStorage.setItem('adk_map', id); } catch (e) {} setMap(id); box.querySelectorAll('button.mapb').forEach(o => o.classList.toggle('sel', o.dataset.m === id)); syncEconomyUI(); };
     box.appendChild(b);
   }
   setMap(chosenMap);
@@ -4790,6 +5054,28 @@ function enableHorizontalDrag(element) {
       if (e.stopImmediatePropagation) e.stopImmediatePropagation();
     }
   }, true);
+  // Gestos verticais iniciados dentro do carrossel devem rolar a tela-pai.
+  // Não interferir em gestos horizontais nem nos toques simples de seleção.
+  let gesture = null;
+  element.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) { gesture = null; return; }
+    const t = e.touches[0];
+    gesture = { x: t.clientX, y: t.clientY, lastY: t.clientY, axis: '', card: element.closest('.card') };
+  }, { passive: true });
+  element.addEventListener('touchmove', e => {
+    if (!gesture || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    const dx = t.clientX - gesture.x, dy = t.clientY - gesture.y;
+    if (!gesture.axis && (Math.abs(dx) > 7 || Math.abs(dy) > 7))
+      gesture.axis = Math.abs(dy) > Math.abs(dx) * 1.12 ? 'vertical' : 'horizontal';
+    if (gesture.axis === 'vertical' && gesture.card && gesture.card.scrollHeight > gesture.card.clientHeight + 2) {
+      gesture.card.scrollTop -= t.clientY - gesture.lastY;
+      if (e.cancelable) e.preventDefault();
+    }
+    gesture.lastY = t.clientY;
+  }, { passive: false });
+  element.addEventListener('touchend', () => { gesture = null; }, { passive: true });
+  element.addEventListener('touchcancel', () => { gesture = null; }, { passive: true });
 }
 function buildMenu() {
   try { const playerName = document.getElementById('playerName'); if (playerName) playerName.value = localStorage.getItem('adk_name') || ''; } catch (e) {}
@@ -4912,8 +5198,8 @@ function buildMenu() {
 
 /* ---------------- sem zoom, sem seleção, sem menu de toque longo ---------------- */
 function lockPage() {
-  // o primeiro toque em qualquer lugar já coloca em tela cheia
-  document.addEventListener('pointerup', () => goFullscreen(), true);
+  // Tela cheia apenas ao iniciar o combate. No menu, a solicitação de
+  // fullscreen em cada toque impedia o teclado virtual de permanecer aberto.
   document.addEventListener('fullscreenchange', () => setTimeout(resizeCanvas, 150));
   const isInput = e => { const t = e.target && (e.target.nodeType === 1 ? e.target : e.target.parentElement); return !!(t && t.closest && t.closest('input')); };
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
@@ -5045,21 +5331,21 @@ function openPause() {
   document.getElementById('pauseInfo').textContent = game.mode === 'online'
     ? `sala ${net.code} · ${game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length}/${MAX_PLAYERS} jogadores · a partida continua`
     : 'jogo pausado';
-  show('pause', true); updateTouchUI();
+  show('pause', true); updateTouchUI(); resizeCanvas();
 }
-function closePause() { overlay = null; show('pause', false); updateTouchUI(); }
+function closePause() { overlay = null; show('pause', false); updateTouchUI(); resizeCanvas(); }
 function openSettings(from) {
   settingsBack = from || 'menu';
   show('menu', false); show('pause', false); show('settings', true);
   const hud = document.getElementById('menuHud'); if (hud) hud.classList.add('hidden');
   if (game.phase === 'play') overlay = 'settings';
-  syncSettingsUI(); updateTouchUI();
+  syncSettingsUI(); updateTouchUI(); resizeCanvas();
 }
 function closeSettings() {
   show('settings', false);
   if (settingsBack === 'pause') { overlay = 'pause'; show('pause', true); }
   else { show(settingsBack || 'menu', true); overlay = null; const hud = document.getElementById('menuHud'); if (hud && game.phase !== 'play') hud.classList.remove('hidden'); }
-  updateTouchUI();
+  updateTouchUI(); resizeCanvas();
 }
 function syncSettingsUI() {
   document.getElementById('rSize').value = settings.size; document.getElementById('vSize').textContent = settings.size + '%';
@@ -5165,7 +5451,7 @@ function frame(now) {
   } catch (e) { setInterval(tick, 50); }
   document.addEventListener('visibilitychange', () => { last = performance.now(); acc = 0; for (const k in keys) keys[k] = false; });
 })();
-buildBackground(); buildMenu(); setupTouch(); lockPage(); setupChat(); syncEconomyUI();
+buildBackground(); buildMenu(); setupTouch(); lockPage(); setupChat(); setupKeyboardVisibility(); syncEconomyUI();
 resizeCanvas(); addEventListener('resize', resizeCanvas); setTimeout(resizeCanvas, 300);
 addEventListener('pagehide', () => { if (game.phase === 'play') net.leave(true); lobby.stop(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
