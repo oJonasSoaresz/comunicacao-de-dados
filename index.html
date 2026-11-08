@@ -37,9 +37,14 @@
   #touch.edit button.sel{border-color:#ffd23a;background:rgba(255,210,58,.35);box-shadow:0 0 0 3px rgba(255,210,58,.35)}
   /* barrinha da edição: pequena e sempre num lugar sem botão embaixo */
   /* chat: barra de digitar no topo, pequena; as mensagens aparecem discretas no canto esquerdo */
-  #chatbar{position:absolute;left:50%;top:0;transform:translateX(-50%);width:min(56%,460px);pointer-events:auto;display:flex;gap:5px;background:rgba(18,12,28,.88);border:2px solid var(--line);box-shadow:0 0 0 2px #000;padding:4px}
+  /* chat: histórico legível em cima + campo grande embaixo, fica aberto para conversar */
+  #chatbar{position:absolute;left:50%;top:4px;transform:translateX(-50%);width:min(38%,360px);min-width:250px;margin:0;pointer-events:auto;display:flex;background:rgba(14,9,24,.9);border:2px solid var(--line);box-shadow:0 0 0 2px #000;padding:4px}
+  #chatRow{flex:1}
   #chatbar.hidden{display:none}
-  #chatbar input{flex:1;min-width:0;font-size:16px;padding:5px 7px}
+  #chatRow{display:flex;gap:5px;align-items:stretch}
+  #chatbar input{flex:1;min-width:0;font-size:16px;padding:8px 9px}
+  #chatCount{align-self:center;font-size:9px;color:var(--muted);min-width:34px;text-align:right}
+  #chatCount.lim{color:#ffb02e}
   #chatbar button.b{padding:6px 8px;font-size:9px;min-width:54px}
   #chatbar button.b.wait{background:#3a3450;color:#9d94bd}
   #editbar{position:absolute;pointer-events:auto;background:rgba(26,21,40,.92);border:2px solid var(--line);box-shadow:0 0 0 2px #000;padding:5px;display:flex;gap:5px;align-items:center;white-space:nowrap}
@@ -64,8 +69,6 @@
   input[type=range]::-moz-range-track{height:8px;background:#0f0b19;border:2px solid var(--line)}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-9px;background:var(--acc);border:2px solid #000}
   input[type=range]::-moz-range-thumb{width:20px;height:20px;background:var(--acc);border:2px solid #000;border-radius:0}
-  button.room.full{opacity:.55;cursor:not-allowed}
-  button.room.full .rj{background:#555;box-shadow:0 0 0 2px #888}
   .card{max-height:96%;overflow:auto;touch-action:pan-y;width:min(94%,900px);background:rgba(26,21,40,.94);border:3px solid var(--line);box-shadow:0 0 0 3px #000,0 12px 40px #000;padding:clamp(12px,2.4vw,26px);display:flex;flex-direction:column;gap:clamp(8px,1.4vw,14px)}
   .title{text-align:center;line-height:1.25}
   .title b{display:block;font-size:clamp(18px,3.4vw,34px);color:var(--acc);text-shadow:3px 3px 0 #3a1206}
@@ -137,15 +140,20 @@
   #lobbyState.ok{color:#7dff6a}
   #onlineInfo{font-size:clamp(7px,.85vw,9px);color:#cfc6ff;line-height:1.6}
   #onlineInfo b{color:#7dff6a}
-  button.room .cnt{grid-row:1/3;grid-column:2;align-self:center;font-size:clamp(9px,1.1vw,12px);color:#7dff6a;text-align:right}
-  button.room.full .cnt{color:#ff6a5a}
-  #rooms{display:flex;flex-direction:column;gap:6px;min-height:110px;max-height:min(42vh,260px);overflow:auto;touch-action:pan-y;background:#0f0b19;border:2px solid var(--line);padding:6px}
+  #rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));align-content:start;gap:8px;min-height:110px;max-height:min(46vh,300px);overflow:auto;touch-action:pan-y;background:#0f0b19;border:2px solid var(--line);padding:8px}
+  #rooms .empty{grid-column:1/-1}
+  /* sala = imagem do cenário + nome + jogadores/máximo */
+  button.room{position:relative;display:block;padding:0;font-family:inherit;background:#000;color:#fff;border:2px solid #000;box-shadow:0 0 0 2px var(--line);cursor:pointer;overflow:hidden;aspect-ratio:16/10;text-align:left}
+  button.room img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;transition:transform .2s}
+  button.room:hover img{transform:scale(1.06)}
+  button.room:hover,button.room:focus-visible{box-shadow:0 0 0 2px var(--acc);outline:none}
+  button.room .rn{position:absolute;left:0;right:0;bottom:0;padding:16px 7px 6px;background:linear-gradient(transparent,rgba(8,5,16,.92) 45%);font-size:clamp(8px,1vw,10px);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:1px 1px 0 #000}
+  button.room .cnt{position:absolute;top:5px;right:5px;padding:3px 6px;background:rgba(8,5,16,.85);border:1px solid #7dff6a;color:#7dff6a;font-size:clamp(8px,1vw,10px);text-shadow:1px 1px 0 #000}
+  button.room.full{cursor:not-allowed}
+  button.room.full img{filter:grayscale(1) brightness(.55)}
+  button.room.full .cnt{border-color:#ff6a5a;color:#ff6a5a}
+  button.room .stamp{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);padding:3px 8px;border:2px solid #ff6a5a;color:#ff6a5a;font-size:clamp(9px,1.1vw,12px);background:rgba(8,5,16,.6)}
   #rooms .empty{margin:auto;text-align:center;font-size:clamp(7px,.85vw,9px);color:var(--muted);line-height:1.9}
-  button.room{display:grid;grid-template-columns:1fr auto auto;grid-template-rows:auto auto;gap:4px 8px;text-align:left;font-family:inherit;background:#2b2244;color:var(--fg);border:2px solid #000;box-shadow:0 0 0 2px var(--line);padding:8px;cursor:pointer}
-  button.room:hover{background:#3a2e5c}
-  button.room .rn{font-size:clamp(8px,1vw,10px);color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  button.room .rc{font-size:clamp(6px,.75vw,8px);color:var(--muted)}
-  button.room .rj{grid-row:1/3;grid-column:3;align-self:center;font-size:clamp(7px,.9vw,9px);background:#c4661b;padding:6px 8px;box-shadow:0 0 0 2px #ffb15a}
   .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .btns .wide{grid-column:1/3}
   button.b{font-family:inherit;font-size:clamp(8px,1vw,10px);padding:12px 8px;background:#2b2244;color:var(--fg);border:2px solid #000;box-shadow:inset 0 -4px 0 rgba(0,0,0,.35),0 0 0 2px var(--line);cursor:pointer}
@@ -164,13 +172,14 @@
       <div class="title"><b>ARENA DE KI</b><small>batalha livre online · jogo de estudo</small></div>
       <div class="cols">
         <div class="col">
-          <div class="row"><label>NOME</label><input id="name" type="text" maxlength="12" placeholder="seu nome" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+          <div class="row"><label>NOME</label><input id="name" type="text" maxlength="18" placeholder="seu nome" autocomplete="off" autocorrect="off" spellcheck="false"></div>
           <div class="row" style="align-items:stretch"><label style="align-self:center">PERSONAGEM</label><div id="chars"></div></div>
           <div class="row"><label>VISUAL</label><button class="b pri" id="bCustom" style="flex:1">✎ PERSONALIZAR</button></div>
           <div class="row" style="align-items:stretch"><label style="align-self:center">MAPA</label><div id="maps"></div></div>
           <div class="btns">
             <button class="b" id="bTrain">MODO TREINO</button>
             <button class="b" id="bBots">CONTRA BOTS</button>
+            <input class="wide" id="roomName" type="text" maxlength="18" placeholder="nome da sala (opcional)" autocomplete="off" autocorrect="off" spellcheck="false">
             <button class="b pri wide" id="bHost">CRIAR SALA ONLINE</button>
             <button class="b wide" id="bSettings">⚙ CONFIGURAÇÕES</button>
           </div>
@@ -187,7 +196,7 @@
   </div>
   <div id="safe">
     <div id="touch" class="hidden"></div>
-    <div id="chatbar" class="hidden"><input id="chatIn" type="text" maxlength="60" placeholder="Mensagem para a sala..." autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="send"><button class="b pri" id="chatSend">ENVIAR</button><button class="b" id="chatX">✕</button></div>
+    <form id="chatbar" class="hidden" autocomplete="off"><div id="chatRow"><input id="chatIn" type="text" maxlength="60" placeholder="Mensagem para a sala..." autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" enterkeyhint="send"><span id="chatCount">0/60</span><button type="submit" class="b pri" id="chatSend">ENVIAR</button><button type="button" class="b" id="chatX">✕</button></div></form>
     <div id="editbar" class="hidden">
       <button class="b" id="eMinus">−</button><span id="selName">ARRASTE</span><button class="b" id="ePlus">+</button>
       <button class="b" id="eReset">PADRÃO</button><button class="b pri" id="eDone">OK</button>
@@ -729,7 +738,7 @@ class Fighter {
   constructor({ id, name, pal = 0, local = true, ctrl = 'human', ai = null, char = 'goku' }) {
     Object.assign(this, { id, name, pal, local, ctrl, ai, char: CHARS[char] ? char : 'goku' });
     this.kills = 0; this.deaths = 0;
-    this.hp = this.maxHp = 1000; this.hpShown = 1000; this.flying = false; this.ki = 50; this.maxKi = 100;
+    this.hp = this.maxHp = 1000; this.hpShown = 1000; this.flying = false; this.ki = 0; this.maxKi = 100; // energia começa vazia
     this.x = 400; this.y = GROUND; this.vx = 0; this.vy = 0; this.facing = 1;
     this.state = 'idle'; this.stateT = 0; this.stateAge = 0;
     this.onGround = true; this.glideT = 0; this.dropT = 0;
@@ -755,7 +764,7 @@ class Fighter {
 
   spawn() {
     if (this.home) { // o boneco de treino volta sempre para o mesmo lugar
-      this.x = this.home.x; this.y = this.home.y; this.vx = this.vy = 0; this.hp = this.hpShown = this.maxHp; this.ki = 50;
+      this.x = this.home.x; this.y = this.home.y; this.vx = this.vy = 0; this.hp = this.hpShown = this.maxHp; this.ki = 0;
       this.setState('idle'); this.invuln = 0.5; this.lastHitBy = null; this.beamLen = 0;
       ring(this.x, this.y - 22, this.pal_.aura[1], 4, 34, 0.5); return;
     }
@@ -767,8 +776,8 @@ class Fighter {
       d += rnd(0, 120); if (d > bd) { bd = d; best = p; }
     }
     this.x = clamp(best.x + rnd(-55, 55), 30, WW - 30); this.y = best.y; this.vx = this.vy = 0;
-    this.hp = this.hpShown = this.maxHp; this.ki = 50;
-    this.setState('idle'); this.invuln = 2; this.lastHitBy = null; this.beamLen = 0;
+    this.hp = this.hpShown = this.maxHp; this.ki = 0;
+    this.setState('idle'); this.invuln = RESPAWN_INVULN; this.lastHitBy = null; this.beamLen = 0;
     ring(this.x, this.y - 22, this.pal_.aura[1], 4, 34, 0.5); spark(this.x, this.y - 22, 14, this.pal_.aura[1], 120, 0.5);
     if (nearCam(this.x, this.y)) SFX.spawn();
   }
@@ -787,12 +796,15 @@ class Fighter {
       while (this.regenT >= JIREN.regenStep) { this.regenT -= JIREN.regenStep; if (this.ki < this.maxKi) this.ki = Math.min(this.maxKi, this.ki + 1); }
     }
     if (this.awakenT > 0 && Math.random() < 0.08 && nearCam(this.x, this.y) && !this.dead) SFX.zap();
-    if (this.awakenT > 0) { this.awakenT -= dt; if (this.awakenT <= 0) { this.awakenT = 0; popup(this.x, this.y - 60, 'fim do despertar', '#cfc6ff', 5); } }
+    if (this.awakenT > 0 && this.local !== false) { this.awakenT -= dt; if (this.awakenT <= 0) this.endAwaken(); }
 
     if (this.state !== 'idle' && this.state !== 'guard') this.flying = false;
     if (this.state === 'ko') {
       this.deadT -= dt; this.physics(dt, true);
-      if (this.deadT <= 0) this.spawn();
+      if (this.deadT <= 0) {
+        if (this.clickRespawn()) { this.deadT = 0; if (this.respawnReq) { this.respawnReq = false; this.spawn(); } } // online: só renasce quando o jogador toca na tela
+        else this.spawn();
+      }
       return;
     }
     if (!this.isBeaming()) this.beamLen = 0;
@@ -1083,6 +1095,15 @@ class Fighter {
     if (Math.random() < 0.7) particles.push({ x: this.x + rnd(-6, 6), y: this.y - 2, vx: rnd(-20, 20), vy: rnd(50, 90), life: 0.25, max: 0.25, size: 2, color: '#ffffff', glow: true });
   }
   /* aviso de energia cheia: um anel branco, um "plim" e o texto ENERGIA MÁXIMA */
+  /* a estamina acabou: perde o despertar/transformação e a energia zera — precisa carregar o ki até o máximo de novo */
+  clickRespawn() { return game.mode === 'online' && this === game.me; }
+  endAwaken() {
+    const had = CHARS[this.char] && CHARS[this.char].trans;
+    this.awakenT = 0; this.ki = 0;
+    popup(this.x, this.y - 60, had ? 'destransformou!' : 'sem estamina!', '#cfc6ff', 6);
+    ring(this.x, this.y - 24, '#cfc6ff', 30, 6, 0.4); spark(this.x, this.y - 26, 16, '#cfc6ff', 120, 0.5);
+    if (nearCam(this.x, this.y)) tone('sawtooth', 600, 180, 0.35, 0.08);
+  }
   awaken() {
     this.awakenT = AWAKEN_TIME;
     popup(this.x, this.y - 70, 'DESPERTAR!', '#ffffff', 9);
@@ -1494,7 +1515,7 @@ class Fighter {
   }
   die(src) {
     this.awakenT = 0;
-    this.hp = 0; this.setState('ko'); this.deadT = game.mode === 'treino' && this !== game.me ? 1.6 : 3.2;
+    this.hp = 0; this.setState('ko'); this.deadT = game.mode === 'treino' && this !== game.me ? 1.6 : this.clickRespawn() ? 1.4 : 3.2; this.respawnReq = false;
     this.deaths++; this.beamLen = 0;
     this.vx = sign(this.x - src.x) * 170; this.vy = -230; this.onGround = false;
     if (nearCam(this.x, this.y)) SFX.ko();
@@ -1529,6 +1550,15 @@ class Fighter {
     this.t += dt; this.flash -= dt;
     n.x += n.vx * dt; n.y += n.vy * dt;
     if (Math.hypot(n.x - this.x, n.y - this.y) > 160) { this.x = n.x; this.y = n.y; }
+    if (n.st === 'ko') {
+      /* derrotado: cada um simula a queda do corpo por conta própria até o chão e mostra a pose de derrotado.
+         Assim o corpo cai certinho mesmo se quem morreu deixou o jogo em 2º plano (aba parada, sem mandar dados). */
+      if (this.state !== 'ko') { this.vx = n.vx; this.vy = n.vy; this.onGround = !!n.og; this.dropT = 0; this.flying = false; this.state = 'ko'; this.stateAge = 0; }
+      this.facing = n.f; this.stateAge += dt; this.physics(dt, true);
+      n.x = this.x; n.y = this.y; n.vx = n.vy = 0;
+      this.hpShown = Math.max(0, this.hpShown - 300 * dt);
+      return;
+    }
     this.x = approach(this.x, n.x, 16, dt); this.y = approach(this.y, n.y, 16, dt);
     this.vx = n.vx; this.vy = n.vy; this.facing = n.f; this.state = n.st; this.stateAge += dt;
     this.hpShown = this.hpShown > this.hp ? Math.max(this.hp, this.hpShown - 300 * dt) : this.hp;
@@ -1543,11 +1573,11 @@ class Fighter {
     if (!this.net) { this.x = m.x; this.y = m.y; }
     const prevSt = this.net ? this.net.st : null;
     this.net = { ...m };
-    this.name = String(m.n || '?').slice(0, 12); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
+    this.name = String(m.n || '?').slice(0, 18); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
     const predicting = this.predT && performance.now() - this.predT < 600;
     if (m.hp < this.hp - 0.5 && !predicting) this.flash = 0.08;
     // enquanto a rede não confirma, mantém o dano que já mostrei (não "devolve" a vida)
-    this.awakenT = m.aw ? 1 : 0;
+    this.awakenT = +m.aw || 0; // estamina vem junto (barrinha sobre a cabeça)
     this.hp = predicting ? Math.min(m.hp, this.hp) : m.hp; this.beamLen = m.bl; this.combo = m.cb; this.pose_ = m.po;
     if (prevSt !== m.st) {
       this.stateAge = 0;
@@ -1568,7 +1598,7 @@ class Fighter {
     return { t: 's', id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
       ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
-      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? 1 : 0 };
+      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0 };
   }
 
   pushTrail(every) {
@@ -1588,7 +1618,7 @@ class Fighter {
   }
 
   pose() {
-    if (!this.local) return this.pose_ || 'parado';
+    if (!this.local && this.state !== 'ko') return this.pose_ || 'parado'; // derrotado: a pose é calculada aqui mesmo (ver updateRemote)
     switch (this.state) {
       case 'ko': return this.onGround && this.spr.derrotado && this._koLand && this.t - this._koLand > 0.16 ? 'derrotado' : this.spr.arremessado ? 'arremessado' : 'dano'; // quem tem quadro de derrotado cai sentado nele
       case 'hurt': return this.spr.arremessado && !this.onGround && (this.vy < -60 || Math.abs(this.vx) > 170) ? 'arremessado' : 'dano'; // golpe forte: voando para trás
@@ -1645,7 +1675,11 @@ class Fighter {
     let ox = 0, oy = 0, sx = 1, sy = 1, rot = 0;
     const koLean = -this.facing * 0.5; // ~30° para trás
     if (pose === 'derrotado') { const k = this.t - this._koLand - 0.16; if (k < 0.12) { sy = 1 - 0.12 * (1 - k / 0.12); sx = 1 + 0.08 * (1 - k / 0.12); } }
-    else if (this.state === 'ko' && this.onGround) { const k = clamp((this.t - this._koLand) / 0.16, 0, 1); rot = koLean * (1 - k); oy = -Math.sin(k * Math.PI) * 5; } // quique
+    else if (this.state === 'ko' && this.onGround) { // quique; quem não tem quadro de derrotado termina deitado (só 90°, sem pirueta)
+      const k = clamp((this.t - this._koLand) / 0.16, 0, 1), end = this.spr.derrotado ? 0 : -this.facing * Math.PI / 2;
+      rot = koLean + (end - koLean) * k; oy = -Math.sin(k * Math.PI) * 5 * (this.spr.derrotado ? 1 : 0.6);
+      if (!this.spr.derrotado && k >= 1 && this.t - this._koLand < 0.28) { const q = (this.t - this._koLand - 0.16) / 0.12; sy = 1 - 0.1 * (1 - q); }
+    }
     else if (this.state === 'ko') rot = koLean * Math.min(1, this.stateAge * 3);
     else if (this.state === 'hurt') ox = (Math.random() - 0.5) * 2.5;
     else if (pose === 'parado' && this.onGround) { sy = 1 + Math.sin(t * 4) * 0.025; sx = 1 - Math.sin(t * 4) * 0.012; }
@@ -1662,7 +1696,7 @@ class Fighter {
     if (awake || awakening) drawAwakenGlow(px, py + oy, t, awakening ? 0.4 + 0.6 * clamp(this.stateAge / AWAKEN_HOLD, 0, 1) : 1, awake && hasTrans ? '255,215,90' : '200,235,255');
     if (awake && hasTrans && Math.random() < 0.35) particles.push({ x: this.x + rnd(-12, 12), y: this.y - rnd(0, 46), vx: 0, vy: rnd(-120, -60), life: 0.3, max: 0.3, streak: rnd(3, 7) | 0, color: '#ffe680', glow: true });
 
-    if (this.invuln > 0 && this.state !== 'dash') ctx.globalAlpha = 0.5; // invulnerável: meio transparente
+    if ((this.invuln > 0 && this.state !== 'dash') || this.dead) ctx.globalAlpha = 0.5; // invulnerável ou caído: meio transparente (não atrapalha a luta)
     if (this.state === 'dash') ctx.globalAlpha = 0.45;
     blit(this.spr[pose] || this.spr.parado, px + ox, py + oy, this.facing, sx, sy, rot);
     if (this.flash > 0) blit(this.white[pose] || this.white.parado, px + ox, py + oy, this.facing, sx, sy, rot);
@@ -1706,12 +1740,13 @@ class Fighter {
   drawOverhead(cam) {
     if (this.dead) return;
     const x = Math.round(this.x - cam.x), y = Math.round(this.y - cam.y - 54 - ((this.spr.parado || {})._pad ? 8 : 0)); // auréola: nome sobe
-    text(this.name, x, y - 9, 5, this.pal_.swatch, 'center', '#120c1c', 1.2);
+    if (isOwner(this.name)) ownerText(dispName(this.name), x, y - 9, 5, 'center'); else text(this.name, x, y - 9, 5, this.pal_.swatch, 'center', '#120c1c', 1.2);
     const w = 26, r = clamp(this.hp / this.maxHp, 0, 1);
     ctx.fillStyle = '#120c1c'; ctx.fillRect(x - w / 2 - 1, y - 1, w + 2, 5);
     ctx.fillStyle = '#ffffff'; ctx.fillRect(x - w / 2, y, Math.round(w * clamp(this.hpShown / this.maxHp, 0, 1)), 3);
     ctx.fillStyle = r > 0.5 ? '#5dff6a' : r > 0.25 ? '#ffb02e' : '#ff4a3a'; ctx.fillRect(x - w / 2, y, Math.round(w * r), 3);
     ctx.fillStyle = '#52d8ff'; ctx.fillRect(x - w / 2, y + 3, Math.round(w * clamp(this.ki / this.maxKi, 0, 1)), 1);
+    if (this.awakenT > 0) { ctx.fillStyle = '#120c1c'; ctx.fillRect(x - w / 2 - 1, y + 4, w + 2, 3); ctx.fillStyle = '#ffd23a'; ctx.fillRect(x - w / 2, y + 5, Math.round(w * clamp(this.awakenT / AWAKEN_TIME, 0, 1)), 1); }
   }
 }
 let beamWarnT = 0;
@@ -1863,7 +1898,7 @@ function drawAura(x, y, ch, t, sc, front) {
   ctx.restore();
 }
 /* ---------------- MODO DESPERTAR: raios ao redor do personagem ---------------- */
-const AWAKEN_HOLD = 2.0, AWAKEN_TIME = 25;
+const AWAKEN_HOLD = 2.0, AWAKEN_TIME = 25, RESPAWN_INVULN = 4; // invencível 4s ao renascer
 function drawBolts(x, y, k) {
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineJoin = 'miter';
   const n = Math.round(1 + 4 * k);
@@ -2380,10 +2415,10 @@ function deliverHit(target, p, src) {
 function handleKill(m) {
   if (m.k !== m.v) {
     const victim = game.byId(m.v);
-    killBadges.push({ k: m.k, name: String(m.vn || '?').slice(0, 12), color: victim ? victim.pal_.swatch : '#ffffff', life: 1.9, max: 1.9 });
+    killBadges.push({ k: m.k, name: dispName(String(m.vn || '?')).slice(0, 12), color: victim ? victim.pal_.swatch : '#ffffff', life: 1.9, max: 1.9 });
     if (game.me && m.k === game.me.id) { tone('square', 660, 990, 0.12, 0.12); tone('square', 990, 1320, 0.16, 0.1); }
   }
-  killfeed.unshift({ k: m.kn, v: m.vn, life: 6 });
+  killfeed.unshift({ k: dispName(m.kn), v: dispName(m.vn), life: 6 });
   if (killfeed.length > 5) killfeed.pop();
   const killer = game.byId(m.k);
   if (killer && killer.local && m.k !== m.v) killer.kills++;
@@ -2450,7 +2485,7 @@ class Bot {
      Se quem segura o quadro sair, outro jogador assume sozinho.
    • SALA: quem cria a sala é o anfitrião e repassa as mensagens entre os jogadores.
      Se o anfitrião sair, o próximo jogador da lista assume o mesmo código e os outros reconectam. */
-const PREFIX = 'arenadeki-v2-';
+const PREFIX = 'arenadeki-v3-'; // v3: salas com nome (versões antigas ficam num quadro separado)
 const LOBBY_ID = PREFIX + 'quadro-de-salas';
 const BOT_NAMES = ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann', 'Nilo', 'Yara', 'Ozzo'];
 const MAX_PLAYERS = 6;
@@ -2512,12 +2547,12 @@ const lobby = {
     const list = this.list(); this.rooms = list; renderRooms();
     for (const c of this.conns) if (c.open) c.send({ t: 'rooms', list });
   },
-  list() { return [...this.regs.values()].sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map })); },
+  list() { return [...this.regs.values()].sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map, nm: r.nm })); },
   onReg(m) {
     if (!m) return;
     if (m.t === 'reg' && m.room && /^[A-Z]{4}$/.test(m.room.code)) {
       const old = this.regs.get(m.room.code);
-      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 12), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', t: Date.now(), since: old ? old.since : Date.now() });
+      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 18), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', nm: filterChat(String(m.room.nm || '')).slice(0, 18), t: Date.now(), since: old ? old.since : Date.now() });
     } else if (m.t === 'unreg') this.regs.delete(m.code);
   },
   send(m) { if (this.isServer) { this.onReg(m); this.tickServer(); } else if (this.conn && this.conn.open) this.conn.send(m); },
@@ -2526,6 +2561,9 @@ const lobby = {
   flush() { if (this.myRoom) this.send({ t: 'reg', room: this.myRoom }); }
 };
 let roomsKey = '';
+const MAP_THUMB_URL = {};
+function mapThumbURL(id) { id = MAPS[id] ? id : 'canyon'; if (!MAP_THUMB_URL[id]) { const c = makeCanvas(256, 144); renderMapThumb(id, c); MAP_THUMB_URL[id] = c.toDataURL(); } return MAP_THUMB_URL[id]; }
+function roomName() { const el = document.getElementById('roomName'); const v = filterChat(el ? el.value : '').slice(0, 18); return v; }
 function renderRooms() {
   const el = document.getElementById('rooms'), st = document.getElementById('lobbyState');
   if (!el) return;
@@ -2539,8 +2577,8 @@ function renderRooms() {
     ? `<b>${total}</b> jogador${total === 1 ? '' : 'es'} online em <b>${list.length}</b> sala${list.length === 1 ? '' : 's'} · até ${MAX_PLAYERS} por sala`
     : `Cada sala tem até ${MAX_PLAYERS} jogadores.`;
   if (!list.length) el.innerHTML = `<div class="empty">${lobby.status === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : lobby.status === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
-  else el.innerHTML = list.map(r => { const full = r.n >= MAX_PLAYERS;
-    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}><span class="rn">Sala de ${esc(r.host)}</span><span class="rc">código ${esc(r.code)} · ${esc((MAPS[r.map] || MAPS.canyon).name)}</span><span class="cnt">👥 ${r.n}/${MAX_PLAYERS}</span><span class="rj">${full ? 'CHEIA' : 'ENTRAR'}</span></button>`; }).join('');
+  else el.innerHTML = list.map(r => { const full = r.n >= MAX_PLAYERS, nm = r.nm || 'Sala de ' + dispName(r.host);
+    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="cnt">${r.n}/${MAX_PLAYERS}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
 }
 
 const net = {
@@ -2575,7 +2613,7 @@ const net = {
       const humans = this.conns.length + 1;
       if (humans >= MAX_PLAYERS) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
       if (humans + 1 + game.bots.length > MAX_PLAYERS) game.removeBot(); // abre espaço tirando um bot
-      c.send({ t: 'welcome', map: game.map || 'canyon' });
+      c.send({ t: 'welcome', map: game.map || 'canyon', nm: this.roomName || '' });
       this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
     });
     c.on('data', m => {
@@ -2613,7 +2651,7 @@ const net = {
       if (!m) return;
       if (!done) { // espera o anfitrião aceitar (ou dizer que está cheia)
         if (gen !== this.gen) return;
-        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; onOk(code); }
+        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); onOk(code); }
         else if (m.t === 'full') fail('Sala cheia (' + MAX_PLAYERS + ' jogadores).');
         return;
       }
@@ -2674,7 +2712,7 @@ const net = {
     if (this.sendT <= 0) { this.sendT = 0.05; for (const f of game.fighters) if (f.local) this.send(f.snapshot()); }
     if (this.role === 'host') {
       this.regT -= dt;
-      if (this.regT <= 0) { this.regT = 2; lobby.register({ code: this.code, host: game.me.name, n: this.conns.length + 1, map: game.map || 'canyon' }); }
+      if (this.regT <= 0) { this.regT = 2; lobby.register({ code: this.code, host: dispName(game.me.name), nm: this.roomName || '', n: this.conns.length + 1, map: game.map || 'canyon' }); }
     }
   }
 };
@@ -2684,8 +2722,8 @@ function handleNet(m) {
     case 's': {
       let f = game.byId(m.id);
       if (f && f.local) return;
-      if (!f) { f = new Fighter({ id: m.id, name: String(m.n || '?').slice(0, 12), pal: m.p | 0, local: false, ctrl: 'remote', char: m.c }); game.fighters.push(f);
-        killfeed.unshift({ sys: f.name + ' entrou na arena', life: 5 }); }
+      if (!f) { f = new Fighter({ id: m.id, name: String(m.n || '?').slice(0, 18), pal: m.p | 0, local: false, ctrl: 'remote', char: m.c }); game.fighters.push(f);
+        killfeed.unshift({ sys: dispName(f.name) + ' entrou na arena', life: 5 }); }
       f.applyNet(m); break;
     }
     case 'pj': spawnProjectile(m, false); break;
@@ -2702,7 +2740,7 @@ function handleNet(m) {
     case 'chat': receiveChat(m); break;
     case 'leave': {
       const f = game.byId(m.id);
-      if (f && !f.local) { game.fighters = game.fighters.filter(o => o !== f); killfeed.unshift({ sys: f.name + ' saiu', life: 5 }); }
+      if (f && !f.local) { game.fighters = game.fighters.filter(o => o !== f); killfeed.unshift({ sys: dispName(f.name) + ' saiu', life: 5 }); }
       break;
     }
   }
@@ -2845,6 +2883,17 @@ function text(str, x, y, size, color = '#fff', align = 'left', outline = '#000',
   if (outline) { ctx.lineJoin = 'round'; ctx.lineWidth = ow * 1.6; ctx.strokeStyle = outline; ctx.strokeText(str, x, y); }
   ctx.fillStyle = color; ctx.fillText(str, x, y);
 }
+/* {DONO}Nome: nome em degradê dourado animado (visual exclusivo do dono do jogo) */
+const isOwner = n => /^\{DONO\}/i.test(String(n || ''));
+const dispName = n => String(n || '').replace(/^\{DONO\}/i, '') || (isOwner(n) ? 'Dono' : String(n || ''));
+function ownerText(str, x, y, size, align = 'left', outline = '#2a1600') {
+  ctx.font = FONT(size); ctx.textAlign = align; ctx.textBaseline = 'top';
+  const w = ctx.measureText(str).width, x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+  if (outline) { ctx.lineJoin = 'round'; ctx.lineWidth = 1.2 * 1.6; ctx.strokeStyle = outline; ctx.strokeText(str, x, y); }
+  const sh = ((performance.now() / 1000) * 0.9) % 1, g = ctx.createLinearGradient(x0 - w + sh * 2 * w, 0, x0 + sh * 2 * w, 0);
+  g.addColorStop(0, '#b7791f'); g.addColorStop(0.35, '#ffd23a'); g.addColorStop(0.5, '#fffbe0'); g.addColorStop(0.65, '#ffd23a'); g.addColorStop(1, '#b7791f');
+  ctx.fillStyle = g; ctx.fillText(str, x, y);
+}
 function drawBar(x, y, w, h, ratio, ghost, color, dark) {
   ctx.fillStyle = '#120c1c'; ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
   ctx.fillStyle = '#3a2e52'; ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
@@ -2866,20 +2915,24 @@ function drawHUD() {
   // barras de vida e energia
   const bx = L + 38, bw = 136;
   const hpR = me.hp / me.maxHp, hpG = me.hpShown / me.maxHp;
-  drawBar(bx, T + 2, bw, 11, hpR, hpG, hpR > 0.5 ? '#7dff6a' : hpR > 0.25 ? '#ffb02e' : '#ff4a3a', hpR > 0.5 ? '#2fbf3c' : hpR > 0.25 ? '#d8661b' : '#c4231c');
-  text('HP ' + Math.ceil(me.hp), bx + 3, T + 5, 5, '#ffffff', 'left', '#120c1c', 1.2);
+  // estamina (acima da vida): sempre aparece; vazia até despertar/transformar, aí enche e vai esvaziando
+  const sr = clamp(me.awakenT / AWAKEN_TIME, 0, 1), low = sr > 0 && sr < 0.25 && Math.sin(game.t * 14) > 0;
+  drawBar(bx, T, bw, 6, sr, null, low ? '#ffffff' : '#ffe58a', low ? '#ff8a3a' : '#e0a21b');
+  text('ESTAMINA', bx + 3, T + 0.5, 4, sr > 0 ? '#ffffff' : '#8f86ad', 'left', sr > 0 ? '#5a3a00' : '#120c1c', 1);
+  drawBar(bx, T + 8, bw, 11, hpR, hpG, hpR > 0.5 ? '#7dff6a' : hpR > 0.25 ? '#ffb02e' : '#ff4a3a', hpR > 0.5 ? '#2fbf3c' : hpR > 0.25 ? '#d8661b' : '#c4231c');
+  text('HP ' + Math.ceil(me.hp), bx + 3, T + 11, 5, '#ffffff', 'left', '#120c1c', 1.2);
   const kiR = me.ki / me.maxKi;
   const fx = me.kiFullFx > 0 ? me.kiFullFx : 0;
-  drawBar(bx, T + 18, bw, 7, kiR, null, '#9ff3ff', '#2fb6e6');
-  if (fx) text('ENERGIA MÁXIMA!', bx + bw + 6, T + 19, 5, '#ffffff', 'left', '#120c1c', 1.2);
-  text('KI ' + (me.infiniteKi ? 'MAX' : Math.floor(me.ki)), bx + 3, T + 19, 5, '#ffffff', 'left', '#0b3550', 1.2);
-  text(me.name, bx, T + 30, 5, me.pal_.swatch, 'left', '#120c1c', 1.2);
-  if (me.awakenT > 0) { ctx.font = FONT(5); text('⚡ DESPERTAR ' + Math.ceil(me.awakenT) + 's', bx + ctx.measureText(me.name).width + 8, T + 30, 5, '#ffffff', 'left', '#1b3550', 1.2); }
+  drawBar(bx, T + 22, bw, 7, kiR, null, '#9ff3ff', '#2fb6e6');
+  if (fx) text('ENERGIA MÁXIMA!', bx + bw + 6, T + 23, 5, '#ffffff', 'left', '#120c1c', 1.2);
+  text('KI ' + (me.infiniteKi ? 'MAX' : Math.floor(me.ki)), bx + 3, T + 23, 5, '#ffffff', 'left', '#0b3550', 1.2);
+  const ny = T + 34;
+  if (isOwner(me.name)) ownerText(dispName(me.name), bx, ny, 5, 'left'); else text(me.name, bx, ny, 5, me.pal_.swatch, 'left', '#120c1c', 1.2);
   const humans = game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length;
-  const footer = game.mode === 'online' ? `SALA ${net.code} · ${humans}/${MAX_PLAYERS} jogadores`
+  const footer = game.mode === 'online' ? `${net.roomName ? net.roomName.toUpperCase() + ' · ' : ''}SALA ${net.code} · ${humans}/${MAX_PLAYERS} jogadores`
     : game.mode === 'treino' ? 'TREINO · energia infinita ' + (me.infiniteKi ? 'LIGADA' : 'DESLIGADA') : 'CONTRA BOTS';
-  text(footer, bx, T + 39, 5, '#cfc6ff', 'left', '#120c1c', 1);
-  if (me.hits >= 2) text(me.hits + ' HITS!', L, T + 52, 8, '#ffd23a', 'left', '#3a0d0d', 2);
+  text(footer, bx, ny + 9, 5, '#cfc6ff', 'left', '#120c1c', 1);
+  if (me.hits >= 2) text(me.hits + ' HITS!', L, T + 54, 8, '#ffd23a', 'left', '#3a0d0d', 2);
 
   // placar (até 10 jogadores)
   const list = [...game.fighters].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths).slice(0, MAX_PLAYERS);
@@ -2891,7 +2944,7 @@ function drawHUD() {
   list.forEach((f, i) => {
     const y = T + 12 + i * 8;
     ctx.fillStyle = f.pal_.swatch; ctx.fillRect(px0 + 4, y + 1, 4, 4);
-    text(f.name.slice(0, 10) + (f === me ? ' ◄' : ''), px0 + 11, y, 5, f.pal_.swatch, 'left', null);
+    if (isOwner(f.name)) ownerText(dispName(f.name).slice(0, 10) + (f === me ? ' ◄' : ''), px0 + 11, y, 5, 'left', null); else text(f.name.slice(0, 10) + (f === me ? ' ◄' : ''), px0 + 11, y, 5, f.pal_.swatch, 'left', null);
     text(f.kills + '/' + f.deaths, RT - 4, y, 5, '#cfc6ff', 'right', null);
   });
   // avisos / eliminações
@@ -2904,13 +2957,15 @@ function drawHUD() {
     fy += 9;
   }
   ctx.globalAlpha = 1;
-  drawChatLog(L, T + 62, BT);
+  drawChatLog(L, T + 64, BT);
   // renascimento
   if (me.dead) {
     const cy = Math.round(VH / 2 - 30);
     ctx.fillStyle = 'rgba(10,6,20,0.55)'; ctx.fillRect(0, cy, VW, 46);
-    text('DERROTADO' + (me.lastHitBy ? ' POR ' + me.lastHitBy.name.toUpperCase() : ''), VW / 2, cy + 8, 9, '#ff6a5a', 'center', '#1a0f24', 2);
-    text('renascendo em ' + Math.max(1, Math.ceil(me.deadT)), VW / 2, cy + 28, 6, '#ffffff', 'center', '#1a0f24', 1);
+    text('DERROTADO' + (me.lastHitBy ? ' POR ' + dispName(me.lastHitBy.name).toUpperCase() : ''), VW / 2, cy + 8, 9, '#ff6a5a', 'center', '#1a0f24', 2);
+    if (!me.clickRespawn()) text('renascendo em ' + Math.max(1, Math.ceil(me.deadT)), VW / 2, cy + 28, 6, '#ffffff', 'center', '#1a0f24', 1);
+    else if (me.deadT > 0) text('...', VW / 2, cy + 28, 6, '#cfc6ff', 'center', '#1a0f24', 1);
+    else text(isTouch ? 'TOQUE NA TELA PARA RENASCER' : 'CLIQUE OU APERTE ESPAÇO PARA RENASCER', VW / 2, cy + 28, 6, Math.sin(game.t * 6) > -0.3 ? '#ffffff' : '#ffd23a', 'center', '#1a0f24', 1);
   }
   // setas para lutadores fora da tela
   for (const f of game.fighters) {
@@ -2932,7 +2987,8 @@ function drawHUD() {
    • Filtro de palavrões nos dois lados (quem envia e quem recebe).
    • Não atrapalha a luta: as mensagens ficam pequenas no canto esquerdo e somem sozinhas,
      e aparece um balãozinho rápido sobre quem falou. */
-const CHAT_COOLDOWN = 3, CHAT_MAX = 60;
+const CHAT_COOLDOWN = 1.5, CHAT_MAX = 60;
+let chatQueue = null; // mensagem que espera o intervalo antiespam acabar (envia sozinha, sem apertar de novo)
 let chatLog = [], chatOpen = false, chatLastSent = -99, chatRecvAt = {};
 const squash = w => w.replace(/(.)\1+/g, '$1'); // "porraaa" e "poooorra" viram a mesma coisa
 const BAD_EXACT = new Set(['cu', 'fdp', 'vsf', 'vsfd', 'tnc', 'vtnc', 'tmnc', 'pqp', 'krl', 'crl', 'pnc', 'kct', 'puta', 'puto', 'putas', 'putos', 'foda', 'xota', 'viado', 'viados', 'viadao', 'bicha', 'porra', 'merda', 'bosta', 'corno', 'cuzao', 'cuzinho', 'piroca', 'fudido', 'fodido', 'otario', 'otaria', 'vadia', 'vagabunda', 'vagabundo', 'fuck', 'shit', 'bitch', 'cunt', 'dick', 'pussy', 'nigga'].map(squash));
@@ -2961,8 +3017,9 @@ function openChat() {
   if (game.phase !== 'play' || game.mode !== 'online' || overlay) return;
   chatOpen = true; for (const k in keys) keys[k] = false;
   show('chatbar', true); updateTouchUI(); updateChatBtn();
-  const inp = document.getElementById('chatIn'); inp.value = ''; setTimeout(() => inp.focus(), 30);
+  const inp = document.getElementById('chatIn'); inp.value = ''; updateChatCount(); setTimeout(() => inp.focus(), 30);
 }
+function updateChatCount() { const n = document.getElementById('chatIn').value.length, el = document.getElementById('chatCount'); el.textContent = n + '/' + CHAT_MAX; el.classList.toggle('lim', n >= CHAT_MAX - 10); }
 function closeChat() {
   chatOpen = false; const inp = document.getElementById('chatIn'); if (inp) inp.blur();
   show('chatbar', false); for (const k in keys) keys[k] = false; updateTouchUI();
@@ -2970,17 +3027,20 @@ function closeChat() {
 function updateChatBtn() {
   const b = document.getElementById('chatSend'); if (!b) return;
   const left = CHAT_COOLDOWN - (game.t - chatLastSent);
-  if (left > 0) { b.textContent = Math.ceil(left) + 's'; b.classList.add('wait'); } else { b.textContent = 'ENVIAR'; b.classList.remove('wait'); }
+  if (left > 0 && chatQueue) { b.textContent = '...'; b.classList.add('wait'); } else { b.textContent = 'ENVIAR'; b.classList.remove('wait'); }
 }
 function sendChat() {
   const inp = document.getElementById('chatIn'), raw = inp.value.trim();
   if (!raw) { closeChat(); return; }
-  if (game.t - chatLastSent < CHAT_COOLDOWN) { updateChatBtn(); inp.animate([{ transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'none' }], { duration: 180 }); return; }
   const txt = filterChat(raw); if (!txt) return;
-  chatLastSent = game.t;
+  inp.value = ''; updateChatCount();
+  if (game.t - chatLastSent < CHAT_COOLDOWN) { chatQueue = txt; updateChatBtn(); return; } // envia assim que puder
+  postChat(txt);
+}
+function postChat(txt) {
+  chatLastSent = game.t; chatQueue = null;
   const m = { t: 'chat', id: game.me.id, n: game.me.name, txt };
-  addChat(game.me, game.me.name, txt); net.send(m);
-  closeChat();
+  addChat(game.me, game.me.name, txt); net.send(m); updateChatBtn();
 }
 function receiveChat(m) {
   const f = game.byId(m.id); if (!f || f.local) return;
@@ -2990,22 +3050,29 @@ function receiveChat(m) {
   const txt = filterChat(m.txt); if (txt) addChat(f, f.name, txt);
 }
 function addChat(f, name, txt) {
-  chatLog.push({ name, color: f ? f.pal_.swatch : '#fff', txt, life: 9 });
+  chatLog.push({ name, color: f ? f.pal_.swatch : '#fff', txt, life: 9, mine: f === game.me });
   if (chatLog.length > 30) chatLog.shift();
   if (f !== game.me) tone('sine', 1200, 1500, 0.06, 0.06);
 }
 function wrapText(str, maxW, size) {
   ctx.font = FONT(size); const words = str.split(' '), lines = []; let cur = '';
-  for (const w of words) { const t = cur ? cur + ' ' + w : w; if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; }
+  for (let w of words) {
+    while (ctx.measureText(w).width > maxW) { // palavra enorme: corta no meio
+      let k = w.length; while (k > 1 && ctx.measureText((cur ? cur + ' ' : '') + w.slice(0, k)).width > maxW) k--;
+      if (k <= 1 && cur) { lines.push(cur); cur = ''; continue; }
+      lines.push((cur ? cur + ' ' : '') + w.slice(0, k)); cur = ''; w = w.slice(k);
+    }
+    const t = cur ? cur + ' ' + w : w; if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t;
+  }
   if (cur) lines.push(cur); return lines;
 }
 function drawChatLog(x, y, bottom) {
   // fechado: só as últimas 4 mensagens, sumindo sozinhas. Aberto: histórico maior com fundo.
-  const maxW = Math.min(170, VW * 0.36), items = chatOpen ? chatLog.slice(-8) : chatLog.filter(c => c.life > 0).slice(-4);
+  const maxW = Math.min(140, VW * 0.3), items = chatOpen ? chatLog.slice(-6) : chatLog.filter(c => c.life > 0).slice(-4);
   if (!items.length) return;
   const rows = [];
   for (const c of items) {
-    const lines = wrapText(c.name + ': ' + c.txt, maxW, 5).slice(0, 3);
+    const lines = wrapText(dispName(c.name) + ': ' + c.txt, maxW, 5).slice(0, 4);
     lines.forEach((ln, i) => rows.push({ c, ln, first: i === 0 }));
   }
   const lh = 8, h = rows.length * lh + 4;
@@ -3015,7 +3082,7 @@ function drawChatLog(x, y, bottom) {
     ctx.globalAlpha = chatOpen ? 1 : clamp(r.c.life / 1.5, 0, 1) * 0.92;
     const yy = y0 + i * lh;
     if (r.first) {
-      const nm = r.c.name + ':'; text(nm, x, yy, 5, r.c.color, 'left', '#120c1c', 1.2);
+      const nm = dispName(r.c.name) + ':'; if (isOwner(r.c.name)) ownerText(nm, x, yy, 5, 'left'); else text(nm, x, yy, 5, r.c.color, 'left', '#120c1c', 1.2);
       ctx.font = FONT(5); const w = ctx.measureText(nm + ' ').width;
       text(r.ln.slice(nm.length + 1), x + w, yy, 5, '#ffffff', 'left', '#120c1c', 1.2);
     } else text(r.ln, x + 6, yy, 5, '#ffffff', 'left', '#120c1c', 1.2);
@@ -3037,10 +3104,13 @@ function drawBubble(f, cam) {
 }
 function setupChat() {
   const inp = document.getElementById('chatIn');
-  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendChat(); } else if (e.key === 'Escape') { e.preventDefault(); closeChat(); } e.stopPropagation(); });
-  document.getElementById('chatSend').addEventListener('click', sendChat);
+  // enviar = submit do formulário: funciona igual no Enter do PC, no botão e no "enviar" do teclado do celular (1 toque só)
+  document.getElementById('chatbar').addEventListener('submit', e => { e.preventDefault(); sendChat(); });
+  inp.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); closeChat(); } e.stopPropagation(); });
+  inp.addEventListener('input', updateChatCount);
+  document.getElementById('chatSend').addEventListener('pointerdown', e => e.preventDefault()); // não fecha o teclado do celular ao enviar
   document.getElementById('chatX').addEventListener('click', closeChat);
-  setInterval(() => { if (chatOpen) updateChatBtn(); }, 250);
+  setInterval(() => { if (chatQueue && game.t - chatLastSent >= CHAT_COOLDOWN && game.phase === 'play') postChat(chatQueue); if (chatOpen) updateChatBtn(); }, 100);
 }
 
 /* ---------------- aviso de eliminação: caveira subindo sobre quem derrotou ---------------- */
@@ -3079,7 +3149,7 @@ game = {
     const map = mode === 'online' && net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
     setMap(map); this.map = map;
     this.mode = mode; projectiles = []; stomps = []; lasers = []; blasts = []; soqFx = []; particles = []; popups = []; killfeed = [];
-    const name = (document.getElementById('name').value.trim() || 'Jogador').slice(0, 12);
+    const name = (document.getElementById('name').value.trim() || 'Jogador').slice(0, 18);
     try { localStorage.setItem('adk_name', name); } catch (e) {}
     this.fighters = []; this.bots = [];
     this.me = new Fighter({ id: 'p-' + uid() + uid(), name, pal: 0, local: true, ctrl: 'human', char: chosenChar });
@@ -3387,13 +3457,19 @@ function buildMenu() {
   document.getElementById('bTrain').onclick = () => { initAudio(); net.close(); game.start('treino'); };
   document.getElementById('bBots').onclick = () => { initAudio(); net.close(); game.start('bots'); };
   document.getElementById('bSettings').onclick = () => openSettings('menu');
+  const rn = document.getElementById('roomName');
+  try { rn.value = localStorage.getItem('adk_room') || ''; } catch (e) {}
+  rn.addEventListener('input', () => { try { localStorage.setItem('adk_room', rn.value); } catch (e) {} });
+  rn.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('bHost').click(); });
   document.getElementById('bHost').onclick = () => {
     if (busy) return; initAudio(); if (!needNet()) return; setStatus('Criando sala...'); busy = true;
     setStatus('Criando sala (' + MAPS[chosenMap].name + ')...');
-    net.hostRoom(code => { busy = false; setStatus(''); game.start('online'); killfeed.unshift({ sys: 'Sala criada! Código: ' + code, life: 12 }); net.regT = 0; },
+    net.roomName = roomName();
+    net.hostRoom(code => { busy = false; setStatus(''); game.start('online'); killfeed.unshift({ sys: (net.roomName ? 'Sala "' + net.roomName + '" criada!' : 'Sala criada!') + ' Código: ' + code, life: 12 }); net.regT = 0; },
       err => { busy = false; setStatus(err); });
   };
   const join = code => {
+    net.roomName = '';
     if (busy) return; initAudio(); if (!needNet()) return;
     code = String(code || '').trim().toUpperCase();
     if (!/^[A-Z]{4}$/.test(code)) { setStatus('Digite o código da sala (4 letras).'); return; }
@@ -3598,6 +3674,14 @@ function setupTouch() {
   document.getElementById('pSettings').onclick = () => openSettings('pause');
   document.getElementById('pExit').onclick = () => game.toMenu();
   addEventListener('touchstart', () => { isTouch = true; }, { passive: true });
+  // online: tocar/clicar em qualquer lugar da tela (ou espaço/enter) para renascer
+  const wantRespawn = e => {
+    const me = game.me; if (!me || !me.dead || game.phase !== 'play' || overlay || chatOpen || !me.clickRespawn() || me.deadT > 0) return false;
+    if (e.target && e.target.closest && e.target.closest('#chatbar,#pauseBtn,.ovl')) return false;
+    me.respawnReq = true; return true;
+  };
+  addEventListener('pointerdown', e => { if (wantRespawn(e)) e.preventDefault(); }, { capture: true });
+  addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && wantRespawn(e)) { e.preventDefault(); e.stopPropagation(); } }, { capture: true });
 }
 
 /* ---------------- loop ---------------- */
