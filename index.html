@@ -598,7 +598,234 @@
   .gear-button{width:48px;height:48px;font-size:24px}
   @media(max-width:650px){.menu-hud{gap:8px}.mini-wallet{min-width:82px;padding:9px 12px}.mini-wallet strong{font-size:14px}.mini-coin{font-size:17px}.gear-button{width:44px;height:44px;font-size:22px}}
 
-  #gachaHeroCanvas,.gacha-reveal-card canvas,.gacha-item canvas{background:transparent!important}\n</style>
+  #gachaHeroCanvas,.gacha-reveal-card canvas,.gacha-item canvas{background:transparent!important}\n
+  /* v15 — revisão responsiva mobile: gestos, rolagem e áreas de toque */
+  .card{
+    min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;
+    overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    touch-action:pan-x pan-y;
+  }
+  .screen-card,.solo-card{min-width:0;min-height:0}
+  .scroll-help{display:none;color:#bca9d8;font-size:7px;letter-spacing:.3px;white-space:nowrap}
+  #chars,#createMaps,#gachaPool{
+    min-width:0;overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  #chars::-webkit-scrollbar,#createMaps::-webkit-scrollbar,#gachaPool::-webkit-scrollbar{display:none}
+  #rooms{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+
+  @media (pointer:coarse), (max-width:760px){
+    html,body{overscroll-behavior:none}
+    .ovl{
+      overflow:hidden;align-items:center;justify-content:center;
+      padding:8px;touch-action:pan-x pan-y;
+    }
+    .card{
+      width:calc(100% - 12px);max-width:1080px;
+      max-height:calc(100% - 12px);min-height:0;min-width:0;
+      padding:12px;gap:10px;border-width:2px;
+      overflow-x:hidden;overflow-y:auto;
+      -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+      touch-action:pan-x pan-y;
+    }
+    .card.small{width:min(calc(100% - 16px),440px)}
+    .screen-card{width:calc(100% - 12px);padding-top:60px}
+    .home-card{width:calc(100% - 16px);padding-top:60px}
+    .solo-card{width:calc(100% - 16px);padding-top:60px}
+    .screen-head,.char-toolbar,.section-label,.char-screen-actions,
+    .char-screen-back,.status-extra,.btns{flex-shrink:0}
+    .screen-head{gap:8px;align-items:center}
+    .screen-head .title{min-width:0;width:100%}
+    .title b{font-size:clamp(16px,2.8vw,26px);line-height:1.3}
+    .title small{font-size:8px;line-height:1.7}
+    .section-label{font-size:8px;line-height:1.6}
+    .hint,.status-extra{font-size:8px;line-height:1.7}
+    .menu-hud{
+      z-index:150;top:8px;right:8px;gap:8px;
+      padding:0;max-width:calc(100% - 16px);
+    }
+    .mini-wallet{min-width:76px;min-height:40px;padding:8px 11px}
+    .mini-wallet strong{font-size:13px}
+    .mini-coin{font-size:16px}
+    .gear-button{width:42px;height:42px;font-size:22px;flex:0 0 42px}
+    .home-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .home-actions .wide{grid-column:1/-1}
+    .home-actions button{min-width:0;min-height:46px;padding:10px 6px;line-height:1.55;overflow-wrap:anywhere}
+    .code-shortcut{min-height:40px;padding:9px 14px;font-size:8px}
+    button.b{min-height:44px;padding:11px 9px;font-size:clamp(8px,1vw,10px);line-height:1.5}
+    .row{min-width:0;gap:8px}
+    input[type=text],input[type=password],textarea,select{
+      min-width:0;min-height:44px;font-size:16px!important;
+      padding:10px 12px;max-width:100%;
+    }
+
+    /* Carrossel de personagens: área independente, sem botões por cima. */
+    #chars{
+      position:relative;z-index:1;isolation:isolate;
+      display:flex!important;flex:0 0 154px!important;
+      width:100%;height:154px;min-height:154px;max-height:none!important;
+      flex-wrap:nowrap!important;align-items:stretch;
+      gap:9px;padding:8px;
+      overflow-x:auto!important;overflow-y:hidden!important;
+      touch-action:pan-x pan-y;scroll-snap-type:x proximity;
+      scroll-padding-inline:8px;
+    }
+    button.char{
+      position:relative;z-index:0;flex:0 0 132px!important;
+      width:132px;min-width:132px;height:136px;min-height:0!important;
+      max-height:136px;padding:7px 5px;gap:5px;
+      scroll-snap-align:start;touch-action:pan-x pan-y;
+    }
+    button.char canvas{width:68px;height:68px;flex:0 0 68px}
+    button.char>span:not(.char-state){font-size:8px;line-height:1.4}
+    button.char .char-state{font-size:7px;line-height:1.35;overflow-wrap:anywhere}
+    .char-toolbar{align-items:flex-start;gap:6px;flex-wrap:wrap}
+    .char-toolbar .hint{min-width:0;text-align:left}
+
+    /* Carrossel de mapas: altura fixa e cards dimensionados para não cortar o preview. */
+    #createMaps{
+      position:relative;z-index:1;isolation:isolate;
+      display:flex!important;flex:0 0 146px!important;
+      width:100%;height:146px;min-height:146px;max-height:none!important;
+      flex-wrap:nowrap!important;align-items:stretch;
+      gap:9px;padding:8px;
+      overflow-x:auto!important;overflow-y:hidden!important;
+      touch-action:pan-x pan-y;scroll-snap-type:x proximity;
+      scroll-padding-inline:8px;
+    }
+    #createMaps button.mapb{
+      flex:0 0 184px!important;width:184px;min-width:184px;max-width:184px;
+      height:126px;min-height:0;padding:7px;gap:6px;
+      display:flex;flex-direction:column;justify-content:center;
+      scroll-snap-align:start;touch-action:pan-x pan-y;
+    }
+    #createMaps button.mapb canvas{
+      display:block;width:100%;height:auto;max-width:none;max-height:94px;
+      aspect-ratio:16/9;object-fit:cover;flex:0 0 auto;
+    }
+    #createMaps button.mapb span{font-size:8px;line-height:1.4;text-align:center}
+
+    /* Coleção do Gacha: rolagem horizontal sem roubar o scroll vertical do cartão. */
+    #gachaPool{
+      position:relative;z-index:1;isolation:isolate;
+      display:flex!important;flex:0 0 112px!important;
+      width:100%;height:112px;min-height:112px;max-height:none!important;
+      flex-wrap:nowrap!important;align-items:stretch;gap:8px;padding:7px;
+      overflow-x:auto!important;overflow-y:hidden!important;
+      touch-action:pan-x pan-y;scroll-snap-type:x proximity;
+    }
+    .gacha-item{
+      flex:0 0 102px;min-width:102px;height:94px;
+      padding:6px 4px;gap:4px;scroll-snap-align:start;touch-action:pan-x pan-y;
+      font-size:7px;line-height:1.35;
+    }
+    .gacha-item canvas{width:42px;height:42px;flex:0 0 42px}
+    .gacha-collection-head{flex-wrap:wrap;gap:6px}
+    .scroll-help{display:inline;color:#bca9d8}
+
+    /* Formulário de criação: campos em linhas próprias; nunca comprimidos sob os botões. */
+    .create-card{gap:10px}
+    .create-char-row{
+      display:grid;grid-template-columns:minmax(75px,auto) minmax(0,1fr) minmax(145px,auto);
+      align-items:center;gap:8px;
+    }
+    .create-char-row label{min-width:0;font-size:8px}
+    .create-char-row .screen-value{min-width:0;overflow-wrap:anywhere}
+    .create-char-row button{min-width:0;min-height:44px}
+    .create-input-row{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+    .create-input-row label{width:100%;min-width:0;font-size:8px}
+    .create-input-row input{width:100%;min-width:0;flex:0 0 auto}
+    #createScreen .btns{display:grid;grid-template-columns:1fr 1fr}
+    #createScreen .btns .wide{grid-column:1/-1}
+
+    /* Seleção: os botões ficam depois do carrossel e sempre acessíveis. */
+    .char-screen-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .char-screen-actions button{width:100%;min-width:0;min-height:46px;padding:9px 6px}
+    .char-screen-back button{width:100%;min-height:44px}
+
+    /* Salas: grade vertical com área de rolagem própria. */
+    #rooms{
+      flex:1 1 auto;min-height:116px;max-height:42vh;
+      grid-template-columns:repeat(auto-fill,minmax(124px,1fr));
+      align-content:start;overflow-x:hidden;overflow-y:auto;
+      touch-action:pan-y;-webkit-overflow-scrolling:touch;
+      overscroll-behavior:contain;
+    }
+    .rooms-card{gap:9px}
+    .code-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .code-row input{grid-column:1/-1;width:100%;min-height:44px}
+    .code-row button{min-width:0;min-height:44px}
+
+    /* Modais, personalização e configurações: rolagem vertical interna. */
+    .password-modal-card,.code-modal-card{width:min(calc(100% - 16px),460px)}
+    .password-modal-card{padding:14px;gap:12px}
+    #roomPasswordInput{font-size:16px!important;min-height:48px}
+    #roomPasswordModal .modal-top{padding:0 34px}
+    #roomPasswordModal .set{padding:11px}
+    .cust{width:calc(100% - 12px);padding-top:14px}
+    .cwrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:10px;align-items:start}
+    .cprev{width:100%;min-width:0;padding:6px}
+    .cprev canvas{width:min(100%,240px);height:auto;max-height:190px;aspect-ratio:8/7}
+    .copts{width:100%;min-width:0}
+    .cpanel{min-height:0;max-height:34vh;overflow-y:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+    .cbtns{display:flex;flex-wrap:wrap;gap:8px}
+    .cbtns button{flex:1 1 130px;min-width:0;min-height:44px}
+    #settings .card{width:min(calc(100% - 16px),440px);max-height:calc(100% - 16px)}
+    .player-name-setting input{width:100%;min-height:44px;font-size:16px!important}
+    .set label{gap:8px;line-height:1.6}
+    input[type=range]{height:38px}
+
+    /* Gacha: área de compra e revelação adaptáveis à altura disponível. */
+    .gacha-card{max-width:850px}
+    .gacha-shop-hero{min-height:0;padding:13px;gap:12px}
+    .gacha-shop-copy{min-width:0;align-items:center;text-align:center}
+    .gacha-shop-copy p{font-size:8px;line-height:1.7}
+    .gacha-shop-orb{width:112px;flex-basis:112px}
+    .gacha-buy{width:100%;min-height:48px}
+    .gacha-stage{min-height:0;padding:12px;gap:8px}
+    .gacha-opening .opening-orb-wrap{gap:12px;padding:16px}
+    .opening-cancel{min-height:42px;top:8px;left:8px}
+    #gachaHeroCanvas{max-height:40vh;max-width:82vw}
+    .reveal-content{gap:10px;padding:14px}
+    .reveal-continue{min-height:48px}
+  }
+
+  /* Em telas touch muito estreitas, empilhar os campos/ações que ficariam comprimidos. */
+  @media (pointer:coarse) and (max-width:700px){
+    .create-char-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+    .create-char-row label{grid-column:1/-1}
+    .create-char-row button{grid-column:1/-1;width:100%}
+    .solo-modes{grid-template-columns:1fr}
+    .solo-mode{min-height:88px}
+    .char-screen-actions{grid-template-columns:1fr 1fr}
+  }
+
+  /* Em celulares com pouca altura, manter carrosséis visíveis e deixar o cartão rolar. */
+  @media (pointer:coarse) and (max-height:420px){
+    .screen-card,.home-card,.solo-card{max-height:calc(100% - 8px);padding-top:54px}
+    #chars{flex-basis:142px!important;height:142px;min-height:142px}
+    button.char{height:124px;max-height:124px}
+    #createMaps{flex-basis:132px!important;height:132px;min-height:132px}
+    #createMaps button.mapb{height:112px}
+    #gachaPool{flex-basis:102px!important;height:102px;min-height:102px}
+    .gacha-item{height:84px}
+  }
+
+
+  /* A tela é girada pelo jogo em celulares mantidos na vertical:
+     aplicar as mesmas dimensões compactas ao viewport interno rotacionado. */
+  #wrap.rot .screen-card,#wrap.rot .home-card,#wrap.rot .solo-card{
+    max-height:calc(100% - 8px);padding-top:54px;
+  }
+  #wrap.rot #chars{flex-basis:142px!important;height:142px;min-height:142px}
+  #wrap.rot button.char{height:124px;max-height:124px}
+  #wrap.rot #createMaps{flex-basis:132px!important;height:132px;min-height:132px}
+  #wrap.rot #createMaps button.mapb{height:112px}
+  #wrap.rot #gachaPool{flex-basis:102px!important;height:102px;min-height:102px}
+  #wrap.rot .gacha-item{height:84px}
+  #wrap.rot .menu-hud{top:8px;right:8px}
+
+</style>
 </head>
 <body>
 <div id="wrap">
@@ -622,10 +849,10 @@
   <div id="charScreen" class="ovl hidden">
     <div class="card screen-card">
       <div class="screen-head"><div class="title"><b>SELEÇÃO DE PERSONAGEM</b><small>escolha seu lutador; os bloqueados podem ser obtidos na loja</small></div></div>
-      <div class="char-toolbar"><span class="section-label">LUTADORES DISPONÍVEIS</span><span class="hint">Toque em um personagem para selecioná-lo.</span></div>
+      <div class="char-toolbar"><span class="section-label">LUTADORES DISPONÍVEIS</span><span class="hint">Toque para selecionar · deslize para ver todos.</span></div>
       <div id="chars"></div>
-      <div class="row"><button class="b" id="bCustom" style="flex:1">PERSONALIZAR BASE / ENERGIA</button><button class="b pri" id="bCharDone">CONFIRMAR PERSONAGEM</button></div>
-      <div class="row"><button class="b" id="bCharBack" style="flex:1">VOLTAR</button></div>
+      <div class="row char-screen-actions"><button class="b" id="bCustom" style="flex:1">PERSONALIZAR BASE / ENERGIA</button><button class="b pri" id="bCharDone">CONFIRMAR PERSONAGEM</button></div>
+      <div class="row char-screen-back"><button class="b" id="bCharBack" style="flex:1">VOLTAR</button></div>
       <div id="statusChar" class="status-extra"></div>
     </div>
   </div>
@@ -647,12 +874,12 @@
   <div id="createScreen" class="ovl hidden">
     <div class="card screen-card create-card">
       <div class="screen-head"><div class="title"><b>CRIAR SALA ONLINE</b><small>escolha o cenário e configure sua sala para outros jogadores entrarem</small></div></div>
-      <div class="row"><label>PERSONAGEM</label><strong id="createCharInfo" class="screen-value">Base</strong><button class="b" id="bCreateChangeChar">TROCAR PERSONAGEM</button></div>
-      <div class="section-label">ESCOLHA O CENÁRIO DA PARTIDA</div>
+      <div class="row create-char-row"><label>PERSONAGEM</label><strong id="createCharInfo" class="screen-value">Base</strong><button class="b" id="bCreateChangeChar">TROCAR PERSONAGEM</button></div>
+      <div class="section-label">ESCOLHA O CENÁRIO DA PARTIDA · DESLIZE PARA VER MAIS</div>
       <div id="createMaps"></div>
       <div class="row"><label>CENÁRIO SELECIONADO</label><strong id="createMapInfo" class="screen-value">Cânion Rochoso</strong></div>
-      <div class="row"><label>NOME DA SALA</label><input id="roomName" type="text" maxlength="18" placeholder="nome da sala (opcional)" autocomplete="off" autocorrect="off" spellcheck="false"></div>
-      <div class="row"><label>SENHA DA SALA</label><input id="roomPass" type="text" maxlength="12" placeholder="deixe vazio para sala aberta" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+      <div class="row create-input-row"><label>NOME DA SALA</label><input id="roomName" type="text" maxlength="18" placeholder="nome da sala (opcional)" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+      <div class="row create-input-row"><label>SENHA DA SALA</label><input id="roomPass" type="text" maxlength="12" placeholder="deixe vazio para sala aberta" autocomplete="off" autocorrect="off" spellcheck="false"></div>
       <div class="btns"><button class="b pri wide" id="bHost">CRIAR SALA ONLINE</button><button class="b" id="bCreateBack">VOLTAR AO MENU</button></div>
       <div id="statusCreate" class="status-extra"></div>
     </div>
@@ -684,7 +911,7 @@
           <button class="b pri gacha-buy" id="bBuyGacha" type="button">COMPRAR GACHA · 100 ◈</button>
         </div>
       </div>
-      <div class="gacha-collection-head"><span class="section-label">COLEÇÃO DE GUERREIROS</span><span id="gachaCount" class="gacha-count">1 / 9</span></div>
+      <div class="gacha-collection-head"><span class="section-label">COLEÇÃO DE GUERREIROS</span><span class="scroll-help">DESLIZE →</span><span id="gachaCount" class="gacha-count">1 / 9</span></div>
       <div id="gachaPool"></div>
       <div class="btns one"><button class="b" id="bGachaBack">VOLTAR AO MENU</button></div>
       <div id="statusGacha" class="status-extra"></div>
@@ -787,7 +1014,7 @@
       <div class="modal-top"><div class="title"><b id="roomPasswordTitle">SALA TRANCADA</b><small>digite a senha para entrar nesta sala</small></div><button class="modal-close" id="bCloseRoomPassword" type="button" aria-label="Fechar">×</button></div>
       <div class="set">
         <div class="lh"><span class="locked-note">SALA PROTEGIDA</span><span id="roomPasswordCodeLabel">----</span></div>
-        <input id="roomPasswordInput" type="password" maxlength="12" placeholder="DIGITE A SENHA" autocomplete="current-password" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Senha da sala">
+        <input id="roomPasswordInput" type="text" maxlength="12" placeholder="DIGITE A SENHA" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Senha da sala">
         <p class="password-help">Se a senha estiver correta, a entrada na sala acontece imediatamente.</p>
       </div>
       <div class="btns"><button class="b pri wide" id="bEnterLockedRoom" type="button">ENTRAR NA SALA</button><button class="b" id="bCloseRoomPasswordBottom" type="button">CANCELAR</button></div>
@@ -1187,7 +1414,7 @@ function resizeCanvas() {
   let vw = Math.round(270 * a), vh = 270;
   if (vw > 720) { vw = 720; vh = Math.round(720 / a); }
   if (vw < 320) { vw = 320; vh = Math.min(WH, Math.round(320 / a)); }
-  const s = clamp(Math.ceil(r.height * dpr / vh), 1, 4);
+  const maxScale = isTouchDevice() ? 2 : 4; const s = clamp(Math.ceil(r.height * dpr / vh), 1, maxScale);
   if (vw !== VW || vh !== VH || s !== S) {
     VW = vw; VH = vh; S = s; cv.width = VW * S; cv.height = VH * S;
     if (BG) buildBackground();
@@ -1225,6 +1452,37 @@ const MAPS = {
     far: ['floating', '#a8d6ee'], mid: 'celestial', cloud: 'rgba(255,255,255,0.9)',
     ground: ['#7e8f91', '#e6dfc5', '#53676d', '#a9aa91', '#c9c1a5', '#66787a'],
     plat: ['#9b9c8c', '#eee4c7', '#fff4d9', '#b84f3d', '#6b7774'], rock: '#687c7b',
+    platforms: [{ x: 180, y: 585, w: 150 }, { x: 470, y: 490, w: 160 }, { x: 800, y: 400, w: 190 }, { x: 1180, y: 490, w: 160 }, { x: 1480, y: 585, w: 150 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 125 }, { x: 1570, y: 380, w: 125 }] },
+
+  world_tournament: { name: 'Torneio Mundial', desc: 'Arena clássica de artes marciais, arquibancadas e telhado vermelho',
+    sky: [[0, '#397fc1'], [0.48, '#83c9ee'], [0.82, '#f6d8a2'], [1, '#f4b978']],
+    suns: [[390, 74, 20, 'rgba(255,249,214,0.96)']], far: ['hills', '#b4c8d1'], mid: 'tournament', cloud: 'rgba(255,255,255,0.82)',
+    ground: ['#8b7258', '#e2c79b', '#f4dfb7', '#9d8160', '#6e5a48', '#5b4c40'],
+    plat: ['#6e5545', '#d8b987', '#f7e1b5', '#c34e3e', '#57443a'], rock: '#6e5545',
+    platforms: [{ x: 180, y: 585, w: 155 }, { x: 470, y: 490, w: 160 }, { x: 800, y: 400, w: 190 }, { x: 1180, y: 490, w: 160 }, { x: 1480, y: 585, w: 155 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 125 }, { x: 1570, y: 380, w: 125 }] },
+  west_city: { name: 'Cidade do Futuro', desc: 'Arranha-céus de West City sob um céu tecnológico',
+    sky: [[0, '#172044'], [0.42, '#354d86'], [0.78, '#b36d91'], [1, '#f0ad9a']],
+    suns: [[390, 82, 17, 'rgba(255,210,174,0.88)']], far: ['skyline', '#39476f'], mid: 'city', cloud: 'rgba(221,229,255,0.32)', stars: true,
+    ground: ['#30384f', '#697c91', '#8da0b1', '#414c65', '#252e43', '#18243a'],
+    plat: ['#27334a', '#72869a', '#a9bdca', '#e5a65f', '#1a263b'], rock: '#263248',
+    platforms: [{ x: 180, y: 585, w: 150 }, { x: 470, y: 490, w: 160 }, { x: 800, y: 400, w: 190 }, { x: 1180, y: 490, w: 160 }, { x: 1480, y: 585, w: 150 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 125 }, { x: 1570, y: 380, w: 125 }] },
+  freeza: { name: 'Planeta Freeza', desc: 'Montanhas congeladas, cristais de gelo e aurora azul',
+    sky: [[0, '#101d4a'], [0.38, '#365c9c'], [0.76, '#9bc8e8'], [1, '#e7f5ff']],
+    suns: [[390, 76, 22, 'rgba(220,245,255,0.92)']], far: ['icepeaks', '#789fc4'], mid: 'ice', cloud: 'rgba(232,248,255,0.62)', stars: true,
+    ground: ['#5c7894', '#c5e3f4', '#eaf8ff', '#789bb6', '#45627f', '#273e60'],
+    plat: ['#486987', '#b8d8ed', '#effaff', '#7dd7ed', '#304e6b'], rock: '#496783',
+    platforms: [{ x: 180, y: 585, w: 150 }, { x: 470, y: 490, w: 160 }, { x: 800, y: 400, w: 190 }, { x: 1180, y: 490, w: 160 }, { x: 1480, y: 585, w: 150 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 125 }, { x: 1570, y: 380, w: 125 }] },
+  kaioshin: { name: 'Mundo dos Kaioshins', desc: 'Ilhas celestes, árvores sagradas e céu dourado',
+    sky: [[0, '#315e88'], [0.4, '#80b9bb'], [0.78, '#e5d7a0'], [1, '#f9edc5']],
+    suns: [[385, 72, 24, 'rgba(255,246,194,0.96)']], far: ['floating', '#9ebbb5'], mid: 'kai', cloud: 'rgba(255,255,240,0.82)',
+    ground: ['#586f63', '#a8c77b', '#d7e4a2', '#789b6a', '#3e604e', '#304b42'],
+    plat: ['#526f5c', '#a8c77b', '#e3efb3', '#d7b76c', '#354d42'], rock: '#49624f',
+    platforms: [{ x: 180, y: 585, w: 150 }, { x: 470, y: 490, w: 160 }, { x: 800, y: 400, w: 190 }, { x: 1180, y: 490, w: 160 }, { x: 1480, y: 585, w: 150 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 125 }, { x: 1570, y: 380, w: 125 }] },
+  beerus: { name: 'Planeta de Beerus', desc: 'Deserto alienígena violeta com formações rochosas e árvores exóticas',
+    sky: [[0, '#211b4b'], [0.42, '#5b4385'], [0.78, '#bd83a8'], [1, '#f0c0a1']],
+    suns: [[385, 80, 21, 'rgba(255,219,185,0.9)']], far: ['peaks', '#66547f'], mid: 'beerus', cloud: 'rgba(244,213,255,0.38)', stars: true,
+    ground: ['#51405e', '#b18c9e', '#d9b4c2', '#725a7d', '#40324f', '#291f3a'],
+    plat: ['#463652', '#a984a0', '#e1bdc8', '#d98a77', '#30243f'], rock: '#493753',
     platforms: [{ x: 180, y: 585, w: 150 }, { x: 470, y: 490, w: 160 }, { x: 800, y: 400, w: 190 }, { x: 1180, y: 490, w: 160 }, { x: 1480, y: 585, w: 150 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 125 }, { x: 1570, y: 380, w: 125 }] },
 };
 const MAP_IDS = Object.keys(MAPS);
@@ -3605,7 +3863,26 @@ function buildBackground() {
       f.fillStyle = 'rgba(112,153,174,0.22)'; f.beginPath(); f.moveTo(x - w * 0.65, y + 2); f.lineTo(x + w * 0.65, y + 2); f.lineTo(x, y + 17 + R() * 12); f.closePath(); f.fill();
     }
   }
-  L.far = far;
+
+  else if (ftype === 'icepeaks') {
+    f.beginPath(); f.moveTo(0, fh);
+    let x = 0;
+    while (x <= fw) {
+      const peakW = 45 + R() * 90, peakH = 55 + R() * 95, peakX = x + peakW * 0.5;
+      f.lineTo(peakX - peakW * 0.5, fh);
+      f.lineTo(peakX, fh - peakH);
+      f.lineTo(peakX + peakW * 0.5, fh);
+      x += peakW * 0.72;
+    }
+    f.lineTo(fw, fh); f.closePath(); f.fill();
+    f.fillStyle = 'rgba(240,250,255,0.78)';
+    for (let i = 0; i < 18; i++) {
+      const px = R() * fw, py = fh - 55 - R() * 75;
+      f.beginPath(); f.moveTo(px - 8, py + 12); f.lineTo(px, py); f.lineTo(px + 8, py + 12); f.closePath(); f.fill();
+    }
+  }
+
+    L.far = far;
   // meio
   const mw = Math.ceil(VW + (WW - VW) * 0.5) + 40, mh = Math.ceil(VH + (WH - VH) * 0.6) + 10;
   const mid = makeCanvas(mw, mh), m = mid.getContext('2d');
@@ -3659,7 +3936,58 @@ function buildBackground() {
     }
     mx += w + 65 + R() * 55;
   }
-  L.mid = mid;
+
+  if (M.mid === 'tournament') while (mx < mw) {
+    const x0 = mx, w = 95 + R() * 65, h = 42 + R() * 28, top = base - h;
+    // arquibancadas com pequenos pontos coloridos representando o público
+    m.fillStyle = '#9a8b83'; m.fillRect(x0, top + 18, w, mh - top - 18);
+    m.fillStyle = '#d9c4a4'; m.fillRect(x0 - 5, top + 13, w + 10, 7);
+    for (let row = 0; row < 3; row++) for (let j = 0; j < 13; j++) {
+      m.fillStyle = ['#d84b4b', '#e9d27d', '#3f75a8', '#f1eee1'][((j + row) % 4)];
+      m.fillRect(x0 + 4 + j * (w - 10) / 13, top + 23 + row * 8, 3, 4);
+    }
+    if (R() < 0.7) {
+      const tw = 45 + R() * 20, tx = x0 + w / 2 - tw / 2, ty = top - 35;
+      m.fillStyle = '#f0dfb8'; m.fillRect(tx + 5, ty + 17, tw - 10, 28);
+      m.fillStyle = '#c84b3e'; m.beginPath(); m.moveTo(tx - 7, ty + 19); m.lineTo(tx + tw / 2, ty); m.lineTo(tx + tw + 7, ty + 19); m.lineTo(tx + tw / 2, ty + 13); m.closePath(); m.fill();
+      m.fillStyle = '#6d4037'; m.fillRect(tx + tw / 2 - 5, ty + 29, 10, 16);
+    }
+    mx += w + 30 + R() * 55;
+  }
+  if (M.mid === 'ice') while (mx < mw) {
+    const x0 = mx, w = 34 + R() * 54, h = 70 + R() * 115, top = base - h;
+    m.fillStyle = R() < 0.5 ? '#8fc4e4' : '#b8dff2';
+    m.beginPath(); m.moveTo(x0, mh); m.lineTo(x0 + w * 0.38, top + 20); m.lineTo(x0 + w * 0.52, top); m.lineTo(x0 + w * 0.68, top + 28); m.lineTo(x0 + w, mh); m.closePath(); m.fill();
+    m.fillStyle = 'rgba(255,255,255,0.82)';
+    m.beginPath(); m.moveTo(x0 + w * 0.38, top + 20); m.lineTo(x0 + w * 0.52, top); m.lineTo(x0 + w * 0.68, top + 28); m.lineTo(x0 + w * 0.57, top + 18); m.lineTo(x0 + w * 0.5, top + 24); m.closePath(); m.fill();
+    m.fillStyle = 'rgba(77,151,198,0.34)'; m.fillRect(x0 + w * 0.25, top + h * 0.58, 3, h * 0.34);
+    mx += w + 18 + R() * 32;
+  }
+  if (M.mid === 'kai') while (mx < mw) {
+    const w = 120 + R() * 65, x0 = mx, islandY = base - 35 - R() * 35;
+    m.fillStyle = '#6b8467'; m.beginPath(); m.moveTo(x0 + 5, islandY); m.lineTo(x0 + w - 5, islandY); m.lineTo(x0 + w * 0.72, islandY + 17); m.lineTo(x0 + w * 0.52, islandY + 43); m.lineTo(x0 + w * 0.25, islandY + 22); m.closePath(); m.fill();
+    m.fillStyle = '#9fc77d'; m.beginPath(); m.ellipse(x0 + w / 2, islandY + 1, w / 2, 9, 0, Math.PI, Math.PI * 2); m.fill();
+    // árvore sagrada de copa larga
+    const tx = x0 + w * (0.25 + R() * 0.5), ty = islandY - 8 - R() * 18;
+    m.fillStyle = '#755b50'; m.fillRect(tx - 3, ty, 6, islandY - ty + 5);
+    m.fillStyle = '#4d9a69'; m.beginPath(); m.arc(tx, ty - 7, 18 + R() * 7, 0, Math.PI * 2); m.fill();
+    m.fillStyle = '#83c77c'; m.beginPath(); m.arc(tx - 7, ty - 13, 9, 0, Math.PI * 2); m.fill();
+    mx += w + 55 + R() * 45;
+  }
+  if (M.mid === 'beerus') while (mx < mw) {
+    const x0 = mx, w = 48 + R() * 58, h = 55 + R() * 105, top = base - h;
+    m.fillStyle = '#5a426e'; m.beginPath(); m.moveTo(x0, mh); m.lineTo(x0 + w * 0.18, top + 18); m.lineTo(x0 + w * 0.48, top); m.lineTo(x0 + w * 0.77, top + 15); m.lineTo(x0 + w, mh); m.closePath(); m.fill();
+    m.fillStyle = '#8d6d9b'; m.fillRect(x0 + w * 0.25, top + h * 0.5, 4, h * 0.35);
+    if (R() < 0.65) {
+      const tx = x0 + w + 12, ty = base - 24 - R() * 20;
+      m.fillStyle = '#73516d'; m.fillRect(tx - 2, ty, 4, 30);
+      m.fillStyle = '#b47e9e'; m.beginPath(); m.ellipse(tx, ty - 4, 12, 17, 0, 0, Math.PI * 2); m.fill();
+      m.fillStyle = '#d7a3b4'; m.beginPath(); m.ellipse(tx - 4, ty - 10, 5, 8, -0.4, 0, Math.PI * 2); m.fill();
+    }
+    mx += w + 28 + R() * 40;
+  }
+
+    L.mid = mid;
   // chão
   const [gBase, gTop, gLine, gS1, gS2, gCrack] = M.ground;
   const gr = makeCanvas(WW, WH - GROUND + 10), q = gr.getContext('2d');
@@ -4106,7 +4434,7 @@ function update(dt) {
   projectiles = projectiles.filter(p => !p.dead);
   for (const p of particles) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g || 0) * dt; p.vx *= Math.pow(0.1, dt); if (!p.g) p.vy *= Math.pow(0.1, dt); }
   particles = particles.filter(p => p.life > 0);
-  if (particles.length > 900) particles.splice(0, particles.length - 900);
+  const particleLimit = isTouchDevice() ? 600 : 900; if (particles.length > particleLimit) particles.splice(0, particles.length - particleLimit);
   for (const p of popups) { p.life -= dt; p.y -= 22 * dt; }
   popups = popups.filter(p => p.life > 0);
   for (const k of killfeed) k.life -= dt;
@@ -4185,13 +4513,30 @@ function openCharScreen(returnTo = 'menu') { charReturnScreen = returnTo; showMe
 let chosenChar = 'base', chosenMap = 'canyon';
 try { if (MAPS[localStorage.getItem('adk_map')]) chosenMap = localStorage.getItem('adk_map'); } catch (e) {}
 /* escolha de mapa: miniatura de cada cenário */
+const MAP_THUMB_CACHE = new Map();
 function renderMapThumb(id, c) {
+  const x = c.getContext('2d');
+  const cached = MAP_THUMB_CACHE.get(id);
+  if (cached) {
+    x.clearRect(0, 0, c.width, c.height);
+    x.imageSmoothingEnabled = false;
+    x.drawImage(cached, 0, 0, c.width, c.height);
+    return;
+  }
   const save = { BG, PLATFORMS, MAP_ID, ctx, VW, VH };
-  VW = 480; VH = 270; MAP_ID = id; PLATFORMS = MAPS[id].platforms; buildBackground();
-  const big = makeCanvas(480, 270); ctx = big.getContext('2d'); ctx.imageSmoothingEnabled = false;
-  const cam = { x: 660, y: WH - VH - 40 }; drawBackground(cam, 0); drawForeground(cam);
-  ({ BG, PLATFORMS, MAP_ID, ctx, VW, VH } = save);
-  const x = c.getContext('2d'); x.drawImage(big, 0, 0, c.width, c.height);
+  let big;
+  try {
+    VW = 480; VH = 270; MAP_ID = id; PLATFORMS = MAPS[id].platforms; buildBackground();
+    big = makeCanvas(480, 270);
+    ctx = big.getContext('2d'); ctx.imageSmoothingEnabled = false;
+    const cam = { x: 660, y: WH - VH - 40 };
+    drawBackground(cam, 0); drawForeground(cam);
+  } finally {
+    ({ BG, PLATFORMS, MAP_ID, ctx, VW, VH } = save);
+  }
+  MAP_THUMB_CACHE.set(id, big);
+  x.imageSmoothingEnabled = false;
+  x.drawImage(big, 0, 0, c.width, c.height);
 }
 function buildMapPicker() {
   const box = document.getElementById('createMaps'); if (!box) return; box.innerHTML = '';
@@ -4353,11 +4698,16 @@ function openRoomPasswordModal(code, roomLabel = '') {
   if (codeLabel) codeLabel.textContent = pendingRoomJoinCode || '----';
   if (input) input.value = '';
   if (status) { status.textContent = 'Digite a senha para entrar.'; status.style.color = ''; }
+  const hud = document.getElementById('menuHud');
+  if (hud) hud.classList.add('hidden');
   show('roomPasswordModal', true);
   setTimeout(() => { try { input && input.focus(); } catch (_) {} }, 30);
 }
 function closeRoomPasswordModal() {
   show('roomPasswordModal', false);
+  const hud = document.getElementById('menuHud');
+  const rooms = document.getElementById('roomsScreen');
+  if (hud && rooms && !rooms.classList.contains('hidden') && game.phase !== 'play') hud.classList.remove('hidden');
 }
 function redeemGameCode() {
   const input = document.getElementById('menuCode');
@@ -4793,9 +5143,16 @@ function advance(now) {
   while (acc >= STEP) { update(STEP); acc -= STEP; for (const k in pressed) delete pressed[k]; }
   return dt;
 }
+let lastMobileIdleRender = 0;
 function frame(now) {
   const dt = advance(now);
-  if (!document.hidden) render(dt);
+  if (!document.hidden) {
+    const lowPowerMenu = isTouchDevice() && (game.phase !== 'play' || !!overlay || chatOpen);
+    if (!lowPowerMenu || now - lastMobileIdleRender >= 1000 / 30) {
+      render(dt);
+      lastMobileIdleRender = now;
+    }
+  }
   requestAnimationFrame(frame);
 }
 /* Com a aba em segundo plano o navegador para o requestAnimationFrame.
