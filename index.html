@@ -171,6 +171,18 @@
   button.b.pri:hover{background:#dc7a26}
   #status{min-height:14px;font-size:clamp(7px,.9vw,9px);color:#ffd8a8;text-align:center;line-height:1.6}
   .hint{font-size:clamp(6px,.8vw,8px);color:var(--muted);text-align:center;line-height:1.7}
+
+  /* ===== cantos arredondados em todas as telas e janelas ===== */
+  :root{--r:16px;--r2:11px;--r3:8px}
+  .card{border-radius:var(--r)}
+  .cpanel,.cprev,#rooms,.copts,#chatbar,#editbar,.set{border-radius:var(--r2)}
+  button.b,button.char,button.mapb,button.hairb,button.room,.copt,.ctabs button,#authTabs button,.cposes button,
+  input[type=text],input[type=email],input[type=password],#chatbar input,#selName{border-radius:var(--r3)}
+  button.char canvas,button.mapb canvas,button.hairb canvas,.copt canvas{border-radius:calc(var(--r3) - 2px)}
+  button.room .cnt,button.room .stamp,button.room .lock{border-radius:999px}
+  #pwBox .card{max-width:min(94vw,440px)}
+  #pwMsg{min-height:1.4em;font-size:clamp(8px,1vw,10px);color:#ffb02e;line-height:1.5}
+  button.room .lock{position:absolute;top:5px;left:5px;padding:3px 7px;background:rgba(8,5,16,.85);border:1px solid #ffd23a;color:#ffd23a;font-size:clamp(8px,1vw,10px)}
 </style>
 </head>
 <body>
@@ -190,6 +202,7 @@
             <button class="b" id="bTrain">MODO TREINO</button>
             <button class="b" id="bBots">CONTRA BOTS</button>
             <input class="wide" id="roomName" type="text" maxlength="18" placeholder="nome da sala (opcional)" autocomplete="off" autocorrect="off" spellcheck="false">
+            <input class="wide" id="roomPw" type="text" maxlength="12" placeholder="senha da sala (opcional — vazio = aberta)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             <button class="b pri wide" id="bHost">CRIAR SALA ONLINE</button>
             <button class="b wide" id="bSettings">⚙ CONFIGURAÇÕES</button>
           </div>
@@ -221,6 +234,14 @@
       <div class="row"><label>SENHA</label><input id="authPass" type="password" maxlength="72" placeholder="mínimo 6 letras ou números" autocomplete="current-password"></div>
       <div id="authMsg"></div>
       <div class="btns"><button type="submit" class="b pri wide" id="authGo">ENTRAR</button><button type="button" class="b wide" id="authBack">VOLTAR (JOGAR COMO CONVIDADO)</button></div>
+    </form>
+  </div>
+  <div id="pwBox" class="ovl hidden">
+    <form class="card" id="pwForm" autocomplete="off">
+      <div class="title"><b>SALA COM SENHA</b><small id="pwSub">digite a senha que o anfitrião passou</small></div>
+      <div class="row"><label>SENHA</label><input id="pwIn" type="text" maxlength="12" placeholder="senha" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+      <div id="pwMsg"></div>
+      <div class="btns"><button type="submit" class="b pri wide">ENTRAR NA SALA</button><button type="button" class="b wide" id="pwBack">VOLTAR</button></div>
     </form>
   </div>
   <div id="pause" class="ovl hidden">
@@ -2495,13 +2516,18 @@ function ownerText(str, x, y, size, align = 'left', outline = '#2a1600') {
   g.addColorStop(0, '#b7791f'); g.addColorStop(0.35, '#ffd23a'); g.addColorStop(0.5, '#fffbe0'); g.addColorStop(0.65, '#ffd23a'); g.addColorStop(1, '#b7791f');
   ctx.fillStyle = g; ctx.fillText(str, x, y);
 }
+/* retângulo com cantos arredondados (HUD) */
+function rr(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, Math.min(r, h / 2, w / 2)); else ctx.rect(x, y, w, h); }
 function drawBar(x, y, w, h, ratio, ghost, color, dark) {
-  ctx.fillStyle = '#120c1c'; ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
-  ctx.fillStyle = '#3a2e52'; ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
+  const r = Math.min(4, h / 2 + 1);
+  ctx.fillStyle = '#120c1c'; rr(x - 2, y - 2, w + 4, h + 4, r + 2); ctx.fill();
+  ctx.fillStyle = '#3a2e52'; rr(x - 1, y - 1, w + 2, h + 2, r + 1); ctx.fill();
+  ctx.save(); rr(x, y, w, h, r); ctx.clip();
   ctx.fillStyle = '#20182e'; ctx.fillRect(x, y, w, h);
   if (ghost != null) { ctx.fillStyle = '#ffffff'; ctx.fillRect(x, y, Math.round(w * clamp(ghost, 0, 1)), h); }
   const ww = Math.round(w * clamp(ratio, 0, 1));
   ctx.fillStyle = dark; ctx.fillRect(x, y, ww, h); ctx.fillStyle = color; ctx.fillRect(x, y, ww, Math.ceil(h / 2));
+  ctx.restore();
 }
 function drawHUD() {
   const me = game.me; if (!me) return;
@@ -2538,8 +2564,8 @@ function drawHUD() {
   // placar (até 10 jogadores)
   const list = [...game.fighters].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths).slice(0, MAX_PLAYERS);
   const pw = 104, px0 = RT - pw, bh = 12 + list.length * 8;
-  ctx.fillStyle = 'rgba(18,12,28,0.72)'; ctx.fillRect(px0, T, pw, bh);
-  ctx.fillStyle = '#3a2e52'; ctx.fillRect(px0, T, pw, 1);
+  ctx.fillStyle = 'rgba(18,12,28,0.72)'; rr(px0, T, pw, bh, 6); ctx.fill();
+  ctx.strokeStyle = '#3a2e52'; ctx.lineWidth = 1; rr(px0 + 0.5, T + 0.5, pw - 1, bh - 1, 6); ctx.stroke();
   text('PLACAR', px0 + 4, T + 3, 5, '#ffd23a', 'left', null);
   text('K/M', RT - 4, T + 3, 5, '#8d86a8', 'right', null);
   list.forEach((f, i) => {
@@ -2951,7 +2977,7 @@ const lobby = {
     for (const c of this.conns) if (c.open) c.send({ t: 'rooms', list });
   },
   // salas cheias não aparecem; voltam sozinhas quando alguém sai (o anfitrião avisa a nova quantidade)
-  list() { return [...this.regs.values()].filter(r => r.n < MAX_PLAYERS).sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map, nm: r.nm })); },
+  list() { return [...this.regs.values()].filter(r => r.n < MAX_PLAYERS).sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map, nm: r.nm, lk: !!r.lk })); },
   /* quem fica ligado ao quadro: quem está no menu, os anfitriões e o próprio quadro. Quem só está lutando numa sala se desliga. */
   sync() {
     // com a lista no Supabase funcionando, ninguém precisa do quadro P2P (só quem já é o quadro continua até sair)
@@ -2963,7 +2989,7 @@ const lobby = {
     if (!m) return;
     if (m.t === 'reg' && m.room && /^[A-Z]{4}$/.test(m.room.code)) {
       const old = this.regs.get(m.room.code);
-      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 18), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', nm: filterChat(String(m.room.nm || '')).slice(0, 18), t: Date.now(), since: old ? old.since : Date.now(), conn: conn || (old && old.conn) });
+      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 18), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', nm: filterChat(String(m.room.nm || '')).slice(0, 18), lk: !!m.room.lk, t: Date.now(), since: old ? old.since : Date.now(), conn: conn || (old && old.conn) });
     } else if (m.t === 'unreg') this.regs.delete(m.code);
   },
   send(m) { if (this.isServer) { this.onReg(m); this.tickServer(); } else if (this.conn && this.conn.open) this.conn.send(m); },
@@ -3001,25 +3027,42 @@ const net = {
     c.ids = new Set();
     c.on('open', () => {
       if (this.role !== 'host') { try { c.close(); } catch (_) {} return; }
-      const humans = this.conns.length + 1;
-      if (humans >= MAX_PLAYERS) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
-      if (humans + 1 + game.bots.length > MAX_PLAYERS) game.removeBot(); // abre espaço tirando um bot
-      c.send({ t: 'welcome', map: game.map || 'canyon', nm: this.roomName || '' });
-      this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
+      if (this.roomPw) { // sala com senha: espera a senha antes de aceitar (6s)
+        c.waitPw = setTimeout(() => { try { c.send({ t: 'deny', why: 'senha' }); } catch (_) {} setTimeout(() => { try { c.close(); } catch (_) {} }, 400); }, 6000);
+        return;
+      }
+      this.admit(c);
     });
     c.on('data', m => {
+      if (m && m.t === 'pw' && !this.conns.includes(c)) { // resposta da senha (salas sem senha ignoram)
+        if (this.role !== 'host' || !this.roomPw || c.admitted) return;
+        clearTimeout(c.waitPw);
+        if (String(m.pw || '').trim() === this.roomPw) this.admit(c);
+        else { c.send({ t: 'deny', why: 'senha' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); }
+        return;
+      }
       if (!m || this.role !== 'host' || !this.conns.includes(c)) return;
       if (m.t === 's') c.ids.add(m.id); else if (m.t === 'leave') c.ids.delete(m.id);
       for (const o of this.conns) if (o !== c && o.open) o.send(m); // repassa para os outros
       handleNet(m);
     });
     c.on('close', () => {
+      clearTimeout(c.waitPw);
       if (!this.conns.includes(c)) return;
       this.conns = this.conns.filter(o => o !== c); this.members = this.members.filter(id => id !== c.peer);
       this.send({ t: 'members', list: this.members });
       for (const id of c.ids) { const msg = { t: 'leave', id }; handleNet(msg); this.send(msg); }
     });
     c.on('error', () => {});
+  },
+  /* coloca o jogador na sala (depois de conferir a senha, se houver) */
+  admit(c) {
+    if (c.admitted || this.role !== 'host') return; c.admitted = true;
+    const humans = this.conns.length + 1;
+    if (humans >= MAX_PLAYERS) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
+    if (humans + 1 + game.bots.length > MAX_PLAYERS) game.removeBot(); // abre espaço tirando um bot
+    c.send({ t: 'welcome', map: game.map || 'canyon', nm: this.roomName || '' });
+    this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
   },
   joinRoom(code, onOk, onErr) {
     this.close(); this.code = code;
@@ -3035,6 +3078,7 @@ const net = {
   connectTo(code, timeout, onOk, onFail) {
     const gen = this.gen, c = this.peer.connect(PREFIX + code, { reliable: true, serialization: 'json' });
     let done = false;
+    c.on('open', () => { try { c.send({ t: 'pw', pw: this.roomPw || '' }); } catch (_) {} }); // manda a senha (sala aberta ignora)
     const fail = msg => { if (done) return; done = true; this.pending = null; clearTimeout(to); try { c.close(); } catch (_) {} if (gen === this.gen) onFail(msg); };
     this.pending = fail;
     const to = setTimeout(() => fail('Não foi possível conectar. Confira o código.'), timeout);
@@ -3044,6 +3088,7 @@ const net = {
         if (gen !== this.gen) return;
         if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); onOk(code); }
         else if (m.t === 'full') fail('Sala cheia (' + MAX_PLAYERS + ' jogadores).');
+        else if (m.t === 'deny') fail(this.roomPw ? 'SENHA_ERRADA' : 'SENHA');
         return;
       }
       if (this.host !== c) return;
@@ -3104,7 +3149,7 @@ const net = {
     if (this.role === 'host') {
       this.regT -= dt;
       // avisa o quadro só quando algo muda (entrou/saiu gente, nome, cenário) + uma confirmação a cada 15s
-      const room = { code: this.code, host: dispName(game.me.name), nm: this.roomName || '', n: this.conns.length + 1, map: game.map || 'canyon' }, rk = JSON.stringify(room);
+      const room = { code: this.code, host: dispName(game.me.name), nm: this.roomName || '', lk: !!this.roomPw, n: this.conns.length + 1, map: game.map || 'canyon' }, rk = JSON.stringify(room);
       if (rk !== this.regKey || this.regT <= 0) { this.regT = ROOM_HEARTBEAT; this.regKey = rk; lobby.register(room); }
     }
   }
@@ -3281,12 +3326,19 @@ const salasSB = {
   get ok() { return !!conta.sb && performance.now() - this.okAt < 15000; },
   async poll() {
     if (!conta.sb) return;
-    const { data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map');
+    let { data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map,lk');
+    if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map')); // banco sem a coluna lk (SQL v2 ainda não rodado)
     if (error || !Array.isArray(data)) { this.failAt = performance.now(); return; }
-    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18) }));
+    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18), lk: !!r.lk }));
     roomsKey = ''; renderRooms();
   },
-  reg(room) { if (!conta.sb) return; this.mine = room.code; conta.sb.from('rooms').upsert(room).then(r => { if (!r.error) this.okAt = performance.now(); }, () => {}); },
+  reg(room) {
+    if (!conta.sb) return; this.mine = room.code;
+    conta.sb.from('rooms').upsert(room).then(r => {
+      if (!r.error) { this.okAt = performance.now(); return; }
+      const { lk, ...semLk } = room; conta.sb.from('rooms').upsert(semLk).then(() => {}, () => {}); // banco sem a coluna lk
+    }, () => {});
+  },
   unreg(code) { if (!conta.sb) return; this.mine = null; conta.sb.from('rooms').delete().eq('code', code).then(() => {}, () => {}); },
   tick() { // a cada segundo: quem está no menu atualiza a lista a cada 4s
     if (!conta.sb || game.phase !== 'menu') return;
@@ -3347,7 +3399,7 @@ function renderRooms() {
     : `Cada sala tem até ${MAX_PLAYERS} jogadores.`;
   if (!list.length) el.innerHTML = `<div class="empty">${ls === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : ls === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
   else el.innerHTML = list.map(r => { const full = r.n >= MAX_PLAYERS, nm = r.nm || 'Sala de ' + dispName(r.host);
-    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="cnt">${r.n}/${MAX_PLAYERS}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
+    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}${r.lk ? ' data-lk="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt="">${r.lk ? '<span class="lock">🔒 SENHA</span>' : ''}<span class="cnt">${r.n}/${MAX_PLAYERS}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
 }
 
 /* ---------------- CHAT ----------------
@@ -3446,7 +3498,7 @@ function drawChatLog(x, y, bottom) {
   }
   const lh = 8, h = rows.length * lh + 4;
   const y0 = Math.min(y, bottom - h);
-  if (chatOpen) { ctx.fillStyle = 'rgba(12,8,20,0.6)'; ctx.fillRect(x - 2, y0 - 2, maxW + 6, h); }
+  if (chatOpen) { ctx.fillStyle = 'rgba(12,8,20,0.6)'; rr(x - 2, y0 - 2, maxW + 6, h, 5); ctx.fill(); }
   rows.forEach((r, i) => {
     ctx.globalAlpha = chatOpen ? 1 : clamp(r.c.life / 1.5, 0, 1) * 0.92;
     const yy = y0 + i * lh;
@@ -3693,20 +3745,39 @@ function buildMenu() {
     if (busy) return; initAudio(); if (!needNet()) return; setStatus('Criando sala...'); busy = true;
     setStatus('Criando sala (' + MAPS[chosenMap].name + ')...');
     net.roomName = roomName();
+    net.roomPw = String(document.getElementById('roomPw').value || '').trim().slice(0, 12); // vazio = sala aberta
     net.hostRoom(code => { busy = false; setStatus(''); game.start('online'); killfeed.unshift({ sys: (net.roomName ? 'Sala "' + net.roomName + '" criada!' : 'Sala criada!') + ' Código: ' + code, life: 12 }); net.regT = 0; },
       err => { busy = false; setStatus(err); });
   };
-  const join = code => {
+  const join = (code, pw = '') => {
     net.roomName = '';
     if (busy) return; initAudio(); if (!needNet()) return;
     code = String(code || '').trim().toUpperCase();
     if (!/^[A-Z]{4}$/.test(code)) { setStatus('Digite o código da sala (4 letras).'); return; }
+    net.roomPw = String(pw || '').trim().slice(0, 12);
     setStatus('Entrando na sala ' + code + '...'); busy = true;
-    net.joinRoom(code, () => { busy = false; setStatus(''); game.start('online'); }, err => { busy = false; net.close(); setStatus(err); });
+    net.joinRoom(code, () => { busy = false; setStatus(''); show('pwBox', false); game.start('online'); }, err => {
+      busy = false; net.close();
+      if (err === 'SENHA' || err === 'SENHA_ERRADA') { setStatus(''); askPw(code, err === 'SENHA_ERRADA' ? 'Senha errada. Confira com o anfitrião.' : ''); }
+      else setStatus(err);
+    });
   };
+  /* janela da senha (o texto aparece enquanto digita) */
+  let pwCode = '';
+  const askPw = (code, msg) => {
+    pwCode = code; document.getElementById('pwMsg').textContent = msg || '';
+    document.getElementById('pwSub').textContent = 'Sala ' + code + ' · digite a senha que o anfitrião passou';
+    show('pwBox', true); const i = document.getElementById('pwIn'); if (!msg) i.value = ''; setTimeout(() => { i.focus(); i.select(); }, 50);
+  };
+  document.getElementById('pwForm').addEventListener('submit', e => {
+    e.preventDefault(); const v = document.getElementById('pwIn').value.trim();
+    if (!v) { document.getElementById('pwMsg').textContent = 'Digite a senha.'; return; }
+    document.getElementById('pwMsg').textContent = 'Entrando...'; join(pwCode, v);
+  });
+  document.getElementById('pwBack').onclick = () => show('pwBox', false);
   document.getElementById('bJoin').onclick = () => join(document.getElementById('code').value);
   document.getElementById('code').addEventListener('keydown', e => { if (e.key === 'Enter') join(e.target.value); });
-  document.getElementById('rooms').addEventListener('click', e => { const b = e.target.closest('button.room'); if (!b) return; if (b.dataset.full) { setStatus('Essa sala está cheia.'); return; } join(b.dataset.code); });
+  document.getElementById('rooms').addEventListener('click', e => { const b = e.target.closest('button.room'); if (!b) return; if (b.dataset.full) { setStatus('Essa sala está cheia.'); return; } if (b.dataset.lk) askPw(b.dataset.code); else join(b.dataset.code); });
   const p = new URLSearchParams(location.search).get('sala'); if (p) document.getElementById('code').value = p.toUpperCase();
 }
 
@@ -3881,7 +3952,8 @@ function placeEditbar() {
 }
 function finishEdit() { editMode = false; selectBtn(null); saveSettings(); show('editbar', false); show('settings', true); updateTouchUI(); }
 function onEscape() {
-  if (!document.getElementById('auth').classList.contains('hidden')) show('auth', false);
+  if (!document.getElementById('pwBox').classList.contains('hidden')) show('pwBox', false);
+  else if (!document.getElementById('auth').classList.contains('hidden')) show('auth', false);
   else if (chatOpen) closeChat();
   else if (editMode) finishEdit();
   else if (!document.getElementById('settings').classList.contains('hidden')) closeSettings();
