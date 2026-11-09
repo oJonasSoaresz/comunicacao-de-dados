@@ -348,6 +348,66 @@ const MAPS = {
     far: ['hills', '#3f8f86'], mid: 'namek', cloud: 'rgba(235,255,245,0.75)',
     ground: ['#4f7486', '#86d65a', '#3f6a3a', '#5c8798', '#6b97a8', '#3e5f70'], plat: ['#4d6c7c', '#7fcf52', '#b9f28a', '#3f9a3a', '#36505e'], rock: '#3e5f70',
     platforms: [{ x: 180, y: 585, w: 150 }, { x: 470, y: 490, w: 150 }, { x: 800, y: 400, w: 200 }, { x: 1180, y: 490, w: 150 }, { x: 1470, y: 585, w: 150 }, { x: 820, y: 595, w: 160 }, { x: 110, y: 380, w: 120 }, { x: 1570, y: 380, w: 120 }] },
+
+  tenkaichi: { name: 'Torneio de Artes Marciais', desc: 'O grande estádio do Budokai Tenkaichi',
+    sky: [[0, '#354b83'], [0.48, '#e18a65'], [1, '#f5c58a']], suns: [[390, 76, 22, 'rgba(255,236,180,0.95)']],
+    far: ['hills', '#76617d'], mid: 'arena', cloud: 'rgba(255,239,225,0.42)',
+    ground: ['#a66c42', '#e5b77d', '#704a35', '#c58a54', '#d5a06b', '#593c2c'], plat: ['#713d2b', '#d18a52', '#f1c27c', '#c94d3a', '#4d2d28'], rock: '#593c2c',
+    platforms: [{ x: 180, y: 575, w: 170 }, { x: 480, y: 495, w: 160 }, { x: 790, y: 575, w: 220 }, { x: 1160, y: 495, w: 160 }, { x: 1450, y: 575, w: 170 }, { x: 800, y: 365, w: 180 }] },
+
+  westcity: { name: 'Cidade do Oeste', desc: 'Arranha-céus, avenidas e telhados da Capsule Corp.',
+    sky: [[0, '#172b62'], [0.52, '#4f83bd'], [1, '#f3ad83']], suns: [[410, 82, 16, 'rgba(255,230,180,0.9)']],
+    far: ['skyline', '#30385f'], mid: 'city', cloud: 'rgba(235,244,255,0.55)', road: true, girder: true,
+    ground: ['#303647', '#596176', '#222a3c', '#424b61', '#697187', '#1c2534'], plat: ['#303b5c', '#8193b7', '#c4d8e8', '#e2b84d', '#20283d'], rock: '#222a3c',
+    platforms: [{ x: 110, y: 570, w: 150 }, { x: 340, y: 455, w: 145 }, { x: 590, y: 555, w: 160 }, { x: 850, y: 420, w: 190 }, { x: 1130, y: 540, w: 160 }, { x: 1390, y: 445, w: 150 }, { x: 1600, y: 570, w: 130 }] },
+
+  vegeta: { name: 'Planeta Vegeta', desc: 'Montanhas vulcânicas sob um céu alienígena',
+    sky: [[0, '#170f2c'], [0.48, '#542b50'], [1, '#d05a45']], suns: [[365, 78, 24, 'rgba(255,106,75,0.9)']],
+    far: ['volcano', '#492b43'], mid: 'volcano', cloud: 'rgba(255,174,135,0.22)', stars: true,
+    ground: ['#35212b', '#7d3c32', '#241923', '#71342c', '#9b4a36', '#1b151e'], plat: ['#3b2530', '#a24c37', '#e17a43', '#ffb04a', '#281923'], rock: '#21151e',
+    platforms: [{ x: 150, y: 580, w: 150 }, { x: 400, y: 470, w: 150 }, { x: 690, y: 565, w: 170 }, { x: 990, y: 410, w: 170 }, { x: 1280, y: 535, w: 150 }, { x: 1510, y: 430, w: 160 }, { x: 820, y: 315, w: 140 }] },
+
+  kaio: { name: 'Planeta do Senhor Kaioh', desc: 'O pequeno planeta de gravidade elevada',
+    sky: [[0, '#123f62'], [0.5, '#42a6b0'], [1, '#c9e7a0']], suns: [[390, 90, 20, 'rgba(255,244,190,0.95)']],
+    far: ['hills', '#5b9b83'], mid: 'kai', cloud: 'rgba(235,255,235,0.62)',
+    ground: ['#668c43', '#b5d96a', '#3d612e', '#779c4b', '#d1d77a', '#314b2c'], plat: ['#456b3c', '#9fca65', '#d8ed9a', '#e6c66a', '#294a31'], rock: '#314b2c',
+    platforms: [{ x: 180, y: 575, w: 140 }, { x: 430, y: 480, w: 150 }, { x: 700, y: 570, w: 150 }, { x: 980, y: 455, w: 170 }, { x: 1260, y: 575, w: 150 }, { x: 1510, y: 475, w: 150 }, { x: 820, y: 335, w: 150 }] },
+
+  lookout: { name: 'Templo de Kami', desc: 'O mirante sagrado acima das nuvens',
+    sky: [[0, '#3a69ad'], [0.55, '#a8d8ef'], [1, '#f4f0dc']], suns: [[385, 75, 18, 'rgba(255,248,215,0.95)']],
+    far: ['temple', '#7e9fbd'], mid: 'temple', cloud: 'rgba(255,255,255,0.88)',
+    ground: ['#b9b6a6', '#f0e7c8', '#858b91', '#d6cba9', '#e8dfc3', '#777c85'], plat: ['#858b91', '#e5d7ae', '#fff0c8', '#c9a75a', '#6f7884'], rock: '#777c85',
+    platforms: [{ x: 160, y: 580, w: 150 }, { x: 430, y: 485, w: 150 }, { x: 720, y: 575, w: 160 }, { x: 1000, y: 455, w: 180 }, { x: 1320, y: 570, w: 150 }, { x: 1550, y: 465, w: 140 }, { x: 820, y: 335, w: 150 }] },
+
+  timechamber: { name: 'Sala do Tempo', desc: 'A dimensão branca do treinamento extremo',
+    sky: [[0, '#e7e5d9'], [0.58, '#f7f0d9'], [1, '#c9c3b5']], suns: [[400, 85, 18, 'rgba(255,255,245,0.9)']],
+    far: ['peaks', '#c9c4b7'], mid: 'time', cloud: 'rgba(255,255,255,0.20)',
+    ground: ['#b8b2a5', '#eee7d7', '#8d8a83', '#d4cbbb', '#f7f0e1', '#77756f'], plat: ['#8e8a80', '#ded6c6', '#f8f2e5', '#b9a98d', '#77736b'], rock: '#77736b',
+    platforms: [{ x: 140, y: 575, w: 160 }, { x: 400, y: 460, w: 150 }, { x: 670, y: 560, w: 160 }, { x: 950, y: 420, w: 190 }, { x: 1240, y: 555, w: 160 }, { x: 1510, y: 445, w: 160 }, { x: 790, y: 315, w: 170 }] },
+
+  beerus: { name: 'Planeta de Bills', desc: 'Rochas flutuantes e cristais do planeta de Beerus',
+    sky: [[0, '#1d1647'], [0.48, '#583b88'], [1, '#d09ac0']], suns: [[365, 78, 26, 'rgba(232,190,255,0.88)'], [415, 105, 8, 'rgba(255,226,190,0.85)']],
+    far: ['hills', '#68508e'], mid: 'beerus', cloud: 'rgba(232,208,255,0.35)', stars: true,
+    ground: ['#47345d', '#9b75a8', '#30233f', '#75558a', '#b28bc0', '#251b35'], plat: ['#38284f', '#9b74ac', '#d7b4e8', '#68c8bf', '#211a32'], rock: '#251b35',
+    platforms: [{ x: 150, y: 570, w: 145 }, { x: 390, y: 455, w: 160 }, { x: 690, y: 560, w: 155 }, { x: 960, y: 410, w: 180 }, { x: 1250, y: 550, w: 160 }, { x: 1510, y: 445, w: 150 }, { x: 820, y: 305, w: 150 }] },
+
+  kame: { name: 'Ilha da Kame House', desc: 'A ilha tropical da casa do Mestre Kame',
+    sky: [[0, '#167b9b'], [0.48, '#55c9c2'], [1, '#f6d99b']], suns: [[390, 75, 22, 'rgba(255,244,190,0.95)']],
+    far: ['islands', '#347d91'], mid: 'island', cloud: 'rgba(255,255,255,0.72)',
+    ground: ['#b78a54', '#f0d28d', '#8a613d', '#d7b36c', '#f5dfa7', '#725038'], plat: ['#7b593c', '#d4b16b', '#f6dc9c', '#4c9c73', '#5e4534'], rock: '#725038',
+    platforms: [{ x: 170, y: 575, w: 150 }, { x: 440, y: 485, w: 150 }, { x: 730, y: 570, w: 150 }, { x: 1020, y: 465, w: 170 }, { x: 1330, y: 575, w: 150 }, { x: 1570, y: 485, w: 130 }] },
+
+  sacred: { name: 'Mundo Sagrado dos Kaioshins', desc: 'O reino celestial dos Kaioshins',
+    sky: [[0, '#102c5e'], [0.5, '#3679a4'], [1, '#b5d9c7']], suns: [[395, 75, 20, 'rgba(219,255,232,0.95)']], stars: true,
+    far: ['temple', '#4b7890'], mid: 'sacred', cloud: 'rgba(224,255,242,0.50)',
+    ground: ['#476e57', '#a9d69a', '#294b43', '#648d65', '#c5e0a4', '#203c38'], plat: ['#355d50', '#8fbd8b', '#d3edb7', '#e0c77b', '#1f4038'], rock: '#203c38',
+    platforms: [{ x: 150, y: 570, w: 150 }, { x: 410, y: 465, w: 150 }, { x: 700, y: 560, w: 160 }, { x: 990, y: 430, w: 180 }, { x: 1280, y: 560, w: 150 }, { x: 1540, y: 465, w: 150 }, { x: 820, y: 315, w: 150 }] },
+
+  otherworld: { name: 'Mundo dos Mortos', desc: 'As paisagens sombrias do Outro Mundo',
+    sky: [[0, '#210e35'], [0.48, '#7a304d'], [1, '#e27b54']], suns: [[390, 82, 24, 'rgba(255,177,112,0.88)']], stars: true,
+    far: ['hell', '#48243c'], mid: 'hell', cloud: 'rgba(255,164,130,0.18)',
+    ground: ['#33212e', '#754044', '#201522', '#63333b', '#9a4b43', '#180f1b'], plat: ['#2d1b2a', '#8a4144', '#c15b49', '#f08b4c', '#1c111e'], rock: '#180f1b',
+    platforms: [{ x: 140, y: 575, w: 150 }, { x: 390, y: 465, w: 150 }, { x: 670, y: 560, w: 160 }, { x: 950, y: 420, w: 180 }, { x: 1240, y: 560, w: 160 }, { x: 1510, y: 455, w: 160 }, { x: 820, y: 315, w: 150 }] }
 };
 const MAP_IDS = Object.keys(MAPS);
 let MAP_ID = 'canyon', PLATFORMS = MAPS.canyon.platforms;
@@ -2383,7 +2443,9 @@ function drawStomps(cam) {
 let BG = null;
 function seeded(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
 function buildBackground() {
-  const M = MAPS[MAP_ID], R = seeded(1337 + MAP_ID.length * 97), L = {};
+  let mapSeed = 1337;
+  for (let i = 0; i < MAP_ID.length; i++) mapSeed = (mapSeed * 31 + MAP_ID.charCodeAt(i)) % 2147483646;
+  const M = MAPS[MAP_ID], R = seeded(mapSeed + 1), L = {};
   // céu
   const sky = makeCanvas(VW, VH), s = sky.getContext('2d');
   const g = s.createLinearGradient(0, 0, 0, VH); for (const [o, c] of M.sky) g.addColorStop(o, c);
@@ -2410,6 +2472,47 @@ function buildBackground() {
       f.fillStyle = 'rgba(255,214,110,0.5)'; for (let wy = fh - h + 6; wy < fh - 6; wy += 7) for (let wx = x + 3; wx < x + w - 3; wx += 5) if (R() < 0.25) f.fillRect(wx, wy, 2, 3);
       x += w + 2 + R() * 6;
     }
+  } else if (ftype === 'islands') {
+    f.fillStyle = '#276b83'; f.fillRect(0, fh - 92, fw, 92);
+    f.strokeStyle = 'rgba(190,244,235,0.38)'; f.lineWidth = 2;
+    for (let y = fh - 78; y < fh - 8; y += 13) { f.beginPath(); f.moveTo(0, y); for (let x = 0; x <= fw; x += 22) f.lineTo(x, y + Math.sin(x * 0.018 + y) * 3); f.stroke(); }
+    for (let i = 0; i < 7; i++) {
+      const x = i * fw / 6 + R() * 35, y = fh - 88 - R() * 26, w = 75 + R() * 100, h = 35 + R() * 28;
+      f.fillStyle = fcol; f.beginPath(); f.ellipse(x, y, w, h, 0, Math.PI, 0); f.fill();
+      f.fillStyle = '#477e65'; f.beginPath(); f.ellipse(x, y - 5, w * 0.78, h * 0.42, 0, Math.PI, 0); f.fill();
+    }
+  } else if (ftype === 'volcano') {
+    f.beginPath(); f.moveTo(0, fh);
+    for (let x = 0; x <= fw; x += 5) f.lineTo(x, fh - 42 - Math.abs(Math.sin(x * 0.009)) * 80 - Math.abs(Math.sin(x * 0.027 + 1)) * 28);
+    f.lineTo(fw, fh); f.fill();
+    const cx = fw * 0.55, top = fh - 158;
+    f.fillStyle = '#281b31'; f.beginPath(); f.moveTo(cx - 180, fh); f.lineTo(cx - 32, top + 26); f.lineTo(cx - 8, top + 8); f.lineTo(cx + 10, top + 12); f.lineTo(cx + 35, top + 27); f.lineTo(cx + 185, fh); f.fill();
+    f.strokeStyle = '#ff7045'; f.lineWidth = 3; f.beginPath(); f.moveTo(cx + 2, top + 15); f.lineTo(cx + 34, top + 58); f.lineTo(cx + 18, top + 100); f.stroke();
+    f.fillStyle = '#ff9a4a'; f.beginPath(); f.ellipse(cx + 2, top + 13, 24, 5, 0, 0, Math.PI * 2); f.fill();
+  } else if (ftype === 'ice') {
+    f.beginPath(); f.moveTo(0, fh);
+    for (let x = 0; x <= fw; x += 8) f.lineTo(x, fh - 65 - Math.abs(Math.sin(x * 0.011)) * 105 - Math.abs(Math.sin(x * 0.037)) * 22);
+    f.lineTo(fw, fh); f.fill();
+    f.fillStyle = 'rgba(238,252,255,0.9)';
+    for (let i = 0; i < 14; i++) {
+      const x = R() * fw, y = fh - 105 - R() * 60, w = 18 + R() * 30;
+      f.beginPath(); f.moveTo(x - w, y + 20); f.lineTo(x, y - 12 - R() * 18); f.lineTo(x + w, y + 20); f.closePath(); f.fill();
+    }
+  } else if (ftype === 'temple') {
+    f.beginPath(); f.moveTo(0, fh);
+    for (let x = 0; x <= fw; x += 6) f.lineTo(x, fh - 48 - Math.sin(x * 0.009) * 30 - Math.sin(x * 0.025) * 16);
+    f.lineTo(fw, fh); f.fill();
+    const tx = fw * 0.52, ty = fh - 128;
+    f.fillStyle = '#d8e2d7'; f.fillRect(tx - 68, ty + 28, 136, 70);
+    f.fillRect(tx - 52, ty + 6, 104, 26);
+    f.beginPath(); f.moveTo(tx - 86, ty + 8); f.lineTo(tx, ty - 22); f.lineTo(tx + 86, ty + 8); f.lineTo(tx + 66, ty + 18); f.lineTo(tx - 66, ty + 18); f.fill();
+    f.fillStyle = '#9bafae'; for (let i = -2; i <= 2; i++) f.fillRect(tx + i * 25 - 4, ty + 38, 8, 60);
+  } else if (ftype === 'hell') {
+    f.fillStyle = fcol; f.beginPath(); f.moveTo(0, fh);
+    for (let x = 0; x <= fw; x += 10) f.lineTo(x, fh - 45 - R() * 90);
+    f.lineTo(fw, fh); f.fill();
+    f.strokeStyle = 'rgba(255,104,73,0.75)'; f.lineWidth = 2;
+    for (let i = 0; i < 16; i++) { const x = R() * fw, y = fh - 65 - R() * 80; f.beginPath(); f.moveTo(x, y); f.lineTo(x + 7, y + 18); f.lineTo(x - 2, y + 38); f.stroke(); }
   }
   L.far = far;
   // meio
@@ -2440,6 +2543,117 @@ function buildBackground() {
     for (let wy = top + 8; wy < mh - 10; wy += 9) for (let wx = x0 + 4; wx < x0 + w - 4; wx += 7) { m.fillStyle = R() < 0.35 ? '#ffd86a' : '#1a1f40'; m.fillRect(wx, wy, 3, 4); }
     if (R() < 0.3) { m.fillStyle = '#ff4a5a'; m.fillRect(x0 + w / 2, top - 10, 1, 10); m.fillRect(x0 + w / 2 - 1, top - 11, 3, 2); }
     mx += w + 4 + R() * 30;
+  }
+  if (M.mid === 'arena') {
+    // arquibancadas, colunas e cobertura do Budokai Tenkaichi
+    m.fillStyle = '#8b493f'; m.fillRect(0, base - 92, mw, 92);
+    for (let y = base - 82; y < base - 14; y += 13) {
+      m.fillStyle = y % 2 ? '#d58a55' : '#b9694c'; m.fillRect(0, y, mw, 7);
+      for (let x = 8; x < mw; x += 17) { m.fillStyle = ['#e7c36e', '#6e9c9a', '#d9d0b7', '#7c596f'][((x + y) / 17 | 0) % 4]; m.fillRect(x, y + 2, 3, 4); }
+    }
+    m.fillStyle = '#4c3441'; m.fillRect(0, base - 98, mw, 8);
+    for (let x = 50; x < mw; x += 230) {
+      m.fillStyle = '#e9d2a8'; m.fillRect(x, base - 120, 8, 120);
+      m.fillStyle = '#a74338'; m.beginPath(); m.moveTo(x - 28, base - 120); m.lineTo(x + 4, base - 145); m.lineTo(x + 36, base - 120); m.fill();
+    }
+    m.fillStyle = '#f1d6a3'; m.fillRect(mw * 0.42, base - 170, mw * 0.16, 6);
+  }
+  if (M.mid === 'volcano') {
+    // paredões vulcânicos e rios de lava do Planeta Vegeta
+    for (let x = -20; x < mw + 120; x += 190 + R() * 90) {
+      const h = 115 + R() * 115, w = 150 + R() * 95, top = base - h;
+      m.fillStyle = '#382337'; m.beginPath(); m.moveTo(x, mh); m.lineTo(x + w * 0.22, top + 32); m.lineTo(x + w * 0.48, top); m.lineTo(x + w * 0.75, top + 24); m.lineTo(x + w, mh); m.fill();
+      m.strokeStyle = '#e65a3d'; m.lineWidth = 3; m.beginPath(); m.moveTo(x + w * 0.49, top + 9); m.lineTo(x + w * 0.62, top + 48); m.lineTo(x + w * 0.45, top + 82); m.stroke();
+      m.fillStyle = '#ff9a43'; m.fillRect(x + w * 0.44, base - 8, w * 0.2, 4);
+    }
+  }
+  if (M.mid === 'kai') {
+    // árvores arredondadas e o pequeno planeta do Senhor Kaioh
+    m.fillStyle = '#4c895f'; m.fillRect(0, base - 30, mw, 30);
+    for (let x = -15; x < mw + 50; x += 95 + R() * 55) {
+      const h = 70 + R() * 65, top = base - h, r = 20 + R() * 13;
+      m.fillStyle = '#76533b'; m.fillRect(x - 3, top + 12, 6, base - top);
+      m.fillStyle = '#2c754c'; m.beginPath(); m.arc(x, top, r, 0, Math.PI * 2); m.fill();
+      m.fillStyle = '#63ad62'; m.beginPath(); m.arc(x - 7, top - 7, r * 0.62, 0, Math.PI * 2); m.fill();
+    }
+    const px = mw * 0.68, py = base - 120;
+    m.fillStyle = '#e4c66f'; m.beginPath(); m.arc(px, py, 30, 0, Math.PI * 2); m.fill();
+    m.strokeStyle = '#fff0b0'; m.lineWidth = 3; m.beginPath(); m.ellipse(px, py, 48, 12, -0.25, 0, Math.PI * 2); m.stroke();
+    m.fillStyle = '#6b9e58'; m.beginPath(); m.arc(px - 8, py - 7, 8, 0, Math.PI * 2); m.fill();
+  }
+  if (M.mid === 'temple') {
+    // colunatas do Templo de Kami e plataformas do mirante
+    for (let x = -30; x < mw + 100; x += 180) {
+      const h = 105 + R() * 50;
+      m.fillStyle = '#c8d0c7'; m.fillRect(x, base - h, 16, h);
+      m.fillStyle = '#eef0dc'; m.fillRect(x - 7, base - h - 7, 30, 8);
+      m.fillStyle = '#9eaaa7'; m.fillRect(x + 4, base - h + 8, 4, h - 8);
+    }
+    const cx = mw * 0.5, top = base - 145;
+    m.fillStyle = '#e5e0c6'; m.fillRect(cx - 110, top + 42, 220, 92);
+    m.fillStyle = '#f3e8c9'; m.fillRect(cx - 88, top + 20, 176, 22);
+    m.beginPath(); m.moveTo(cx - 132, top + 22); m.lineTo(cx, top - 16); m.lineTo(cx + 132, top + 22); m.closePath(); m.fill();
+    m.fillStyle = '#9bafad'; for (let i = -3; i <= 3; i++) m.fillRect(cx + i * 28 - 4, top + 55, 8, 80);
+  }
+  if (M.mid === 'time') {
+    // pilares e relógio monumental da Sala do Tempo
+    m.fillStyle = 'rgba(255,255,255,0.35)'; m.fillRect(0, base - 24, mw, 24);
+    for (let x = 80; x < mw; x += 245) {
+      const h = 145 + R() * 70;
+      m.fillStyle = '#a9a79f'; m.fillRect(x, base - h, 17, h);
+      m.fillStyle = '#f4efe2'; m.fillRect(x - 8, base - h - 8, 33, 10);
+      m.fillStyle = '#c8c3b6'; m.fillRect(x + 5, base - h + 12, 5, h - 12);
+    }
+    const cx = mw * 0.55, cy = base - 135;
+    m.fillStyle = '#e6e0d1'; m.beginPath(); m.arc(cx, cy, 42, 0, Math.PI * 2); m.fill();
+    m.strokeStyle = '#99958c'; m.lineWidth = 4; m.beginPath(); m.arc(cx, cy, 34, 0, Math.PI * 2); m.stroke();
+    m.strokeStyle = '#77746d'; m.lineWidth = 3; m.beginPath(); m.moveTo(cx, cy); m.lineTo(cx, cy - 23); m.moveTo(cx, cy); m.lineTo(cx + 17, cy + 8); m.stroke();
+  }
+  if (M.mid === 'beerus') {
+    // arcos rochosos, cristais e formações violetas do planeta de Bills
+    for (let x = 20; x < mw; x += 250) {
+      const h = 90 + R() * 100, w = 95 + R() * 35, top = base - h;
+      m.fillStyle = '#4a345f'; m.beginPath(); m.moveTo(x, base); m.lineTo(x + 8, top + 18); m.lineTo(x + w * 0.45, top); m.lineTo(x + w, top + 28); m.lineTo(x + w + 18, base); m.fill();
+      m.fillStyle = '#8f69a7'; m.beginPath(); m.moveTo(x + w * 0.45, top + 4); m.lineTo(x + w * 0.58, top - 38); m.lineTo(x + w * 0.72, top + 8); m.closePath(); m.fill();
+    }
+    m.strokeStyle = 'rgba(205,168,235,0.55)'; m.lineWidth = 5; m.beginPath(); m.ellipse(mw * 0.65, base - 65, 130, 26, -0.12, 0, Math.PI * 2); m.stroke();
+  }
+  if (M.mid === 'island') {
+    // mar, palmeiras e a casa rosa do Mestre Kame
+    m.fillStyle = '#398fa0'; m.fillRect(0, base - 68, mw, 68);
+    m.strokeStyle = 'rgba(195,245,225,0.45)'; m.lineWidth = 2;
+    for (let y = base - 54; y < base - 4; y += 13) { m.beginPath(); m.moveTo(0, y); for (let x = 0; x < mw; x += 24) m.lineTo(x, y + Math.sin(x * 0.02 + y) * 3); m.stroke(); }
+    for (let x = 40; x < mw; x += 260) {
+      const h = 85 + R() * 35;
+      m.fillStyle = '#8e6a3d'; m.fillRect(x, base - h, 7, h);
+      m.strokeStyle = '#2d754f'; m.lineWidth = 8; m.beginPath(); m.moveTo(x + 3, base - h); m.lineTo(x - 36, base - h - 24); m.moveTo(x + 3, base - h); m.lineTo(x + 42, base - h - 28); m.moveTo(x + 3, base - h); m.lineTo(x - 10, base - h - 40); m.stroke();
+    }
+    const hx = mw * 0.53, hy = base - 92;
+    m.fillStyle = '#f4e5d1'; m.fillRect(hx - 38, hy + 20, 76, 40);
+    m.fillStyle = '#d86c91'; m.beginPath(); m.moveTo(hx - 48, hy + 22); m.lineTo(hx, hy - 8); m.lineTo(hx + 48, hy + 22); m.closePath(); m.fill();
+    m.fillStyle = '#8ccbd2'; m.fillRect(hx - 8, hy + 35, 16, 25);
+  }
+  if (M.mid === 'sacred') {
+    // árvore ancestral e cascatas do Mundo Sagrado dos Kaioshins
+    const tx = mw * 0.52, top = base - 210;
+    m.fillStyle = '#5d8061'; m.fillRect(tx - 13, top + 80, 26, base - top);
+    m.fillStyle = '#397d61'; m.beginPath(); m.arc(tx, top + 54, 94, 0, Math.PI * 2); m.fill();
+    m.fillStyle = '#77b77c'; m.beginPath(); m.arc(tx - 28, top + 28, 55, 0, Math.PI * 2); m.fill();
+    m.fillStyle = '#b7e6c1'; m.fillRect(tx - 82, top + 125, 8, base - top - 125);
+    m.fillRect(tx + 74, top + 125, 8, base - top - 125);
+    for (let x = -30; x < mw + 80; x += 210) {
+      m.fillStyle = '#426d58'; m.beginPath(); m.ellipse(x, base - 35, 65, 24, 0, Math.PI, 0); m.fill();
+    }
+  }
+  if (M.mid === 'hell') {
+    // rochedos escuros, espinhos e fendas de lava do Outro Mundo
+    for (let x = -30; x < mw + 80; x += 105 + R() * 70) {
+      const h = 65 + R() * 115, w = 38 + R() * 35;
+      m.fillStyle = '#382238'; m.beginPath(); m.moveTo(x, base); m.lineTo(x + w * 0.38, base - h); m.lineTo(x + w, base); m.closePath(); m.fill();
+      m.strokeStyle = '#f16a4c'; m.lineWidth = 2; m.beginPath(); m.moveTo(x + w * 0.42, base - h + 16); m.lineTo(x + w * 0.58, base - h + 42); m.lineTo(x + w * 0.35, base - h + 65); m.stroke();
+    }
+    m.fillStyle = '#c84f3d'; m.fillRect(0, base - 7, mw, 7);
+    m.fillStyle = '#ff9a50'; for (let x = 0; x < mw; x += 48) m.fillRect(x + 7, base - 5, 17, 2);
   }
   L.mid = mid;
   // chão
@@ -3603,7 +3817,7 @@ function renderMapThumb(id, c) {
 function buildMapPicker() {
   const box = document.getElementById('maps'); box.innerHTML = '';
   for (const id of MAP_IDS) {
-    const b = document.createElement('button'); b.className = 'mapb' + (id === chosenMap ? ' sel' : ''); b.dataset.m = id;
+    const b = document.createElement('button'); b.className = 'mapb' + (id === chosenMap ? ' sel' : ''); b.dataset.m = id; b.title = MAPS[id].desc || MAPS[id].name; b.setAttribute('aria-label', MAPS[id].name + '. ' + (MAPS[id].desc || ''));
     const c = makeCanvas(160, 90); renderMapThumb(id, c); b.appendChild(c);
     const sp = document.createElement('span'); sp.textContent = MAPS[id].name; b.appendChild(sp);
     b.onclick = () => { chosenMap = id; try { localStorage.setItem('adk_map', id); } catch (e) {} setMap(id); box.querySelectorAll('button.mapb').forEach(o => o.classList.toggle('sel', o.dataset.m === id)); };
