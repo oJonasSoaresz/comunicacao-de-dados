@@ -386,6 +386,8 @@
   #chatbar{width:min(56%,480px)}
   #chatbar button.b{min-width:0}
   #chatX{flex:none;width:34px}
+  #msgList .copt{width:104px;flex:0 0 104px}
+  #msgList .copt span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
 </style>
 </head>
 <body>
@@ -500,7 +502,6 @@
           <div class="cpanel" id="cPanel"></div>
         </div>
       </div>
-      <div id="buyPop" class="hidden"><span id="buyTxt"></span><button type="button" class="b pri" id="buyGo">COMPRAR</button><button type="button" class="b" id="buyX">✕</button></div>
       <div class="cbtns"><button class="b" id="cRand">🎲 ALEATÓRIO</button><button class="b pri" id="cDone">✓ PRONTO</button></div>
     </div>
   </div>
@@ -2810,7 +2811,7 @@ const conta = {
     let semMoedas = false;
     if (error) { ({ error } = await this.sb.rpc('add_stats', { k: p.k, d: p.d, m: p.m })); semMoedas = !error; } // banco antigo: salva o resto
     if (error) { this.pend.k += p.k; this.pend.d += p.d; this.pend.m += p.m; this.pend.c += p.c; return; } // tenta de novo depois
-    if (semMoedas && p.c) { this.pend.c += p.c; if (!this.warnCoins) { this.warnCoins = true; notice('As moedas não estão sendo salvas na conta: falta rodar o SQL v3 no Supabase.', 'MOEDAS'); } }
+    if (semMoedas && p.c) { this.pend.c += p.c; if (!this.warnCoins) { this.warnCoins = true; notice('As moedas não estão sendo salvas na conta: falta rodar o arena-de-ki-supabase-COMPLETO.sql no Supabase.', 'MOEDAS'); } }
     if (this.perfil) { this.perfil.kills += p.k; this.perfil.deaths += p.d; this.perfil.matches += p.m; if (!semMoedas) this.perfil.coins = (this.perfil.coins || 0) + p.c; renderConta(); }
   },
   /* cargo de cada jogador (ex.: dono) — perguntado ao banco em lotes */
@@ -2892,19 +2893,25 @@ function renderConta() {
    Itens: cabelo, rabo, auréola e CADA cor (cabelo, pele, rabo, auréola, aura, poder). Grátis: o visual inicial. */
 const PRICE = { color: 50, item: 100, trans: 250 }; // cores 50 · cabelo/rabo/auréola 100 · transformação 250
 /* janelinha de compra: aparece embaixo, do lado das opções (não tampa a prévia) */
-function offerBuy(k, nome) {
-  const box = document.getElementById('buyPop');
-  if (!k || shop.has(k)) { box.classList.add('hidden'); return; }
-  document.getElementById('buyTxt').innerHTML = '🔒 <b>' + esc(nome) + '</b> · ' + (shop.infinite() ? 0 : priceOf(k)) + ' moedas';
-  document.getElementById('buyGo').onclick = async () => { box.classList.add('hidden'); await shop.buy([{ k, n: nome }]); };
-  box.classList.remove('hidden');
+async function offerBuy(k, nome) {
+  if (!k || shop.has(k)) return;
+  const preco = shop.infinite() ? 0 : priceOf(k);
+  const ok = await msgOpen('ITEM BLOQUEADO', '🔒 ' + nome + '\n\nPreço: ' + preco + ' moedas · você tem ' + (shop.infinite() ? '∞' : wallet.n) + '\n\nVocê pode ver na prévia, mas para usar na luta precisa comprar.', '', true, 'COMPRAR');
+  if (ok) await shop.buy([{ k, n: nome }]);
 }
-const priceOf = k => /^(h|t|a):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color;
+/* uma cor comprada vale em TODOS os itens e slots ('c:#hex'); a transformação comprada vale em todos os slots ('tr:x') */
+const normItem = k => { const m = /^(hc|s|tc|ac|fa|fk|c):(#[0-9a-f]{6})$/i.exec(k || ''); return m ? 'c:' + m[2].toLowerCase() : /^tr:/.test(k || '') ? 'tr:x' : k; };
+const priceOf = k => { k = normItem(k); return /^(h|t|a|sl):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color; };
 const ITEM_PRICE = PRICE.color;
-const FREE_ITEMS = new Set(['h:hair1', 'hc:#3a3a4a', 'hc:#cfcfcf', 'tc:#7a4a26', 'ac:#ffd23a']);
+const FREE_ITEMS = new Set(['h:hair1', 'c:#3a3a4a', 'c:#cfcfcf', 'c:#7a4a26', 'c:#ffd23a', 'sl:0']);
 const shop = {
   infinite() { return !!(conta.perfil && conta.perfil.infinite); },
-  has(k) { return !k || FREE_ITEMS.has(k) || this.infinite() || !!(conta.perfil && Array.isArray(conta.perfil.owned) && conta.perfil.owned.includes(k)); },
+  has(k) {
+    if (!k) return true; const n = normItem(k);
+    if (FREE_ITEMS.has(n) || this.infinite()) return true;
+    const own = conta.perfil && Array.isArray(conta.perfil.owned) ? conta.perfil.owned : [];
+    return own.some(o => normItem(o) === n); // compras antigas ('hc:#..', 'tr:0') também valem
+  },
   // itens usados por um visual (com o nome para mostrar)
   items(look, fxc) {
     const L = look || {}, F = fxc || {}, out = [];
@@ -2939,15 +2946,15 @@ const shop = {
     try {
       await conta.flushStats(); // moedas ganhas há pouco entram antes da compra
       for (const it of list) {
-        const { data, error } = await conta.sb.rpc('buy_item', { item: it.k });
+        const { data, error } = await conta.sb.rpc('buy_item', { item: normItem(it.k) });
         if (error) throw error;
         if (!Array.isArray(conta.perfil.owned)) conta.perfil.owned = [];
-        conta.perfil.owned.push(it.k); conta.perfil.coins = data | 0;
+        conta.perfil.owned.push(normItem(it.k)); conta.perfil.coins = data | 0;
       }
       wallet.sync(); tone('square', 990, 1480, 0.12, 0.1);
     } catch (e) {
       const m = String(e && e.message || e);
-      notice(/SEM_MOEDAS/.test(m) ? 'Moedas insuficientes.' : /buy_item|function|schema cache/i.test(m) ? 'A loja ainda não está ligada no servidor (falta rodar o SQL v5 no Supabase).' : 'Não deu para comprar: ' + m, 'LOJA');
+      notice(/SEM_MOEDAS/.test(m) ? 'Moedas insuficientes.' : /buy_item|function|schema cache/i.test(m) ? 'A loja ainda não está ligada no servidor (falta rodar o arena-de-ki-supabase-COMPLETO.sql no Supabase).' : 'Não deu para comprar: ' + m, 'LOJA');
     } finally { unwait(); if (custOpen) buildCustomPanel(); }
   },
 };
@@ -2968,7 +2975,7 @@ async function useCode() {
       wallet.sync(); renderConta(); notice('Conta resetada: moedas, itens, personagens e estatísticas voltaram ao começo.', 'CÓDIGO');
     }
     else notice('Código inválido.', 'CÓDIGO');
-  } catch (e) { unwait(); notice(/redeem_code|function|schema cache/i.test(String(e && e.message)) ? 'Os códigos ainda não estão ligados no servidor (falta rodar o SQL v5 no Supabase).' : 'Não deu para usar o código.', 'CÓDIGO'); }
+  } catch (e) { unwait(); notice(/redeem_code|function|schema cache|column|coins|infinite|owned/i.test(String(e && e.message)) ? 'O banco do jogo está desatualizado. Rode o arquivo arena-de-ki-supabase-COMPLETO.sql no Supabase.\n(' + String(e && e.message) + ')' : 'Não deu para usar o código: ' + String(e && e.message), 'CÓDIGO'); }
 }
 /* nome usado na partida: o da conta (escolhido ao criar a conta) */
 function playerName() { return conta.perfil ? conta.perfil.name : 'Jogador'; }
@@ -3343,6 +3350,7 @@ game = {
     const name = playerName();
     this.fighters = []; this.bots = [];
     this.me = new Fighter({ id: 'p-' + uid() + uid(), name, pal: 0, local: true, ctrl: 'human', char: chosenChar });
+    if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); }
     storeSlot();
     const formOf = o => { const e = shop.equip(o.look, o.fxc); return { look: e.look, fxc: e.fxc, arq: o.arq }; };
     const cur = slots[slotCur], tr = cur.tr >= 0 && cur.tr !== slotCur && shop.has('tr:' + slotCur) ? slots[cur.tr] : null;
@@ -3396,12 +3404,12 @@ game = {
 /* todos os avisos e erros aparecem em popup */
 function setStatus(s) { if (s) notice(s); }
 let msgDone = null;
-function msgOpen(title, text, input, cancel) {
+function msgOpen(title, text, input, cancel, okLabel) {
   return new Promise(res => {
     if (msgDone) msgDone(null);
     document.getElementById('msgTitle').textContent = title; document.getElementById('msgText').textContent = text || '';
     const inp = document.getElementById('msgIn'); inp.classList.toggle('hidden', !input); inp.value = ''; inp.placeholder = input || '';
-    show('msgCancel', !!cancel); document.getElementById('msgBtns').style.gridTemplateColumns = cancel ? '' : '1fr';
+    document.getElementById('msgOk').textContent = okLabel || 'OK'; show('msgCancel', !!cancel); document.getElementById('msgBtns').style.gridTemplateColumns = cancel ? '' : '1fr';
     msgDone = v => { msgDone = null; show('msgBox', false); res(v); };
     show('msgBox', true); for (const k in keys) keys[k] = false;
     setTimeout(() => (input ? inp : document.getElementById('msgOk')).focus(), 60);
@@ -3420,7 +3428,7 @@ function pickTrans() {
     b.onclick = () => msgDone && msgDone(v); box.appendChild(b);
   };
   add('Nenhuma', -1, null);
-  slots.forEach((o, i) => { if (i !== slotCur) add('Slot ' + (i + 1) + ' · ' + ARQS[o.arq].name, i, shop.equip(o.look, o.fxc).look); });
+  slots.forEach((o, i) => { if (i !== slotCur && shop.has('sl:' + i)) add('Slot ' + (i + 1) + ' · ' + ARQS[o.arq].name, i, shop.equip(o.look, o.fxc).look); });
   show('msgList', true);
   return pr.then(v => { show('msgList', false); return v === null || v === true ? null : v; });
 }
@@ -3494,14 +3502,14 @@ const CUST_POSES = [['auto', 'AUTO'], ['parado', 'PARADO'], ['frente', 'ANDAR'],
 function custSprites() { return lookSprites(chosenLook).spr; }
 function dropLocked() { const e = shop.equip(chosenLook, chosenFxc); chosenLook = e.look; chosenFxc = e.fxc; if (chosenTr >= 0 && !shop.has('tr:' + slotCur)) chosenTr = -1; storeSlot(); }
 function openCustom() {
-  custOpen = true; dropLocked(); show('buyPop', false);
+  custOpen = true; if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); } dropLocked(); 
   show('menu', false); show('custom', true); buildCustomPanel();
   const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; requestAnimationFrame(() => { cc.scrollTop = 0; });
   cancelAnimationFrame(custRaf); const t0 = performance.now();
   const loop = now => { if (!custOpen) return; drawCustomPreview((now - t0) / 1000); custRaf = requestAnimationFrame(loop); };
   custRaf = requestAnimationFrame(loop);
 }
-function closeCustom() { dropLocked(); saveLook(); show('buyPop', false); custOpen = false; cancelAnimationFrame(custRaf); show('custom', false); show('menu', true); }
+function closeCustom() { dropLocked(); saveLook();  custOpen = false; cancelAnimationFrame(custRaf); show('custom', false); show('menu', true); }
 function swatches(list, cur, onPick, withDefault, pfx) {
   const w = document.createElement('div'); w.className = 'cswatch';
   const add = (col, extra) => {
@@ -3639,7 +3647,8 @@ function buildCharList() {
     const c = makeCanvas(48, 48), x = c.getContext('2d'), im = lookSprites(o.look).spr.parado;
     x.imageSmoothingEnabled = false; x.drawImage(im, Math.floor(24 - im.width / 2), Math.round(4 - (im._pad || 0)));
     b.innerHTML = '<b>' + (i + 1) + '</b>'; b.appendChild(c); const sp = document.createElement('span'); sp.textContent = ARQS[o.arq].name; b.appendChild(sp);
-    b.onclick = () => { if (i !== slotCur) useSlot(i); }; sb.appendChild(b);
+    if (!shop.has('sl:' + i)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
+    b.onclick = () => { if (!shop.has('sl:' + i)) { offerBuy('sl:' + i, 'Slot ' + (i + 1)); return; } if (i !== slotCur) useSlot(i); }; sb.appendChild(b);
   });
 }
 function buildMenu() {
@@ -3940,11 +3949,19 @@ resizeCanvas(); addEventListener('resize', resizeCanvas); setTimeout(resizeCanva
 setInterval(() => { if (game.phase !== 'loading') { salasSB.tick(); lobby.sync(); } }, 1000);
 addEventListener('pagehide', () => { if (game.phase === 'play') net.leave(true); lobby.stop(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
-loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cDone').onclick = closeCustom; document.getElementById('buyX').onclick = () => show('buyPop', false);
+loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cDone').onclick = closeCustom;
   document.getElementById('cRand').onclick = () => { // visual sorteado
     const pick = a => a[(Math.random() * a.length) | 0];
-    chosenLook = randomLook(); chosenArq = ARQ_IDS[(Math.random() * ARQ_IDS.length) | 0];
-    chosenFxc = { a: pick([''].concat(FX_COLORS)), k: pick([''].concat(FX_COLORS)) }; saveLook();
+    const mine = list => list.filter(c => shop.has('c:' + c));
+    const ownedCols = [...new Set(HAIR_COLORS.concat(SKIN_COLORS, TAIL_COLORS, HALO_COLORS, FX_COLORS, ((conta.perfil && conta.perfil.owned) || []).map(normItem).filter(k => k.startsWith('c:')).map(k => k.slice(2))))].filter(c => shop.has('c:' + c));
+    const L = { ...chosenLook };
+    L.h = pick(HAIRS.map(h => h.id).filter(id => !id || shop.has('h:' + id)));
+    L.hc = pick(ownedCols.length ? ownedCols : ['#3a3a4a']);
+    L.s = pick([''].concat(mine(SKIN_COLORS))); // pele: só tons de pele (ou a original)
+    L.t = pick(TAILS.map(t => t.id).filter(id => !id || shop.has('t:' + id))); L.tc = pick(ownedCols.length ? ownedCols : [TAIL_COLORS[0]]);
+    L.a = shop.has('a:1') ? pick([0, 1]) : 0; L.ac = pick(ownedCols.length ? ownedCols : [HALO_COLORS[0]]);
+    chosenLook = validLook(L) || chosenLook; chosenArq = ARQ_IDS[(Math.random() * ARQ_IDS.length) | 0];
+    chosenFxc = { a: pick([''].concat(ownedCols)), k: pick([''].concat(ownedCols)) }; saveLook();
   }; if (game.phase === 'loading') game.phase = 'menu'; updateTouchUI(); lobby.start(); gate.spritesReady(); }).catch(e => { console.error(e); gate.fail('Não foi possível carregar o jogo. Tente de novo.'); });
 requestAnimationFrame(frame);
 
