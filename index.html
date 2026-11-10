@@ -359,7 +359,8 @@
   /* ===== loja ===== */
   .copt,.cswatch button{position:relative}
   .lockb{position:absolute;right:-4px;top:-5px;font-size:9px;line-height:1;filter:drop-shadow(0 0 2px #000);pointer-events:none}
-  .copt .lockb{right:2px;top:2px}
+  .copt .lockb{right:2px;top:2px;z-index:3}
+  .lockb{z-index:3}
   .copt.lk canvas{opacity:.75}
   .buybar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;background:#2a1d0a;border:2px solid #6b5418;border-radius:var(--r3);font-size:clamp(6px,.8vw,8px);line-height:1.6;color:#ffe58a}
   .buybar span{flex:1;min-width:160px}
@@ -398,6 +399,23 @@
   .st .stv{text-align:right;color:var(--fg)}
   .copt.pwc{width:116px;flex:0 0 116px}
   .copt.pwc span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+  /* PERSONAGEM: tamanho fixo; só o painel de opções rola (para cima e para baixo) */
+  .card.cust{height:min(94%,calc(var(--wh,600px) * .94));max-height:none;display:flex;flex-direction:column;overflow:hidden;touch-action:pan-y}
+  .card.cust .cwrap{flex:1;min-height:0;flex-wrap:nowrap;overflow:hidden}
+  .card.cust .cprev{overflow:hidden;flex:0 0 auto;max-width:42%}
+  .card.cust .copts{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+  .card.cust .cpanel{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y}
+  .card.cust .cpanel *{max-width:100%}
+  .card.cust .cchars{flex:0 0 auto;overflow:hidden}
+  .card.cust .arqs{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .card.cust .arq{min-width:0;overflow:hidden}
+  .card.cust .cprev{display:flex;flex-direction:column;width:clamp(200px,34vw,340px)}
+  .card.cust .cprev canvas{width:100%;height:auto;flex:1 1 0;min-height:0;object-fit:contain}
+  #wrap.short .card.cust #cStats,#wrap.short .card.cust #cPoses{display:none}
+  #wrap.short .card.cust .ctitle{margin:0;font-size:14px}
+  #wrap.short #cSlots canvas,#wrap.short #cChars canvas{width:28px;height:28px}
+  #wrap.short .card.cust .cchars{margin-bottom:4px}
+  #cSlots .lockb{top:3px!important;right:3px!important}
 </style>
 </head>
 <body>
@@ -663,15 +681,26 @@ const POWERS = {
   k: { ki:     { name: 'Bola de energia', desc: 'Um disparo rápido.',                         cost: 10 },
        tri:    { name: 'Tiro triplo',     desc: '3 disparos em leque.',                       cost: 15 },
        hom:    { name: 'Energia que segue', desc: 'Mais lenta, mas persegue o inimigo.',      cost: 15 },
-       disco:  { name: 'Disco cortante',  desc: 'Disco veloz e mais forte.',                  cost: 18 } },
+       disco:  { name: 'Disco cortante',  desc: 'Disco veloz e mais forte.',                  cost: 18 },
+       laser:  { name: 'Laser',           desc: 'Raio fino e rapidíssimo.',                   cost: 14 } },
   r: { bola:   { name: 'Bola gigante',    desc: 'Forma e arremessa uma bola enorme.',         cost: 35 },
        genki:  { name: 'Esfera suprema',  desc: 'Demora a juntar, mas é devastadora.',        cost: 60 },
-       chuva:  { name: 'Chuva de energia', desc: '6 bolas caem do céu à sua frente.',          cost: 45 } },
+       chuva:  { name: 'Chuva de energia', desc: '6 bolas caem do céu à sua frente.',          cost: 45 },
+       kienzan:{ name: 'Disco destruidor', desc: 'Disco gigante que atravessa todos.',        cost: 50 },
+       fogos:  { name: 'Fogos caçadores', desc: '5 bolas sobem e caçam os inimigos.',         cost: 45 } },
   s: { kame:   { name: 'Feixe de energia', desc: 'Um raio contínuo e poderoso.',              cost: 40 },
        rajada: { name: 'Rajada',          desc: '9 disparos seguidos.',                       cost: 40 },
-       enxame: { name: 'Enxame',          desc: '5 energias que perseguem os inimigos.',      cost: 45 } },
+       enxame: { name: 'Enxame',          desc: '5 energias que perseguem os inimigos.',      cost: 45 },
+       cegar:  { name: 'Clarão',          desc: 'Cega quem estiver perto por 3 segundos.',    cost: 30 } },
 };
 const pwOf = (f, slot) => { const id = f.pw && f.pw[slot]; return POWERS[slot][id] ? id : Object.keys(POWERS[slot])[0]; };
+/* CLARÃO: quem estiver perto (menos quem soltou) fica cego por 3 segundos */
+let blindT = 0; // (zera quando volta ao menu)
+function applyBlind(m) {
+  const me = game.me; if (!me || me.id === m.o || me.dead) return;
+  if (Math.hypot(me.x - m.x, me.y - 25 - m.y) < 200) blindT = 3;
+  for (const f of game.fighters) if (f.ai && f.local && f.id !== m.o && Math.hypot(f.x - m.x, f.y - 25 - m.y) < 200) f.setState('hurt', 1.2); // bots ficam tontos
+}
 function spawnProjectile(m, broadcast) {
   if (projectiles.some(p => p.id === m.id)) return;
   if (broadcast && m.kc === undefined) { const o = game.byId(m.o); if (o && o.fxc && okHex(o.fxc.k)) m.kc = o.fxc.k; } // cor de poder escolhida vai junto
@@ -1019,6 +1048,9 @@ class Fighter {
   useSpecial() {
     const sp = pwOf(this, 's');
     if (sp === 'rajada') { if (!this.spend(POWERS.s.rajada.cost)) return; this.vx = 0; this.setState('rajada', 0.95); this.rajT = 0; return; }
+    if (sp === 'cegar') { if (!this.spend(POWERS.s.cegar.cost)) return; this.setState('charge', 0.3);
+      const m = { t: 'blind', o: this.id, x: this.x, y: this.y - 25 }; net.send(m); applyBlind(m);
+      spark(this.x, this.y - 25, 40, '#ffffff', 300, 0.5, 3); ring(this.x, this.y - 25, '#ffffff', 10, 190, 0.4); return; }
     if (sp === 'enxame') { if (!this.spend(POWERS.s.enxame.cost)) return; this.setState('kiball', 0.4);
       for (let i = 0; i < 5; i++) this.shot({ vx: this.facing * 170, vy: (i - 2) * 70, hom: 1, r: 4, dmg: 36 * this.dmgMul() });
       ring(this.x, this.y - 30, this.pal_.ki[1], 8, 40, 0.3); return; }
@@ -1033,6 +1065,10 @@ class Fighter {
   /* RAIO do BASE: ergue a mão, forma a bola grande e arremessa · sem kit próprio: raio contínuo (segurar) */
   useRaio() {
     const rp = pwOf(this, 'r');
+    if (rp === 'kienzan') { if (!this.spend(POWERS.r.kienzan.cost)) return; this.setState('kiball', 0.35);
+      this.shot({ vx: this.facing * 300, disc: 1, pierce: 1, r: 13, dmg: 170 * this.dmgMul(), y: this.y - 52 }); if (nearCam(this.x, this.y)) SFX.bigWind(); return; }
+    if (rp === 'fogos') { if (!this.spend(POWERS.r.fogos.cost)) return; this.setState('kiball', 0.35);
+      for (let i = 0; i < 5; i++) this.shot({ vx: this.facing * (40 + i * 25), vy: -300 + i * 20, hom: 1, hd: 0.5, r: 4, dmg: 40 * this.dmgMul() }); return; }
     if (rp === 'chuva') { if (!this.spend(POWERS.r.chuva.cost)) return; this.setState('kiball', 0.35);
       for (let i = 0; i < 6; i++) spawnProjectile({ id: uid(), o: this.id, x: this.x + this.facing * (70 + i * 38) + rnd(-8, 8), y: GROUND - 300 - i * 45, vx: this.facing * 20, vy: 330, r: 6, dmg: 50 * this.dmgMul(), big: 0, rain: 1, pal: this.pal, ch: this.form }, true);
       if (nearCam(this.x, this.y)) SFX.bigWind(); return; }
@@ -1113,6 +1149,7 @@ class Fighter {
     if (k === 'tri') { for (const vy of [-80, 0, 80]) this.shot({ r: 4, vy, dmg: 32 * m }); }
     else if (k === 'hom') this.shot({ vx: this.facing * 210, hom: 1, r: 5, dmg: 48 * m });
     else if (k === 'disco') this.shot({ vx: this.facing * 430, disc: 1, r: 6, dmg: 75 * m });
+    else if (k === 'laser') this.shot({ vx: this.facing * 900, lz: 1, r: 3, dmg: 50 * m });
     else this.shot({});
     ring(h.x, h.y, this.pal_.ki[1], 2, 12, 0.15);
   }
@@ -1286,7 +1323,7 @@ class Projectile {
   get col() { return (CHARS[this.ch] || CHARS.base).ki; } // simples; a PARTE 2 (visual) usa a cor escolhida pelo jogador
   update(dt) {
     this.t += dt;
-    if (this.hom) { // persegue o inimigo mais perto
+    if (this.hom && this.t >= (this.hd || 0)) { // persegue o inimigo mais perto (fogos: só depois de subir)
       let best = null, bd = 1e9;
       for (const f of game.fighters) { if (f.id === this.o || f.dead) continue; const d = Math.hypot(f.x - this.x, f.y - 25 - this.y); if (d < bd) { bd = d; best = f; } }
       const sp = Math.hypot(this.vx, this.vy || 0) || 200;
@@ -1305,16 +1342,17 @@ class Projectile {
       const b = f.body();
       if (this.x + this.r > b.x0 && this.x - this.r < b.x1 && this.y + this.r > b.y0 && this.y - this.r < b.y1) {
         if (f.invuln > 0) continue;
+        if (this.pierce) { this.hitIds = this.hitIds || []; if (this.hitIds.includes(f.id)) continue; this.hitIds.push(f.id); }
         const src = game.byId(this.o) || { id: this.o, name: '?', x: this.x - sign(this.vx) * 50, local: false, pal_: palFor(this.ch, this.pal) };
         if (f.local) {
           const res = f.takeHit({ dmg: this.dmg, kbx: sign(this.vx) * (this.big ? 270 : 110), kby: this.big ? -170 : 0, stun: this.big ? 0.65 : 0.32, kind: this.big ? 'heavy' : 'hit' }, src);
-          this.explode(res === 'block');
+          if (!this.pierce) this.explode(res === 'block');
         } else {
           const blocked = f.state === 'guard' && sign(src.x - f.x) === f.facing;
           if (src.local) f.predictHit(blocked ? this.dmg * 0.15 : this.dmg, blocked ? 'block' : this.big ? 'heavy' : 'hit', src);
-          this.explode(blocked);
+          if (!this.pierce) this.explode(blocked);
         }
-        return;
+        if (!this.pierce) return; else continue;
       }
     }
     // raios destroem projéteis
@@ -2129,14 +2167,13 @@ function drawBar(x, y, w, h, ratio, ghost, color, dark) {
 }
 function drawHUD() {
   const me = game.me; if (!me) return;
+  if (blindT > 0) { blindT -= 1 / 60; ctx.fillStyle = 'rgba(255,255,250,' + clamp(blindT / 1.2, 0, 0.96) + ')'; ctx.fillRect(0, 0, VW, VH); }
   if (game.duel) {
-    const d = game.duelSt, y0 = Math.round(SAFE.t) + (isTouch ? 30 : 0), ds = duelists(); // abaixo do botão do chat no celular
+    const d = game.duelSt, y0 = Math.round(SAFE.t) + (isTouch ? 30 : 0), ds = duelists(); // (placar do duelo fica no quadro PLACAR) // abaixo do botão do chat no celular
     if (d.ph === 'wait') { ctx.fillStyle = 'rgba(18,12,28,0.8)'; rr(VW / 2 - 70, y0, 140, 15, 7); ctx.fill(); text('⚔ ESPERANDO OPONENTE', VW / 2, y0 + 5, 5, '#ffb3a8', 'center', '#120c1c', 1); }
     else {
       const a = ds[0], b = ds[1], sa = a ? d.sc[a.id] || 0 : 0, sb = b ? d.sc[b.id] || 0 : 0;
-      ctx.fillStyle = 'rgba(18,12,28,0.85)'; rr(VW / 2 - 90, y0, 180, 17, 8); ctx.fill();
-      text((a ? dispName(a.name).slice(0, 9) : '?') + '  ' + sa + ' x ' + sb + '  ' + (b ? dispName(b.name).slice(0, 9) : '?'), VW / 2, y0 + 3, 6, '#ffffff', 'center', '#120c1c', 1);
-      text('ROUND ' + d.rd, VW / 2, y0 + 19, 5, '#ffd23a', 'center', '#120c1c', 1);
+
       if (d.ph === 'count') { const n = Math.max(1, Math.ceil(d.t)); text(String(n), VW / 2, VH / 2 - 40, 26, '#ffd23a', 'center', '#120c1c', 3); text('PREPARE-SE!', VW / 2, VH / 2 - 4, 8, '#ffffff', 'center', '#120c1c', 2); }
       if (d.ph === 'fight' && performance.now() - (game.fightAt || 0) < 1000) text('LUTEM!', VW / 2, VH / 2 - 30, 16, '#ff6a5a', 'center', '#120c1c', 3);
       if (d.ph === 'between') { const w = ds.find(f => f.id === d.w); text((w ? dispName(w.name).toUpperCase() : '?') + ' VENCEU O ROUND!', VW / 2, VH / 2 - 30, 10, '#ffd23a', 'center', '#120c1c', 2); }
@@ -2185,13 +2222,13 @@ function drawHUD() {
   const pw = 104, px0 = RT - pw, bh = 12 + list.length * 8;
   ctx.fillStyle = 'rgba(18,12,28,0.72)'; rr(px0, T, pw, bh, 6); ctx.fill();
   ctx.strokeStyle = '#3a2e52'; ctx.lineWidth = 1; rr(px0 + 0.5, T + 0.5, pw - 1, bh - 1, 6); ctx.stroke();
-  text('PLACAR', px0 + 4, T + 3, 5, '#ffd23a', 'left', null);
-  text('K/M', RT - 4, T + 3, 5, '#8d86a8', 'right', null);
+  text(game.duel ? 'DUELO · ROUND ' + game.duelSt.rd : 'PLACAR', px0 + 4, T + 3, 5, '#ffd23a', 'left', null);
+  text(game.duel ? 'V' : 'K/M', RT - 4, T + 3, 5, '#8d86a8', 'right', null);
   list.forEach((f, i) => {
     const y = T + 12 + i * 8;
     ctx.fillStyle = f.pal_.swatch; ctx.fillRect(px0 + 4, y + 1, 4, 4);
     nameText(f, dispName(f.name).slice(0, 10) + (f === me ? ' ◄' : ''), px0 + 11, y, 5, 'left', f.pal_.swatch, null);
-    text(f.kills + '/' + f.deaths, RT - 4, y, 5, '#cfc6ff', 'right', null);
+    text(game.duel ? String((game.duelSt.sc || {})[f.id] || 0) : f.kills + '/' + f.deaths, RT - 4, y, game.duel ? 6 : 5, game.duel ? '#ffd23a' : '#cfc6ff', 'right', null);
   });
   // avisos / eliminações
   let fy = T + bh + 6;
@@ -2438,6 +2475,11 @@ Object.defineProperties(Projectile.prototype, Object.getOwnPropertyDescriptors({
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       ctx.strokeStyle = hexA(this.col[1], 0.5); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(x, y, this.r + 6 + Math.sin(this.t * 25) * 3, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    }
+    if (this.lz) { // laser: linha fina e comprida
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; const c = this.col, L = Math.min(90, this.t * 900);
+      ctx.strokeStyle = hexA(c[1], 0.6); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(x - sign(this.vx) * L, y); ctx.lineTo(x, y); ctx.stroke();
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore(); return;
     }
     if (this.disc) { // disco: elipse achatada girando
       ctx.save(); ctx.translate(x, y); ctx.globalCompositeOperation = 'lighter';
@@ -2742,6 +2784,7 @@ function handleNet(m) {
       f.applyNet(m); break;
     }
     case 'pj': spawnProjectile(m, false); break;
+    case 'blind': applyBlind(m); break;
     case 'hit': {
       const tg = game.byId(m.tg); if (!tg || !tg.local) return;
       const src = game.byId(m.from) || { id: m.from, name: '?', x: tg.x - sign(m.kbx) * 20, local: false };
@@ -3528,7 +3571,7 @@ game = {
     const msg = { t: 'leave', id: b.me.id }; net.send(msg);
   },
   toMenu(msg) {
-    net.leave(); this.ended = false; this.timed = false; this.started = false; this.duel = false; show('results', false); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
+    net.leave(); blindT = 0; this.ended = false; this.timed = false; this.started = false; this.duel = false; show('results', false); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
     overlay = null; editMode = false; ['pause', 'settings'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById('editbar').classList.add('hidden');
     if (conta.user && conta.perfil) document.getElementById('menu').classList.remove('hidden'); else gate.loggedOut();
     for (const k in keys) keys[k] = false;
@@ -3634,15 +3677,18 @@ try {
   }
 } catch (e) { setSlots([], 0); }
 function useSlot(i) { if (typeof dropLocked === 'function') dropLocked(); storeSlot(); slotCur = i; loadSlot(); saveLook(); }
-function saveLook() { storeSlot(); if (typeof conta !== 'undefined') conta.saveProfile(); try { localStorage.setItem('adk_slots', JSON.stringify({ cur: slotCur, slots })); } catch (e) {} if (custOpen) buildCustomPanel(); }
+function saveLook() { storeSlot(); if (typeof conta !== 'undefined') conta.saveProfile(); try { localStorage.setItem('adk_slots', JSON.stringify({ cur: slotCur, slots })); } catch (e) {} if (custOpen) { buildCustomPanel(); custBtn(); } }
 /* ===== TELA DE PERSONALIZAR: prévia animada + abas (cabelo, rabo, energia) ===== */
-let custOpen = false, custTab = 'arq', custPose = 'auto', custRaf = 0;
+let custOpen = false, custTab = 'corpo', custPose = 'auto', custRaf = 0;
 const CUST_POSES = [['auto', 'AUTO'], ['parado', 'PARADO'], ['frente', 'ANDAR'], ['golpe1', 'SOCO'], ['golpe3', 'CHUTE'], ['carga2', 'CARGA'], ['kiball', 'KI'], ['defesa', 'DEFESA']];
 function custSprites() { return lookSprites(chosenLook).spr; }
 function dropLocked() { const e = shop.equip(chosenLook, chosenFxc); chosenLook = e.look; chosenFxc = e.fxc; chosenPw = shop.equipPw(chosenPw); if (chosenTr >= 0 && !shop.has('tr:' + slotCur)) chosenTr = -1; storeSlot(); }
+function custSig() { return JSON.stringify([slotCur, chosenLook, chosenFxc, chosenArq, chosenTr, chosenPw]); }
+function custBtn() { const b = document.getElementById('cDone'); if (b) b.textContent = custOpen && custSig() !== custStart ? '✓ SALVAR' : '← VOLTAR'; }
+let custStart = '';
 function openCustom() {
-  custOpen = true; if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); } dropLocked(); 
-  show('menu', false); show('custom', true); buildCustomPanel();
+  custOpen = true; custDemo = null; if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); } dropLocked(); 
+  show('menu', false); show('custom', true); custStart = custSig(); buildCustomPanel(); custBtn();
   const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; requestAnimationFrame(() => { cc.scrollTop = 0; });
   cancelAnimationFrame(custRaf); const t0 = performance.now();
   const loop = now => { if (!custOpen) return; drawCustomPreview((now - t0) / 1000); custRaf = requestAnimationFrame(loop); };
@@ -3682,7 +3728,7 @@ function buildCustomPanel() {
   document.getElementById('cName').textContent = dispName(playerName()).toUpperCase();
   buildCharList();
   const tabs = document.getElementById('cTabs'); tabs.innerHTML = '';
-  for (const [id, nm] of [['arq', 'ARQUÉTIPO'], ['poderes', 'PODERES'], ['cabelo', 'CABELO'], ['corpo', 'CORPO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['energia', 'ENERGIA'], ['trans', 'TRANSFORMAÇÃO']]) {
+  for (const [id, nm] of [['corpo', 'CORPO'], ['cabelo', 'CABELO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['energia', 'ENERGIA'], ['poderes', 'PODERES'], ['arq', 'ARQUÉTIPO'], ['trans', 'TRANSFORMAÇÃO']]) {
     const b = document.createElement('button'); b.textContent = nm; b.className = custTab === id ? 'sel' : '';
     b.onclick = () => { custTab = id; buildCustomPanel(); }; tabs.appendChild(b);
   }
@@ -3707,7 +3753,7 @@ function buildCustomPanel() {
     for (const [sl, nm, btn] of [['k', 'BOLA DE ENERGIA', 'K'], ['r', 'ESP. 1', 'I'], ['s', 'ESP. 2', 'L']]) {
       h4(nm + ' (tecla ' + btn + ')'); const g = grid();
       for (const [id, pw] of Object.entries(POWERS[sl])) {
-        const free = id === PW0[sl], card = optCard(pw.name, chosenPw[sl] === id, x => drawPowerIcon(x, id), () => { chosenPw[sl] = id; }, free ? '' : 'p:' + id);
+        const free = id === PW0[sl], card = optCard(pw.name, chosenPw[sl] === id, x => drawPowerIcon(x, id), () => { chosenPw[sl] = id; custDemo = { id, t0: performance.now() }; }, free ? '' : 'p:' + id);
         card.title = pw.desc + ' · ' + pw.cost + ' de energia'; card.classList.add('pwc'); g.appendChild(card);
       }
     }
@@ -3753,15 +3799,18 @@ function buildCustomPanel() {
   const pb = document.getElementById('cPoses'); pb.innerHTML = '';
   for (const [id, nm] of CUST_POSES) { const b = document.createElement('button'); b.textContent = nm; b.className = custPose === id ? 'sel' : ''; b.onclick = () => { custPose = id; buildCustomPanel(); }; pb.appendChild(b); }
 }
+let custDemo = null;
 function drawCustomPreview(t) {
   const c = document.getElementById('cPrev'), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
   x.clearRect(0, 0, c.width, c.height);
   const spr = custSprites(); if (!spr) return;
   const auto = ['parado', 'frente', 'golpe1', 'golpe2', 'golpe3', 'carga2', 'kiball', 'defesa'];
   let pose = custPose === 'auto' ? auto[Math.floor(t / 0.9) % auto.length] : custPose;
+  const demo = custTab === 'poderes' ? (custDemo || { id: chosenPw.k, t0: 0 }) : null, dt0 = demo ? ((performance.now() - demo.t0) / 1000) % 1.6 : 0;
+  if (demo) pose = ['genki', 'kienzan'].includes(demo.id) && dt0 < 0.7 ? (spr.lancar ? 'lancar' : 'carga2') : ['cegar'].includes(demo.id) ? 'carga2' : 'kiball';
   if (custTab === 'energia' && custPose === 'auto') pose = Math.floor(t / 1.6) % 2 ? 'kiball' : 'carga2';
   const im = spr[pose] || spr.parado, pal = palForCustom(chosenChar, 0, chosenFxc);
-  const fx = 40, fy = 64, sc = 1; // tamanho real do jogo (sem redesenhar nem esticar)
+  const fx = demo ? 16 : 40, fy = 64, sc = 1; // tamanho real do jogo (sem redesenhar nem esticar)
   const save = ctx; ctx = x; // as funções de desenho usam o ctx global
   try {
     x.save(); x.translate(fx, fy); x.scale(sc, sc);
@@ -3769,9 +3818,30 @@ function drawCustomPreview(t) {
     if (pose === 'carga2') { const fr = auraFramesFor(pal.aura); if (fr) { const a = fr[2 + (Math.floor(t / 0.08) % 2)]; x.globalAlpha = 0.9; x.drawImage(a, -a.width / 2 * AURA_SC, -a.height * AURA_SC + 3, a.width * AURA_SC, a.height * AURA_SC); x.globalAlpha = 1; } }
     const bob = 0;
     x.drawImage(im, -Math.floor(im.width / 2), -im.height + bob);
-    if (pose === 'kiball') drawKiBall(Math.round(20 + (t * 30) % 12), -30, 5, pal.ki, t);
+    if (demo) drawPowerDemo(x, demo.id, dt0, pal.ki);
+    else if (pose === 'kiball') drawKiBall(Math.round(20 + (t * 30) % 12), -30, 5, pal.ki, t);
     x.restore();
   } finally { ctx = save; }
+}
+/* animação do poder na prévia (coordenadas a partir dos pés do lutador) */
+function drawPowerDemo(x, id, k, col) {
+  const hx = 17, hy = -30, b = (bx, by, r) => drawKiBall(bx, by, r, col, k), go = Math.max(0, k - 0.15);
+  switch (id) {
+    case 'ki': b(hx + go * 70, hy, 3); break;
+    case 'tri': for (const d of [-1, 0, 1]) b(hx + go * 60, hy + d * go * 25, 2.5); break;
+    case 'hom': b(hx + go * 50, hy - Math.sin(go * 3) * 14, 3); break;
+    case 'disco': x.fillStyle = col[0]; x.beginPath(); x.ellipse(hx + go * 80, hy, 6, 2, 0, 0, 7); x.fill(); break;
+    case 'laser': x.strokeStyle = col[1]; x.lineWidth = 2; x.beginPath(); x.moveTo(hx, hy); x.lineTo(Math.min(70, hx + go * 300), hy); x.stroke(); x.strokeStyle = '#fff'; x.lineWidth = 0.7; x.stroke(); break;
+    case 'bola': b(hx + Math.max(0, k - 0.4) * 60, hy, Math.min(8, 2 + k * 14)); break;
+    case 'genki': { const r = Math.min(9, 2 + k * 11); b(k < 0.7 ? 6 : 6 + (k - 0.7) * 70, k < 0.7 ? -54 : -54 + (k - 0.7) * 30, r); break; }
+    case 'chuva': for (let i = 0; i < 4; i++) b(30 + i * 10, -70 + ((k * 90 + i * 22) % 70), 2.5); break;
+    case 'kienzan': { const px = k < 0.7 ? 4 : 4 + (k - 0.7) * 80, py = -56; x.fillStyle = hexA(col[1], 0.6); x.beginPath(); x.ellipse(px, py, 11, 3.5, 0, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.ellipse(px, py, 5, 1.2, 0, 0, 7); x.fill(); break; }
+    case 'fogos': for (let i = 0; i < 4; i++) { const u = go * 1.6; b(hx + i * 3 + (u > 0.5 ? (u - 0.5) * 50 : 0), hy - Math.min(0.5, u) * 70 + (u > 0.5 ? (u - 0.5) * 50 : 0) + i * 3, 2); } break;
+    case 'kame': if (k > 0.3) { const L = Math.min(60, (k - 0.3) * 160); x.fillStyle = col[1]; x.fillRect(hx, hy - 4, L, 8); x.fillStyle = '#fff'; x.fillRect(hx, hy - 1.5, L, 3); } b(hx, hy, 5); break;
+    case 'rajada': for (let i = 0; i < 5; i++) { const u = go - i * 0.12; if (u > 0) b(hx + u * 80, hy + (i % 2 ? -3 : 3), 2); } break;
+    case 'enxame': for (let i = 0; i < 5; i++) b(hx + go * 45, hy + (i - 2) * go * 14 - Math.sin(go * 4) * 4, 2); break;
+    case 'cegar': if (k > 0.3) { x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = 'rgba(255,255,240,' + Math.max(0, 0.9 - (k - 0.3)) + ')'; x.fillRect(0, 0, 80, 70); x.restore(); } break;
+  }
 }
 /* desenho de cada poder (miniatura 56x56) */
 function drawPowerIcon(x, id) {
@@ -3789,6 +3859,10 @@ function drawPowerIcon(x, id) {
     case 'chuva': for (let i = 0; i < 5; i++) { trail(10 + i * 9, 4 + (i % 2) * 8, 12 + i * 9, 22 + (i % 2) * 8); ball(12 + i * 9, 26 + (i % 2) * 8, 3.5); } x.fillStyle = '#3a2e58'; x.fillRect(0, 48, 56, 8); break;
     case 'kame': { const g = x.createLinearGradient(0, 22, 0, 34); g.addColorStop(0, col[1]); g.addColorStop(0.5, '#ffffff'); g.addColorStop(1, col[1]); x.fillStyle = g; x.fillRect(14, 22, 42, 12); ball(14, 28, 9); break; }
     case 'rajada': for (let i = 0; i < 5; i++) ball(10 + i * 10, 28 + (i % 2 ? -6 : 6), 3.5); break;
+    case 'laser': x.strokeStyle = col[1]; x.lineWidth = 4; x.beginPath(); x.moveTo(8, 28); x.lineTo(54, 28); x.stroke(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); break;
+    case 'kienzan': x.fillStyle = hexA(col[1], 0.5); x.beginPath(); x.ellipse(28, 26, 24, 8, 0, 0, 7); x.fill(); x.fillStyle = col[0]; x.beginPath(); x.ellipse(28, 26, 20, 6, 0, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.ellipse(28, 26, 10, 2.5, 0, 0, 7); x.fill(); break;
+    case 'fogos': for (let i = 0; i < 4; i++) { x.strokeStyle = hexA(col[1], 0.5); x.lineWidth = 2; x.beginPath(); x.moveTo(8 + i * 4, 50); x.quadraticCurveTo(12 + i * 8, 4, 40 + i * 4, 14 + i * 8); x.stroke(); ball(40 + i * 4, 14 + i * 8, 3); } break;
+    case 'cegar': { const g = x.createRadialGradient(28, 28, 2, 28, 28, 26); g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, 'rgba(255,255,220,.7)'); g.addColorStop(1, 'rgba(255,255,200,0)'); x.fillStyle = g; x.fillRect(0, 0, 56, 56); break; }
     case 'enxame': for (let i = 0; i < 5; i++) { const a = -0.9 + i * 0.45; ball(28 + Math.cos(a) * 18, 28 + Math.sin(a) * 18, 3.5); } ball(16, 28, 4); break;
   }
   ctx = old;
