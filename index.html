@@ -416,6 +416,16 @@
   #wrap.short #cSlots canvas,#wrap.short #cChars canvas{width:28px;height:28px}
   #wrap.short .card.cust .cchars{margin-bottom:4px}
   #cSlots .lockb{top:3px!important;right:3px!important}
+  #cTabs{flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;touch-action:pan-x;overscroll-behavior-x:contain;cursor:grab;padding-bottom:2px;flex:0 0 auto}
+  #cTabs button{flex:0 0 auto;white-space:nowrap}
+  .arq.pwcard{position:relative;flex-direction:row;align-items:center;gap:8px}
+  .arq.pwcard canvas{flex:0 0 auto;width:52px;height:52px;image-rendering:pixelated;border-radius:6px;background:#100b1c}
+  .arq.pwcard div{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .arq.pwcard .lockb{top:4px!important;right:4px!important}
+  .cbtns{display:flex;gap:8px;align-items:center}
+  .cbtns .sp{flex:1}
+  .arq.pwcard b{font-weight:normal;font-size:clamp(7px,.9vw,10px)}
+  .arq.pwcard.sel b{color:var(--acc)}
 </style>
 </head>
 <body>
@@ -530,7 +540,7 @@
           <div class="cpanel" id="cPanel"></div>
         </div>
       </div>
-      <div class="cbtns"><button class="b" id="cRand">🎲 ALEATÓRIO</button><button class="b pri" id="cDone">✓ PRONTO</button></div>
+      <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
     </div>
   </div>
   <div id="settings" class="ovl hidden">
@@ -678,20 +688,20 @@ const AWAKEN_HOLD = 2.0, AWAKEN_TIME = 25, RESPAWN_INVULN = 4; // invencível 4s
 const KAME = { charge: 0.8, total: 2.0, dps: 230 };              // especial do BASE: feixe de energia
 /* PODERES escolhíveis (aba PODERES): botão BOLA DE ENERGIA (k), ESP. 1 (r) e ESP. 2 (s) */
 const POWERS = {
-  k: { ki:     { name: 'Bola de energia', desc: 'Um disparo rápido.',                         cost: 10 },
-       tri:    { name: 'Tiro triplo',     desc: '3 disparos em leque.',                       cost: 15 },
-       hom:    { name: 'Energia que segue', desc: 'Mais lenta, mas persegue o inimigo.',      cost: 15 },
-       disco:  { name: 'Disco cortante',  desc: 'Disco veloz e mais forte.',                  cost: 18 },
-       laser:  { name: 'Laser',           desc: 'Raio fino e rapidíssimo.',                   cost: 14 } },
-  r: { bola:   { name: 'Bola gigante',    desc: 'Forma e arremessa uma bola enorme.',         cost: 35 },
-       genki:  { name: 'Esfera suprema',  desc: 'Demora a juntar, mas é devastadora.',        cost: 60 },
-       chuva:  { name: 'Chuva de energia', desc: '6 bolas caem do céu à sua frente.',          cost: 45 },
-       kienzan:{ name: 'Disco destruidor', desc: 'Disco gigante que atravessa todos.',        cost: 50 },
-       fogos:  { name: 'Fogos caçadores', desc: '5 bolas sobem e caçam os inimigos.',         cost: 45 } },
-  s: { kame:   { name: 'Feixe de energia', desc: 'Um raio contínuo e poderoso.',              cost: 40 },
-       rajada: { name: 'Rajada',          desc: '9 disparos seguidos.',                       cost: 40 },
-       enxame: { name: 'Enxame',          desc: '5 energias que perseguem os inimigos.',      cost: 45 },
-       cegar:  { name: 'Clarão',          desc: 'Cega quem estiver perto por 3 segundos.',    cost: 30 } },
+  k: { ki:     { name: 'Bola de energia',  desc: 'Disparo rápido e direto.',                       cost: 10 },
+       tri:    { name: 'Tiro triplo',      desc: '3 disparos em leque.',                           cost: 15 },
+       hom:    { name: 'Energia teleguiada', desc: 'Vai reto atrás do inimigo mais perto.',        cost: 15 },
+       disco:  { name: 'Disco bumerangue', desc: 'Lâmina giratória que vai e volta, cortando.',   cost: 18 },
+       bomba:  { name: 'Bola explosiva',   desc: 'Mais lenta; explode e atinge quem está em volta.', cost: 18 } },
+  r: { bola:   { name: 'Bola gigante',     desc: 'Forma e arremessa uma bola enorme.',             cost: 35 },
+       genki:  { name: 'Esfera suprema',   desc: 'Demora a juntar, mas mira a altura do inimigo e é devastadora.', cost: 60 },
+       chuva:  { name: 'Chuva de energia', desc: '6 bolas caem do céu à sua frente.',              cost: 45 },
+       kienzan:{ name: 'Disco destruidor', desc: 'Lâmina gigante que atravessa TODOS no caminho.', cost: 50 },
+       fogos:  { name: 'Fogos caçadores',  desc: '5 fogos saem um a um, sobem e caçam o inimigo.', cost: 45 } },
+  s: { kame:   { name: 'Feixe de energia', desc: 'Raio contínuo e poderoso.',                      cost: 40 },
+       rajada: { name: 'Rajada',           desc: '9 disparos seguidos.',                           cost: 40 },
+       enxame: { name: 'Enxame',           desc: '6 energias saem em sequência e perseguem o alvo.', cost: 45 },
+       cegar:  { name: 'Clarão',           desc: 'Cega quem estiver perto por 3 segundos.',        cost: 30 } },
 };
 const pwOf = (f, slot) => { const id = f.pw && f.pw[slot]; return POWERS[slot][id] ? id : Object.keys(POWERS[slot])[0]; };
 /* CLARÃO: quem estiver perto (menos quem soltou) fica cego por 3 segundos */
@@ -879,8 +889,8 @@ class Fighter {
         this.physics(dt, false); return;
       }
       case 'rajada': // ESP. 2 rajada: 9 disparos seguidos
-        this.vx = approach(this.vx, 0, 12, dt); airHover(); this.rajT -= dt;
-        if (this.rajT <= 0 && this.stateT > 0.05) { this.rajT = 0.1; this.shot({ r: 4, vy: rnd(-25, 25), vx: this.facing * 360, dmg: 26 * this.dmgMul() }); }
+        this.vx = approach(this.vx, 0, 12, dt); airHover();
+        if (this.ser && this.ser.i < this.ser.n) { this.ser.t -= dt; if (this.ser.t <= 0) { this.ser.t = this.ser.gap; this.serieShot(); } }
         if (this.stateT <= 0) this.setState('idle');
         this.physics(dt, false, true); return;
       case 'kiball':
@@ -1047,13 +1057,11 @@ class Fighter {
   /* ESPECIAL do BASE: feixe de energia (kame) · sem kit próprio: bola grande */
   useSpecial() {
     const sp = pwOf(this, 's');
-    if (sp === 'rajada') { if (!this.spend(POWERS.s.rajada.cost)) return; this.vx = 0; this.setState('rajada', 0.95); this.rajT = 0; return; }
+    if (sp === 'rajada') { if (!this.spend(POWERS.s.rajada.cost)) return; this.serie('rajada', 9, 0.1); return; }
     if (sp === 'cegar') { if (!this.spend(POWERS.s.cegar.cost)) return; this.setState('charge', 0.3);
       const m = { t: 'blind', o: this.id, x: this.x, y: this.y - 25 }; net.send(m); applyBlind(m);
       spark(this.x, this.y - 25, 40, '#ffffff', 300, 0.5, 3); ring(this.x, this.y - 25, '#ffffff', 10, 190, 0.4); return; }
-    if (sp === 'enxame') { if (!this.spend(POWERS.s.enxame.cost)) return; this.setState('kiball', 0.4);
-      for (let i = 0; i < 5; i++) this.shot({ vx: this.facing * 170, vy: (i - 2) * 70, hom: 1, r: 4, dmg: 36 * this.dmgMul() });
-      ring(this.x, this.y - 30, this.pal_.ki[1], 8, 40, 0.3); return; }
+    if (sp === 'enxame') { if (!this.spend(POWERS.s.enxame.cost)) return; this.serie('enxame', 6, 0.08); return; }
     if (this.kit.special === 'kame') {
       if (!this.spend(40)) return;
       this.kameFired = false; this.beamLen = 0; this.setState('kame', KAME.total); if (nearCam(this.x, this.y)) SFX.kameCharge();
@@ -1066,9 +1074,8 @@ class Fighter {
   useRaio() {
     const rp = pwOf(this, 'r');
     if (rp === 'kienzan') { if (!this.spend(POWERS.r.kienzan.cost)) return; this.setState('kiball', 0.35);
-      this.shot({ vx: this.facing * 300, disc: 1, pierce: 1, r: 13, dmg: 170 * this.dmgMul(), y: this.y - 52 }); if (nearCam(this.x, this.y)) SFX.bigWind(); return; }
-    if (rp === 'fogos') { if (!this.spend(POWERS.r.fogos.cost)) return; this.setState('kiball', 0.35);
-      for (let i = 0; i < 5; i++) this.shot({ vx: this.facing * (40 + i * 25), vy: -300 + i * 20, hom: 1, hd: 0.5, r: 4, dmg: 40 * this.dmgMul() }); return; }
+      this.shot({ vx: this.facing * 380, saw: 1, pierce: 1, r: 15, dmg: 150 * this.dmgMul() }); if (nearCam(this.x, this.y)) SFX.bigWind(); return; }
+    if (rp === 'fogos') { if (!this.spend(POWERS.r.fogos.cost)) return; this.serie('fogos', 5, 0.16); return; }
     if (rp === 'chuva') { if (!this.spend(POWERS.r.chuva.cost)) return; this.setState('kiball', 0.35);
       for (let i = 0; i < 6; i++) spawnProjectile({ id: uid(), o: this.id, x: this.x + this.facing * (70 + i * 38) + rnd(-8, 8), y: GROUND - 300 - i * 45, vx: this.facing * 20, vy: 330, r: 6, dmg: 50 * this.dmgMul(), big: 0, rain: 1, pal: this.pal, ch: this.form }, true);
       if (nearCam(this.x, this.y)) SFX.bigWind(); return; }
@@ -1141,15 +1148,22 @@ class Fighter {
       }
     }
   }
+  serie(kind, n, gap) { this.vx = 0; this.ser = { kind, n, gap, i: 0, t: 0 }; this.setState('rajada', n * gap + 0.15); }
+  serieShot() {
+    const s = this.ser, m = this.dmgMul(), f = this.facing, i = s.i++;
+    if (s.kind === 'rajada') this.shot({ r: 4, vy: rnd(-25, 25), vx: f * 360, dmg: 26 * m });
+    else if (s.kind === 'fogos') this.shot({ r: 4, vx: f * 90, vy: -300, hom: 1, hd: 0.32, tr: 7, dmg: 40 * m });
+    else if (s.kind === 'enxame') this.shot({ r: 4, vx: f * 230, vy: (i % 2 ? -1 : 1) * (60 + i * 18), hom: 1, tr: 9, dmg: 32 * m });
+  }
   shot(o) { const h = this.handPos(); spawnProjectile({ id: uid(), o: this.id, x: h.x, y: h.y, vx: this.facing * 320, r: 5, dmg: 55 * this.dmgMul(), big: 0, pal: this.pal, ch: this.form, ...o }, true); }
   fireKi() {
     const k = pwOf(this, 'k');
     if (!this.infiniteKi) this.ki -= POWERS.k[k].cost; this.kiCd = k === 'ki' ? 0.3 : 0.45; this.setState('kiball', 0.26);
     const h = this.handPos(), m = this.dmgMul();
     if (k === 'tri') { for (const vy of [-80, 0, 80]) this.shot({ r: 4, vy, dmg: 32 * m }); }
-    else if (k === 'hom') this.shot({ vx: this.facing * 210, hom: 1, r: 5, dmg: 48 * m });
-    else if (k === 'disco') this.shot({ vx: this.facing * 430, disc: 1, r: 6, dmg: 75 * m });
-    else if (k === 'laser') this.shot({ vx: this.facing * 900, lz: 1, r: 3, dmg: 50 * m });
+    else if (k === 'hom') this.shot({ vx: this.facing * 270, hom: 1, tr: 8, r: 5, dmg: 46 * m });
+    else if (k === 'disco') this.shot({ vx: this.facing * 440, saw: 1, boom: 1, f0: this.facing, pierce: 1, r: 7, dmg: 45 * m });
+    else if (k === 'bomba') this.shot({ vx: this.facing * 240, r: 7, aoe: 62, dmg: 60 * m });
     else this.shot({});
     ring(h.x, h.y, this.pal_.ki[1], 2, 12, 0.15);
   }
@@ -1157,7 +1171,7 @@ class Fighter {
     this.setState('bigfire', 0.36);
     const h = this.handPos(); // (BASE: já sai da mão que arremessa)
     if (this.genki) { this.genki = false; // esfera suprema
-      spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 10, y: h.y - 14, vx: this.facing * 150, vy: 30, r: 24, dmg: 320 * this.dmgMul(), big: 1, gk: 1, pal: this.pal, ch: this.form }, true);
+      spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 10, y: h.y - 14, vx: this.facing * 220, vy: 0, r: 27, dmg: 320 * this.dmgMul(), big: 1, gk: 1, pal: this.pal, ch: this.form }, true);
       ring(h.x, h.y, this.pal_.ki[1], 10, 70, 0.4); shake = Math.max(shake, this === game.me ? 7 : 0); return; }
     spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 6, y: h.y, vx: this.facing * 235, r: 13, dmg: 170 * this.dmgMul(), big: 1, pal: this.pal, ch: this.form }, true);
     ring(h.x, h.y, this.pal_.ki[1], 6, 40, 0.3); shake = Math.max(shake, this === game.me ? 4 : 0);
@@ -1326,22 +1340,33 @@ class Projectile {
     if (this.hom && this.t >= (this.hd || 0)) { // persegue o inimigo mais perto (fogos: só depois de subir)
       let best = null, bd = 1e9;
       for (const f of game.fighters) { if (f.id === this.o || f.dead) continue; const d = Math.hypot(f.x - this.x, f.y - 25 - this.y); if (d < bd) { bd = d; best = f; } }
-      const sp = Math.hypot(this.vx, this.vy || 0) || 200;
-      if (best && bd < 520) { const a0 = Math.atan2(this.vy || 0, this.vx), a1 = Math.atan2(best.y - 25 - this.y, best.x - this.x); let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
-        const a = a0 + clamp(da, -4 * dt, 4 * dt); this.vx = Math.cos(a) * sp; this.vy = Math.sin(a) * sp; }
-      if (this.t > 3.2) { this.explode(); return; }
+      const sp = Math.max(240, Math.hypot(this.vx, this.vy || 0));
+      if (best && bd < 700) { const a0 = Math.atan2(this.vy || 0, this.vx), a1 = Math.atan2(best.y - 25 - this.y, best.x - this.x); let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+        const tr = (this.tr || 5) * dt, a = a0 + clamp(da, -tr, tr); this.vx = Math.cos(a) * sp; this.vy = Math.sin(a) * sp; }
+      if (this.t > 2.8) { this.explode(); return; }
+    }
+    if (this.gk) { // esfera suprema: acompanha a altura do inimigo mais perto à frente
+      let best = null, bd = 1e9; for (const f of game.fighters) { if (f.id === this.o || f.dead || sign(f.x - this.x) !== sign(this.vx)) continue; const d = Math.abs(f.x - this.x); if (d < bd) { bd = d; best = f; } }
+      if (best) this.vy = clamp((best.y - 25 - this.y) * 2, -140, 140); else this.vy = 0;
+    }
+    if (this.boom) { // bumerangue: freia, volta e some perto de quem lançou (ou em 1,8s)
+      this.vx -= this.f0 * 900 * dt;
+      if (!this.back && sign(this.vx) !== this.f0) { this.back = 1; this.hitIds = []; }
+      const ow = game.byId(this.o); if (this.back && ow) this.vy = clamp((ow.y - 30 - this.y) * 3, -200, 200);
+      if (this.t > 1.8 || (this.back && ow && Math.abs(ow.x - this.x) < 14)) { this.dead = true; return; }
     }
     this.x += this.vx * dt; this.y += (this.vy || 0) * dt;
     if (this.y + this.r >= GROUND && (this.vy || 0) > 0) { this.explode(); return; }
     if (Math.random() < (this.big ? 1 : 0.6)) particles.push({ x: this.x - sign(this.vx) * this.r, y: this.y + rnd(-this.r, this.r) * 0.6, vx: -this.vx * 0.15, vy: rnd(-10, 10), life: this.big ? 0.35 : 0.2, max: 0.35, size: this.big ? 3 : 2, color: this.col[1], glow: true });
     if (this.x < -40 || this.x > WW + 40) { this.dead = true; return; }
-    if (!this.rain) for (const p of PLATFORMS) if (this.x > p.x && this.x < p.x + p.w && Math.abs(this.y - (p.y + 5)) < this.r + 5) { this.explode(); return; }
+    if (!this.saw) for (const p of PLATFORMS) if (this.x > p.x && this.x < p.x + p.w && Math.abs(this.y - (p.y + 5)) < this.r + 5) { this.explode(); return; }
     // colide com qualquer lutador; o dano só é aplicado no computador dono da vítima
     for (const f of game.fighters) {
       if (f.id === this.o || f.dead || this.dead) continue;
       const b = f.body();
       if (this.x + this.r > b.x0 && this.x - this.r < b.x1 && this.y + this.r > b.y0 && this.y - this.r < b.y1) {
         if (f.invuln > 0) continue;
+        if (this.aoe) this.hitIds = [f.id];
         if (this.pierce) { this.hitIds = this.hitIds || []; if (this.hitIds.includes(f.id)) continue; this.hitIds.push(f.id); }
         const src = game.byId(this.o) || { id: this.o, name: '?', x: this.x - sign(this.vx) * 50, local: false, pal_: palFor(this.ch, this.pal) };
         if (f.local) {
@@ -1364,6 +1389,11 @@ class Projectile {
   }
   explode(blocked) {
     if (this.dead) return; this.dead = true;
+    if (this.aoe) { // explosão em área: cada computador aplica nos SEUS lutadores
+      for (const f of game.fighters) { if (!f.local || f.dead || f.id === this.o || f.invuln > 0 || (this.hitIds || []).includes(f.id)) continue;
+        if (Math.hypot(f.x - this.x, f.y - 25 - this.y) < this.aoe) f.takeHit({ dmg: this.dmg * 0.75, kbx: sign(f.x - this.x) * 200, kby: -150, stun: 0.45, kind: 'heavy' }, game.byId(this.o) || { id: this.o, name: '?', x: this.x, local: false, pal_: palFor(this.ch, this.pal) }); }
+      spark(this.x, this.y, 30, this.col[1], 220, 0.5, 3); ring(this.x, this.y, '#ffffff', 6, this.aoe, 0.35); if (nearCam(this.x, this.y)) { shake = Math.max(shake, 4); SFX.boom(); }
+    }
     const c = this.col;
     spark(this.x, this.y, this.big ? 34 : 10, c[1], this.big ? 230 : 120, this.big ? 0.6 : 0.3, this.big ? 3 : 2);
     ring(this.x, this.y, c[0], 2, this.big ? 54 : 18, this.big ? 0.4 : 0.22);
@@ -2466,6 +2496,19 @@ Object.defineProperties(Fighter.prototype, Object.getOwnPropertyDescriptors({
   },
 }));
 
+/* lâmina de energia giratória (disco bumerangue e disco destruidor) */
+function drawSaw(x, y, r, c, t) {
+  ctx.save(); ctx.translate(x, y); ctx.globalCompositeOperation = 'lighter';
+  ctx.scale(1, 0.42); ctx.rotate(t * 22);
+  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 1.5); g.addColorStop(0, hexA(c[1], 0.55)); g.addColorStop(1, hexA(c[1], 0));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, r * 1.5, 0, 7); ctx.fill();
+  ctx.fillStyle = c[0]; ctx.beginPath();
+  for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2, rr2 = i % 2 ? r * 0.72 : r * 1.08; ctx.lineTo(Math.cos(a) * rr2, Math.sin(a) * rr2); }
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(0, 0, r * 0.45, 0, 7); ctx.fill();
+  ctx.fillStyle = hexA(c[1], 0.9); ctx.beginPath(); ctx.arc(0, 0, r * 0.2, 0, 7); ctx.fill();
+  ctx.restore();
+}
 /* PROJÉTIL — parte visual */
 Object.defineProperties(Projectile.prototype, Object.getOwnPropertyDescriptors({
   get col() { return okHex(this.kc) ? kiCols(this.kc) : (CHARS[this.ch] || CHARS.base).ki; },
@@ -2476,18 +2519,8 @@ Object.defineProperties(Projectile.prototype, Object.getOwnPropertyDescriptors({
       ctx.strokeStyle = hexA(this.col[1], 0.5); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(x, y, this.r + 6 + Math.sin(this.t * 25) * 3, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
     }
-    if (this.lz) { // laser: linha fina e comprida
-      ctx.save(); ctx.globalCompositeOperation = 'lighter'; const c = this.col, L = Math.min(90, this.t * 900);
-      ctx.strokeStyle = hexA(c[1], 0.6); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(x - sign(this.vx) * L, y); ctx.lineTo(x, y); ctx.stroke();
-      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore(); return;
-    }
-    if (this.disc) { // disco: elipse achatada girando
-      ctx.save(); ctx.translate(x, y); ctx.globalCompositeOperation = 'lighter';
-      const c = this.col, w = this.r * 2.4, h = this.r * 0.75 + Math.sin(this.t * 30) * 0.6;
-      ctx.fillStyle = hexA(c[1], 0.5); ctx.beginPath(); ctx.ellipse(0, 0, w + 3, h + 2, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = c[0]; ctx.beginPath(); ctx.ellipse(0, 0, w, h, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(0, 0, w * 0.5, h * 0.4, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); return;
-    }
+    if (this.saw) { drawSaw(x, y, this.r, this.col, this.t); return; }
+    if (this.aoe) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = hexA(this.col[1], 0.6); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, this.r + 3 + Math.sin(this.t * 30) * 1.5, 0, 7); ctx.stroke(); ctx.restore(); }
     drawKiBall(x, y, this.r, this.col, this.t);
   },
 }));
@@ -3684,11 +3717,14 @@ const CUST_POSES = [['auto', 'AUTO'], ['parado', 'PARADO'], ['frente', 'ANDAR'],
 function custSprites() { return lookSprites(chosenLook).spr; }
 function dropLocked() { const e = shop.equip(chosenLook, chosenFxc); chosenLook = e.look; chosenFxc = e.fxc; chosenPw = shop.equipPw(chosenPw); if (chosenTr >= 0 && !shop.has('tr:' + slotCur)) chosenTr = -1; storeSlot(); }
 function custSig() { return JSON.stringify([slotCur, chosenLook, chosenFxc, chosenArq, chosenTr, chosenPw]); }
-function custBtn() { const b = document.getElementById('cDone'); if (b) b.textContent = custOpen && custSig() !== custStart ? '✓ SALVAR' : '← VOLTAR'; }
+let custBackup = null;
+function custCancel() { if (custBackup) { setSlots(custBackup.slots, custBackup.cur); saveLook(); } closeCustom(); } // desfaz tudo desta visita
+function custClear() { chosenLook = newSlot().look; chosenFxc = { a: '', k: '' }; chosenArq = 'eq'; chosenTr = -1; chosenPw = { ...PW0 }; saveLook(); } // padrão de fábrica
+function custBtn() { const b = document.getElementById('cDone'), ch = custOpen && custSig() !== custStart; if (b) b.textContent = ch ? '✓ SALVAR' : '← VOLTAR'; show('cCancel', ch); }
 let custStart = '';
 function openCustom() {
   custOpen = true; custDemo = null; if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); } dropLocked(); 
-  show('menu', false); show('custom', true); custStart = custSig(); buildCustomPanel(); custBtn();
+  show('menu', false); show('custom', true); storeSlot(); custBackup = JSON.parse(JSON.stringify({ slots, cur: slotCur })); custStart = custSig(); buildCustomPanel(); custBtn();
   const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; requestAnimationFrame(() => { cc.scrollTop = 0; });
   cancelAnimationFrame(custRaf); const t0 = performance.now();
   const loop = now => { if (!custOpen) return; drawCustomPreview((now - t0) / 1000); custRaf = requestAnimationFrame(loop); };
@@ -3728,7 +3764,7 @@ function buildCustomPanel() {
   document.getElementById('cName').textContent = dispName(playerName()).toUpperCase();
   buildCharList();
   const tabs = document.getElementById('cTabs'); tabs.innerHTML = '';
-  for (const [id, nm] of [['corpo', 'CORPO'], ['cabelo', 'CABELO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['energia', 'ENERGIA'], ['poderes', 'PODERES'], ['arq', 'ARQUÉTIPO'], ['trans', 'TRANSFORMAÇÃO']]) {
+  for (const [id, nm] of [['corpo', 'CORPO'], ['cabelo', 'CABELO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['energia', 'COR DA ENERGIA'], ['pk', 'BOLA DE ENERGIA'], ['pr', 'ESPECIAL 1'], ['ps', 'ESPECIAL 2'], ['arq', 'ARQUÉTIPO'], ['trans', 'TRANSFORMAÇÃO']]) {
     const b = document.createElement('button'); b.textContent = nm; b.className = custTab === id ? 'sel' : '';
     b.onclick = () => { custTab = id; buildCustomPanel(); }; tabs.appendChild(b);
   }
@@ -3749,15 +3785,16 @@ function buildCustomPanel() {
       b.onclick = () => { chosenArq = id; saveLook(); }; g.appendChild(b);
     }
     const n = document.createElement('div'); n.className = 'cnote'; n.textContent = ARQS[chosenArq].desc; P.appendChild(n);
-  } else if (custTab === 'poderes') {
-    for (const [sl, nm, btn] of [['k', 'BOLA DE ENERGIA', 'K'], ['r', 'ESP. 1', 'I'], ['s', 'ESP. 2', 'L']]) {
-      h4(nm + ' (tecla ' + btn + ')'); const g = grid();
-      for (const [id, pw] of Object.entries(POWERS[sl])) {
-        const free = id === PW0[sl], card = optCard(pw.name, chosenPw[sl] === id, x => drawPowerIcon(x, id), () => { chosenPw[sl] = id; custDemo = { id, t0: performance.now() }; }, free ? '' : 'p:' + id);
-        card.title = pw.desc + ' · ' + pw.cost + ' de energia'; card.classList.add('pwc'); g.appendChild(card);
-      }
+  } else if (['pk', 'pr', 'ps'].includes(custTab)) {
+    const sl = custTab[1], g = document.createElement('div'); g.className = 'arqs'; P.appendChild(g);
+    for (const [id, pw] of Object.entries(POWERS[sl])) {
+      const key = id === PW0[sl] ? '' : 'p:' + id, b = document.createElement('button'); b.type = 'button'; b.className = 'arq pwcard' + (chosenPw[sl] === id ? ' sel' : '');
+      const c = makeCanvas(56, 56); c.getContext('2d').imageSmoothingEnabled = false; drawPowerIcon(c.getContext('2d'), id); b.appendChild(c);
+      const tx = document.createElement('div'); tx.innerHTML = '<b>' + pw.name + '</b><span class="pwd">' + pw.desc + '</span><span class="pwd">⚡ ' + pw.cost + ' de energia</span>'; b.appendChild(tx);
+      if (key && !shop.has(key)) b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>');
+      b.onclick = () => { chosenPw[sl] = id; custDemo = { id, t0: performance.now() }; saveLook(); if (key) offerBuy(key, pw.name); };
+      g.appendChild(b);
     }
-    const n = document.createElement('div'); n.className = 'cnote'; n.textContent = 'Toque num poder para ver; os bloqueados custam ' + PRICE.item + ' moedas.'; P.appendChild(n);
   } else if (custTab === 'trans') {
     h4('TRANSFORMAÇÃO: no DESPERTAR, este lutador vira outro dos seus personagens');
     const o = chosenTr >= 0 ? slots[chosenTr] : null, k = 'tr:' + slotCur, g = grid();
@@ -3806,11 +3843,12 @@ function drawCustomPreview(t) {
   const spr = custSprites(); if (!spr) return;
   const auto = ['parado', 'frente', 'golpe1', 'golpe2', 'golpe3', 'carga2', 'kiball', 'defesa'];
   let pose = custPose === 'auto' ? auto[Math.floor(t / 0.9) % auto.length] : custPose;
-  const demo = custTab === 'poderes' ? (custDemo || { id: chosenPw.k, t0: 0 }) : null, dt0 = demo ? ((performance.now() - demo.t0) / 1000) % 1.6 : 0;
-  if (demo) pose = ['genki', 'kienzan'].includes(demo.id) && dt0 < 0.7 ? (spr.lancar ? 'lancar' : 'carga2') : ['cegar'].includes(demo.id) ? 'carga2' : 'kiball';
+  const pvOn = ['pk', 'pr', 'ps'].includes(custTab), W = pvOn ? PV.W : 80, H = pvOn ? PV.H : 70;
+  if (c.width !== W || c.height !== H) { c.width = W; c.height = H; x.imageSmoothingEnabled = false; }
+  if (pvOn) { drawPowerPreview(x, spr, palForCustom(chosenChar, 0, chosenFxc), performance.now()); return; }
   if (custTab === 'energia' && custPose === 'auto') pose = Math.floor(t / 1.6) % 2 ? 'kiball' : 'carga2';
   const im = spr[pose] || spr.parado, pal = palForCustom(chosenChar, 0, chosenFxc);
-  const fx = demo ? 16 : 40, fy = 64, sc = 1; // tamanho real do jogo (sem redesenhar nem esticar)
+  const fx = 40, fy = 64, sc = 1; // tamanho real do jogo (sem redesenhar nem esticar)
   const save = ctx; ctx = x; // as funções de desenho usam o ctx global
   try {
     x.save(); x.translate(fx, fy); x.scale(sc, sc);
@@ -3818,30 +3856,79 @@ function drawCustomPreview(t) {
     if (pose === 'carga2') { const fr = auraFramesFor(pal.aura); if (fr) { const a = fr[2 + (Math.floor(t / 0.08) % 2)]; x.globalAlpha = 0.9; x.drawImage(a, -a.width / 2 * AURA_SC, -a.height * AURA_SC + 3, a.width * AURA_SC, a.height * AURA_SC); x.globalAlpha = 1; } }
     const bob = 0;
     x.drawImage(im, -Math.floor(im.width / 2), -im.height + bob);
-    if (demo) drawPowerDemo(x, demo.id, dt0, pal.ki);
-    else if (pose === 'kiball') drawKiBall(Math.round(20 + (t * 30) % 12), -30, 5, pal.ki, t);
+    if (pose === 'kiball') drawKiBall(Math.round(20 + (t * 30) % 12), -30, 5, pal.ki, t);
     x.restore();
   } finally { ctx = save; }
 }
-/* animação do poder na prévia (coordenadas a partir dos pés do lutador) */
-function drawPowerDemo(x, id, k, col) {
-  const hx = 17, hy = -30, b = (bx, by, r) => drawKiBall(bx, by, r, col, k), go = Math.max(0, k - 0.15);
+/* prévia dos poderes: simula de verdade (mesmas velocidades e regras do jogo) numa arena de 200x90 com um alvo */
+const PV = { W: 200, H: 90, gx: 24, gy: 84, tx: 168 };
+let pvSim = null;
+function pvReset(id) { pvSim = { id, t: 0, shots: [], fx: [], beam: 0, flash: 0, last: performance.now() }; }
+function pvShot(o) { pvSim.shots.push({ x: 17, y: -30, vx: 320, vy: 0, r: 5, t: 0, ...o }); }
+function pvStep(dt) {
+  const S = pvSim, id = S.id, t = S.t, T = { x: PV.tx - PV.gx, y: -25 };
+  const once = (k, fn) => { if (!S['f' + k]) { S['f' + k] = 1; fn(); } };
   switch (id) {
-    case 'ki': b(hx + go * 70, hy, 3); break;
-    case 'tri': for (const d of [-1, 0, 1]) b(hx + go * 60, hy + d * go * 25, 2.5); break;
-    case 'hom': b(hx + go * 50, hy - Math.sin(go * 3) * 14, 3); break;
-    case 'disco': x.fillStyle = col[0]; x.beginPath(); x.ellipse(hx + go * 80, hy, 6, 2, 0, 0, 7); x.fill(); break;
-    case 'laser': x.strokeStyle = col[1]; x.lineWidth = 2; x.beginPath(); x.moveTo(hx, hy); x.lineTo(Math.min(70, hx + go * 300), hy); x.stroke(); x.strokeStyle = '#fff'; x.lineWidth = 0.7; x.stroke(); break;
-    case 'bola': b(hx + Math.max(0, k - 0.4) * 60, hy, Math.min(8, 2 + k * 14)); break;
-    case 'genki': { const r = Math.min(9, 2 + k * 11); b(k < 0.7 ? 6 : 6 + (k - 0.7) * 70, k < 0.7 ? -54 : -54 + (k - 0.7) * 30, r); break; }
-    case 'chuva': for (let i = 0; i < 4; i++) b(30 + i * 10, -70 + ((k * 90 + i * 22) % 70), 2.5); break;
-    case 'kienzan': { const px = k < 0.7 ? 4 : 4 + (k - 0.7) * 80, py = -56; x.fillStyle = hexA(col[1], 0.6); x.beginPath(); x.ellipse(px, py, 11, 3.5, 0, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.ellipse(px, py, 5, 1.2, 0, 0, 7); x.fill(); break; }
-    case 'fogos': for (let i = 0; i < 4; i++) { const u = go * 1.6; b(hx + i * 3 + (u > 0.5 ? (u - 0.5) * 50 : 0), hy - Math.min(0.5, u) * 70 + (u > 0.5 ? (u - 0.5) * 50 : 0) + i * 3, 2); } break;
-    case 'kame': if (k > 0.3) { const L = Math.min(60, (k - 0.3) * 160); x.fillStyle = col[1]; x.fillRect(hx, hy - 4, L, 8); x.fillStyle = '#fff'; x.fillRect(hx, hy - 1.5, L, 3); } b(hx, hy, 5); break;
-    case 'rajada': for (let i = 0; i < 5; i++) { const u = go - i * 0.12; if (u > 0) b(hx + u * 80, hy + (i % 2 ? -3 : 3), 2); } break;
-    case 'enxame': for (let i = 0; i < 5; i++) b(hx + go * 45, hy + (i - 2) * go * 14 - Math.sin(go * 4) * 4, 2); break;
-    case 'cegar': if (k > 0.3) { x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.fillStyle = 'rgba(255,255,240,' + Math.max(0, 0.9 - (k - 0.3)) + ')'; x.fillRect(0, 0, 80, 70); x.restore(); } break;
+    case 'ki': if (t > 0.1) once(1, () => pvShot({})); break;
+    case 'tri': if (t > 0.1) once(1, () => [-80, 0, 80].forEach(vy => pvShot({ r: 4, vy }))); break;
+    case 'hom': if (t > 0.1) once(1, () => pvShot({ vx: 270, vy: -120, hom: 1, tr: 8 })); break;
+    case 'disco': if (t > 0.1) once(1, () => pvShot({ vx: 440, saw: 1, boom: 1, r: 7, pierce: 1 })); break;
+    case 'bomba': if (t > 0.1) once(1, () => pvShot({ vx: 240, r: 7, aoe: 62 })); break;
+    case 'bola': if (t > 0.4) once(1, () => pvShot({ x: 16, vx: 235, r: 13 })); break;
+    case 'genki': if (t > 1.3) once(1, () => pvShot({ x: 12, y: -84, vx: 220, r: 27, gk: 1 })); break;
+    case 'chuva': if (t > 0.1) once(1, () => { for (let i = 0; i < 6; i++) pvShot({ x: 30 + i * 22, y: -100 - i * 45, vx: 20, vy: 330, r: 6 }); }); break;
+    case 'kienzan': if (t > 0.1) once(1, () => pvShot({ vx: 380, saw: 1, r: 15, pierce: 1 })); break;
+    case 'fogos': for (let i = 0; i < 5; i++) if (t > 0.1 + i * 0.16) once('f' + i, () => pvShot({ r: 4, vx: 90, vy: -300, hom: 1, hd: 0.32, tr: 7 })); break;
+    case 'rajada': for (let i = 0; i < 9; i++) if (t > 0.1 + i * 0.1) once('r' + i, () => pvShot({ r: 4, vx: 360, vy: rnd(-25, 25) })); break;
+    case 'enxame': for (let i = 0; i < 6; i++) if (t > 0.1 + i * 0.08) once('e' + i, () => pvShot({ r: 4, vx: 230, vy: (i % 2 ? -1 : 1) * (60 + i * 18), hom: 1, tr: 9 })); break;
+    case 'kame': if (t > KAME.charge && t < KAME.total) S.beam = Math.min(PV.W, S.beam + 1400 * dt); else S.beam = 0; break;
+    case 'cegar': if (t > 0.3) once(1, () => { S.flash = 1; }); break;
   }
+  S.flash = Math.max(0, S.flash - dt * 1.2);
+  for (const p of S.shots) {
+    p.t += dt;
+    if (p.hom && p.t >= (p.hd || 0)) { const sp = Math.max(240, Math.hypot(p.vx, p.vy)), a0 = Math.atan2(p.vy, p.vx), a1 = Math.atan2(T.y - p.y, T.x - p.x); let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI; const a = a0 + clamp(da, -p.tr * dt, p.tr * dt); p.vx = Math.cos(a) * sp; p.vy = Math.sin(a) * sp; }
+    if (p.gk) p.vy = clamp((T.y - p.y) * 2, -140, 140);
+    if (p.boom) { p.vx -= 900 * dt; if (!p.back && p.vx < 0) { p.back = 1; p.hit = 0; } if (p.back && p.x < 18) p.dead = 1; }
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    if (p.y + p.r >= 0 && p.vy > 0) { p.dead = 1; S.fx.push({ x: p.x, y: -2, r: p.r * 2.5, t: 0 }); }
+    if (Math.abs(p.x - T.x) < 8 + p.r && Math.abs(p.y - T.y) < 22 + p.r && !p.hit) { p.hit = 1; S.fx.push({ x: p.x, y: p.y, r: p.aoe || p.r * 3, t: 0 }); if (!p.pierce) p.dead = 1; }
+    if (p.x > PV.W + 30 || p.x < -60) p.dead = 1;
+  }
+  S.shots = S.shots.filter(p => !p.dead); S.fx = S.fx.filter(f => (f.t += dt) < 0.35);
+}
+const pvDur = id => id === 'kame' || id === 'genki' ? 2.8 : id === 'chuva' ? 2.4 : 2.0;
+const custDemoId = () => { const sl = custTab[1]; return custDemo && POWERS[sl] && POWERS[sl][custDemo.id] ? custDemo.id : chosenPw[sl]; };
+function drawPowerPreview(x, spr, pal, now) {
+  if (!pvSim || pvSim.id !== custDemoId()) pvReset(custDemoId());
+  const S = pvSim, dt = Math.min(0.05, (now - S.last) / 1000); S.last = now; S.t += dt; pvStep(dt);
+  if (S.t > pvDur(S.id) && !S.shots.length) pvReset(S.id);
+  const id = S.id, t = S.t, col = pal.ki, save = ctx; ctx = x;
+  try {
+    x.clearRect(0, 0, PV.W, PV.H);
+    x.save(); x.translate(PV.gx, PV.gy);
+    const tim = spr.parado; x.save(); x.globalAlpha = 0.35; x.translate(PV.tx - PV.gx, 0); x.scale(-1, 1); x.drawImage(tim, -Math.floor(tim.width / 2), -tim.height); x.restore();
+    x.fillStyle = 'rgba(0,0,0,.35)'; x.beginPath(); x.ellipse(0, 0, 14, 3, 0, 0, Math.PI * 2); x.fill();
+    const charging = (id === 'bola' && t < 0.4) || (id === 'genki' && t < 1.3);
+    const pose = charging ? (spr.lancar ? 'lancar' : 'carga2') : id === 'cegar' || (id === 'kame' && t < KAME.charge) ? 'carga2' : t < 0.1 || t > 1.4 && !S.beam ? 'parado' : 'kiball';
+    const im = spr[pose] || spr.parado; x.drawImage(im, -Math.floor(im.width / 2), -im.height);
+    if (id === 'bola' && t < 0.4) drawKiBall(10, -56, 3 + t / 0.4 * 10, col, t);
+    if (id === 'genki' && t < 1.3) { const k = Math.min(1, t / 1.3); drawKiBall(6, -60 - k * 24, 6 + k * 21, col, t); }
+    if (id === 'kame' && t < KAME.total) drawKiBall(17, -30, 3 + Math.min(1, t / KAME.charge) * 5, col, t);
+    if (S.beam > 0) { const w = (9 + Math.sin(t * 40) * 1.5) * 1.9, L = S.beam; x.save(); x.globalCompositeOperation = 'lighter';
+      x.fillStyle = hexA(col[2], 0.35); x.fillRect(17, -30 - w * 1.3, L, w * 2.6); x.fillStyle = hexA(col[1], 0.8); x.fillRect(17, -30 - w * 0.75, L, w * 1.5); x.fillStyle = col[0]; x.fillRect(17, -30 - w * 0.35, L, w * 0.7);
+      x.fillStyle = 'rgba(255,255,255,.5)'; for (let i = 0; i < L; i += 14) x.fillRect(17 + ((i + t * 600) % L), -30 - w * 0.9, 3, w * 1.8); x.restore(); }
+    for (const p of S.shots) p.saw ? drawSaw(p.x, p.y, p.r, col, p.t) : drawKiBall(p.x, p.y, p.r, col, p.t);
+    for (const f of S.fx) { x.strokeStyle = hexA(col[0], 1 - f.t / 0.35); x.lineWidth = 2; x.beginPath(); x.arc(f.x, f.y, 3 + f.r * f.t / 0.35, 0, 7); x.stroke(); }
+    if (S.flash > 0) { // clarão: luz forte a partir do lutador, que vai tomando a tela
+      const R = 30 + (1 - S.flash) * 260, g = x.createRadialGradient(0, -30, 2, 0, -30, R);
+      g.addColorStop(0, 'rgba(255,255,255,' + S.flash + ')'); g.addColorStop(0.6, 'rgba(255,250,220,' + S.flash * 0.85 + ')'); g.addColorStop(1, 'rgba(255,250,220,0)');
+      x.fillStyle = g; x.fillRect(-PV.gx, -PV.gy, PV.W, PV.H);
+      for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 + t; x.strokeStyle = 'rgba(255,255,255,' + S.flash * 0.7 + ')'; x.lineWidth = 1; x.beginPath(); x.moveTo(Math.cos(a) * 12, -30 + Math.sin(a) * 12); x.lineTo(Math.cos(a) * R * 0.7, -30 + Math.sin(a) * R * 0.7); x.stroke(); }
+    }
+    if (id === 'cegar' && t > 0.6) { x.fillStyle = '#ffd23a'; for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.1; x.fillRect(PV.tx - PV.gx + Math.cos(a) * 9 - 1, -64 + Math.sin(a) * 3, 3, 3); } } // alvo tonto
+    x.restore();
+  } finally { ctx = save; }
 }
 /* desenho de cada poder (miniatura 56x56) */
 function drawPowerIcon(x, id) {
@@ -3853,14 +3940,17 @@ function drawPowerIcon(x, id) {
     case 'ki': trail(8, 28, 34, 28); ball(38, 28, 6); break;
     case 'tri': for (const d of [-12, 0, 12]) { trail(8, 28, 36, 28 + d); ball(40, 28 + d, 4); } break;
     case 'hom': x.strokeStyle = hexA(col[1], 0.6); x.lineWidth = 2; x.setLineDash([3, 3]); x.beginPath(); x.moveTo(6, 44); x.quadraticCurveTo(20, 6, 40, 24); x.stroke(); x.setLineDash([]); ball(42, 26, 5); x.fillStyle = '#ff6a5a'; x.fillRect(46, 38, 6, 10); break;
-    case 'disco': trail(6, 28, 26, 28); x.fillStyle = col[1]; x.beginPath(); x.ellipse(36, 28, 15, 5, 0, 0, 7); x.fill(); x.fillStyle = '#ffffff'; x.beginPath(); x.ellipse(36, 28, 8, 2.5, 0, 0, 7); x.fill(); break;
+    case 'disco': ctx = x; drawSaw(30, 28, 12, col, 0.3); x.strokeStyle = hexA(col[1], 0.6); x.lineWidth = 2; x.beginPath(); x.arc(30, 28, 22, -0.6, 0.6); x.stroke(); break;
+    case 'disco_old': trail(6, 28, 26, 28); x.fillStyle = col[1]; x.beginPath(); x.ellipse(36, 28, 15, 5, 0, 0, 7); x.fill(); x.fillStyle = '#ffffff'; x.beginPath(); x.ellipse(36, 28, 8, 2.5, 0, 0, 7); x.fill(); break;
     case 'bola': trail(6, 32, 22, 30); ball(32, 28, 12); break;
     case 'genki': ball(28, 26, 19); x.fillStyle = '#ffffff'; for (let i = 0; i < 6; i++) x.fillRect(4 + i * 9, 50 - (i % 2) * 4, 2, 2); break;
     case 'chuva': for (let i = 0; i < 5; i++) { trail(10 + i * 9, 4 + (i % 2) * 8, 12 + i * 9, 22 + (i % 2) * 8); ball(12 + i * 9, 26 + (i % 2) * 8, 3.5); } x.fillStyle = '#3a2e58'; x.fillRect(0, 48, 56, 8); break;
     case 'kame': { const g = x.createLinearGradient(0, 22, 0, 34); g.addColorStop(0, col[1]); g.addColorStop(0.5, '#ffffff'); g.addColorStop(1, col[1]); x.fillStyle = g; x.fillRect(14, 22, 42, 12); ball(14, 28, 9); break; }
     case 'rajada': for (let i = 0; i < 5; i++) ball(10 + i * 10, 28 + (i % 2 ? -6 : 6), 3.5); break;
-    case 'laser': x.strokeStyle = col[1]; x.lineWidth = 4; x.beginPath(); x.moveTo(8, 28); x.lineTo(54, 28); x.stroke(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); break;
-    case 'kienzan': x.fillStyle = hexA(col[1], 0.5); x.beginPath(); x.ellipse(28, 26, 24, 8, 0, 0, 7); x.fill(); x.fillStyle = col[0]; x.beginPath(); x.ellipse(28, 26, 20, 6, 0, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.ellipse(28, 26, 10, 2.5, 0, 0, 7); x.fill(); break;
+    case 'bomba': trail(6, 28, 24, 28); ball(30, 28, 7); x.strokeStyle = hexA(col[0], 0.8); x.lineWidth = 1.5; x.beginPath(); x.arc(30, 28, 16, 0, 7); x.stroke(); x.beginPath(); x.arc(30, 28, 22, 0, 7); x.stroke(); break;
+    case 'laser_old': x.strokeStyle = col[1]; x.lineWidth = 4; x.beginPath(); x.moveTo(8, 28); x.lineTo(54, 28); x.stroke(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); break;
+    case 'kienzan': drawSaw(28, 28, 18, col, 0.5); break;
+    case 'kienzan_old': x.fillStyle = hexA(col[1], 0.5); x.beginPath(); x.ellipse(28, 26, 24, 8, 0, 0, 7); x.fill(); x.fillStyle = col[0]; x.beginPath(); x.ellipse(28, 26, 20, 6, 0, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.ellipse(28, 26, 10, 2.5, 0, 0, 7); x.fill(); break;
     case 'fogos': for (let i = 0; i < 4; i++) { x.strokeStyle = hexA(col[1], 0.5); x.lineWidth = 2; x.beginPath(); x.moveTo(8 + i * 4, 50); x.quadraticCurveTo(12 + i * 8, 4, 40 + i * 4, 14 + i * 8); x.stroke(); ball(40 + i * 4, 14 + i * 8, 3); } break;
     case 'cegar': { const g = x.createRadialGradient(28, 28, 2, 28, 28, 26); g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, 'rgba(255,255,220,.7)'); g.addColorStop(1, 'rgba(255,255,200,0)'); x.fillStyle = g; x.fillRect(0, 0, 56, 56); break; }
     case 'enxame': for (let i = 0; i < 5; i++) { const a = -0.9 + i * 0.45; ball(28 + Math.cos(a) * 18, 28 + Math.sin(a) * 18, 3.5); } ball(16, 28, 4); break;
@@ -4193,7 +4283,7 @@ resizeCanvas(); addEventListener('resize', resizeCanvas); setTimeout(resizeCanva
 setInterval(() => { if (game.phase !== 'loading') { salasSB.tick(); lobby.sync(); } }, 1000);
 addEventListener('pagehide', () => { if (game.phase === 'play') net.leave(true); lobby.stop(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
-loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cDone').onclick = closeCustom;
+loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cDone').onclick = closeCustom; document.getElementById('cCancel').onclick = custCancel; document.getElementById('cClear').onclick = custClear; dragScroll(document.getElementById('cTabs'));
   document.getElementById('cRand').onclick = () => { // visual sorteado
     const pick = a => a[(Math.random() * a.length) | 0];
     const mine = list => list.filter(c => shop.has('c:' + c));
