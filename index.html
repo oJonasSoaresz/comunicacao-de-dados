@@ -388,6 +388,16 @@
   #chatX{flex:none;width:34px}
   #msgList .copt{width:104px;flex:0 0 104px}
   #msgList .copt span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+  .arq .pwd{font-size:clamp(6px,.7vw,8px);color:var(--muted);line-height:1.5}
+  #accInfo .dn{font-style:normal;color:#ffd23a;margin-right:2px}
+  .modes{grid-template-columns:repeat(3,1fr)}
+  button.room .md.d{border-color:#ff6a5a;color:#ffb3a8}
+  .st{grid-template-columns:clamp(50px,6.5vw,72px) minmax(40px,1fr) 34px!important}
+  .st .stb{display:block!important;height:7px;min-width:40px;background:#0f0b19;border:1px solid #3a2e58;border-radius:99px;overflow:hidden}
+  .st .stf{display:block!important;height:100%;border-radius:99px}
+  .st .stv{text-align:right;color:var(--fg)}
+  .copt.pwc{width:116px;flex:0 0 116px}
+  .copt.pwc span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
 </style>
 </head>
 <body>
@@ -429,7 +439,7 @@
         <div class="fld2"><span>NOME DA SALA</span><input id="roomName" type="text" maxlength="18" placeholder="opcional" autocomplete="off" autocorrect="off" spellcheck="false"></div>
         <div class="fld2"><span>SENHA</span><input id="roomPw" type="text" maxlength="12" placeholder="sem senha" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       </div>
-      <div class="fld2"><span>MODO DE JOGO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel">∞ NORMAL<small>sem fim</small></button><button type="button" data-m="t">⏱ 5 MINUTOS<small>quem derrotar mais vence · prêmio em moedas</small></button></div></div>
+      <div class="fld2"><span>MODO DE JOGO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel">∞ NORMAL<small>sem fim</small></button><button type="button" data-m="t">⏱ 5 MINUTOS<small>quem derrotar mais vence</small></button><button type="button" data-m="d">⚔ DUELO<small>1 contra 1 · melhor de 3</small></button></div></div>
       <div class="cbmaps">
         <h3>CENÁRIO <small id="mapName2"></small></h3>
         <div id="maps2" class="mapstrip"></div>
@@ -648,6 +658,20 @@ const emptyInput = () => ({ left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0
 
 const AWAKEN_HOLD = 2.0, AWAKEN_TIME = 25, RESPAWN_INVULN = 4; // invencível 4s ao renascer (no treino: nunca)
 const KAME = { charge: 0.8, total: 2.0, dps: 230 };              // especial do BASE: feixe de energia
+/* PODERES escolhíveis (aba PODERES): botão BOLA DE ENERGIA (k), ESP. 1 (r) e ESP. 2 (s) */
+const POWERS = {
+  k: { ki:     { name: 'Bola de energia', desc: 'Um disparo rápido.',                         cost: 10 },
+       tri:    { name: 'Tiro triplo',     desc: '3 disparos em leque.',                       cost: 15 },
+       hom:    { name: 'Energia que segue', desc: 'Mais lenta, mas persegue o inimigo.',      cost: 15 },
+       disco:  { name: 'Disco cortante',  desc: 'Disco veloz e mais forte.',                  cost: 18 } },
+  r: { bola:   { name: 'Bola gigante',    desc: 'Forma e arremessa uma bola enorme.',         cost: 35 },
+       genki:  { name: 'Esfera suprema',  desc: 'Demora a juntar, mas é devastadora.',        cost: 60 },
+       chuva:  { name: 'Chuva de energia', desc: '6 bolas caem do céu à sua frente.',          cost: 45 } },
+  s: { kame:   { name: 'Feixe de energia', desc: 'Um raio contínuo e poderoso.',              cost: 40 },
+       rajada: { name: 'Rajada',          desc: '9 disparos seguidos.',                       cost: 40 },
+       enxame: { name: 'Enxame',          desc: '5 energias que perseguem os inimigos.',      cost: 45 } },
+};
+const pwOf = (f, slot) => { const id = f.pw && f.pw[slot]; return POWERS[slot][id] ? id : Object.keys(POWERS[slot])[0]; };
 function spawnProjectile(m, broadcast) {
   if (projectiles.some(p => p.id === m.id)) return;
   if (broadcast && m.kc === undefined) { const o = game.byId(m.o); if (o && o.fxc && okHex(o.fxc.k)) m.kc = o.fxc.k; } // cor de poder escolhida vai junto
@@ -676,6 +700,7 @@ function handleKill(m) {
   const killer = game.byId(m.k);
   if (killer && killer.local && m.k !== m.v) killer.kills++;
   onKillHook(m); // estatísticas da conta (PARTE 3)
+  if (typeof duelKill === 'function') duelKill(m);
 }
 
 /* ---------------- bots ---------------- */
@@ -824,6 +849,11 @@ class Fighter {
         }
         this.physics(dt, false); return;
       }
+      case 'rajada': // ESP. 2 rajada: 9 disparos seguidos
+        this.vx = approach(this.vx, 0, 12, dt); airHover(); this.rajT -= dt;
+        if (this.rajT <= 0 && this.stateT > 0.05) { this.rajT = 0.1; this.shot({ r: 4, vy: rnd(-25, 25), vx: this.facing * 360, dmg: 26 * this.dmgMul() }); }
+        if (this.stateT <= 0) this.setState('idle');
+        this.physics(dt, false, true); return;
       case 'kiball':
         this.vx = approach(this.vx, 0, 10, dt); // bola de ki comum também não segura no ar
         if (this.stateT <= 0) this.setState('idle');
@@ -940,7 +970,7 @@ class Fighter {
 
     if (inp.punchP && this.punchCd <= 0) this.startPunch();
     else if (inp.bigP) this.useSpecial();
-    else if (inp.kiP && this.kiCd <= 0) { if (this.ki >= 10) this.fireKi(); else popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
+    else if (inp.kiP && this.kiCd <= 0) { if (this.ki >= POWERS.k[pwOf(this, 'k')].cost || this.infiniteKi) this.fireKi(); else popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
     else if (this.kit.raio === 'bola' ? inp.beamP : (inp.beam && this.state === 'idle')) this.useRaio();
     else if (inp.dashP && this.dashCd <= 0 && this.ki >= 12) this.startDash(mx);
     else if (inp.charge && this.onGround) {
@@ -987,6 +1017,11 @@ class Fighter {
   spend(n) { if (this.ki < n) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return false; } if (!this.infiniteKi) this.ki -= n; return true; }
   /* ESPECIAL do BASE: feixe de energia (kame) · sem kit próprio: bola grande */
   useSpecial() {
+    const sp = pwOf(this, 's');
+    if (sp === 'rajada') { if (!this.spend(POWERS.s.rajada.cost)) return; this.vx = 0; this.setState('rajada', 0.95); this.rajT = 0; return; }
+    if (sp === 'enxame') { if (!this.spend(POWERS.s.enxame.cost)) return; this.setState('kiball', 0.4);
+      for (let i = 0; i < 5; i++) this.shot({ vx: this.facing * 170, vy: (i - 2) * 70, hom: 1, r: 4, dmg: 36 * this.dmgMul() });
+      ring(this.x, this.y - 30, this.pal_.ki[1], 8, 40, 0.3); return; }
     if (this.kit.special === 'kame') {
       if (!this.spend(40)) return;
       this.kameFired = false; this.beamLen = 0; this.setState('kame', KAME.total); if (nearCam(this.x, this.y)) SFX.kameCharge();
@@ -997,9 +1032,14 @@ class Fighter {
   }
   /* RAIO do BASE: ergue a mão, forma a bola grande e arremessa · sem kit próprio: raio contínuo (segurar) */
   useRaio() {
+    const rp = pwOf(this, 'r');
+    if (rp === 'chuva') { if (!this.spend(POWERS.r.chuva.cost)) return; this.setState('kiball', 0.35);
+      for (let i = 0; i < 6; i++) spawnProjectile({ id: uid(), o: this.id, x: this.x + this.facing * (70 + i * 38) + rnd(-8, 8), y: GROUND - 300 - i * 45, vx: this.facing * 20, vy: 330, r: 6, dmg: 50 * this.dmgMul(), big: 0, rain: 1, pal: this.pal, ch: this.form }, true);
+      if (nearCam(this.x, this.y)) SFX.bigWind(); return; }
     if (this.kit.raio === 'bola') {
-      if (!this.spend(35)) return;
-      this.vx = 0; this.setState('bigwind', 0.4); if (nearCam(this.x, this.y)) SFX.bigWind();
+      if (!this.spend(rp === 'genki' ? POWERS.r.genki.cost : 35)) return;
+      this.genki = rp === 'genki';
+      this.vx = 0; this.setState('bigwind', this.genki ? 1.3 : 0.4); if (nearCam(this.x, this.y)) SFX.bigWind();
       return;
     }
     if (this.ki >= 20) { this.setState('beamwind', 0.5); if (nearCam(this.x, this.y)) SFX.beamWind(); }
@@ -1016,7 +1056,7 @@ class Fighter {
 
   physics(dt, friction, noGrav) {
     let g = GRAV; if (this.flying) g = 0; // voando: sem gravidade (sobe enquanto segura o pulo)
-    if (!noGrav || this.onGround) this.vy += g * dt; else if (!['charge', 'beam', 'beamwind', 'bigwind', 'kiball', 'bigfire', 'punch', 'dash', 'kame'].includes(this.state)) this.vy += g * dt;
+    if (!noGrav || this.onGround) this.vy += g * dt; else if (!['charge', 'beam', 'beamwind', 'bigwind', 'kiball', 'bigfire', 'punch', 'dash', 'kame', 'rajada'].includes(this.state)) this.vy += g * dt;
     if (friction && this.onGround) this.vx = approach(this.vx, 0, 7, dt);
     const prevY = this.y;
     this.x += this.vx * dt; this.y += this.vy * dt;
@@ -1065,15 +1105,23 @@ class Fighter {
       }
     }
   }
+  shot(o) { const h = this.handPos(); spawnProjectile({ id: uid(), o: this.id, x: h.x, y: h.y, vx: this.facing * 320, r: 5, dmg: 55 * this.dmgMul(), big: 0, pal: this.pal, ch: this.form, ...o }, true); }
   fireKi() {
-    if (!this.infiniteKi) this.ki -= 10; this.kiCd = 0.3; this.setState('kiball', 0.26);
-    const h = this.handPos();
-    spawnProjectile({ id: uid(), o: this.id, x: h.x, y: h.y, vx: this.facing * 320, r: 5, dmg: 55 * this.dmgMul(), big: 0, pal: this.pal, ch: this.form }, true);
+    const k = pwOf(this, 'k');
+    if (!this.infiniteKi) this.ki -= POWERS.k[k].cost; this.kiCd = k === 'ki' ? 0.3 : 0.45; this.setState('kiball', 0.26);
+    const h = this.handPos(), m = this.dmgMul();
+    if (k === 'tri') { for (const vy of [-80, 0, 80]) this.shot({ r: 4, vy, dmg: 32 * m }); }
+    else if (k === 'hom') this.shot({ vx: this.facing * 210, hom: 1, r: 5, dmg: 48 * m });
+    else if (k === 'disco') this.shot({ vx: this.facing * 430, disc: 1, r: 6, dmg: 75 * m });
+    else this.shot({});
     ring(h.x, h.y, this.pal_.ki[1], 2, 12, 0.15);
   }
   fireBig() {
     this.setState('bigfire', 0.36);
     const h = this.handPos(); // (BASE: já sai da mão que arremessa)
+    if (this.genki) { this.genki = false; // esfera suprema
+      spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 10, y: h.y - 14, vx: this.facing * 150, vy: 30, r: 24, dmg: 320 * this.dmgMul(), big: 1, gk: 1, pal: this.pal, ch: this.form }, true);
+      ring(h.x, h.y, this.pal_.ki[1], 10, 70, 0.4); shake = Math.max(shake, this === game.me ? 7 : 0); return; }
     spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 6, y: h.y, vx: this.facing * 235, r: 13, dmg: 170 * this.dmgMul(), big: 1, pal: this.pal, ch: this.form }, true);
     ring(h.x, h.y, this.pal_.ki[1], 6, 40, 0.3); shake = Math.max(shake, this === game.me ? 4 : 0);
   }
@@ -1204,7 +1252,7 @@ class Fighter {
     if (!this.net) { this.x = m.x; this.y = m.y; }
     const prevSt = this.net ? this.net.st : null;
     this.net = { ...m };
-    this.name = String(m.n || '?').slice(0, 18); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; if (m.ar !== undefined && m.ar !== this.arq) applyArq(this, m.ar); this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
+    this.name = String(m.n || '?').slice(0, 18); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; if (m.ar !== undefined && m.ar !== this.arq) applyArq(this, m.ar); this.genki = !!m.gk; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
     const predicting = this.predT && performance.now() - this.predT < 600;
     if (m.hp < this.hp - 0.5 && !predicting) this.flash = 0.08;
     // enquanto a rede não confirma, mantém o dano que já mostrei (não "devolve" a vida)
@@ -1229,7 +1277,7 @@ class Fighter {
     return { t: 's', id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
       ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
-      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq' };
+      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', gk: this.genki ? 1 : 0 };
   }
 }
 
@@ -1238,10 +1286,19 @@ class Projectile {
   get col() { return (CHARS[this.ch] || CHARS.base).ki; } // simples; a PARTE 2 (visual) usa a cor escolhida pelo jogador
   update(dt) {
     this.t += dt;
+    if (this.hom) { // persegue o inimigo mais perto
+      let best = null, bd = 1e9;
+      for (const f of game.fighters) { if (f.id === this.o || f.dead) continue; const d = Math.hypot(f.x - this.x, f.y - 25 - this.y); if (d < bd) { bd = d; best = f; } }
+      const sp = Math.hypot(this.vx, this.vy || 0) || 200;
+      if (best && bd < 520) { const a0 = Math.atan2(this.vy || 0, this.vx), a1 = Math.atan2(best.y - 25 - this.y, best.x - this.x); let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+        const a = a0 + clamp(da, -4 * dt, 4 * dt); this.vx = Math.cos(a) * sp; this.vy = Math.sin(a) * sp; }
+      if (this.t > 3.2) { this.explode(); return; }
+    }
     this.x += this.vx * dt; this.y += (this.vy || 0) * dt;
+    if (this.y + this.r >= GROUND && (this.vy || 0) > 0) { this.explode(); return; }
     if (Math.random() < (this.big ? 1 : 0.6)) particles.push({ x: this.x - sign(this.vx) * this.r, y: this.y + rnd(-this.r, this.r) * 0.6, vx: -this.vx * 0.15, vy: rnd(-10, 10), life: this.big ? 0.35 : 0.2, max: 0.35, size: this.big ? 3 : 2, color: this.col[1], glow: true });
     if (this.x < -40 || this.x > WW + 40) { this.dead = true; return; }
-    for (const p of PLATFORMS) if (this.x > p.x && this.x < p.x + p.w && Math.abs(this.y - (p.y + 5)) < this.r + 5) { this.explode(); return; }
+    if (!this.rain) for (const p of PLATFORMS) if (this.x > p.x && this.x < p.x + p.w && Math.abs(this.y - (p.y + 5)) < this.r + 5) { this.explode(); return; }
     // colide com qualquer lutador; o dano só é aplicado no computador dono da vítima
     for (const f of game.fighters) {
       if (f.id === this.o || f.dead || this.dead) continue;
@@ -2072,6 +2129,19 @@ function drawBar(x, y, w, h, ratio, ghost, color, dark) {
 }
 function drawHUD() {
   const me = game.me; if (!me) return;
+  if (game.duel) {
+    const d = game.duelSt, y0 = Math.round(SAFE.t) + (isTouch ? 30 : 0), ds = duelists(); // abaixo do botão do chat no celular
+    if (d.ph === 'wait') { ctx.fillStyle = 'rgba(18,12,28,0.8)'; rr(VW / 2 - 70, y0, 140, 15, 7); ctx.fill(); text('⚔ ESPERANDO OPONENTE', VW / 2, y0 + 5, 5, '#ffb3a8', 'center', '#120c1c', 1); }
+    else {
+      const a = ds[0], b = ds[1], sa = a ? d.sc[a.id] || 0 : 0, sb = b ? d.sc[b.id] || 0 : 0;
+      ctx.fillStyle = 'rgba(18,12,28,0.85)'; rr(VW / 2 - 90, y0, 180, 17, 8); ctx.fill();
+      text((a ? dispName(a.name).slice(0, 9) : '?') + '  ' + sa + ' x ' + sb + '  ' + (b ? dispName(b.name).slice(0, 9) : '?'), VW / 2, y0 + 3, 6, '#ffffff', 'center', '#120c1c', 1);
+      text('ROUND ' + d.rd, VW / 2, y0 + 19, 5, '#ffd23a', 'center', '#120c1c', 1);
+      if (d.ph === 'count') { const n = Math.max(1, Math.ceil(d.t)); text(String(n), VW / 2, VH / 2 - 40, 26, '#ffd23a', 'center', '#120c1c', 3); text('PREPARE-SE!', VW / 2, VH / 2 - 4, 8, '#ffffff', 'center', '#120c1c', 2); }
+      if (d.ph === 'fight' && performance.now() - (game.fightAt || 0) < 1000) text('LUTEM!', VW / 2, VH / 2 - 30, 16, '#ff6a5a', 'center', '#120c1c', 3);
+      if (d.ph === 'between') { const w = ds.find(f => f.id === d.w); text((w ? dispName(w.name).toUpperCase() : '?') + ' VENCEU O ROUND!', VW / 2, VH / 2 - 30, 10, '#ffd23a', 'center', '#120c1c', 2); }
+    }
+  }
   if (game.timed && !chatOpen && !game.started) { const y0 = Math.round(SAFE.t); ctx.fillStyle = 'rgba(18,12,28,0.8)'; rr(VW / 2 - 70, y0, 140, 15, 7); ctx.fill(); text('⏱ ESPERANDO 2 JOGADORES', VW / 2, y0 + 5, 5, '#ffd23a', 'center', '#120c1c', 1); }
   if (game.timed && game.started && !chatOpen) { // relógio da partida (5 minutos)
     const left = Math.ceil(game.matchLeft()), lbl = Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0');
@@ -2105,7 +2175,7 @@ function drawHUD() {
   const ny = T + 34;
   nameText(me, dispName(me.name), bx, ny, 5, 'left', me.pal_.swatch);
   const humans = game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length;
-  const footer = game.mode === 'online' ? `${net.roomName ? net.roomName.toUpperCase() + ' · ' : ''}SALA ${net.code} · ${humans}/${MAX_PLAYERS} jogadores`
+  const footer = game.mode === 'online' ? `${net.roomName ? net.roomName.toUpperCase() + ' · ' : ''}SALA ${net.code} · ${humans}/${roomMax()} jogadores`
     : game.mode === 'treino' ? 'TREINO · energia infinita ' + (me.infiniteKi ? 'LIGADA' : 'DESLIGADA') : 'CONTRA BOTS';
   text(footer, bx, ny + 9, 5, '#cfc6ff', 'left', '#120c1c', 1);
   if (me.hits >= 2) text(me.hits + ' HITS!', L, T + 54, 8, '#ffd23a', 'left', '#3a0d0d', 2);
@@ -2141,6 +2211,7 @@ function drawHUD() {
     text('DERROTADO' + (me.lastHitBy ? ' POR ' + dispName(me.lastHitBy.name).toUpperCase() : ''), VW / 2, cy + 8, 9, '#ff6a5a', 'center', '#1a0f24', 2);
     if (!me.clickRespawn()) text('renascendo em ' + Math.max(1, Math.ceil(me.deadT)), VW / 2, cy + 28, 6, '#ffffff', 'center', '#1a0f24', 1);
     else if (me.deadT > 0) text('...', VW / 2, cy + 28, 6, '#cfc6ff', 'center', '#1a0f24', 1);
+    else if (game.duel) text('aguarde o próximo round', VW / 2, cy + 28, 6, '#cfc6ff', 'center', '#1a0f24', 1);
     else text(isTouch ? 'TOQUE NA TELA PARA RENASCER' : 'CLIQUE OU APERTE ESPAÇO PARA RENASCER', VW / 2, cy + 28, 6, Math.sin(game.t * 6) > -0.3 ? '#ffffff' : '#ffd23a', 'center', '#1a0f24', 1);
   }
   // setas para lutadores fora da tela
@@ -2253,7 +2324,7 @@ Object.defineProperties(Fighter.prototype, Object.getOwnPropertyDescriptors({
       case 'hurt': return this.spr.arremessado && !this.onGround && (this.vy < -60 || Math.abs(this.vx) > 170) ? 'arremessado' : 'dano'; // golpe forte: voando para trás
       case 'punch': return ['golpe1', 'golpe1', 'golpe2', 'golpe3'][this.combo] || 'golpe1';
       case 'bigfire': return this.spr.arremessar ? 'arremessar' : 'kiball';
-      case 'kiball': case 'beam': return 'kiball';
+      case 'kiball': case 'beam': case 'rajada': return 'kiball';
       case 'awaken': case 'charge': return 'carga2'; // carga de energia
       case 'bigwind': return this.spr.lancar ? 'lancar' : 'carga';
       case 'beamwind': return 'carga';
@@ -2323,7 +2394,8 @@ Object.defineProperties(Fighter.prototype, Object.getOwnPropertyDescriptors({
       ctx.strokeStyle = '#ffffff'; ctx.beginPath(); ctx.arc(px, py - 24 + oy, 30, -Math.PI / 2, -Math.PI / 2 + k * Math.PI * 2); ctx.stroke();
     }
 
-    if (this.state === 'bigwind') { const hp = this.spr.lancar ? { x: px + this.facing * 10, y: py - 56 } : { x: px + this.facing * 17, y: py - 30 }; drawKiBall(hp.x, hp.y, 3 + clamp(this.stateAge / 0.35, 0, 1) * 10, this.pal_.ki, t); }
+    if (this.state === 'bigwind' && this.genki) { const r = 6 + Math.min(1, this.stateAge / 1.3) * 18; drawKiBall(px + this.facing * 6, py - 62 - r, r, this.pal_.ki, t); }
+    else if (this.state === 'bigwind') { const hp = this.spr.lancar ? { x: px + this.facing * 10, y: py - 56 } : { x: px + this.facing * 17, y: py - 30 }; drawKiBall(hp.x, hp.y, 3 + clamp(this.stateAge / 0.35, 0, 1) * 10, this.pal_.ki, t); }
     if (this.state === 'beamwind') drawKiBall(px + this.facing * 17, py - 30, 2 + clamp(this.stateAge / 0.5, 0, 1) * 7, this.pal_.ki, t);
   },
   drawBeam(cam) {
@@ -2367,6 +2439,13 @@ Object.defineProperties(Projectile.prototype, Object.getOwnPropertyDescriptors({
       ctx.strokeStyle = hexA(this.col[1], 0.5); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(x, y, this.r + 6 + Math.sin(this.t * 25) * 3, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
     }
+    if (this.disc) { // disco: elipse achatada girando
+      ctx.save(); ctx.translate(x, y); ctx.globalCompositeOperation = 'lighter';
+      const c = this.col, w = this.r * 2.4, h = this.r * 0.75 + Math.sin(this.t * 30) * 0.6;
+      ctx.fillStyle = hexA(c[1], 0.5); ctx.beginPath(); ctx.ellipse(0, 0, w + 3, h + 2, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = c[0]; ctx.beginPath(); ctx.ellipse(0, 0, w, h, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(0, 0, w * 0.5, h * 0.4, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); return;
+    }
     drawKiBall(x, y, this.r, this.col, this.t);
   },
 }));
@@ -2389,10 +2468,11 @@ function onMapChanged() { buildBackground(); }
    • SALA: quem cria a sala é o anfitrião e repassa as mensagens entre os jogadores.
      Se o anfitrião sair, o próximo jogador da lista assume o mesmo código e os outros reconectam. */
 const PREFIX = 'arenadeki-v4-'; // v4: quadro de salas econômico (versões antigas ficam num quadro separado)
-const ROOM_HEARTBEAT = 15, ROOM_EXPIRE = 40000; // anfitrião confirma a sala a cada 15s; sem notícia por 40s, a sala sai do quadro
+const ROOM_HEARTBEAT = 8, ROOM_EXPIRE = 22000; // anfitrião confirma a sala a cada 15s; sem notícia por 40s, a sala sai do quadro
 const LOBBY_ID = PREFIX + 'quadro-de-salas';
 const BOT_NAMES = ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann', 'Nilo', 'Yara', 'Ozzo'];
 const MAX_PLAYERS = 6;
+const roomMax = md => (md === undefined ? net.roomMode : md) === 'd' ? 2 : MAX_PLAYERS; // duelo: só 2
 function peerOpts() {
   const q = new URLSearchParams(location.search).get('peer');
   if (q) { const [host, port] = q.split(':'); return { host, port: +port || 9000, path: '/', secure: false, debug: 0 }; }
@@ -2459,7 +2539,7 @@ const lobby = {
     for (const c of this.conns) if (c.open) c.send({ t: 'rooms', list });
   },
   // salas cheias não aparecem; voltam sozinhas quando alguém sai (o anfitrião avisa a nova quantidade)
-  list() { return [...this.regs.values()].filter(r => r.n < MAX_PLAYERS).sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map, nm: r.nm, lk: !!r.lk, md: r.md || 'n' })); },
+  list() { return [...this.regs.values()].filter(r => r.n < roomMax(r.md)).sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map, nm: r.nm, lk: !!r.lk, md: r.md || 'n' })); },
   /* quem fica ligado ao quadro: quem está no menu, os anfitriões e o próprio quadro. Quem só está lutando numa sala se desliga. */
   sync() {
     // com a lista no Supabase funcionando, ninguém precisa do quadro P2P (só quem já é o quadro continua até sair)
@@ -2471,7 +2551,7 @@ const lobby = {
     if (!m) return;
     if (m.t === 'reg' && m.room && /^[A-Z]{4}$/.test(m.room.code)) {
       const old = this.regs.get(m.room.code);
-      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 18), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', md: m.room.md === 't' ? 't' : 'n', nm: filterChat(String(m.room.nm || '')).slice(0, 18), lk: !!m.room.lk, t: Date.now(), since: old ? old.since : Date.now(), conn: conn || (old && old.conn) });
+      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 18), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', md: ['t', 'd'].includes(m.room.md) ? m.room.md : 'n', nm: filterChat(String(m.room.nm || '')).slice(0, 18), lk: !!m.room.lk, t: Date.now(), since: old ? old.since : Date.now(), conn: conn || (old && old.conn) });
     } else if (m.t === 'unreg') this.regs.delete(m.code);
   },
   send(m) { if (this.isServer) { this.onReg(m); this.tickServer(); } else if (this.conn && this.conn.open) this.conn.send(m); },
@@ -2548,9 +2628,10 @@ const net = {
   /* coloca o jogador na sala (depois de conferir a senha e o nome) */
   admit(c) {
     if (c.admitted || this.role !== 'host') return; c.admitted = true;
+    if (game.duel && game.duelSt.ph !== 'wait') { c.send({ t: 'deny', why: 'fim' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
     if (game.timed && (game.ended || (game.started && game.matchLeft() < 20))) { c.send({ t: 'deny', why: 'fim' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; } // partida acabando: não entra
     const humans = this.conns.length + 1;
-    if (humans >= MAX_PLAYERS) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
+    if (humans >= roomMax()) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
     if (humans + 1 + game.bots.length > MAX_PLAYERS) game.removeBot(); // abre espaço tirando um bot
     c.send({ t: 'welcome', map: game.map || 'canyon', nm: this.roomName || '', left: Math.round(game.matchLeft()), md: this.roomMode || 'n', st: game.started ? 1 : 0 });
     this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
@@ -2577,8 +2658,8 @@ const net = {
       if (!m) return;
       if (!done) { // espera o anfitrião aceitar (ou dizer que está cheia)
         if (gen !== this.gen) return;
-        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); this.joinLeft = m.left > 0 ? +m.left : MATCH_TIME; this.roomMode = m.md === 't' ? 't' : 'n'; this.joinStarted = !!m.st; onOk(code); }
-        else if (m.t === 'full') fail('Sala cheia (' + MAX_PLAYERS + ' jogadores).');
+        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); this.joinLeft = m.left > 0 ? +m.left : MATCH_TIME; this.roomMode = ['t', 'd'].includes(m.md) ? m.md : 'n'; this.joinStarted = !!m.st; onOk(code); }
+        else if (m.t === 'full') fail('Sala cheia.');
         else if (m.t === 'deny') fail(m.why === 'fim' ? 'Essa partida está terminando. Entre em outra sala.' : m.why === 'nome' ? 'NOME' : this.roomPw ? 'SENHA_ERRADA' : 'SENHA');
         return;
       }
@@ -2613,7 +2694,7 @@ const net = {
     setTimeout(attempt, rank === 0 ? 100 : 800);
   },
   becameHost() {
-    killfeed.unshift({ sys: 'Agora você é o anfitrião da sala', life: 6 });
+    killfeed.unshift({ sys: 'Agora você é o anfitrião da sala', life: 6 }); this.regT = 0; this.regKey = '';
     const n = this.pendingBots; this.pendingBots = 0;
     for (let i = 0; i < n; i++) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
     roomsKey = '';
@@ -2624,7 +2705,7 @@ const net = {
       for (const f of game.fighters) if (f.local) this.send({ t: 'leave', id: f.id });
       if (this.role === 'host') {
         if (this.conns.length) this.send({ t: 'hostleave', bots: game.bots.length });
-        else lobby.unregister(this.code);
+        lobby.unregister(this.code); // tira da lista na hora; se alguém assumir, ele anuncia a sala de novo
       }
     }
     const p = this.peer; this.gen++; this.role = 'off'; this.conns = []; this.host = null; this.peer = null; this.members = []; this.pending = null;
@@ -2643,6 +2724,7 @@ const net = {
       // avisa o quadro só quando algo muda (entrou/saiu gente, nome, cenário) + uma confirmação a cada 15s
       const room = { code: this.code, host: dispName(game.me.name), nm: this.roomName || '', lk: !!this.roomPw, n: this.conns.length + 1, map: game.map || 'canyon', md: this.roomMode || 'n' }, rk = JSON.stringify(room);
       if (!game.ended && (rk !== this.regKey || this.regT <= 0)) { this.regT = ROOM_HEARTBEAT; this.regKey = rk; lobby.register(room); }
+      if (game.duel && !game.ended) duelTick(dt);
       if (game.timed && !game.started && humanCount() >= 2) startMatch(true); // 5 minutos: só começa com 2 jogadores
       this.clockT = (this.clockT || 0) - dt; // o anfitrião manda o relógio da partida a cada 2s
       if (game.timed && game.started && this.clockT <= 0 && !game.ended) { this.clockT = 2; this.send({ t: 'clock', left: Math.max(0, game.matchLeft()) }); }
@@ -2667,6 +2749,7 @@ function handleNet(m) {
     }
     case 'kill': handleKill(m); break;
     case 'chat': receiveChat(m); break;
+    case 'duel': if (game.duel && net.role !== 'host' && !game.ended) duelSet({ ph: m.ph, t: +m.tm || 0, sc: m.sc || {}, rd: m.rd | 0, w: m.w }); break;
     case 'start': if (game.timed && !game.started) startMatch(false); break;
     case 'clock': if (net.role !== 'host' && game.timed && !game.ended) { if (!game.started) startMatch(false); } if (net.role !== 'host' && game.timed && !game.ended) game.endAt = performance.now() + clamp(+m.left || 0, 0, MATCH_TIME) * 1000; break;
     case 'end': if (game.timed) endMatch(); break;
@@ -2855,18 +2938,18 @@ const isOwnerF = f => conta.roleOf(f) === 'dono';
 /* nome de um lutador com o visual do cargo: dono = dourado · youtuber = tag YT vermelha + nome branco */
 function nameText(f, str, x, y, size, align, color, outline = '#120c1c', ow = 1.2) {
   const r = f && f.role !== undefined ? f.role : conta.roleOf(f);
-  if (r === 'dono') return ownerText(str, x, y, size, align, outline ? '#2a1600' : null);
-  if (r === 'youtuber') return ytText(str, x, y, size, align, outline);
+  if (r === 'dono') return tagText('DONO', ['#7a5200', '#ffd23a', '#fff6c8', '#ffd23a', '#7a5200'], '#2a1600', str, x, y, size, align, outline);
+  if (r === 'youtuber') return tagText('YT', ['#8a0d0d', '#ff2a2a', '#ffd0d0', '#ff2a2a', '#8a0d0d'], '#2a0000', str, x, y, size, align, outline);
   text(str, x, y, size, color, align, outline, ow);
 }
-function ytText(str, x, y, size, align = 'left', outline = '#120c1c') {
-  ctx.font = FONT(size); const tw = ctx.measureText('YT ').width, w = tw + ctx.measureText(str).width;
+function tagText(tag, cols, dark, str, x, y, size, align = 'left', outline = '#120c1c') {
+  ctx.font = FONT(size); const tw = ctx.measureText(tag + ' ').width, w = tw + ctx.measureText(str).width;
   const x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
   ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  if (outline) { ctx.lineJoin = 'round'; ctx.lineWidth = 1.9; ctx.strokeStyle = '#2a0000'; ctx.strokeText('YT', x0, y); }
+  if (outline) { ctx.lineJoin = 'round'; ctx.lineWidth = 1.9; ctx.strokeStyle = dark; ctx.strokeText(tag, x0, y); }
   const sh = ((performance.now() / 1000) * 0.9) % 1, yw = tw, g = ctx.createLinearGradient(x0 - yw + sh * 2 * yw, 0, x0 + sh * 2 * yw, 0);
-  g.addColorStop(0, '#8a0d0d'); g.addColorStop(0.35, '#ff2a2a'); g.addColorStop(0.5, '#ffd0d0'); g.addColorStop(0.65, '#ff2a2a'); g.addColorStop(1, '#8a0d0d');
-  ctx.fillStyle = g; ctx.fillText('YT', x0, y);
+  [0, 0.35, 0.5, 0.65, 1].forEach((k, i) => g.addColorStop(k, cols[i]));
+  ctx.fillStyle = g; ctx.fillText(tag, x0, y);
   text(str, x0 + tw, y, size, '#ffffff', 'left', outline, 1.2);
 }
 function onKillHook(m) {
@@ -2885,7 +2968,7 @@ function applyProfile(p) {
 function renderConta() {
   const info = document.getElementById('accInfo'); if (!info) return;
   const p = conta.perfil;
-  if (conta.user && p) { info.innerHTML = (p.role === 'youtuber' ? '<i class="yt">YT</i> ' : '') + '<b>' + esc(dispName(p.name)) + (p.role === 'dono' ? ' ★' : '') + '</b> · ' + p.kills + ' derrotas causadas · ' + p.matches + ' partidas'; info.className = 'on'; }
+  if (conta.user && p) { info.innerHTML = (p.role === 'youtuber' ? '<i class="yt">YT</i> ' : p.role === 'dono' ? '<i class="dn">DONO</i> ' : '') + '<b>' + esc(dispName(p.name)) + '</b> · ' + p.kills + ' derrotas causadas · ' + p.matches + ' partidas'; info.className = 'on'; }
   else info.textContent = '';
 }
 /* ---------------- LOJA: cada item de customização custa 10 moedas ----------------
@@ -2901,14 +2984,16 @@ async function offerBuy(k, nome) {
 }
 /* uma cor comprada vale em TODOS os itens e slots ('c:#hex'); a transformação comprada vale em todos os slots ('tr:x') */
 const normItem = k => { const m = /^(hc|s|tc|ac|fa|fk|c):(#[0-9a-f]{6})$/i.exec(k || ''); return m ? 'c:' + m[2].toLowerCase() : /^tr:/.test(k || '') ? 'tr:x' : k; };
-const priceOf = k => { k = normItem(k); return /^(h|t|a|sl):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color; };
+const priceOf = k => { k = normItem(k); if (/^cp:/.test(k)) return 500; return /^(h|t|a|sl|p):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color; };
 const ITEM_PRICE = PRICE.color;
+const PALETTE = () => new Set([].concat(HAIR_COLORS, SKIN_COLORS, TAIL_COLORS, HALO_COLORS, FX_COLORS).map(c => c.toLowerCase()));
 const FREE_ITEMS = new Set(['h:hair1', 'c:#3a3a4a', 'c:#cfcfcf', 'c:#7a4a26', 'c:#ffd23a', 'sl:0']);
 const shop = {
   infinite() { return !!(conta.perfil && conta.perfil.infinite); },
   has(k) {
     if (!k) return true; const n = normItem(k);
     if (FREE_ITEMS.has(n) || this.infinite()) return true;
+    if (n.startsWith('c:') && !PALETTE().has(n.slice(2))) return this.has('cp:1'); // cor fora da paleta: precisa do seletor de cor livre
     const own = conta.perfil && Array.isArray(conta.perfil.owned) ? conta.perfil.owned : [];
     return own.some(o => normItem(o) === n); // compras antigas ('hc:#..', 'tr:0') também valem
   },
@@ -2937,6 +3022,8 @@ const shop = {
     if (F.a && !this.has('fa:' + F.a)) F.a = '';
     if (F.k && !this.has('fk:' + F.k)) F.k = '';
     return { look: L, fxc: F };
+  },
+  equipPw(pw) { const o = { ...pw }; for (const sl of ['k', 'r', 's']) if (o[sl] !== PW0[sl] && !this.has('p:' + o[sl])) o[sl] = PW0[sl]; return o;
   },
   async buy(list) {
     if (!list.length) return;
@@ -3099,7 +3186,7 @@ const salasSB = {
     if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map,lk')); // banco sem o modo (SQL v5 não rodado)
     if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map')); // banco sem a coluna lk (SQL v2 ainda não rodado)
     if (error || !Array.isArray(data)) { this.failAt = performance.now(); return; }
-    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18), lk: !!r.lk, md: r.md === 't' ? 't' : 'n' }));
+    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18), lk: !!r.lk, md: ['t', 'd'].includes(r.md) ? r.md : 'n' }));
     roomsKey = ''; renderRooms();
   },
   reg(room) {
@@ -3159,12 +3246,12 @@ function renderRooms() {
   const el = document.getElementById('rooms');
   if (!el) return;
   const ls = salasSB.ok ? 'ok' : lobby.status; // lista pelo Supabase ou pelo quadro P2P
-  const list = (salasSB.ok ? salasSB.rooms : lobby.rooms).filter(r => !(net.role === 'host' && r.code === net.code));
+  const list = (salasSB.ok ? salasSB.rooms : lobby.rooms).filter(r => !(net.role === 'host' && r.code === net.code) && r.n < roomMax(r.md)); // sala cheia some da lista
   const key = ls + JSON.stringify(list);
   if (key === roomsKey) return; roomsKey = key;
   if (!list.length) el.innerHTML = `<div class="empty">${ls === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : ls === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
-  else el.innerHTML = list.map(r => { const full = r.n >= MAX_PLAYERS, nm = r.nm || 'Sala de ' + dispName(r.host);
-    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}${r.lk ? ' data-lk="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="md${r.md === 't' ? ' t' : ''}">${r.md === 't' ? '⏱ 5 MIN' : '∞ NORMAL'}</span>${r.lk ? '<span class="lock" title="sala com senha">🔒</span>' : ''}<span class="cnt">${r.n}/${MAX_PLAYERS}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
+  else el.innerHTML = list.map(r => { const full = r.n >= roomMax(r.md), nm = r.nm || 'Sala de ' + dispName(r.host);
+    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}${r.lk ? ' data-lk="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="md${r.md === 't' ? ' t' : r.md === 'd' ? ' d' : ''}">${r.md === 't' ? '⏱ 5 MIN' : r.md === 'd' ? '⚔ DUELO' : '∞ NORMAL'}</span>${r.lk ? '<span class="lock" title="sala com senha">🔒</span>' : ''}<span class="cnt">${r.n}/${roomMax(r.md)}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
 }
 
 /* ---------------- CHAT ----------------
@@ -3269,7 +3356,7 @@ function drawChatLog(x, y, bottom) {
     const yy = y0 + i * lh;
     if (r.first) {
       const nm = dispName(r.c.name) + ':'; nameText({ role: r.c.role }, nm, x, yy, 5, 'left', r.c.color);
-      ctx.font = FONT(5); const w = ctx.measureText((r.c.role === 'youtuber' ? 'YT ' : '') + nm + ' ').width;
+      ctx.font = FONT(5); const w = ctx.measureText((r.c.role === 'youtuber' ? 'YT ' : r.c.role === 'dono' ? 'DONO ' : '') + nm + ' ').width;
       text(r.ln.slice(nm.length + 1), x + w, yy, 5, '#ffffff', 'left', '#120c1c', 1.2);
     } else text(r.ln, x + 6, yy, 5, '#ffffff', 'left', '#120c1c', 1.2);
   });
@@ -3303,13 +3390,62 @@ function setupChat() {
 /* ---------------- PARTIDA ONLINE: 5 minutos, ganha quem derrotar mais ----------------
    Prêmio: 1º 60, 2º 30, 3º 15 moedas — só para quem fez pelo menos 1 derrota (ninguém ganha moeda parado na sala).
    No fim a sala fecha sozinha. */
-const MATCH_TIME = 300, PRIZES = [60, 30, 15];
+const MATCH_TIME = 300;
+/* prêmio da partida de 5 min: cresce com o número de PESSOAS na sala (bots não contam e não ocupam o pódio)
+   2 jogadores: 1º 30 · 3: 45/24 · 4: 60/32/16 · 6: 90/48/24. Sempre só para quem fez pelo menos 1 derrota. */
+const prizesFor = n => n < 2 ? [] : [15 * n, n >= 3 ? 8 * n : 0, n >= 4 ? 4 * n : 0];
 /* despertar com transformação: troca visual, cores e arquétipo (a vida mantém a proporção) */
 function onFormHook(f, on) {
   if (!f.forms || !f.forms.trans || f.formOn === on) return;
   f.formOn = on; const F = on ? f.forms.trans : f.forms.base, r = f.maxHp ? f.hp / f.maxHp : 1;
-  f.look = { ...F.look }; f.fxc = { ...F.fxc }; applyArq(f, F.arq); f.hp = f.hpShown = Math.max(0, r * f.maxHp);
+  f.look = { ...F.look }; f.fxc = { ...F.fxc }; f.pw = { ...F.pw }; applyArq(f, F.arq); f.hp = f.hpShown = Math.max(0, r * f.maxHp);
   if (on) { ring(f.x, f.y - 24, '#ffffff', 6, 80, 0.6); spark(f.x, f.y - 26, 40, '#ffe680', 300, 0.7, 3); if (f === game.me) flashT = Math.max(flashT, 0.35); }
+}
+/* ---------------- DUELO: 1 contra 1, melhor de 3 ----------------
+   O anfitrião manda o estado ({t:'duel'}): wait (esperando oponente) -> count (5s) -> fight -> between (3s) -> count ... -> end.
+   Quem vence 2 rounds ganha o duelo e +10 moedas. */
+const DUEL_PRIZE = 10;
+const duelists = () => game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).sort((a, b) => (a.id < b.id ? -1 : 1));
+function duelSet(st, send) {
+  const prev = game.duelSt; game.duelSt = st;
+  if (st.ph === 'count' && (prev.ph !== 'count' || prev.rd !== st.rd)) { // novo round: todo mundo renasce no seu lado
+    const me = game.me, i = duelists().indexOf(me);
+    me.deadT = 0; me.respawnReq = false; me.spawn(); me.invuln = 0;
+    me.x = i === 1 ? WW / 2 + 260 : WW / 2 - 260; me.y = GROUND; me.vx = me.vy = 0; me.facing = i === 1 ? -1 : 1; me.awakenT = 0;
+  }
+  if (st.ph === 'fight' && prev.ph !== 'fight') { game.fightAt = performance.now(); tone('square', 520, 1040, 0.2, 0.14); }
+  if (st.ph === 'end') endDuel(st.w);
+  if (send) net.send({ ...st, t: 'duel', tm: st.t }); // (o tempo vai em 'tm': 't' é o tipo da mensagem)
+}
+function duelTick(dt) { // só no anfitrião
+  const d = game.duelSt, n = duelists().length;
+  if (d.ph === 'end') return;
+  if (n < 2) { if (d.ph !== 'wait') duelSet({ ph: 'wait', t: 0, sc: {}, rd: 1 }, true); return; }
+  d.t -= dt;
+  if (d.ph === 'wait') duelSet({ ph: 'count', t: 5, sc: {}, rd: 1 }, true);
+  else if (d.ph === 'count' && d.t <= 0) duelSet({ ...d, ph: 'fight', t: 0 }, true);
+  else if (d.ph === 'between' && d.t <= 0) duelSet({ ...d, ph: 'count', t: 5, rd: d.rd + 1 }, true);
+  if (Math.random() < dt) net.send({ ...game.duelSt, t: 'duel', tm: game.duelSt.t }); // repete de vez em quando (quem acabou de entrar)
+}
+function duelKill(m) { // anfitrião: alguém caiu durante a luta
+  const d = game.duelSt; if (!game.duel || net.role !== 'host' || d.ph !== 'fight') return;
+  const ds = duelists(), loser = ds.find(f => f.id === m.v); if (!loser) return;
+  const win = ds.find(f => f !== loser); if (!win) return;
+  const sc = { ...d.sc, [win.id]: (d.sc[win.id] || 0) + 1 };
+  if (sc[win.id] >= 2) duelSet({ ph: 'end', t: 0, sc, rd: d.rd, w: win.id }, true);
+  else duelSet({ ph: 'between', t: 3, sc, rd: d.rd, w: win.id }, true);
+}
+function endDuel(wid) {
+  if (game.ended || game.phase !== 'play') return; game.ended = true;
+  const me = game.me, ds = duelists(), sc = game.duelSt.sc || {};
+  if (wid === me.id) { wallet.add(DUEL_PRIZE, null); conta.flushStats(); }
+  if (net.role === 'host') { lobby.unregister(net.code); setTimeout(() => net.leave(), 1500); } else setTimeout(() => net.leave(), 300);
+  closeChat(); show('pause', false); show('settings', false); overlay = 'results'; for (const k in keys) keys[k] = false;
+  document.getElementById('resList').innerHTML = ds.sort((a, b) => (sc[b.id] || 0) - (sc[a.id] || 0)).map((f, i) =>
+    `<div class="rrow${f === me ? ' me' : ''}"><span class="pos">${f.id === wid ? '🏆' : ''}</span><span>${esc(dispName(f.name))}${f === me ? ' (você)' : ''}</span><span class="k">${sc[f.id] || 0} round${(sc[f.id] || 0) === 1 ? '' : 's'}</span><span class="pz">${f.id === wid ? '+' + DUEL_PRIZE + ' 🪙' : '—'}</span></div>`).join('');
+  document.getElementById('resPrize').textContent = wid === me.id ? 'Você venceu o duelo! +' + DUEL_PRIZE + ' moedas' : 'Você perdeu o duelo. Na próxima é sua!';
+  document.querySelector('#results .title b').textContent = 'FIM DO DUELO';
+  show('results', true); updateTouchUI(); tone('square', 660, 990, 0.15, 0.12);
 }
 const humanCount = () => game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length;
 /* começa a valer a partida de 5 minutos: zera o placar de todos e liga o relógio */
@@ -3323,16 +3459,17 @@ function startMatch(isHost) {
 function rankFighters() { return [...game.fighters].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths || (a.name < b.name ? -1 : 1)); }
 function endMatch() {
   if (game.ended || game.phase !== 'play' || !game.timed || !game.started) return;
-  game.ended = true;
+  game.ended = true; document.querySelector('#results .title b').textContent = 'FIM DE JOGO';
   const list = rankFighters(), me = game.me, pos = list.indexOf(me);
-  const prizeOf = (f, i) => i < 3 && f.kills > 0 ? PRIZES[i] : 0;
-  const mine = prizeOf(me, pos);
+  const people = list.filter(f => !f.ctrl.startsWith('ai') && !f.isBot), PR = prizesFor(people.length);
+  const prizeOf = f => { const i = people.indexOf(f); return i >= 0 && i < 3 && f.kills > 0 ? PR[i] || 0 : 0; };
+  const mine = prizeOf(me);
   if (mine) { wallet.add(mine, null); conta.flushStats(); }
   // a sala fecha: o anfitrião avisa todo mundo, tira a sala da lista e sai
   if (net.role === 'host') { net.send({ t: 'end' }); lobby.unregister(net.code); setTimeout(() => net.leave(), 1500); } else net.leave();
   closeChat(); show('pause', false); show('settings', false); overlay = 'results'; for (const k in keys) keys[k] = false;
   document.getElementById('resList').innerHTML = list.slice(0, 6).map((f, i) => {
-    const pz = prizeOf(f, i);
+    const pz = prizeOf(f);
     return `<div class="rrow${f === me ? ' me' : ''}"><span class="pos">${i + 1}º</span><span>${esc(dispName(f.name))}${f === me ? ' (você)' : ''}</span><span class="k">${f.kills} derrota${f.kills === 1 ? '' : 's'}</span><span class="pz">${pz ? '+' + pz + ' 🪙' : '—'}</span></div>`;
   }).join('');
   document.getElementById('resPrize').textContent = mine ? `Você ficou em ${pos + 1}º e ganhou ${mine} moedas!`
@@ -3352,11 +3489,11 @@ game = {
     this.me = new Fighter({ id: 'p-' + uid() + uid(), name, pal: 0, local: true, ctrl: 'human', char: chosenChar });
     if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); }
     storeSlot();
-    const formOf = o => { const e = shop.equip(o.look, o.fxc); return { look: e.look, fxc: e.fxc, arq: o.arq }; };
+    const formOf = o => { const e = shop.equip(o.look, o.fxc); return { look: e.look, fxc: e.fxc, arq: o.arq, pw: shop.equipPw(o.pw) }; };
     const cur = slots[slotCur], tr = cur.tr >= 0 && cur.tr !== slotCur && shop.has('tr:' + slotCur) ? slots[cur.tr] : null;
     this.me.forms = { base: formOf(cur), trans: tr ? formOf(tr) : null }; this.me.formOn = false;
-    this.me.look = { ...this.me.forms.base.look }; this.me.fxc = { ...this.me.forms.base.fxc }; applyArq(this.me, cur.arq);
-    this.timed = mode === 'online' && net.roomMode === 't'; this.started = this.timed && net.role === 'client' && !!net.joinStarted;
+    this.me.look = { ...this.me.forms.base.look }; this.me.fxc = { ...this.me.forms.base.fxc }; applyArq(this.me, cur.arq); this.me.pw = shop.equipPw(cur.pw);
+    this.timed = mode === 'online' && net.roomMode === 't'; this.duel = mode === 'online' && net.roomMode === 'd'; this.duelSt = { ph: 'wait', t: 0, sc: {}, rd: 1 }; this.started = this.timed && net.role === 'client' && !!net.joinStarted;
     this.ended = false; this.endAt = performance.now() + (mode === 'online' && net.role === 'client' ? (net.joinLeft || MATCH_TIME) : MATCH_TIME) * 1000; show('results', false);
     this.me.pal = freeColor(this.me); this.fighters.push(this.me);
     if (mode === 'treino') this.addBot('dummy', 'Boneco', 'base'); // boneco do treino: BASE com cabelo e cor sorteados
@@ -3391,7 +3528,7 @@ game = {
     const msg = { t: 'leave', id: b.me.id }; net.send(msg);
   },
   toMenu(msg) {
-    net.leave(); this.ended = false; this.timed = false; this.started = false; show('results', false); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
+    net.leave(); this.ended = false; this.timed = false; this.started = false; this.duel = false; show('results', false); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
     overlay = null; editMode = false; ['pause', 'settings'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById('editbar').classList.add('hidden');
     if (conta.user && conta.perfil) document.getElementById('menu').classList.remove('hidden'); else gate.loggedOut();
     for (const k in keys) keys[k] = false;
@@ -3478,14 +3615,16 @@ function dragScroll(el) {
 /* SLOTS: até 3 personagens montados (visual + cores + arquétipo). O slot escolhido é o que entra na luta. */
 const SLOT_N = 3;
 const cleanFxc = c => ({ a: c && okHex(c.a) ? c.a : '', k: c && okHex(c.k) ? c.k : '' });
-const newSlot = () => ({ look: validLook({ h: 'hair1', hc: '#3a3a4a' }), fxc: { a: '', k: '' }, arq: 'eq', tr: -1 });
-const cleanSlot = o => o && typeof o === 'object' ? { look: validLook(o.look || {}) || newSlot().look, fxc: cleanFxc(o.fxc), arq: ARQS[o.arq] ? o.arq : 'eq', tr: Number.isInteger(o.tr) && o.tr >= 0 && o.tr < 3 ? o.tr : -1 } : newSlot();
+const PW0 = { k: 'ki', r: 'bola', s: 'kame' };
+const cleanPw = o => ({ k: o && POWERS.k[o.k] ? o.k : 'ki', r: o && POWERS.r[o.r] ? o.r : 'bola', s: o && POWERS.s[o.s] ? o.s : 'kame' });
+const newSlot = () => ({ look: validLook({ h: 'hair1', hc: '#3a3a4a' }), fxc: { a: '', k: '' }, arq: 'eq', tr: -1, pw: { ...PW0 } });
+const cleanSlot = o => o && typeof o === 'object' ? { look: validLook(o.look || {}) || newSlot().look, fxc: cleanFxc(o.fxc), arq: ARQS[o.arq] ? o.arq : 'eq', tr: Number.isInteger(o.tr) && o.tr >= 0 && o.tr < 3 ? o.tr : -1, pw: cleanPw(o.pw) } : newSlot();
 let slots = [newSlot(), newSlot(), newSlot()], slotCur = 0;
 let chosenLook, chosenFxc, chosenArq;
 function setSlots(list, cur) { slots = Array.from({ length: SLOT_N }, (_, i) => cleanSlot(list && list[i])); slotCur = clamp(cur | 0, 0, SLOT_N - 1); loadSlot(); }
-let chosenTr = -1;
-function loadSlot() { const o = slots[slotCur]; chosenLook = { ...o.look }; chosenFxc = { ...o.fxc }; chosenArq = o.arq; chosenTr = o.tr === slotCur ? -1 : o.tr; }
-function storeSlot() { slots[slotCur] = { look: { ...chosenLook }, fxc: { ...chosenFxc }, arq: chosenArq, tr: chosenTr === slotCur ? -1 : chosenTr }; }
+let chosenTr = -1, chosenPw = { ...PW0 };
+function loadSlot() { const o = slots[slotCur]; chosenLook = { ...o.look }; chosenFxc = { ...o.fxc }; chosenArq = o.arq; chosenTr = o.tr === slotCur ? -1 : o.tr; chosenPw = { ...o.pw }; }
+function storeSlot() { slots[slotCur] = { look: { ...chosenLook }, fxc: { ...chosenFxc }, arq: chosenArq, tr: chosenTr === slotCur ? -1 : chosenTr, pw: { ...chosenPw } }; }
 try {
   const o = JSON.parse(localStorage.getItem('adk_slots') || 'null');
   if (o && Array.isArray(o.slots)) setSlots(o.slots, o.cur);
@@ -3500,7 +3639,7 @@ function saveLook() { storeSlot(); if (typeof conta !== 'undefined') conta.saveP
 let custOpen = false, custTab = 'arq', custPose = 'auto', custRaf = 0;
 const CUST_POSES = [['auto', 'AUTO'], ['parado', 'PARADO'], ['frente', 'ANDAR'], ['golpe1', 'SOCO'], ['golpe3', 'CHUTE'], ['carga2', 'CARGA'], ['kiball', 'KI'], ['defesa', 'DEFESA']];
 function custSprites() { return lookSprites(chosenLook).spr; }
-function dropLocked() { const e = shop.equip(chosenLook, chosenFxc); chosenLook = e.look; chosenFxc = e.fxc; if (chosenTr >= 0 && !shop.has('tr:' + slotCur)) chosenTr = -1; storeSlot(); }
+function dropLocked() { const e = shop.equip(chosenLook, chosenFxc); chosenLook = e.look; chosenFxc = e.fxc; chosenPw = shop.equipPw(chosenPw); if (chosenTr >= 0 && !shop.has('tr:' + slotCur)) chosenTr = -1; storeSlot(); }
 function openCustom() {
   custOpen = true; if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); } dropLocked(); 
   show('menu', false); show('custom', true); buildCustomPanel();
@@ -3522,6 +3661,7 @@ function swatches(list, cur, onPick, withDefault, pfx) {
   if (cur && !list.includes(cur)) add(cur, 'mine'); // a cor livre escolhida aparece como mais uma bolinha
   // "+": abre o seletor de cor do aparelho (qualquer cor, sem encher a tela de bolinhas)
   const lb = document.createElement('label'); lb.className = 'more'; lb.title = 'outra cor'; lb.textContent = '+';
+  if (pfx && !shop.has('cp:1')) { lb.title = 'seletor de cor livre · 500 moedas'; lb.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); lb.onclick = e => { e.preventDefault(); offerBuy('cp:1', 'Seletor de cor livre (qualquer cor, em tudo)'); }; lb.style.position = 'relative'; w.appendChild(lb); return w; }
   const inp = document.createElement('input'); inp.type = 'color'; inp.value = cur && /^#[0-9a-f]{6}$/i.test(cur) ? cur : (list[0] || '#ffffff');
   inp.oninput = () => onPick(inp.value.toLowerCase());          // prévia ao vivo enquanto arrasta
   inp.onchange = () => { onPick(inp.value.toLowerCase()); saveLook(); if (pfx) offerBuy(pfx + ':' + inp.value.toLowerCase(), 'Cor ' + inp.value.toLowerCase()); };
@@ -3542,7 +3682,7 @@ function buildCustomPanel() {
   document.getElementById('cName').textContent = dispName(playerName()).toUpperCase();
   buildCharList();
   const tabs = document.getElementById('cTabs'); tabs.innerHTML = '';
-  for (const [id, nm] of [['arq', 'ARQUÉTIPO'], ['cabelo', 'CORPO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['energia', 'ENERGIA'], ['trans', 'TRANSFORMAÇÃO']]) {
+  for (const [id, nm] of [['arq', 'ARQUÉTIPO'], ['poderes', 'PODERES'], ['cabelo', 'CABELO'], ['corpo', 'CORPO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['energia', 'ENERGIA'], ['trans', 'TRANSFORMAÇÃO']]) {
     const b = document.createElement('button'); b.textContent = nm; b.className = custTab === id ? 'sel' : '';
     b.onclick = () => { custTab = id; buildCustomPanel(); }; tabs.appendChild(b);
   }
@@ -3563,6 +3703,15 @@ function buildCustomPanel() {
       b.onclick = () => { chosenArq = id; saveLook(); }; g.appendChild(b);
     }
     const n = document.createElement('div'); n.className = 'cnote'; n.textContent = ARQS[chosenArq].desc; P.appendChild(n);
+  } else if (custTab === 'poderes') {
+    for (const [sl, nm, btn] of [['k', 'BOLA DE ENERGIA', 'K'], ['r', 'ESP. 1', 'I'], ['s', 'ESP. 2', 'L']]) {
+      h4(nm + ' (tecla ' + btn + ')'); const g = grid();
+      for (const [id, pw] of Object.entries(POWERS[sl])) {
+        const free = id === PW0[sl], card = optCard(pw.name, chosenPw[sl] === id, x => drawPowerIcon(x, id), () => { chosenPw[sl] = id; }, free ? '' : 'p:' + id);
+        card.title = pw.desc + ' · ' + pw.cost + ' de energia'; card.classList.add('pwc'); g.appendChild(card);
+      }
+    }
+    const n = document.createElement('div'); n.className = 'cnote'; n.textContent = 'Toque num poder para ver; os bloqueados custam ' + PRICE.item + ' moedas.'; P.appendChild(n);
   } else if (custTab === 'trans') {
     h4('TRANSFORMAÇÃO: no DESPERTAR, este lutador vira outro dos seus personagens');
     const o = chosenTr >= 0 ? slots[chosenTr] : null, k = 'tr:' + slotCur, g = grid();
@@ -3582,6 +3731,7 @@ function buildCustomPanel() {
     h4('CABELO'); const g = grid();
     for (const h of HAIRS) g.appendChild(optCard(h.name, L.h === h.id, partThumb({ ...L, h: h.id, a: 0 }, head), () => { L.h = h.id; }, h.id && 'h:' + h.id));
     h4('COR DO CABELO'); P.appendChild(swatches(HAIR_COLORS, L.hc, c => { L.hc = c; }, false, 'hc'));
+  } else if (custTab === 'corpo') {
     h4('COR DA PELE'); P.appendChild(swatches(SKIN_COLORS, L.s, c => { L.s = c; }, true, 's'));
   } else if (custTab === 'rabo') {
     h4('RABO'); const g = grid();
@@ -3623,11 +3773,31 @@ function drawCustomPreview(t) {
     x.restore();
   } finally { ctx = save; }
 }
+/* desenho de cada poder (miniatura 56x56) */
+function drawPowerIcon(x, id) {
+  const old = ctx; ctx = x; const col = kiCols(okHex(chosenFxc.k) ? chosenFxc.k : '#5cc8ff'), t = 0.4;
+  x.fillStyle = '#100b1c'; x.fillRect(0, 0, 56, 56);
+  const ball = (bx, by, r) => drawKiBall(bx, by, r, col, t);
+  const trail = (x0, y0, x1, y1) => { x.strokeStyle = hexA(col[1], 0.5); x.lineWidth = 2; x.beginPath(); x.moveTo(x0, y0); x.lineTo(x1, y1); x.stroke(); };
+  switch (id) {
+    case 'ki': trail(8, 28, 34, 28); ball(38, 28, 6); break;
+    case 'tri': for (const d of [-12, 0, 12]) { trail(8, 28, 36, 28 + d); ball(40, 28 + d, 4); } break;
+    case 'hom': x.strokeStyle = hexA(col[1], 0.6); x.lineWidth = 2; x.setLineDash([3, 3]); x.beginPath(); x.moveTo(6, 44); x.quadraticCurveTo(20, 6, 40, 24); x.stroke(); x.setLineDash([]); ball(42, 26, 5); x.fillStyle = '#ff6a5a'; x.fillRect(46, 38, 6, 10); break;
+    case 'disco': trail(6, 28, 26, 28); x.fillStyle = col[1]; x.beginPath(); x.ellipse(36, 28, 15, 5, 0, 0, 7); x.fill(); x.fillStyle = '#ffffff'; x.beginPath(); x.ellipse(36, 28, 8, 2.5, 0, 0, 7); x.fill(); break;
+    case 'bola': trail(6, 32, 22, 30); ball(32, 28, 12); break;
+    case 'genki': ball(28, 26, 19); x.fillStyle = '#ffffff'; for (let i = 0; i < 6; i++) x.fillRect(4 + i * 9, 50 - (i % 2) * 4, 2, 2); break;
+    case 'chuva': for (let i = 0; i < 5; i++) { trail(10 + i * 9, 4 + (i % 2) * 8, 12 + i * 9, 22 + (i % 2) * 8); ball(12 + i * 9, 26 + (i % 2) * 8, 3.5); } x.fillStyle = '#3a2e58'; x.fillRect(0, 48, 56, 8); break;
+    case 'kame': { const g = x.createLinearGradient(0, 22, 0, 34); g.addColorStop(0, col[1]); g.addColorStop(0.5, '#ffffff'); g.addColorStop(1, col[1]); x.fillStyle = g; x.fillRect(14, 22, 42, 12); ball(14, 28, 9); break; }
+    case 'rajada': for (let i = 0; i < 5; i++) ball(10 + i * 10, 28 + (i % 2 ? -6 : 6), 3.5); break;
+    case 'enxame': for (let i = 0; i < 5; i++) { const a = -0.9 + i * 0.45; ball(28 + Math.cos(a) * 18, 28 + Math.sin(a) * 18, 3.5); } ball(16, 28, 4); break;
+  }
+  ctx = old;
+}
 /* barras dos dados base (o máximo de cada barra é o maior valor entre os arquétipos) */
 function statBars(a) {
   const mx = k => Math.max(...ARQ_IDS.map(i => ARQS[i][k]));
   return [['VIDA', 'hp', '#7dff6a'], ['ENERGIA', 'ki', '#5cd6ff'], ['VELOCIDADE', 'spd', '#ffd23a'], ['DANO', 'dmg', '#ff6a5a']]
-    .map(([n, k, c]) => `<div class="st"><span>${n}</span><i><u style="width:${Math.round(a[k] / mx(k) * 100)}%;background:${c}"></u></i></div>`).join('');
+    .map(([n, k, c]) => `<div class="st"><span>${n}</span><span class="stb"><span class="stf" style="width:${Math.round(a[k] / mx(k) * 100)}%;background:${c}"></span></span><span class="stv">${k === 'hp' || k === 'ki' ? a[k] : Math.round(a[k] * 100) + '%'}</span></div>`).join('');
 }
 /* lista de personagens da tela PERSONAGEM (hoje só o BASE; os próximos entram aqui) */
 function buildCharList() {
@@ -3846,7 +4016,7 @@ function openPause() {
   if (game.phase !== 'play') return;
   overlay = 'pause'; for (const k in keys) keys[k] = false;
   document.getElementById('pauseInfo').textContent = game.mode === 'online'
-    ? `sala ${net.code} · ${game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length}/${MAX_PLAYERS} jogadores · a partida continua`
+    ? `sala ${net.code} · ${game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length}/${roomMax()} jogadores · a partida continua`
     : 'jogo pausado';
   show('pause', true); updateTouchUI();
 }
@@ -3914,7 +4084,7 @@ function setupTouch() {
   addEventListener('touchstart', () => { isTouch = true; }, { passive: true });
   // online: tocar/clicar em qualquer lugar da tela (ou espaço/enter) para renascer
   const wantRespawn = e => {
-    const me = game.me; if (!me || !me.dead || game.phase !== 'play' || overlay || chatOpen || !me.clickRespawn() || me.deadT > 0) return false;
+    const me = game.me; if (!me || !me.dead || game.phase !== 'play' || game.duel || overlay || chatOpen || !me.clickRespawn() || me.deadT > 0) return false;
     if (e.target && e.target.closest && e.target.closest('#chatbar,#pauseBtn,.ovl')) return false;
     me.respawnReq = true; return true;
   };
@@ -3961,7 +4131,9 @@ loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementBy
     L.t = pick(TAILS.map(t => t.id).filter(id => !id || shop.has('t:' + id))); L.tc = pick(ownedCols.length ? ownedCols : [TAIL_COLORS[0]]);
     L.a = shop.has('a:1') ? pick([0, 1]) : 0; L.ac = pick(ownedCols.length ? ownedCols : [HALO_COLORS[0]]);
     chosenLook = validLook(L) || chosenLook; chosenArq = ARQ_IDS[(Math.random() * ARQ_IDS.length) | 0];
-    chosenFxc = { a: pick([''].concat(ownedCols)), k: pick([''].concat(ownedCols)) }; saveLook();
+    chosenFxc = { a: pick([''].concat(ownedCols)), k: pick([''].concat(ownedCols)) };
+    for (const sl of ['k', 'r', 's']) chosenPw[sl] = pick(Object.keys(POWERS[sl]).filter(id => id === PW0[sl] || shop.has('p:' + id)));
+    saveLook();
   }; if (game.phase === 'loading') game.phase = 'menu'; updateTouchUI(); lobby.start(); gate.spritesReady(); }).catch(e => { console.error(e); gate.fail('Não foi possível carregar o jogo. Tente de novo.'); });
 requestAnimationFrame(frame);
 
@@ -3971,13 +4143,15 @@ function update(dt) {
   if (overlay && game.mode !== 'online') return; // offline: a pausa congela o jogo
   if (game.mode === 'treino' && tap('KeyE')) game.me.infiniteKi = !game.me.infiniteKi;
   if (game.mode === 'online' && net.role === 'host') {
-    if (tap('KeyB') && net.conns.length + 1 + game.bots.length < MAX_PLAYERS) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
+    if (tap('KeyB') && !game.duel && net.conns.length + 1 + game.bots.length < MAX_PLAYERS) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
     if (tap('KeyN')) game.removeBot();
   }
-  if (game.timed && game.started && !game.ended && game.matchLeft() <= 0) endMatch(); // acabou o tempo
+  if (game.timed && game.started && !game.ended && game.matchLeft() <= 0) endMatch();
+  if (game.duel && net.role !== 'host' && game.duelSt.t > 0) game.duelSt.t -= dt; // acabou o tempo
   if (hitstop > 0) { hitstop -= dt; return; }
 
-  stepWorld(dt, f => f === game.me ? (overlay || chatOpen ? emptyInput() : humanInput()) : emptyInput());
+  const frozen = game.duel && ['count', 'end'].includes(game.duelSt.ph);
+  stepWorld(dt, f => f === game.me ? (overlay || chatOpen || frozen ? emptyInput() : humanInput()) : emptyInput());
   for (const p of particles) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g || 0) * dt; p.vx *= Math.pow(0.1, dt); if (!p.g) p.vy *= Math.pow(0.1, dt); }
   particles = particles.filter(p => p.life > 0);
   if (particles.length > 900) particles.splice(0, particles.length - 900);
