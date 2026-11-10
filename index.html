@@ -370,6 +370,22 @@
   #wrap.tiny .modes button{padding:7px 6px}
   #wrap.tiny .mapstrip button.mapb{flex-basis:118px}
   #wrap.tiny .cbox .title small{display:none}
+  #buyPop{position:sticky;bottom:0;margin-left:auto;width:min(100%,460px);display:flex;align-items:center;gap:8px;padding:8px 10px;background:#2a1d0a;border:2px solid #6b5418;border-radius:var(--r3);font-size:clamp(7px,.85vw,9px);color:#ffe58a;box-shadow:0 6px 20px #000;z-index:3}
+  #buyPop span{flex:1}
+  #buyPop .b{padding:8px 10px}
+  #msgList{justify-content:center}
+  #cSlots button{width:84px;min-width:84px;max-width:84px}
+  #cSlots button span{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+  .copt.trslot{min-width:150px}
+  #chatbar{background:rgba(26,21,40,.95);border:3px solid var(--line);box-shadow:0 0 0 2px #000;border-radius:var(--r2);padding:5px;gap:5px}
+  #chatbar input{background:#0f0b19;border:2px solid var(--line);color:var(--fg);font-family:inherit;font-size:clamp(9px,1vw,11px);padding:8px 9px;border-radius:var(--r3);outline:none}
+  #chatbar input:focus{border-color:var(--acc)}
+  #chatCount{font-family:inherit}
+  #buyPop{width:min(50%,460px)}
+  #wrap.narrow #buyPop{width:100%}
+  #chatbar{width:min(56%,480px)}
+  #chatbar button.b{min-width:0}
+  #chatX{flex:none;width:34px}
 </style>
 </head>
 <body>
@@ -484,6 +500,7 @@
           <div class="cpanel" id="cPanel"></div>
         </div>
       </div>
+      <div id="buyPop" class="hidden"><span id="buyTxt"></span><button type="button" class="b pri" id="buyGo">COMPRAR</button><button type="button" class="b" id="buyX">✕</button></div>
       <div class="cbtns"><button class="b" id="cRand">🎲 ALEATÓRIO</button><button class="b pri" id="cDone">✓ PRONTO</button></div>
     </div>
   </div>
@@ -512,6 +529,7 @@
     <form class="card small msgc" id="msgForm" autocomplete="off">
       <div class="title"><b id="msgTitle">AVISO</b></div>
       <div id="msgText"></div>
+      <div id="msgList" class="cgrid hidden"></div>
       <input id="msgIn" type="text" maxlength="40" class="hidden" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
       <div class="btns2" id="msgBtns"><button type="button" class="b" id="msgCancel">CANCELAR</button><button type="submit" class="b pri" id="msgOk">OK</button></div>
     </form>
@@ -2723,7 +2741,9 @@ const conta = {
     try { this.sb = supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, storageKey: tabAuth.key, storage: tabAuth.storage } }); } catch (e) { this.sb = null; return; }
     this.sb.auth.onAuthStateChange((ev, session) => { setTimeout(() => { this.ready = true; this.setUser(session ? session.user : null); if (!session) gate.loggedOut(); }, 0); });
     setInterval(() => this.flushStats(), 30000);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.flushStats(); });
     setInterval(() => this.fetchRoles(), 2500);
+    setInterval(() => { for (const id in this.roles) this.askRoles.add(id); }, 20000);
     setInterval(() => { if (this.user) tabAuth.beat(); }, 2000);
     addEventListener('pagehide', () => this.flushStats());
   },
@@ -2790,7 +2810,7 @@ const conta = {
     let semMoedas = false;
     if (error) { ({ error } = await this.sb.rpc('add_stats', { k: p.k, d: p.d, m: p.m })); semMoedas = !error; } // banco antigo: salva o resto
     if (error) { this.pend.k += p.k; this.pend.d += p.d; this.pend.m += p.m; this.pend.c += p.c; return; } // tenta de novo depois
-    if (semMoedas && p.c) this.pend.c += p.c;
+    if (semMoedas && p.c) { this.pend.c += p.c; if (!this.warnCoins) { this.warnCoins = true; notice('As moedas não estão sendo salvas na conta: falta rodar o SQL v3 no Supabase.', 'MOEDAS'); } }
     if (this.perfil) { this.perfil.kills += p.k; this.perfil.deaths += p.d; this.perfil.matches += p.m; if (!semMoedas) this.perfil.coins = (this.perfil.coins || 0) + p.c; renderConta(); }
   },
   /* cargo de cada jogador (ex.: dono) — perguntado ao banco em lotes */
@@ -2806,7 +2826,7 @@ const conta = {
     if (!this.sb || !this.askRoles.size) return;
     const ids = [...this.askRoles].filter(id => /^[0-9a-f-]{36}$/i.test(id)).slice(0, 50); this.askRoles.clear(); if (!ids.length) return;
     const { data } = await this.sb.rpc('player_roles', { ids });
-    if (Array.isArray(data)) for (const r of data) this.roles[r.id] = { role: r.role, name: r.name || '' };
+    if (Array.isArray(data)) { for (const id of ids) this.roles[id] = null; for (const r of data) this.roles[r.id] = { role: r.role, name: r.name || '' }; }
   },
 };
 /* ---------------- MOEDAS ----------------
@@ -2821,6 +2841,7 @@ const wallet = {
     this.shown = this.n; renderCoins();
   },
   add(v, from) {
+    clearTimeout(this.saveT); this.saveT = setTimeout(() => conta.flushStats(), 3000); // moedas vão para o servidor logo
     this.n += v;
     if (conta.user && conta.perfil) conta.pend.c += v; else try { localStorage.setItem('adk_coins', String(this.n)); } catch (e) {}
     coinGainFx(v, from); // moedinhas voando até o contador (PARTE 2)
@@ -2869,7 +2890,17 @@ function renderConta() {
 /* ---------------- LOJA: cada item de customização custa 10 moedas ----------------
    Dá para provar qualquer item (aparece na prévia), mas na luta só entra o que foi comprado.
    Itens: cabelo, rabo, auréola e CADA cor (cabelo, pele, rabo, auréola, aura, poder). Grátis: o visual inicial. */
-const ITEM_PRICE = 10;
+const PRICE = { color: 50, item: 100, trans: 250 }; // cores 50 · cabelo/rabo/auréola 100 · transformação 250
+/* janelinha de compra: aparece embaixo, do lado das opções (não tampa a prévia) */
+function offerBuy(k, nome) {
+  const box = document.getElementById('buyPop');
+  if (!k || shop.has(k)) { box.classList.add('hidden'); return; }
+  document.getElementById('buyTxt').innerHTML = '🔒 <b>' + esc(nome) + '</b> · ' + (shop.infinite() ? 0 : priceOf(k)) + ' moedas';
+  document.getElementById('buyGo').onclick = async () => { box.classList.add('hidden'); await shop.buy([{ k, n: nome }]); };
+  box.classList.remove('hidden');
+}
+const priceOf = k => /^(h|t|a):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color;
+const ITEM_PRICE = PRICE.color;
 const FREE_ITEMS = new Set(['h:hair1', 'hc:#3a3a4a', 'hc:#cfcfcf', 'tc:#7a4a26', 'ac:#ffd23a']);
 const shop = {
   infinite() { return !!(conta.perfil && conta.perfil.infinite); },
@@ -2902,7 +2933,7 @@ const shop = {
   },
   async buy(list) {
     if (!list.length) return;
-    const cost = this.infinite() ? 0 : list.length * ITEM_PRICE;
+    const cost = this.infinite() ? 0 : list.reduce((a, i) => a + priceOf(i.k), 0);
     if (cost > wallet.n) { notice('Moedas insuficientes: precisa de ' + cost + ' e você tem ' + wallet.n + '.\nGanhe moedas derrotando adversários!', 'LOJA'); return; }
     wait('comprando...');
     try {
@@ -2923,12 +2954,19 @@ const shop = {
 async function useCode() {
   const c = await ask('CÓDIGO', 'Digite um código especial:', 'código');
   if (!c || !c.trim()) return;
+  if (c.trim().toLowerCase() === 'reset' && !(await msgOpen('RESETAR A CONTA?', 'Isso apaga moedas, itens comprados, personagens e estatísticas. Não dá para desfazer.', '', true))) return;
   wait('conferindo o código...');
   try {
     const { data, error } = await conta.sb.rpc('redeem_code', { code: c.trim() });
     unwait();
     if (error) throw error;
     if (data === 'infinite') { conta.perfil.infinite = true; renderCoins(); notice('Código ativado: moedas infinitas!\nTodos os itens estão liberados.', 'CÓDIGO'); }
+    else if (data === 'gold') { conta.perfil.coins = (conta.perfil.coins || 0) + 100; wallet.sync(); notice('+100 moedas!', 'CÓDIGO'); }
+    else if (data === 'reset') { // conta zerada: tudo volta ao começo
+      conta.pend = { k: 0, d: 0, m: 0, c: 0 }; try { localStorage.removeItem('adk_slots'); } catch (e) {}
+      setSlots([], 0); Object.assign(conta.perfil, { coins: 0, owned: [], infinite: false, kills: 0, deaths: 0, matches: 0, look: {}, fxc: {} });
+      wallet.sync(); renderConta(); notice('Conta resetada: moedas, itens, personagens e estatísticas voltaram ao começo.', 'CÓDIGO');
+    }
     else notice('Código inválido.', 'CÓDIGO');
   } catch (e) { unwait(); notice(/redeem_code|function|schema cache/i.test(String(e && e.message)) ? 'Os códigos ainda não estão ligados no servidor (falta rodar o SQL v5 no Supabase).' : 'Não deu para usar o código.', 'CÓDIGO'); }
 }
@@ -3224,7 +3262,7 @@ function drawChatLog(x, y, bottom) {
     const yy = y0 + i * lh;
     if (r.first) {
       const nm = dispName(r.c.name) + ':'; nameText({ role: r.c.role }, nm, x, yy, 5, 'left', r.c.color);
-      ctx.font = FONT(5); const w = ctx.measureText(nm + ' ').width;
+      ctx.font = FONT(5); const w = ctx.measureText((r.c.role === 'youtuber' ? 'YT ' : '') + nm + ' ').width;
       text(r.ln.slice(nm.length + 1), x + w, yy, 5, '#ffffff', 'left', '#120c1c', 1.2);
     } else text(r.ln, x + 6, yy, 5, '#ffffff', 'left', '#120c1c', 1.2);
   });
@@ -3307,7 +3345,7 @@ game = {
     this.me = new Fighter({ id: 'p-' + uid() + uid(), name, pal: 0, local: true, ctrl: 'human', char: chosenChar });
     storeSlot();
     const formOf = o => { const e = shop.equip(o.look, o.fxc); return { look: e.look, fxc: e.fxc, arq: o.arq }; };
-    const cur = slots[slotCur], tr = cur.tr >= 0 && cur.tr !== slotCur ? slots[cur.tr] : null;
+    const cur = slots[slotCur], tr = cur.tr >= 0 && cur.tr !== slotCur && shop.has('tr:' + slotCur) ? slots[cur.tr] : null;
     this.me.forms = { base: formOf(cur), trans: tr ? formOf(tr) : null }; this.me.formOn = false;
     this.me.look = { ...this.me.forms.base.look }; this.me.fxc = { ...this.me.forms.base.fxc }; applyArq(this.me, cur.arq);
     this.timed = mode === 'online' && net.roomMode === 't'; this.started = this.timed && net.role === 'client' && !!net.joinStarted;
@@ -3370,6 +3408,22 @@ function msgOpen(title, text, input, cancel) {
   });
 }
 const notice = (text, title = 'AVISO') => msgOpen(title, text, '', false);
+/* popup com os personagens criados para escolher a transformação */
+function pickTrans() {
+  const box = document.getElementById('msgList'); box.innerHTML = '';
+  const pr = msgOpen('TRANSFORMAÇÃO', 'Escolha em qual personagem você vira ao despertar:', '', true);
+  const add = (label, v, look) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'copt' + (v === chosenTr ? ' sel' : '');
+    const c = makeCanvas(56, 56), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
+    if (look) { const im = lookSprites(look).spr.parado; x.drawImage(im, Math.floor(28 - im.width / 2), Math.round(4 - (im._pad || 0))); }
+    b.appendChild(c); const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp);
+    b.onclick = () => msgDone && msgDone(v); box.appendChild(b);
+  };
+  add('Nenhuma', -1, null);
+  slots.forEach((o, i) => { if (i !== slotCur) add('Slot ' + (i + 1) + ' · ' + ARQS[o.arq].name, i, shop.equip(o.look, o.fxc).look); });
+  show('msgList', true);
+  return pr.then(v => { show('msgList', false); return v === null || v === true ? null : v; });
+}
 const ask = (title, text, ph) => msgOpen(title, text, ph || ' ', true);
 const msgIsOpen = () => !document.getElementById('msgBox').classList.contains('hidden');
 const chosenChar = 'base'; // único lutador (o visual é o que muda)
@@ -3432,27 +3486,29 @@ try {
     setSlots([{ look: l || newSlot().look, fxc: c, arq: 'eq' }], 0);
   }
 } catch (e) { setSlots([], 0); }
-function useSlot(i) { storeSlot(); slotCur = i; loadSlot(); saveLook(); }
+function useSlot(i) { if (typeof dropLocked === 'function') dropLocked(); storeSlot(); slotCur = i; loadSlot(); saveLook(); }
 function saveLook() { storeSlot(); if (typeof conta !== 'undefined') conta.saveProfile(); try { localStorage.setItem('adk_slots', JSON.stringify({ cur: slotCur, slots })); } catch (e) {} if (custOpen) buildCustomPanel(); }
 /* ===== TELA DE PERSONALIZAR: prévia animada + abas (cabelo, rabo, energia) ===== */
 let custOpen = false, custTab = 'arq', custPose = 'auto', custRaf = 0;
 const CUST_POSES = [['auto', 'AUTO'], ['parado', 'PARADO'], ['frente', 'ANDAR'], ['golpe1', 'SOCO'], ['golpe3', 'CHUTE'], ['carga2', 'CARGA'], ['kiball', 'KI'], ['defesa', 'DEFESA']];
 function custSprites() { return lookSprites(chosenLook).spr; }
+function dropLocked() { const e = shop.equip(chosenLook, chosenFxc); chosenLook = e.look; chosenFxc = e.fxc; if (chosenTr >= 0 && !shop.has('tr:' + slotCur)) chosenTr = -1; storeSlot(); }
 function openCustom() {
-  custOpen = true;
+  custOpen = true; dropLocked(); show('buyPop', false);
   show('menu', false); show('custom', true); buildCustomPanel();
+  const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; requestAnimationFrame(() => { cc.scrollTop = 0; });
   cancelAnimationFrame(custRaf); const t0 = performance.now();
   const loop = now => { if (!custOpen) return; drawCustomPreview((now - t0) / 1000); custRaf = requestAnimationFrame(loop); };
   custRaf = requestAnimationFrame(loop);
 }
-function closeCustom() { custOpen = false; cancelAnimationFrame(custRaf); show('custom', false); show('menu', true); }
+function closeCustom() { dropLocked(); saveLook(); show('buyPop', false); custOpen = false; cancelAnimationFrame(custRaf); show('custom', false); show('menu', true); }
 function swatches(list, cur, onPick, withDefault, pfx) {
   const w = document.createElement('div'); w.className = 'cswatch';
   const add = (col, extra) => {
     const b = document.createElement('button'); if (col) { b.style.background = col; b.title = col; } else { b.className = 'def'; b.textContent = 'P'; b.title = 'padrão'; }
     if (extra) b.classList.add(extra); if (cur === col) b.classList.add('sel');
-    if (col && pfx && !shop.has(pfx + ':' + col)) { b.title = 'bloqueado · ' + ITEM_PRICE + ' moedas'; b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
-    b.onclick = () => { onPick(col); saveLook(); }; w.appendChild(b);
+    if (col && pfx && !shop.has(pfx + ':' + col)) { b.title = 'bloqueado · ' + priceOf(pfx + ':' + col) + ' moedas'; b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
+    b.onclick = () => { onPick(col); saveLook(); if (col && pfx) offerBuy(pfx + ':' + col, 'Cor ' + col); }; w.appendChild(b);
   };
   for (const col of (withDefault ? [''] : []).concat(list)) add(col);
   if (cur && !list.includes(cur)) add(cur, 'mine'); // a cor livre escolhida aparece como mais uma bolinha
@@ -3460,16 +3516,16 @@ function swatches(list, cur, onPick, withDefault, pfx) {
   const lb = document.createElement('label'); lb.className = 'more'; lb.title = 'outra cor'; lb.textContent = '+';
   const inp = document.createElement('input'); inp.type = 'color'; inp.value = cur && /^#[0-9a-f]{6}$/i.test(cur) ? cur : (list[0] || '#ffffff');
   inp.oninput = () => onPick(inp.value.toLowerCase());          // prévia ao vivo enquanto arrasta
-  inp.onchange = () => { onPick(inp.value.toLowerCase()); saveLook(); };
+  inp.onchange = () => { onPick(inp.value.toLowerCase()); saveLook(); if (pfx) offerBuy(pfx + ':' + inp.value.toLowerCase(), 'Cor ' + inp.value.toLowerCase()); };
   lb.appendChild(inp); w.appendChild(lb);
   return w;
 }
 function optCard(label, sel, draw, onPick, key) {
   const b = document.createElement('button'); b.className = 'copt' + (sel ? ' sel' : '');
-  if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); b.title = 'bloqueado · ' + ITEM_PRICE + ' moedas'; }
+  if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); b.title = 'bloqueado · ' + priceOf(key) + ' moedas'; }
   const c = makeCanvas(56, 56), x = c.getContext('2d'); x.imageSmoothingEnabled = false; draw(x);
   b.appendChild(c); const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp);
-  b.onclick = () => { onPick(); saveLook(); }; return b;
+  b.onclick = () => { onPick(); saveLook(); if (key) offerBuy(key, label); }; return b;
 }
 function partThumb(look, crop) { // miniatura: recorte do sprite montado, ampliado 2x (inteiro)
   return x => { const im = lookSprites(look).spr.parado; const [sx, sy, w] = crop(im); x.drawImage(im, sx, sy, w, w, 0, 0, 56, 56); };
@@ -3490,13 +3546,6 @@ function buildCustomPanel() {
   const face = im => [Math.round(im.width / 2) - 8, top0(im) + 6, 16];
   const waist = im => [Math.round(im.width / 2) - 22, im.height - 44, 44];
   const L = chosenLook;
-  const falta = shop.items(chosenLook, chosenFxc);
-  if (falta.length) {
-    const bar = document.createElement('div'); bar.className = 'buybar';
-    bar.innerHTML = '<span>🔒 Não comprados (na luta voltam ao padrão): ' + falta.map(i => esc(i.n)).join(', ') + '</span>';
-    const bb = document.createElement('button'); bb.type = 'button'; bb.className = 'b pri'; bb.textContent = 'COMPRAR · ' + (shop.infinite() ? 0 : falta.length * ITEM_PRICE) + ' 🪙';
-    bb.onclick = () => shop.buy(falta); bar.appendChild(bb); P.appendChild(bar);
-  }
   if (custTab === 'arq') {
     h4('ARQUÉTIPO: muda vida, energia, velocidade e dano');
     const g = document.createElement('div'); g.className = 'arqs'; P.appendChild(g);
@@ -3508,10 +3557,16 @@ function buildCustomPanel() {
     const n = document.createElement('div'); n.className = 'cnote'; n.textContent = ARQS[chosenArq].desc; P.appendChild(n);
   } else if (custTab === 'trans') {
     h4('TRANSFORMAÇÃO: no DESPERTAR, este lutador vira outro dos seus personagens');
-    const g = document.createElement('div'); g.className = 'cgrid trs'; P.appendChild(g);
-    const thumb = o => x => { const im = lookSprites(o.look).spr.parado; x.drawImage(im, Math.floor(28 - im.width / 2), Math.round(4 - (im._pad || 0))); };
-    g.appendChild(optCard('Nenhuma', chosenTr < 0, x => { x.fillStyle = '#3a2e58'; x.font = FONT(16); x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('—', 28, 28); }, () => { chosenTr = -1; }));
-    slots.forEach((o, i) => { if (i === slotCur) return; g.appendChild(optCard('Slot ' + (i + 1) + ' · ' + ARQS[o.arq].name, chosenTr === i, thumb(o), () => { chosenTr = i; })); });
+    const o = chosenTr >= 0 ? slots[chosenTr] : null, k = 'tr:' + slotCur, g = grid();
+    const card = optCard(o ? 'Slot ' + (chosenTr + 1) + ' · ' + ARQS[o.arq].name : 'Vazio · toque para escolher',
+      !!o, x => { if (o) { const im = lookSprites(o.look).spr.parado; x.drawImage(im, Math.floor(28 - im.width / 2), Math.round(4 - (im._pad || 0))); } else { x.fillStyle = '#5a4a80'; x.font = FONT(20); x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('+', 28, 30); } },
+      () => {}, k);
+    card.classList.add('trslot');
+    card.onclick = async () => {
+      if (!shop.has(k)) { offerBuy(k, 'Transformação deste slot'); return; }
+      const v = await pickTrans(); if (v === null) return; chosenTr = v; saveLook();
+    };
+    g.appendChild(card);
     const n = document.createElement('div'); n.className = 'cnote';
     n.textContent = 'Monte o outro personagem em outro slot. Ao despertar (segure CARGA com a energia cheia), você vira ele: visual, cores e arquétipo. Quando a estamina acaba, você volta ao normal.';
     P.appendChild(n);
@@ -3676,11 +3731,11 @@ const BTN_DEFS = [
   { k: 'KeyS', label: 'DEFESA', base: 13, x: .115, y: .6, name: 'DEFESA' },
   { k: 'KeyW', label: 'PULAR', base: 17, x: .95, y: .86, name: 'PULAR' },
   { k: 'KeyJ', label: 'SOCO', base: 13, x: .8, y: .92, name: 'SOCO' },
-  { k: 'KeyK', label: 'KI', base: 13, x: .8, y: .64, name: 'KI' },
-  { k: 'KeyL', label: 'ESPE-<br>CIAL', base: 13, x: .95, y: .5, name: 'ESPECIAL' },
-  { k: 'KeyI', label: 'RAIO', base: 13, x: .66, y: .92, name: 'RAIO' },
+  { k: 'KeyK', label: 'BOLA DE<br>ENERGIA', base: 13, x: .8, y: .64, name: 'BOLA DE ENERGIA', fs: 0.13 },
+  { k: 'KeyL', label: 'ESP. 2', base: 13, x: .95, y: .5, name: 'ESP. 2' },
+  { k: 'KeyI', label: 'ESP. 1', base: 13, x: .66, y: .92, name: 'ESP. 1' },
   { k: 'Space', label: 'CARGA', base: 13, x: .66, y: .64, name: 'CARGA' },
-  { k: 'ShiftLeft', label: 'TELE-<br>PORTE', base: 13, x: .8, y: .36, name: 'TELEPORTE' },
+  { k: 'ShiftLeft', label: 'INVES-<br>TIDA', base: 13, x: .8, y: .36, name: 'INVESTIDA' },
   { k: 'Escape', label: 'MENU', base: 10, x: .5, y: .97, sq: 1, name: 'MENU' },
   { k: 'KeyE', label: '∞ KI', base: 10, x: .02, y: .34, sq: 1, name: '∞ KI', id: 'tKi' },
   { k: 'Chat', label: '💬', base: 10, x: .6, y: .03, sq: 1, name: 'CHAT', id: 'tChat' },
@@ -3704,7 +3759,7 @@ function layoutButtons() {
     const b = btnEls[d.k];
     b.style.width = b.style.height = sz + 'px';
     b.style.left = (cx - sz / 2) + 'px'; b.style.top = (cy - sz / 2) + 'px';
-    b.style.fontSize = (sz * (d.arrow ? 0.42 : d.sq ? 0.2 : 0.18)) + 'px';
+    b.style.fontSize = (sz * (d.fs || (d.arrow ? 0.42 : d.sq ? 0.2 : 0.18))) + 'px';
     if (d.stick) b.classList.add('stick');
   }
   document.getElementById('touch').style.opacity = editMode ? 1 : settings.op / 100;
@@ -3885,7 +3940,7 @@ resizeCanvas(); addEventListener('resize', resizeCanvas); setTimeout(resizeCanva
 setInterval(() => { if (game.phase !== 'loading') { salasSB.tick(); lobby.sync(); } }, 1000);
 addEventListener('pagehide', () => { if (game.phase === 'play') net.leave(true); lobby.stop(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
-loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cDone').onclick = closeCustom;
+loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cDone').onclick = closeCustom; document.getElementById('buyX').onclick = () => show('buyPop', false);
   document.getElementById('cRand').onclick = () => { // visual sorteado
     const pick = a => a[(Math.random() * a.length) | 0];
     chosenLook = randomLook(); chosenArq = ARQ_IDS[(Math.random() * ARQ_IDS.length) | 0];
