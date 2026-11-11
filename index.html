@@ -470,7 +470,6 @@
   .ctop .title.sm b{font-size:calc(var(--fT) * .62)!important}
   .card.cust{gap:calc(var(--gap) * .8)!important}
   .ctop{padding-bottom:calc(var(--gap) * .6)!important}
-  .cpanel.more{-webkit-mask-image:linear-gradient(#000 calc(100% - 34px),transparent);mask-image:linear-gradient(#000 calc(100% - 34px),transparent)}
   .copts{position:relative}
   .cmore{position:absolute;right:14px;bottom:6px;font-size:var(--fL);color:var(--acc);pointer-events:none;animation:cmb 1s ease-in-out infinite alternate;z-index:3}
   @keyframes cmb{to{transform:translateY(3px)}}
@@ -631,7 +630,8 @@
   /* diária: nossa moeda */
   .dday .coin{width:calc(var(--wh,600px) * .06);height:calc(var(--wh,600px) * .06)}
   .dday .coin.big{width:calc(var(--wh,600px) * .08);height:calc(var(--wh,600px) * .08);filter:drop-shadow(0 0 6px #ffcf3a)}
-  .dday.d7{background:linear-gradient(#3a2560,#241640);border-color:#ffcf3a}
+  .dday.d7{background:linear-gradient(#3a2560,#241640);box-shadow:0 0 14px rgba(255,190,40,.45)}
+  .dday.d7.now{border-color:#ffb21e}
   .dday em.tick{position:absolute;top:auto;bottom:8px;right:8px;margin:0}
   /* criar sala: modo e jogadores em seletores ◀ ▶ */
   .steps{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
@@ -644,6 +644,30 @@
   .step.off .sa{opacity:.3;pointer-events:none}
   /* painel da personagem: rolagem só dentro dele */
   .cpanel{overscroll-behavior:contain;touch-action:pan-y}
+  /* ===== R23 ===== */
+  #msgBox,#wait{z-index:90!important}
+  .cfade{position:absolute;left:3px;right:3px;bottom:3px;height:38px;border-radius:0 0 10px 10px;background:linear-gradient(rgba(23,15,46,0),#170f2e);pointer-events:none;opacity:0;transition:opacity .2s;z-index:2}
+  .cfade.on{opacity:1}
+  #accInfo .mpi b{padding:2px 4px 2px 2px;overflow:visible}
+  #mName{overflow:hidden;text-overflow:ellipsis;padding:3px 4px!important}
+  .ib.big2{gap:8px!important}
+  .ib svg{display:block}
+  .steps{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  .step{min-width:0}
+  .step .sv b{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .step .sa{width:calc(var(--wh,600px) * .1)!important;flex:0 0 calc(var(--wh,600px) * .1)!important}
+  .card input[type=text],.card input[type=email],.card input[type=password]{min-height:calc(var(--wh,600px) * .115)!important;padding-top:0!important;padding-bottom:0!important;padding-left:12px!important;box-sizing:border-box}
+  .mtabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .mtabs button{position:relative;padding:9px 4px;border-radius:10px;border:3px solid #4a3a8a;background:#1d1438;color:#cbbdf5;font-size:var(--fB);cursor:pointer}
+  .mtabs button.sel{border-color:#ffb21e;background:#3a2560;color:#ffcf3a}
+  .rwinfo{font-size:var(--fS);color:#9a8cc8;text-align:center;margin-top:-2px}
+  .rwrow.flash,.dday.flash{animation:rwflash .7s ease-out}
+  @keyframes rwflash{0%{transform:scale(1.06);box-shadow:0 0 22px #5dff8a}100%{transform:none}}
+  .gainfx{position:absolute;z-index:9;transform:translate(-50%,-50%);font-size:calc(var(--wh,600px) * .06);color:#ffe066;text-shadow:2px 2px 0 #000,0 0 10px #ffb21e;pointer-events:none;white-space:nowrap;animation:gainup 1.2s ease-out forwards;display:flex;align-items:center;gap:6px}
+  .gainfx .coin{width:1em;height:1em}
+  .gainfx .gc{position:absolute;left:50%;top:50%;width:14px;height:14px;animation:gcoin .9s ease-out forwards}
+  @keyframes gainup{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-160%) scale(1)}}
+  @keyframes gcoin{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--dx),var(--dy));opacity:0}}
 </style>
 </head>
 <body>
@@ -662,7 +686,7 @@
       <div class="mbar">
         <div class="mside"><div class="mprof" id="accInfo"><canvas id="mAva" width="24" height="24"></canvas><div class="mpi"><b id="mName">—</b><div class="mlv"><span id="mLv">NV 1</span><i><u id="mXp"></u><em id="mXpT">0/25</em></i></div></div></div></div>
         <img class="glogo menu" id="logoMenu" alt="CustomBattle Online">
-        <div class="mside r"><div class="coinpill trp" title="derrotas causadas"><i class="trof">🏆</i><span id="mKills">0</span></div><div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bGear" title="ajustes" aria-label="ajustes">⚙</button></div>
+        <div class="mside r"><div class="coinpill trp" title="derrotas causadas"><i class="trof">🏆</i><span id="mKills">0</span></div><div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></div>
       </div>
       <div class="mmid">
         <div class="mhero"><canvas id="mHero" width="130" height="140"></canvas></div>
@@ -763,7 +787,7 @@
         </div>
         <div class="copts">
           <div class="ctabs" id="cTabs"></div>
-          <div class="cpanel" id="cPanel" onscroll="cMore()"></div><i class="cmore hidden" id="cMore">▼ mais</i>
+          <div class="cpanel" id="cPanel" onscroll="cMore()"></div><i class="cfade" id="cFade"></i><i class="cmore hidden" id="cMore">▼ mais</i>
         </div>
       </div>
       <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
@@ -772,6 +796,8 @@
   <div id="missBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" id="missX" aria-label="fechar"></button>
       <div class="title"><b>MISSÕES</b></div>
+      <div class="mtabs" id="missTabs"><button type="button" data-t="d" class="sel">DIÁRIAS<b class="dot hidden" id="dotMD"></b></button><button type="button" data-t="w">SEMANAIS<b class="dot hidden" id="dotMW"></b></button></div>
+      <div class="rwinfo" id="missInfo"></div>
       <div id="missList" class="rwlist"></div>
     </div>
   </div>
@@ -3606,27 +3632,42 @@ async function refreshDaily() {
   if (!conta.user || !conta.sb) return;
   try { if (conta.flushStats) await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('daily_status'); if (error || !data) { dly = null; return; }
-  dly = data; dly.w = dly.w || { k: 0, m: 0, ms: [] }; const pode = MISSOES.some(m => !dly.ms.includes(m.id) && dly[m.f] >= m.n) || SEMANAIS.some(m => !dly.w.ms.includes(m.id) && dly.w[m.f] >= m.n);
+  dly = data; dly.w = dly.w || { k: 0, m: 0, ms: [] }; const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w);
   show('dotMiss', pode); show('dotDaily', !dly.got);
 }
 function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); }
 function semV11() { notice('As missões e a recompensa diária ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.', 'AVISO'); }
-function drawMissoes() {
+let missTab = 'd';
+const prontas = (lista, src) => lista.some(m => !src.ms.includes(m.id) && (src[m.f] || 0) >= m.n);
+function drawMissoes(flash) {
   const L = document.getElementById('missList'); L.innerHTML = '';
-  const grupo = (tit, lista, src) => { const h = document.createElement('h4'); h.className = 'rwh'; h.textContent = tit; L.appendChild(h);
-    for (const m of lista) { const v = Math.min(m.n, src[m.f] || 0), feita = src.ms.includes(m.id), ok = v >= m.n;
-      const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : ok ? ' ready' : '');
-      r.innerHTML = '<div class="rwi"><b>' + m.t + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div><span class="rwp"><i class="coin"></i>' + m.p + '</span>';
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
-      b.innerHTML = feita ? '<span class="tick"></span>RESGATADO' : 'RESGATAR';
-      b.onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
-        if (error) return notice(error.message, 'MISSÕES'); moedasGanhas(data); src.ms.push(m.id); drawMissoes(); refreshDaily(); };
-      r.appendChild(b); L.appendChild(r); } };
-  grupo('DIÁRIAS · renovam à meia-noite', MISSOES, dly); grupo('SEMANAIS · renovam na segunda-feira', SEMANAIS, dly.w);
+  const sem = missTab === 'w', lista = sem ? SEMANAIS : MISSOES, src = sem ? dly.w : dly;
+  document.querySelectorAll('#missTabs button').forEach(b => b.classList.toggle('sel', b.dataset.t === missTab));
+  show('dotMD', prontas(MISSOES, dly)); show('dotMW', prontas(SEMANAIS, dly.w));
+  document.getElementById('missInfo').textContent = sem ? 'renovam toda segunda-feira' : 'renovam todo dia à meia-noite';
+  for (const m of lista) { const v = Math.min(m.n, src[m.f] || 0), feita = src.ms.includes(m.id), ok = v >= m.n;
+    const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : ok ? ' ready' : '') + (flash === m.id ? ' flash' : '');
+    r.innerHTML = '<div class="rwi"><b>' + m.t + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div><span class="rwp"><i class="coin"></i>' + m.p + '</span>';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
+    b.innerHTML = feita ? '<span class="tick"></span>RESGATADO' : 'RESGATAR';
+    b.onclick = async () => { b.disabled = true; wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
+      if (error) { b.disabled = false; return notice(erroRecompensa(error), 'MISSÕES'); }
+      moedasGanhas(data); src.ms.push(m.id); drawMissoes(m.id); ganhouFx(document.querySelector('#missList .rwrow.flash') || L, data); refreshDaily(); };
+    r.appendChild(b); L.appendChild(r); }
+}
+function erroRecompensa(e) { const t = (e && e.message) || '';
+  if (/JA_RESGATADO/.test(t)) return 'Você já resgatou esta recompensa.'; if (/NAO_CONCLUIDA/.test(t)) return 'Essa missão ainda não foi concluída.';
+  if (/function|does not exist|schema/i.test(t)) return 'As missões ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.'; return t || 'Não deu certo. Tente de novo.'; }
+function ganhouFx(el, n) { // "+40" com moedinhas subindo do item resgatado
+  const box = el.closest('.card'), r = el.getBoundingClientRect(), b = box.getBoundingClientRect(), z = parseFloat(getComputedStyle(box).zoom) || 1;
+  const f = document.createElement('div'); f.className = 'gainfx'; f.innerHTML = '+' + n + ' <i class="coin"></i>';
+  f.style.left = ((r.left + r.width / 2 - b.left) / z) + 'px'; f.style.top = ((r.top + r.height / 2 - b.top) / z) + 'px';
+  for (let i = 0; i < 8; i++) { const c = document.createElement('i'); c.className = 'coin gc'; c.style.setProperty('--dx', (Math.random() * 120 - 60) + 'px'); c.style.setProperty('--dy', (-40 - Math.random() * 60) + 'px'); c.style.animationDelay = (i * 0.03) + 's'; f.appendChild(c); }
+  box.appendChild(f); setTimeout(() => f.remove(), 1300); try { SFX.zap(); } catch (e) {}
 }
 function drawDiaria() {
   const D = document.getElementById('dailyDays'); D.innerHTML = ''; const feitos = dly.streak % 7 || (dly.got && dly.streak ? 7 : 0), hoje = dly.got ? feitos - 1 : feitos;
-  DIARIA.forEach((p, i) => { const c = document.createElement('div'); c.className = 'dday' + (i < feitos ? ' got' : '') + (i === hoje ? ' now' : '');
+  DIARIA.forEach((p, i) => { const c = document.createElement('div'); c.className = 'dday' + (i < feitos ? ' got' : '') + (i === hoje && !dly.got ? ' now' : '');
     c.innerHTML = '<small>DIA ' + (i + 1) + '</small><i class="coin' + (i === 6 ? ' big' : '') + '"></i><b>' + p + '</b>' + (i < feitos ? '<em class="tick"></em>' : ''); if (i === 6) c.classList.add('d7'); D.appendChild(c); });
   const b = document.getElementById('bClaimDaily'); b.disabled = dly.got; b.textContent = dly.got ? 'VOLTE AMANHÃ' : 'RESGATAR';
 }
@@ -3634,17 +3675,19 @@ async function abrirRecompensa(qual) {
   if (!document.getElementById('missBox').classList.contains('hidden') || !document.getElementById('dailyBox').classList.contains('hidden')) return; // uma de cada vez
   if (!dly) { wait('carregando...'); await refreshDaily(); unwait(); }
   if (!dly) return semV11();
-  if (qual === 'miss') { drawMissoes(); show('missBox', true); } else { drawDiaria(); show('dailyBox', true); }
+  if (qual === 'miss') { missTab = prontas(MISSOES, dly) || !prontas(SEMANAIS, dly.w) ? 'd' : 'w'; drawMissoes(); show('missBox', true); document.getElementById('missList').scrollTop = 0; } else { drawDiaria(); show('dailyBox', true); }
 }
 document.getElementById('bMiss').onclick = () => abrirRecompensa('miss');
 document.getElementById('bDaily').onclick = () => abrirRecompensa('daily');
 document.getElementById('missX').onclick = () => show('missBox', false);
+document.querySelectorAll('#missTabs button').forEach(b => b.onclick = () => { missTab = b.dataset.t; drawMissoes(); document.getElementById('missList').scrollTop = 0; });
+setInterval(() => { if (!document.getElementById('menu').classList.contains('hidden')) refreshDaily(); }, 20000); // bolinha vermelha em dia
 document.getElementById('dailyX').onclick = () => show('dailyBox', false);
 document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_daily'); unwait();
-  if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : error.message, 'RECOMPENSA');
-  moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); refreshDaily(); };
+  if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : erroRecompensa(error), 'RECOMPENSA');
+  moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); ganhouFx(d, data); refreshDaily(); };
 function cMore() { if (cMore.r) return; cMore.r = requestAnimationFrame(() => { cMore.r = 0; cMore2(); }); }
-function cMore2() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; p.classList.toggle('more', more); m.classList.toggle('hidden', !more); }
+function cMore2() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; m.classList.toggle('hidden', !more); document.getElementById('cFade').classList.toggle('on', more); }
 "use strict";
 /* =====================================================================
    PARTE 4 — INTERFACE, SESSÃO E LAÇO PRINCIPAL
@@ -4386,7 +4429,7 @@ function buildMenu() {
   const stepClick = (box, list) => document.querySelectorAll('#' + box + ' .sa').forEach(a => a.onclick = () => { const bs = [...document.querySelectorAll('#' + list + ' button')], i = bs.findIndex(b => b.classList.contains('sel')), n = bs[(i + +a.dataset.d + bs.length) % bs.length]; if (!n.disabled) n.click(); });
   stepClick('stMode', 'roomMode'); stepClick('stMx', 'roomMx');
   document.querySelectorAll('#roomMode button').forEach(b => b.onclick = () => { net.roomMode = b.dataset.m; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o === b)); syncMx(); });
-  document.getElementById('bOpenCreate').onclick = () => { net.roomMode = 'n'; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o.dataset.m === 'n')); net.roomMx = MAX_PLAYERS; syncMx(); rn.value = ''; document.getElementById('roomPw').value = ''; openPop('createBox'); const mb = document.querySelector('#maps2 button.mapb'); if (mb) mb.click(); document.getElementById('maps2').scrollLeft = 0; }; // sempre começa vazio
+  document.getElementById('bOpenCreate').onclick = () => { net.roomMode = 'n'; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o.dataset.m === 'n')); net.roomMx = MAX_PLAYERS; syncMx(); rn.value = ''; document.getElementById('roomPw').value = ''; openPop('createBox'); document.querySelector('#createForm').scrollTop = 0; const mb = document.querySelector('#maps2 button.mapb'); if (mb) mb.click(); document.getElementById('maps2').scrollLeft = 0; }; // sempre começa vazio
   document.getElementById('bChar').onclick = openCustom;
   document.getElementById('resBack').onclick = () => game.toMenu();
   document.getElementById('msgForm').addEventListener('submit', e => { e.preventDefault(); if (msgDone) msgDone(document.getElementById('msgIn').classList.contains('hidden') ? true : document.getElementById('msgIn').value); });
