@@ -507,7 +507,12 @@
   .play .mb.big i{font-size:calc(var(--wh,600px) * .1)}
   .play .mb b{font-weight:normal;white-space:nowrap;font-size:calc(var(--wh,600px) * .028);color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.55);max-width:100%}
   .play .mb.big b{font-size:calc(var(--wh,600px) * .046)}
-  #bAcc:not(.hidden) ~ #bBack{grid-column:span 2}
+  #bBack,#bCloseCreate,#bCloseRooms{display:none!important}
+  #settings .card{position:relative;padding-top:calc(var(--pad) * 1.1)!important}
+  #settings .card .title{padding-right:40px}
+  .cbox .btns2{grid-template-columns:1fr!important;justify-items:center}
+  .cbox .btns2 #bHost{min-width:55%}
+  .rbox .rfoot{grid-template-columns:1fr!important}
   button.b.dang{background:#5a1820;border-color:#000;box-shadow:inset 0 -4px 0 rgba(0,0,0,.35),0 0 0 2px #b8323c}
   #menu .status{display:none}
   .mcard #accInfo{flex:0 0 auto;font-size:var(--fS)!important;margin-top:calc(var(--gap) * -.4)}
@@ -821,7 +826,7 @@
   </div>
   <div id="settings" class="ovl hidden">
     <div class="card small mid">
-      <div class="title"><b>CONFIGURAÇÕES</b><small>controles na tela e código</small></div>
+      <button type="button" class="msgx" aria-label="fechar" onclick="closeSettings()"></button><div class="title"><b>CONFIGURAÇÕES</b><small>controles na tela e código</small></div>
       <div class="set"><label>Tamanho dos botões <span id="vSize"></span></label><input type="range" id="rSize" min="60" max="170" step="5"></div>
       <div class="set"><label>Visibilidade dos botões <span id="vOp"></span></label><input type="range" id="rOp" min="25" max="100" step="5"></div>
       <div class="btns one">
@@ -1819,11 +1824,32 @@ let ROT = false;
 function layoutFrame() {
   const wrap = document.getElementById('wrap');
   const W = window.innerWidth, H = window.innerHeight;
-  ROT = (isTouchDevice() && H > W);
+  const ot = screen.orientation && screen.orientation.type, portrait = ot ? ot.startsWith('portrait') : (screen.height > screen.width ? H > W * 0.9 || H > W : H > W);
+  ROT = isTouchDevice() && (ot ? portrait : H > W);
   wrap.classList.toggle('rot', ROT);
   if (ROT) { wrap.style.width = H + 'px'; wrap.style.height = W + 'px'; wrap.style.transform = `translateX(${W}px) rotate(90deg)`; }
   else { wrap.style.width = ''; wrap.style.height = ''; wrap.style.transform = ''; }
 }
+(function rotTouch() {
+  let el = null, lx = 0, ly = 0, axis = '', vel = 0, raf = 0, rng = null, moved = false;
+  const canX = e => e.scrollWidth > e.clientWidth + 1 && /(auto|scroll)/.test(getComputedStyle(e).overflowX);
+  const canY = e => e.scrollHeight > e.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(e).overflowY);
+  const find = (t, f) => { for (let e = t; e && e !== document.body; e = e.parentElement) if (f(e)) return e; return null; };
+  const setRange = (r, t) => { const b = r.getBoundingClientRect(), k = clamp((t.clientY - b.top) / b.height, 0, 1), mn = +r.min || 0, mx = +r.max || 100, st = +r.step || 1;
+    const v = Math.round((mn + k * (mx - mn)) / st) * st; if (+r.value !== v) { r.value = v; r.dispatchEvent(new Event('input', { bubbles: true })); r.dispatchEvent(new Event('change', { bubbles: true })); } };
+  document.addEventListener('touchstart', e => { if (!ROT || e.touches.length !== 1) return; cancelAnimationFrame(raf); const t = e.touches[0], tg = e.target;
+    if (tg.closest && tg.closest('#touch')) { el = null; return; }
+    rng = tg.matches && tg.matches('input[type=range]') ? tg : null; if (rng) { e.preventDefault(); setRange(rng, t); return; }
+    const p = toLocal(t.clientX, t.clientY); lx = p.x; ly = p.y; axis = ''; vel = 0; moved = false; el = tg; }, { passive: false });
+  document.addEventListener('touchmove', e => { if (!ROT) return; const t = e.touches[0];
+    if (rng) { e.preventDefault(); setRange(rng, t); return; } if (!el) return;
+    const p = toLocal(t.clientX, t.clientY), dx = p.x - lx, dy = p.y - ly;
+    if (!axis) { if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return; axis = Math.abs(dy) >= Math.abs(dx) ? 'y' : 'x'; el = find(el, axis === 'y' ? canY : canX) || find(el, axis === 'y' ? canX : canY); if (el && !(axis === 'y' ? canY(el) : canX(el))) axis = axis === 'y' ? 'x' : 'y'; }
+    if (!el) return; e.preventDefault(); moved = true; const d = axis === 'y' ? dy : dx;
+    if (axis === 'y') el.scrollTop -= d; else el.scrollLeft -= d; vel = d; lx = p.x; ly = p.y; }, { passive: false });
+  document.addEventListener('touchend', () => { if (!ROT) return; rng = null; if (!el || !moved) { el = null; return; } const s = el, ax = axis;
+    const step = () => { vel *= 0.92; if (Math.abs(vel) < 0.5) return; if (ax === 'y') s.scrollTop -= vel; else s.scrollLeft -= vel; raf = requestAnimationFrame(step); }; raf = requestAnimationFrame(step); el = null; });
+})();
 function isTouchDevice() { return matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0; }
 /* converte um toque da tela para as coordenadas do jogo (considerando o giro) */
 function toLocal(cx, cy) { return ROT ? { x: cy, y: window.innerWidth - cx } : { x: cx, y: cy }; }
@@ -3281,7 +3307,8 @@ const conta = {
     }, 1500);
   },
   stat(k, d, m) { if (!this.user) return; this.pend.k += k; this.pend.d += d; this.pend.m += m; },
-  async flushStats() {
+  flushStats() { this.fq = (this.fq || Promise.resolve()).then(() => this.flushNow(), () => this.flushNow()); return this.fq; },
+  async flushNow() {
     if (!this.sb || !this.user) return; const p = this.pend; if (!p.k && !p.d && !p.m && !p.c) return;
     this.pend = { k: 0, d: 0, m: 0, c: 0 };
     let { error } = this.coinsDb ? await this.sb.rpc('add_stats', { k: p.k, d: p.d, m: p.m, c: p.c }) : { error: 1 };
@@ -3362,11 +3389,11 @@ function applyProfile(p) {
 function renderConta() {
   const p = conta.perfil, on = !!(conta.user && p);
   document.getElementById('accInfo').classList.toggle('on', on); if (!on) return;
-  const xp = (p.kills | 0) * 10 + (p.matches | 0) * 4, lv = 1 + Math.floor(Math.sqrt(xp / 25)), a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
+  const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4, lv = 1 + Math.floor(Math.sqrt(xp / 25)), a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
   document.getElementById('mName').innerHTML = (TAGS[p.role] ? '<canvas class="tagc" data-r="' + p.role + '" width="48" height="12"></canvas>' : '') + '<span>' + esc(dispName(p.name)) + '</span>';
   document.getElementById('mLv').textContent = 'NV ' + lv; document.getElementById('mXp').style.width = Math.round((xp - a) / (b - a) * 100) + '%'; document.getElementById('mXpT').textContent = (xp - a) + ' / ' + (b - a) + ' XP';
   refreshDaily();
-  document.getElementById('mKills').textContent = p.kills | 0;
+  document.getElementById('mKills').textContent = K;
 }
 /* ---------------- LOJA: cada item de customização custa 10 moedas ----------------
    Dá para provar qualquer item (aparece na prévia), mas na luta só entra o que foi comprado.
@@ -3618,7 +3645,8 @@ document.getElementById('bGear').onclick = () => openSettings('menu');
 /* menu: o SEU lutador em destaque (parado ↔ bola de energia) + rostinho no rodapé */
 (function menuHero() {
   const loop = now => { requestAnimationFrame(loop);
-    const m = document.getElementById('menu'); if (!m || m.classList.contains('hidden') || typeof chosenLook === 'undefined') return;
+    const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(refreshDaily); } loop.was = vis;
+    if (!vis || typeof chosenLook === 'undefined') return;
     const t = now / 1000, c = document.getElementById('mHero'), x = c.getContext('2d'), spr = lookSprites(chosenLook).spr, pal = palForCustom(chosenChar, 0, chosenFxc);
     const ph = t % 4, pose = ph < 1.6 ? 'parado' : ph < 2.6 ? 'carga2' : 'kiball', im = spr[pose] || spr.parado;
     x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, c.width, c.height); x.imageSmoothingEnabled = false;
@@ -3651,19 +3679,20 @@ async function refreshDaily() {
 function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); }
 function semV11() { notice('As missões e a recompensa diária ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.', 'AVISO'); }
 let missTab = 'd';
-const prontas = (lista, src) => lista.some(m => !src.ms.includes(m.id) && (src[m.f] || 0) >= m.n);
+const prog = (src, f) => (src[f] || 0) + (conta.pend[f] | 0); // servidor + o que ainda não foi enviado
+const prontas = (lista, src) => lista.some(m => !src.ms.includes(m.id) && prog(src, m.f) >= m.n);
 function drawMissoes(flash) {
   const L = document.getElementById('missList'); L.innerHTML = '';
   const sem = missTab === 'w', lista = sem ? SEMANAIS : MISSOES, src = sem ? dly.w : dly;
   document.querySelectorAll('#missTabs button').forEach(b => b.classList.toggle('sel', b.dataset.t === missTab));
   show('dotMD', prontas(MISSOES, dly)); show('dotMW', prontas(SEMANAIS, dly.w));
   document.getElementById('missInfo').textContent = sem ? 'renovam toda segunda-feira' : 'renovam todo dia à meia-noite';
-  for (const m of lista) { const v = Math.min(m.n, src[m.f] || 0), feita = src.ms.includes(m.id), ok = v >= m.n;
+  for (const m of lista) { const v = Math.min(m.n, prog(src, m.f)), feita = src.ms.includes(m.id), ok = v >= m.n;
     const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : ok ? ' ready' : '') + (flash === m.id ? ' flash' : '');
     r.innerHTML = '<div class="rwi"><b>' + m.t + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div><span class="rwp"><i class="coin"></i>' + m.p + '</span>';
     const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
     b.innerHTML = feita ? '<span class="tick"></span>RESGATADO' : 'RESGATAR';
-    b.onclick = async () => { b.disabled = true; wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
+    b.onclick = async () => { b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {} const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
       if (error) { b.disabled = false; return notice(erroRecompensa(error), 'MISSÕES'); }
       moedasGanhas(data); src.ms.push(m.id); drawMissoes(m.id); ganhouFx(document.querySelector('#missList .rwrow.flash') || L, data); refreshDaily(); };
     r.appendChild(b); L.appendChild(r); }
