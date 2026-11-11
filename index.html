@@ -426,6 +426,16 @@
   .cbtns .sp{flex:1}
   .arq.pwcard b{font-weight:normal;font-size:clamp(7px,.9vw,10px)}
   .arq.pwcard.sel b{color:var(--acc)}
+  .ctitle{position:relative}
+  .cpill{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:clamp(8px,1vw,11px)}
+  .cprev{position:relative}
+  #cBuy{position:absolute;left:8px;right:8px;bottom:8px;display:flex;align-items:center;gap:8px;padding:7px 9px;background:rgba(42,29,10,.96);border:2px solid #6b5418;border-radius:var(--r3);font-size:clamp(7px,.85vw,9px);color:#ffe58a;z-index:4;box-shadow:0 4px 14px #000}
+  #cBuy span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #cBuy .b{padding:7px 10px}
+  /* bloqueados um pouco apagados */
+  .copt.lk,.arq.pwcard.lk,#cSlots button.lk{opacity:.55}
+  .copt.lk.sel,.arq.pwcard.lk.sel{opacity:.85}
+  .cswatch button.lkc{opacity:.5}
 </style>
 </head>
 <body>
@@ -526,7 +536,7 @@
   </div>
   <div id="custom" class="ovl hidden">
     <div class="card cust">
-      <h2 class="ctitle">PERSONAGEM</h2>
+      <h2 class="ctitle">PERSONAGEM<span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></h2>
       <div class="cchars"><span>PERSONAGEM</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div></div>
       <div class="cwrap">
         <div class="cprev">
@@ -534,6 +544,7 @@
           <div class="cname" id="cName"></div>
           <div class="cposes" id="cPoses"></div>
           <div id="cStats"></div>
+          <div id="cBuy" class="hidden"><span id="cBuyTxt"></span><button type="button" class="b pri" id="cBuyGo">COMPRAR</button></div>
         </div>
         <div class="copts">
           <div class="ctabs" id="cTabs"></div>
@@ -690,7 +701,8 @@ const KAME = { charge: 0.8, total: 2.0, dps: 230 };              // especial do 
 const POWERS = {
   k: { ki:     { name: 'Bola de energia',  desc: 'Disparo rápido e direto.',                       cost: 10 },
        tri:    { name: 'Tiro triplo',      desc: '3 disparos em leque.',                           cost: 15 },
-       hom:    { name: 'Energia teleguiada', desc: 'Vai reto atrás do inimigo mais perto.',        cost: 15 },
+       hom:    { name: 'Granada de energia', desc: 'Lançada em arco; explode no chão ou no inimigo.', cost: 15 },
+       laser:  { name: 'Laser',            desc: 'Raio fino e instantâneo que corta a tela.',     cost: 18 },
        disco:  { name: 'Disco bumerangue', desc: 'Lâmina giratória que vai e volta, cortando.',   cost: 18 },
        bomba:  { name: 'Bola explosiva',   desc: 'Mais lenta; explode e atinge quem está em volta.', cost: 18 } },
   r: { bola:   { name: 'Bola gigante',     desc: 'Forma e arremessa uma bola enorme.',             cost: 35 },
@@ -700,8 +712,11 @@ const POWERS = {
        fogos:  { name: 'Fogos caçadores',  desc: '5 fogos saem um a um, sobem e caçam o inimigo.', cost: 45 } },
   s: { kame:   { name: 'Feixe de energia', desc: 'Raio contínuo e poderoso.',                      cost: 40 },
        rajada: { name: 'Rajada',           desc: '9 disparos seguidos.',                           cost: 40 },
-       enxame: { name: 'Enxame',           desc: '6 energias saem em sequência e perseguem o alvo.', cost: 45 },
-       cegar:  { name: 'Clarão',           desc: 'Cega quem estiver perto por 3 segundos.',        cost: 30 } },
+       enxame: { name: 'Enxame',           desc: '4 energias saem em ângulos diferentes e perseguem o alvo.', cost: 45 },
+       cegar:  { name: 'Clarão',           desc: 'Cega quem estiver perto por 3 segundos.',        cost: 30 },
+       paral:  { name: 'Anel paralisante', desc: 'Anel elétrico: quem for atingido fica paralisado 2s.', cost: 35 },
+       invis:  { name: 'Invisibilidade',   desc: 'Some por 3 segundos para fugir.',               cost: 30 },
+       escudo: { name: 'Escudo de energia', desc: 'Bolha que bloqueia disparos por 3 segundos.',  cost: 35 } },
 };
 const pwOf = (f, slot) => { const id = f.pw && f.pw[slot]; return POWERS[slot][id] ? id : Object.keys(POWERS[slot])[0]; };
 /* CLARÃO: quem estiver perto (menos quem soltou) fica cego por 3 segundos */
@@ -711,6 +726,7 @@ function applyBlind(m) {
   if (Math.hypot(me.x - m.x, me.y - 25 - m.y) < 200) blindT = 3;
   for (const f of game.fighters) if (f.ai && f.local && f.id !== m.o && Math.hypot(f.x - m.x, f.y - 25 - m.y) < 200) f.setState('hurt', 1.2); // bots ficam tontos
 }
+let lzFx = [];
 function spawnProjectile(m, broadcast) {
   if (projectiles.some(p => p.id === m.id)) return;
   if (broadcast && m.kc === undefined) { const o = game.byId(m.o); if (o && o.fxc && okHex(o.fxc.k)) m.kc = o.fxc.k; } // cor de poder escolhida vai junto
@@ -850,7 +866,7 @@ class Fighter {
   /* ---------- atualização (apenas lutadores deste computador) ---------- */
   update(dt, inp) {
     this.t += dt; this.stateT -= dt; this.stateAge += dt;
-    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
+    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; if (this.invisT > 0) this.invisT -= dt; if (this.shieldT > 0) this.shieldT -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
     this.flash -= dt; this.invuln -= dt; this.hitsT -= dt; if (this.hitsT <= 0) this.hits = 0;
     this.beamPopT -= dt;
     if (this.beamPopT <= 0 && this.beamDmgAcc > 0) { popup(this.x, this.y - 58, '-' + Math.round(this.beamDmgAcc), '#ffd23a', 6); this.beamDmgAcc = 0; this.beamPopT = 0.3; }
@@ -1061,7 +1077,10 @@ class Fighter {
     if (sp === 'cegar') { if (!this.spend(POWERS.s.cegar.cost)) return; this.setState('charge', 0.3);
       const m = { t: 'blind', o: this.id, x: this.x, y: this.y - 25 }; net.send(m); applyBlind(m);
       spark(this.x, this.y - 25, 40, '#ffffff', 300, 0.5, 3); ring(this.x, this.y - 25, '#ffffff', 10, 190, 0.4); return; }
-    if (sp === 'enxame') { if (!this.spend(POWERS.s.enxame.cost)) return; this.serie('enxame', 6, 0.08); return; }
+    if (sp === 'enxame') { if (!this.spend(POWERS.s.enxame.cost)) return; this.serie('enxame', 4, 0.07); return; }
+    if (sp === 'paral') { if (!this.spend(POWERS.s.paral.cost)) return; this.setState('kiball', 0.35); this.shot({ vx: this.facing * 300, ring: 1, para: 2, r: 9, dmg: 15 * this.dmgMul() }); return; }
+    if (sp === 'invis') { if (!this.spend(POWERS.s.invis.cost)) return; this.invisT = 3; spark(this.x, this.y - 25, 20, '#ffffff', 160, 0.4, 2); return; }
+    if (sp === 'escudo') { if (!this.spend(POWERS.s.escudo.cost)) return; this.shieldT = 3; ring(this.x, this.y - 28, this.pal_.ki[1], 10, 40, 0.3); return; }
     if (this.kit.special === 'kame') {
       if (!this.spend(40)) return;
       this.kameFired = false; this.beamLen = 0; this.setState('kame', KAME.total); if (nearCam(this.x, this.y)) SFX.kameCharge();
@@ -1153,7 +1172,7 @@ class Fighter {
     const s = this.ser, m = this.dmgMul(), f = this.facing, i = s.i++;
     if (s.kind === 'rajada') this.shot({ r: 4, vy: rnd(-25, 25), vx: f * 360, dmg: 26 * m });
     else if (s.kind === 'fogos') this.shot({ r: 4, vx: f * 90, vy: -300, hom: 1, hd: 0.32, tr: 7, dmg: 40 * m });
-    else if (s.kind === 'enxame') this.shot({ r: 4, vx: f * 230, vy: (i % 2 ? -1 : 1) * (60 + i * 18), hom: 1, tr: 9, dmg: 32 * m });
+    else if (s.kind === 'enxame') { const a = [-0.95, -0.35, 0.35, 0.95][i] || 0; this.shot({ r: 4, vx: f * Math.cos(a) * 230, vy: Math.sin(a) * 230, hom: 1, hd: 0.28, tr: 8, dmg: 36 * m }); }
   }
   shot(o) { const h = this.handPos(); spawnProjectile({ id: uid(), o: this.id, x: h.x, y: h.y, vx: this.facing * 320, r: 5, dmg: 55 * this.dmgMul(), big: 0, pal: this.pal, ch: this.form, ...o }, true); }
   fireKi() {
@@ -1161,7 +1180,8 @@ class Fighter {
     if (!this.infiniteKi) this.ki -= POWERS.k[k].cost; this.kiCd = k === 'ki' ? 0.3 : 0.45; this.setState('kiball', 0.26);
     const h = this.handPos(), m = this.dmgMul();
     if (k === 'tri') { for (const vy of [-80, 0, 80]) this.shot({ r: 4, vy, dmg: 32 * m }); }
-    else if (k === 'hom') this.shot({ vx: this.facing * 270, hom: 1, tr: 8, r: 5, dmg: 46 * m });
+    else if (k === 'hom') this.shot({ vx: this.facing * 250, vy: -330, gr: 760, aoe: 58, r: 6, dmg: 55 * m });
+    else if (k === 'laser') { this.shot({ vx: this.facing * 2200, lz: 1, sx: h.x, r: 4, dmg: 70 * m }); this.setState('kiball', 0.3); }
     else if (k === 'disco') this.shot({ vx: this.facing * 440, saw: 1, boom: 1, f0: this.facing, pierce: 1, r: 7, dmg: 45 * m });
     else if (k === 'bomba') this.shot({ vx: this.facing * 240, r: 7, aoe: 62, dmg: 60 * m });
     else this.shot({});
@@ -1303,7 +1323,7 @@ class Fighter {
     if (!this.net) { this.x = m.x; this.y = m.y; }
     const prevSt = this.net ? this.net.st : null;
     this.net = { ...m };
-    this.name = String(m.n || '?').slice(0, 18); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; if (m.ar !== undefined && m.ar !== this.arq) applyArq(this, m.ar); this.genki = !!m.gk; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
+    this.name = String(m.n || '?').slice(0, 18); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; if (m.ar !== undefined && m.ar !== this.arq) applyArq(this, m.ar); this.genki = !!m.gk; this.invisT = m.ivs ? 0.3 : 0; this.shieldT = m.sh ? 0.3 : 0; if (m.sk) this.ser = { kind: m.sk }; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
     const predicting = this.predT && performance.now() - this.predT < 600;
     if (m.hp < this.hp - 0.5 && !predicting) this.flash = 0.08;
     // enquanto a rede não confirma, mantém o dano que já mostrei (não "devolve" a vida)
@@ -1328,7 +1348,7 @@ class Fighter {
     return { t: 's', id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
       ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
-      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', gk: this.genki ? 1 : 0 };
+      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', ivs: this.invisT > 0 ? 1 : 0, sh: this.shieldT > 0 ? 1 : 0, sk: this.state === 'rajada' && this.ser ? this.ser.kind : '', gk: this.genki ? 1 : 0 };
   }
 }
 
@@ -1355,8 +1375,11 @@ class Projectile {
       const ow = game.byId(this.o); if (this.back && ow) this.vy = clamp((ow.y - 30 - this.y) * 3, -200, 200);
       if (this.t > 1.8 || (this.back && ow && Math.abs(ow.x - this.x) < 14)) { this.dead = true; return; }
     }
+    if (this.para && this.t > 2.4) { this.dead = true; return; }
+    if (this.gr) this.vy = (this.vy || 0) + this.gr * dt; // granada: cai em arco
     this.x += this.vx * dt; this.y += (this.vy || 0) * dt;
     if (this.y + this.r >= GROUND && (this.vy || 0) > 0) { this.explode(); return; }
+    if (this.lz && Math.abs(this.x - this.sx) > 620) { this.dead = true; return; }
     if (Math.random() < (this.big ? 1 : 0.6)) particles.push({ x: this.x - sign(this.vx) * this.r, y: this.y + rnd(-this.r, this.r) * 0.6, vx: -this.vx * 0.15, vy: rnd(-10, 10), life: this.big ? 0.35 : 0.2, max: 0.35, size: this.big ? 3 : 2, color: this.col[1], glow: true });
     if (this.x < -40 || this.x > WW + 40) { this.dead = true; return; }
     if (!this.saw) for (const p of PLATFORMS) if (this.x > p.x && this.x < p.x + p.w && Math.abs(this.y - (p.y + 5)) < this.r + 5) { this.explode(); return; }
@@ -1366,6 +1389,8 @@ class Projectile {
       const b = f.body();
       if (this.x + this.r > b.x0 && this.x - this.r < b.x1 && this.y + this.r > b.y0 && this.y - this.r < b.y1) {
         if (f.invuln > 0) continue;
+        if (f.shieldT > 0) { this.explode(true); spark(this.x, this.y, 8, '#ffffff', 120, 0.25, 2); return; } // escudo segura o disparo
+        if (this.para && f.local) { f.setState('hurt', this.para); f.paraT = this.para; }
         if (this.aoe) this.hitIds = [f.id];
         if (this.pierce) { this.hitIds = this.hitIds || []; if (this.hitIds.includes(f.id)) continue; this.hitIds.push(f.id); }
         const src = game.byId(this.o) || { id: this.o, name: '?', x: this.x - sign(this.vx) * 50, local: false, pal_: palFor(this.ch, this.pal) };
@@ -1389,6 +1414,7 @@ class Projectile {
   }
   explode(blocked) {
     if (this.dead) return; this.dead = true;
+    if (this.lz) lzFx.push({ x0: this.sx, x1: this.x, y: this.y, c: this.col, t: 0.25 }); // o laser fica brilhando um instante
     if (this.aoe) { // explosão em área: cada computador aplica nos SEUS lutadores
       for (const f of game.fighters) { if (!f.local || f.dead || f.id === this.o || f.invuln > 0 || (this.hitIds || []).includes(f.id)) continue;
         if (Math.hypot(f.x - this.x, f.y - 25 - this.y) < this.aoe) f.takeHit({ dmg: this.dmg * 0.75, kbx: sign(f.x - this.x) * 200, kby: -150, stun: 0.45, kind: 'heavy' }, game.byId(this.o) || { id: this.o, name: '?', x: this.x, local: false, pal_: palFor(this.ch, this.pal) }); }
@@ -2338,6 +2364,9 @@ function render(dt) {
   for (const f of order) f.drawBeam(cam);
   for (const f of order) f.draw(cam);
   for (const p of projectiles) p.draw(cam);
+  lzFx = lzFx.filter(f => (f.t -= 1 / 60) > 0);
+  for (const f of lzFx) { const a = f.t / 0.25, x0 = Math.min(f.x0, f.x1) - cam.x, L = Math.abs(f.x1 - f.x0), y = f.y - cam.y, w = 1 + a * 1.5;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = hexA(f.c[2], 0.35 * a); ctx.fillRect(x0, y - 5 * w, L, 10 * w); ctx.fillStyle = hexA(f.c[1], 0.9 * a); ctx.fillRect(x0, y - 2.5 * w, L, 5 * w); ctx.fillStyle = hexA('#ffffff', a); ctx.fillRect(x0, y - w, L, 2 * w); ctx.restore(); }
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   for (const p of particles) {
     if (!p.glow && !p.ring) continue;
@@ -2391,7 +2420,8 @@ Object.defineProperties(Fighter.prototype, Object.getOwnPropertyDescriptors({
       case 'hurt': return this.spr.arremessado && !this.onGround && (this.vy < -60 || Math.abs(this.vx) > 170) ? 'arremessado' : 'dano'; // golpe forte: voando para trás
       case 'punch': return ['golpe1', 'golpe1', 'golpe2', 'golpe3'][this.combo] || 'golpe1';
       case 'bigfire': return this.spr.arremessar ? 'arremessar' : 'kiball';
-      case 'kiball': case 'beam': case 'rajada': return 'kiball';
+      case 'rajada': return this.ser && this.ser.kind === 'fogos' && this.spr.lancar ? 'lancar' : 'kiball'; // fogos: braço para cima
+      case 'kiball': case 'beam': return 'kiball';
       case 'awaken': case 'charge': return 'carga2'; // carga de energia
       case 'bigwind': return this.spr.lancar ? 'lancar' : 'carga';
       case 'beamwind': return 'carga';
@@ -2447,7 +2477,8 @@ Object.defineProperties(Fighter.prototype, Object.getOwnPropertyDescriptors({
     const awakening = this.state === 'awaken', awake = this.awakenT > 0;
     if (awake || awakening) drawAwakenGlow(px, py + oy, t, awakening ? 0.4 + 0.6 * clamp(this.stateAge / AWAKEN_HOLD, 0, 1) : 1, '200,235,255');
 
-    if ((this.invuln > 0 && this.state !== 'dash') || this.dead) ctx.globalAlpha = 0.5; // invulnerável ou caído: meio transparente (não atrapalha a luta)
+    if (this.invisT > 0) ctx.globalAlpha = this === game.me ? 0.3 : 0.04; // invisível (você se vê um pouco)
+    else if ((this.invuln > 0 && this.state !== 'dash') || this.dead) ctx.globalAlpha = 0.5; // invulnerável ou caído: meio transparente (não atrapalha a luta)
     if (this.state === 'dash') ctx.globalAlpha = 0.45;
     blit(this.spr[pose] || this.spr.parado, px + ox, py + oy, this.facing, sx, sy, rot);
     if (this.flash > 0) blit(this.white[pose] || this.white.parado, px + ox, py + oy, this.facing, sx, sy, rot);
@@ -2484,7 +2515,9 @@ Object.defineProperties(Fighter.prototype, Object.getOwnPropertyDescriptors({
     if (Math.random() < 0.7) particles.push({ x: h.x + f * L, y: h.y + rnd(-8, 8), vx: f * rnd(-40, 80), vy: rnd(-80, 80), life: 0.25, max: 0.25, size: 2, color: c[1], glow: true });
   },
   drawOverhead(cam) {
-    if (this.dead) return;
+    if (this.dead || (this.invisT > 0 && this !== game.me)) return;
+    if (this.shieldT > 0) { const sx = this.x - cam.x, sy = this.y - cam.y - 28, c = this.pal_.ki; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = hexA(c[1], 0.7 + Math.sin(this.t * 12) * 0.2); ctx.lineWidth = 2; ctx.fillStyle = hexA(c[1], 0.12); ctx.beginPath(); ctx.ellipse(sx, sy, 22, 32, 0, 0, 7); ctx.fill(); ctx.stroke(); ctx.restore(); }
+    if (this.paraT > 0 && this.state === 'hurt') { const sx = this.x - cam.x, sy = this.y - cam.y; ctx.strokeStyle = '#ffe680'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); let px = sx - 12 + Math.random() * 24, py = sy - 50; ctx.moveTo(px, py); for (let k = 0; k < 4; k++) { px += rnd(-6, 6); py += 10; ctx.lineTo(px, py); } ctx.stroke(); } }
     const x = Math.round(this.x - cam.x), y = Math.round(this.y - cam.y - 54 - ((this.spr.parado || {})._pad ? 8 : 0)); // auréola: nome sobe
     nameText(this, dispName(this.name), x, y - 9, 5, 'center', this.pal_.swatch);
     const w = 26, r = clamp(this.hp / this.maxHp, 0, 1);
@@ -2520,6 +2553,14 @@ Object.defineProperties(Projectile.prototype, Object.getOwnPropertyDescriptors({
       ctx.beginPath(); ctx.arc(x, y, this.r + 6 + Math.sin(this.t * 25) * 3, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
     }
     if (this.saw) { drawSaw(x, y, this.r, this.col, this.t); return; }
+    if (this.lz) { // laser: feixe fino do ponto de saída até a ponta, com brilho
+      const c = this.col, x0 = this.sx - cam.x, L = x - x0; ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = hexA(c[2], 0.35); ctx.fillRect(Math.min(x0, x), y - 5, Math.abs(L), 10);
+      ctx.fillStyle = hexA(c[1], 0.9); ctx.fillRect(Math.min(x0, x), y - 2.5, Math.abs(L), 5);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(Math.min(x0, x), y - 1, Math.abs(L), 2);
+      drawKiBall(x0, y, 5, c, this.t); drawKiBall(x, y, 4, c, this.t); ctx.restore(); return; }
+    if (this.ring) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#ffe680'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.ellipse(x, y, this.r * 0.6, this.r + Math.sin(this.t * 30), 0, 0, 7); ctx.stroke();
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(x + rnd(-6, 6), y + rnd(-10, 10)); ctx.lineTo(x + rnd(-6, 6), y + rnd(-10, 10)); ctx.stroke(); } ctx.restore(); return; }
     if (this.aoe) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = hexA(this.col[1], 0.6); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, this.r + 3 + Math.sin(this.t * 30) * 1.5, 0, 7); ctx.stroke(); ctx.restore(); }
     drawKiBall(x, y, this.r, this.col, this.t);
   },
@@ -3008,7 +3049,7 @@ const wallet = {
     renderCoins();
   },
 };
-function renderCoins() { const el = document.getElementById('coinN'); if (el) el.textContent = shop.infinite() ? '∞' : wallet.n; const p = document.getElementById('coinPill'); if (p) { p.classList.remove('pulse'); void p.offsetWidth; p.classList.add('pulse'); } }
+function renderCoins() { const el = document.getElementById('coinN'), v = shop.infinite() ? '∞' : wallet.n; if (el) el.textContent = v; const e2 = document.getElementById('cCoinN'); if (e2) e2.textContent = v; const p = document.getElementById('coinPill'); if (p) { p.classList.remove('pulse'); void p.offsetWidth; p.classList.add('pulse'); } }
 /* o nome dourado agora vem do cargo salvo no banco (a antiga tag {DONO} não vale mais) */
 const isOwnerF = f => conta.roleOf(f) === 'dono';
 /* nome de um lutador com o visual do cargo: dono = dourado · youtuber = tag YT vermelha + nome branco */
@@ -3052,8 +3093,16 @@ function renderConta() {
    Itens: cabelo, rabo, auréola e CADA cor (cabelo, pele, rabo, auréola, aura, poder). Grátis: o visual inicial. */
 const PRICE = { color: 50, item: 100, trans: 250 }; // cores 50 · cabelo/rabo/auréola 100 · transformação 250
 /* janelinha de compra: aparece embaixo, do lado das opções (não tampa a prévia) */
-async function offerBuy(k, nome) {
+/* item bloqueado: aparece na prévia NA HORA; o selo 'COMPRAR' fica sobre a prévia (não mexe no tamanho da tela) */
+let buyTag = null;
+function offerBuy(k, nome) {
+  const el = document.getElementById('cBuy'); if (!el) return buyNow(k, nome);
+  if (!k || shop.has(k)) { buyTag = null; el.classList.add('hidden'); return; }
+  buyTag = { k, nome }; document.getElementById('cBuyTxt').innerHTML = '🔒 ' + esc(nome) + ' · <b>' + (shop.infinite() ? 0 : priceOf(k)) + '</b>'; el.classList.remove('hidden');
+}
+async function buyNow(k, nome, direto) {
   if (!k || shop.has(k)) return;
+  if (direto) return shop.buy([{ k, n: nome }]); // botão COMPRAR do selo: já mostra o preço
   const preco = shop.infinite() ? 0 : priceOf(k);
   const ok = await msgOpen('ITEM BLOQUEADO', '🔒 ' + nome + '\n\nPreço: ' + preco + ' moedas · você tem ' + (shop.infinite() ? '∞' : wallet.n) + '\n\nVocê pode ver na prévia, mas para usar na luta precisa comprar.', '', true, 'COMPRAR');
   if (ok) await shop.buy([{ k, n: nome }]);
@@ -3131,7 +3180,7 @@ async function useCode() {
     unwait();
     if (error) throw error;
     if (data === 'infinite') { conta.perfil.infinite = true; renderCoins(); notice('Código ativado: moedas infinitas!\nTodos os itens estão liberados.', 'CÓDIGO'); }
-    else if (data === 'gold') { conta.perfil.coins = (conta.perfil.coins || 0) + 100; wallet.sync(); notice('+100 moedas!', 'CÓDIGO'); }
+    else if (/^coins:\d+$/.test(data || '')) { const n = +data.slice(6); conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); notice('+' + n + ' moedas!', 'CÓDIGO'); }
     else if (data === 'reset') { // conta zerada: tudo volta ao começo
       conta.pend = { k: 0, d: 0, m: 0, c: 0 }; try { localStorage.removeItem('adk_slots'); } catch (e) {}
       setSlots([], 0); Object.assign(conta.perfil, { coins: 0, owned: [], infinite: false, kills: 0, deaths: 0, matches: 0, look: {}, fxc: {} });
@@ -3723,6 +3772,7 @@ function custClear() { chosenLook = newSlot().look; chosenFxc = { a: '', k: '' }
 function custBtn() { const b = document.getElementById('cDone'), ch = custOpen && custSig() !== custStart; if (b) b.textContent = ch ? '✓ SALVAR' : '← VOLTAR'; show('cCancel', ch); }
 let custStart = '';
 function openCustom() {
+  buyTag = null; show('cBuy', false);
   custOpen = true; custDemo = null; if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); } dropLocked(); 
   show('menu', false); show('custom', true); storeSlot(); custBackup = JSON.parse(JSON.stringify({ slots, cur: slotCur })); custStart = custSig(); buildCustomPanel(); custBtn();
   const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; requestAnimationFrame(() => { cc.scrollTop = 0; });
@@ -3736,14 +3786,14 @@ function swatches(list, cur, onPick, withDefault, pfx) {
   const add = (col, extra) => {
     const b = document.createElement('button'); if (col) { b.style.background = col; b.title = col; } else { b.className = 'def'; b.textContent = 'P'; b.title = 'padrão'; }
     if (extra) b.classList.add(extra); if (cur === col) b.classList.add('sel');
-    if (col && pfx && !shop.has(pfx + ':' + col)) { b.title = 'bloqueado · ' + priceOf(pfx + ':' + col) + ' moedas'; b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
-    b.onclick = () => { onPick(col); saveLook(); if (col && pfx) offerBuy(pfx + ':' + col, 'Cor ' + col); }; w.appendChild(b);
+    if (col && pfx && !shop.has(pfx + ':' + col)) { b.classList.add('lkc'); b.title = 'bloqueado · ' + priceOf(pfx + ':' + col) + ' moedas'; b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
+    b.onclick = () => { onPick(col); saveLook(); offerBuy(col && pfx ? pfx + ':' + col : '', 'Cor ' + col); }; w.appendChild(b);
   };
   for (const col of (withDefault ? [''] : []).concat(list)) add(col);
   if (cur && !list.includes(cur)) add(cur, 'mine'); // a cor livre escolhida aparece como mais uma bolinha
   // "+": abre o seletor de cor do aparelho (qualquer cor, sem encher a tela de bolinhas)
   const lb = document.createElement('label'); lb.className = 'more'; lb.title = 'outra cor'; lb.textContent = '+';
-  if (pfx && !shop.has('cp:1')) { lb.title = 'seletor de cor livre · 500 moedas'; lb.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); lb.onclick = e => { e.preventDefault(); offerBuy('cp:1', 'Seletor de cor livre (qualquer cor, em tudo)'); }; lb.style.position = 'relative'; w.appendChild(lb); return w; }
+  if (pfx && !shop.has('cp:1')) { lb.title = 'seletor de cor livre · 500 moedas'; lb.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); lb.onclick = e => { e.preventDefault(); buyNow('cp:1', 'Seletor de cor livre (qualquer cor, em tudo)'); }; lb.style.position = 'relative'; w.appendChild(lb); return w; }
   const inp = document.createElement('input'); inp.type = 'color'; inp.value = cur && /^#[0-9a-f]{6}$/i.test(cur) ? cur : (list[0] || '#ffffff');
   inp.oninput = () => onPick(inp.value.toLowerCase());          // prévia ao vivo enquanto arrasta
   inp.onchange = () => { onPick(inp.value.toLowerCase()); saveLook(); if (pfx) offerBuy(pfx + ':' + inp.value.toLowerCase(), 'Cor ' + inp.value.toLowerCase()); };
@@ -3755,7 +3805,7 @@ function optCard(label, sel, draw, onPick, key) {
   if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); b.title = 'bloqueado · ' + priceOf(key) + ' moedas'; }
   const c = makeCanvas(56, 56), x = c.getContext('2d'); x.imageSmoothingEnabled = false; draw(x);
   b.appendChild(c); const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp);
-  b.onclick = () => { onPick(); saveLook(); if (key) offerBuy(key, label); }; return b;
+  b.onclick = () => { onPick(); saveLook(); offerBuy(key, label); }; return b;
 }
 function partThumb(look, crop) { // miniatura: recorte do sprite montado, ampliado 2x (inteiro)
   return x => { const im = lookSprites(look).spr.parado; const [sx, sy, w] = crop(im); x.drawImage(im, sx, sy, w, w, 0, 0, 56, 56); };
@@ -3791,8 +3841,8 @@ function buildCustomPanel() {
       const key = id === PW0[sl] ? '' : 'p:' + id, b = document.createElement('button'); b.type = 'button'; b.className = 'arq pwcard' + (chosenPw[sl] === id ? ' sel' : '');
       const c = makeCanvas(56, 56); c.getContext('2d').imageSmoothingEnabled = false; drawPowerIcon(c.getContext('2d'), id); b.appendChild(c);
       const tx = document.createElement('div'); tx.innerHTML = '<b>' + pw.name + '</b><span class="pwd">' + pw.desc + '</span><span class="pwd">⚡ ' + pw.cost + ' de energia</span>'; b.appendChild(tx);
-      if (key && !shop.has(key)) b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>');
-      b.onclick = () => { chosenPw[sl] = id; custDemo = { id, t0: performance.now() }; saveLook(); if (key) offerBuy(key, pw.name); };
+      if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
+      b.onclick = () => { chosenPw[sl] = id; custDemo = { id, t0: performance.now() }; saveLook(); offerBuy(key, pw.name); };
       g.appendChild(b);
     }
   } else if (custTab === 'trans') {
@@ -3803,7 +3853,7 @@ function buildCustomPanel() {
       () => {}, k);
     card.classList.add('trslot');
     card.onclick = async () => {
-      if (!shop.has(k)) { offerBuy(k, 'Transformação deste slot'); return; }
+      if (!shop.has(k)) { buyNow(k, 'Transformação'); return; }
       const v = await pickTrans(); if (v === null) return; chosenTr = v; saveLook();
     };
     g.appendChild(card);
@@ -3871,7 +3921,11 @@ function pvStep(dt) {
   switch (id) {
     case 'ki': if (t > 0.1) once(1, () => pvShot({})); break;
     case 'tri': if (t > 0.1) once(1, () => [-80, 0, 80].forEach(vy => pvShot({ r: 4, vy }))); break;
-    case 'hom': if (t > 0.1) once(1, () => pvShot({ vx: 270, vy: -120, hom: 1, tr: 8 })); break;
+    case 'hom': if (t > 0.1) once(1, () => pvShot({ vx: 250, vy: -330, gr: 760, aoe: 58, r: 6 })); break;
+    case 'laser': if (t > 0.1) once(1, () => pvShot({ vx: 2200, lz: 1, sx: 17, r: 4 })); break;
+    case 'paral': if (t > 0.1) once(1, () => pvShot({ vx: 300, ring: 1, r: 9 })); break;
+    case 'invis': S.inv = t > 0.3 && t < 1.8 ? 1 : 0; break;
+    case 'escudo': S.shield = t > 0.25 && t < 2.0 ? 1 : 0; if (t > 0.6) once(1, () => S.shots.push({ x: PV.tx - PV.gx - 10, y: -30, vx: -320, vy: 0, r: 5, t: 0, enemy: 1 })); break;
     case 'disco': if (t > 0.1) once(1, () => pvShot({ vx: 440, saw: 1, boom: 1, r: 7, pierce: 1 })); break;
     case 'bomba': if (t > 0.1) once(1, () => pvShot({ vx: 240, r: 7, aoe: 62 })); break;
     case 'bola': if (t > 0.4) once(1, () => pvShot({ x: 16, vx: 235, r: 13 })); break;
@@ -3880,24 +3934,27 @@ function pvStep(dt) {
     case 'kienzan': if (t > 0.1) once(1, () => pvShot({ vx: 380, saw: 1, r: 15, pierce: 1 })); break;
     case 'fogos': for (let i = 0; i < 5; i++) if (t > 0.1 + i * 0.16) once('f' + i, () => pvShot({ r: 4, vx: 90, vy: -300, hom: 1, hd: 0.32, tr: 7 })); break;
     case 'rajada': for (let i = 0; i < 9; i++) if (t > 0.1 + i * 0.1) once('r' + i, () => pvShot({ r: 4, vx: 360, vy: rnd(-25, 25) })); break;
-    case 'enxame': for (let i = 0; i < 6; i++) if (t > 0.1 + i * 0.08) once('e' + i, () => pvShot({ r: 4, vx: 230, vy: (i % 2 ? -1 : 1) * (60 + i * 18), hom: 1, tr: 9 })); break;
+    case 'enxame': [-0.95, -0.35, 0.35, 0.95].forEach((a, i) => { if (t > 0.1 + i * 0.07) once('e' + i, () => pvShot({ r: 4, vx: Math.cos(a) * 230, vy: Math.sin(a) * 230, hom: 1, hd: 0.28, tr: 8 })); }); break;
     case 'kame': if (t > KAME.charge && t < KAME.total) S.beam = Math.min(PV.W, S.beam + 1400 * dt); else S.beam = 0; break;
     case 'cegar': if (t > 0.3) once(1, () => { S.flash = 1; }); break;
   }
-  S.flash = Math.max(0, S.flash - dt * 1.2);
+  S.flash = Math.max(0, S.flash - dt * 1.2); S.para = Math.max(0, (S.para || 0) - dt);
   for (const p of S.shots) {
     p.t += dt;
     if (p.hom && p.t >= (p.hd || 0)) { const sp = Math.max(240, Math.hypot(p.vx, p.vy)), a0 = Math.atan2(p.vy, p.vx), a1 = Math.atan2(T.y - p.y, T.x - p.x); let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI; const a = a0 + clamp(da, -p.tr * dt, p.tr * dt); p.vx = Math.cos(a) * sp; p.vy = Math.sin(a) * sp; }
     if (p.gk) p.vy = clamp((T.y - p.y) * 2, -140, 140);
+    if (p.gr) p.vy += p.gr * dt;
+    if (p.enemy && S.shield && p.x < 22) { p.dead = 1; S.fx.push({ x: 20, y: p.y, r: 10, t: 0 }); continue; }
+    if (p.lz && p.x > PV.W) p.x = PV.W;
     if (p.boom) { p.vx -= 900 * dt; if (!p.back && p.vx < 0) { p.back = 1; p.hit = 0; } if (p.back && p.x < 18) p.dead = 1; }
     p.x += p.vx * dt; p.y += p.vy * dt;
     if (p.y + p.r >= 0 && p.vy > 0) { p.dead = 1; S.fx.push({ x: p.x, y: -2, r: p.r * 2.5, t: 0 }); }
-    if (Math.abs(p.x - T.x) < 8 + p.r && Math.abs(p.y - T.y) < 22 + p.r && !p.hit) { p.hit = 1; S.fx.push({ x: p.x, y: p.y, r: p.aoe || p.r * 3, t: 0 }); if (!p.pierce) p.dead = 1; }
-    if (p.x > PV.W + 30 || p.x < -60) p.dead = 1;
+    if (!p.enemy && Math.abs(p.x - T.x) < 8 + p.r && Math.abs(p.y - T.y) < 22 + p.r && !p.hit) { if (p.ring) S.para = 2; p.hit = 1; S.fx.push({ x: p.x, y: p.y, r: p.aoe || p.r * 3, t: 0 }); if (!p.pierce) p.dead = 1; }
+    if (p.x > PV.W + 30 || p.x < -60 || (p.lz && p.t > 0.25)) p.dead = 1;
   }
   S.shots = S.shots.filter(p => !p.dead); S.fx = S.fx.filter(f => (f.t += dt) < 0.35);
 }
-const pvDur = id => id === 'kame' || id === 'genki' ? 2.8 : id === 'chuva' ? 2.4 : 2.0;
+const pvDur = id => id === 'kame' || id === 'genki' || id === 'escudo' ? 2.8 : id === 'chuva' || id === 'invis' || id === 'paral' ? 2.4 : 2.0;
 const custDemoId = () => { const sl = custTab[1]; return custDemo && POWERS[sl] && POWERS[sl][custDemo.id] ? custDemo.id : chosenPw[sl]; };
 function drawPowerPreview(x, spr, pal, now) {
   if (!pvSim || pvSim.id !== custDemoId()) pvReset(custDemoId());
@@ -3911,14 +3968,21 @@ function drawPowerPreview(x, spr, pal, now) {
     x.fillStyle = 'rgba(0,0,0,.35)'; x.beginPath(); x.ellipse(0, 0, 14, 3, 0, 0, Math.PI * 2); x.fill();
     const charging = (id === 'bola' && t < 0.4) || (id === 'genki' && t < 1.3);
     const pose = charging ? (spr.lancar ? 'lancar' : 'carga2') : id === 'cegar' || (id === 'kame' && t < KAME.charge) ? 'carga2' : t < 0.1 || t > 1.4 && !S.beam ? 'parado' : 'kiball';
-    const im = spr[pose] || spr.parado; x.drawImage(im, -Math.floor(im.width / 2), -im.height);
+    const im = spr[pose === 'kiball' && id === 'fogos' && spr.lancar ? 'lancar' : pose] || spr.parado; x.globalAlpha = S.inv ? 0.25 : 1; x.drawImage(im, -Math.floor(im.width / 2), -im.height); x.globalAlpha = 1;
+    if (S.shield) { x.strokeStyle = col[1]; x.lineWidth = 2; x.fillStyle = hexA(col[1], 0.15); x.beginPath(); x.ellipse(0, -28, 20, 30, 0, 0, 7); x.fill(); x.stroke(); }
+    if (S.para > 0) { x.strokeStyle = '#ffe680'; x.lineWidth = 1; for (let i = 0; i < 3; i++) { let px = PV.tx - PV.gx - 10 + Math.random() * 20, py = -52; x.beginPath(); x.moveTo(px, py); for (let k = 0; k < 4; k++) { px += rnd(-5, 5); py += 11; x.lineTo(px, py); } x.stroke(); } }
     if (id === 'bola' && t < 0.4) drawKiBall(10, -56, 3 + t / 0.4 * 10, col, t);
     if (id === 'genki' && t < 1.3) { const k = Math.min(1, t / 1.3); drawKiBall(6, -60 - k * 24, 6 + k * 21, col, t); }
     if (id === 'kame' && t < KAME.total) drawKiBall(17, -30, 3 + Math.min(1, t / KAME.charge) * 5, col, t);
     if (S.beam > 0) { const w = (9 + Math.sin(t * 40) * 1.5) * 1.9, L = S.beam; x.save(); x.globalCompositeOperation = 'lighter';
       x.fillStyle = hexA(col[2], 0.35); x.fillRect(17, -30 - w * 1.3, L, w * 2.6); x.fillStyle = hexA(col[1], 0.8); x.fillRect(17, -30 - w * 0.75, L, w * 1.5); x.fillStyle = col[0]; x.fillRect(17, -30 - w * 0.35, L, w * 0.7);
       x.fillStyle = 'rgba(255,255,255,.5)'; for (let i = 0; i < L; i += 14) x.fillRect(17 + ((i + t * 600) % L), -30 - w * 0.9, 3, w * 1.8); x.restore(); }
-    for (const p of S.shots) p.saw ? drawSaw(p.x, p.y, p.r, col, p.t) : drawKiBall(p.x, p.y, p.r, col, p.t);
+    for (const p of S.shots) {
+      if (p.saw) drawSaw(p.x, p.y, p.r, col, p.t);
+      else if (p.lz) { x.save(); x.globalCompositeOperation = 'lighter'; x.fillStyle = hexA(col[2], .35); x.fillRect(17, p.y - 5, p.x - 17, 10); x.fillStyle = col[1]; x.fillRect(17, p.y - 2.5, p.x - 17, 5); x.fillStyle = '#fff'; x.fillRect(17, p.y - 1, p.x - 17, 2); x.restore(); }
+      else if (p.ring) { x.strokeStyle = '#ffe680'; x.lineWidth = 2.5; x.beginPath(); x.ellipse(p.x, p.y, 5, 9, 0, 0, 7); x.stroke(); }
+      else drawKiBall(p.x, p.y, p.r, p.enemy ? kiCols('#ff6a5a') : col, p.t);
+    }
     for (const f of S.fx) { x.strokeStyle = hexA(col[0], 1 - f.t / 0.35); x.lineWidth = 2; x.beginPath(); x.arc(f.x, f.y, 3 + f.r * f.t / 0.35, 0, 7); x.stroke(); }
     if (S.flash > 0) { // clarão: luz forte a partir do lutador, que vai tomando a tela
       const R = 30 + (1 - S.flash) * 260, g = x.createRadialGradient(0, -30, 2, 0, -30, R);
@@ -3939,7 +4003,8 @@ function drawPowerIcon(x, id) {
   switch (id) {
     case 'ki': trail(8, 28, 34, 28); ball(38, 28, 6); break;
     case 'tri': for (const d of [-12, 0, 12]) { trail(8, 28, 36, 28 + d); ball(40, 28 + d, 4); } break;
-    case 'hom': x.strokeStyle = hexA(col[1], 0.6); x.lineWidth = 2; x.setLineDash([3, 3]); x.beginPath(); x.moveTo(6, 44); x.quadraticCurveTo(20, 6, 40, 24); x.stroke(); x.setLineDash([]); ball(42, 26, 5); x.fillStyle = '#ff6a5a'; x.fillRect(46, 38, 6, 10); break;
+    case 'hom': x.strokeStyle = hexA(col[1], 0.6); x.lineWidth = 2; x.setLineDash([3, 3]); x.beginPath(); x.moveTo(6, 40); x.quadraticCurveTo(26, -6, 46, 44); x.stroke(); x.setLineDash([]); ball(44, 40, 5); x.strokeStyle = hexA(col[0], .8); x.beginPath(); x.arc(44, 44, 9, Math.PI, 0); x.stroke(); break;
+    case 'hom_old': x.strokeStyle = hexA(col[1], 0.6); x.lineWidth = 2; x.setLineDash([3, 3]); x.beginPath(); x.moveTo(6, 44); x.quadraticCurveTo(20, 6, 40, 24); x.stroke(); x.setLineDash([]); ball(42, 26, 5); x.fillStyle = '#ff6a5a'; x.fillRect(46, 38, 6, 10); break;
     case 'disco': ctx = x; drawSaw(30, 28, 12, col, 0.3); x.strokeStyle = hexA(col[1], 0.6); x.lineWidth = 2; x.beginPath(); x.arc(30, 28, 22, -0.6, 0.6); x.stroke(); break;
     case 'disco_old': trail(6, 28, 26, 28); x.fillStyle = col[1]; x.beginPath(); x.ellipse(36, 28, 15, 5, 0, 0, 7); x.fill(); x.fillStyle = '#ffffff'; x.beginPath(); x.ellipse(36, 28, 8, 2.5, 0, 0, 7); x.fill(); break;
     case 'bola': trail(6, 32, 22, 30); ball(32, 28, 12); break;
@@ -3948,12 +4013,17 @@ function drawPowerIcon(x, id) {
     case 'kame': { const g = x.createLinearGradient(0, 22, 0, 34); g.addColorStop(0, col[1]); g.addColorStop(0.5, '#ffffff'); g.addColorStop(1, col[1]); x.fillStyle = g; x.fillRect(14, 22, 42, 12); ball(14, 28, 9); break; }
     case 'rajada': for (let i = 0; i < 5; i++) ball(10 + i * 10, 28 + (i % 2 ? -6 : 6), 3.5); break;
     case 'bomba': trail(6, 28, 24, 28); ball(30, 28, 7); x.strokeStyle = hexA(col[0], 0.8); x.lineWidth = 1.5; x.beginPath(); x.arc(30, 28, 16, 0, 7); x.stroke(); x.beginPath(); x.arc(30, 28, 22, 0, 7); x.stroke(); break;
+    case 'laser': { x.fillStyle = hexA(col[2], .4); x.fillRect(6, 23, 50, 10); x.fillStyle = col[1]; x.fillRect(6, 25.5, 50, 5); x.fillStyle = '#fff'; x.fillRect(6, 27, 50, 2); ball(8, 28, 5); break; }
+    case 'paral': x.strokeStyle = '#ffe680'; x.lineWidth = 2.5; x.beginPath(); x.ellipse(30, 28, 7, 14, 0, 0, 7); x.stroke(); x.strokeStyle = '#fff'; x.lineWidth = 1; x.beginPath(); x.moveTo(22, 16); x.lineTo(30, 28); x.lineTo(24, 32); x.lineTo(34, 44); x.stroke(); break;
+    case 'invis': { const im = lookSprites(chosenLook).spr.parado; x.globalAlpha = .25; x.drawImage(im, 28 - im.width / 2, 4); x.globalAlpha = 1; x.strokeStyle = 'rgba(255,255,255,.5)'; x.setLineDash([2, 3]); x.strokeRect(14, 4, 28, 48); x.setLineDash([]); break; }
+    case 'escudo': { const im = lookSprites(chosenLook).spr.parado; x.drawImage(im, 28 - im.width / 2, 4); x.strokeStyle = col[1]; x.lineWidth = 2; x.fillStyle = hexA(col[1], .18); x.beginPath(); x.ellipse(28, 28, 20, 26, 0, 0, 7); x.fill(); x.stroke(); break; }
     case 'laser_old': x.strokeStyle = col[1]; x.lineWidth = 4; x.beginPath(); x.moveTo(8, 28); x.lineTo(54, 28); x.stroke(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); break;
     case 'kienzan': drawSaw(28, 28, 18, col, 0.5); break;
     case 'kienzan_old': x.fillStyle = hexA(col[1], 0.5); x.beginPath(); x.ellipse(28, 26, 24, 8, 0, 0, 7); x.fill(); x.fillStyle = col[0]; x.beginPath(); x.ellipse(28, 26, 20, 6, 0, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.ellipse(28, 26, 10, 2.5, 0, 0, 7); x.fill(); break;
     case 'fogos': for (let i = 0; i < 4; i++) { x.strokeStyle = hexA(col[1], 0.5); x.lineWidth = 2; x.beginPath(); x.moveTo(8 + i * 4, 50); x.quadraticCurveTo(12 + i * 8, 4, 40 + i * 4, 14 + i * 8); x.stroke(); ball(40 + i * 4, 14 + i * 8, 3); } break;
     case 'cegar': { const g = x.createRadialGradient(28, 28, 2, 28, 28, 26); g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, 'rgba(255,255,220,.7)'); g.addColorStop(1, 'rgba(255,255,200,0)'); x.fillStyle = g; x.fillRect(0, 0, 56, 56); break; }
-    case 'enxame': for (let i = 0; i < 5; i++) { const a = -0.9 + i * 0.45; ball(28 + Math.cos(a) * 18, 28 + Math.sin(a) * 18, 3.5); } ball(16, 28, 4); break;
+    case 'enxame': for (const a of [-0.95, -0.35, 0.35, 0.95]) { x.strokeStyle = hexA(col[1], .5); x.lineWidth = 1.5; x.beginPath(); x.moveTo(12, 28); x.lineTo(12 + Math.cos(a) * 22, 28 + Math.sin(a) * 22); x.stroke(); ball(12 + Math.cos(a) * 24, 28 + Math.sin(a) * 24, 3.5); } break;
+    case 'enxame_old': for (let i = 0; i < 5; i++) { const a = -0.9 + i * 0.45; ball(28 + Math.cos(a) * 18, 28 + Math.sin(a) * 18, 3.5); } ball(16, 28, 4); break;
   }
   ctx = old;
 }
@@ -3982,7 +4052,7 @@ function buildCharList() {
     x.imageSmoothingEnabled = false; x.drawImage(im, Math.floor(24 - im.width / 2), Math.round(4 - (im._pad || 0)));
     b.innerHTML = '<b>' + (i + 1) + '</b>'; b.appendChild(c); const sp = document.createElement('span'); sp.textContent = ARQS[o.arq].name; b.appendChild(sp);
     if (!shop.has('sl:' + i)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
-    b.onclick = () => { if (!shop.has('sl:' + i)) { offerBuy('sl:' + i, 'Slot ' + (i + 1)); return; } if (i !== slotCur) useSlot(i); }; sb.appendChild(b);
+    b.onclick = () => { if (!shop.has('sl:' + i)) { buyNow('sl:' + i, 'Slot ' + (i + 1)); return; } if (i !== slotCur) useSlot(i); }; sb.appendChild(b);
   });
 }
 function buildMenu() {
@@ -4283,7 +4353,8 @@ resizeCanvas(); addEventListener('resize', resizeCanvas); setTimeout(resizeCanva
 setInterval(() => { if (game.phase !== 'loading') { salasSB.tick(); lobby.sync(); } }, 1000);
 addEventListener('pagehide', () => { if (game.phase === 'play') net.leave(true); lobby.stop(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {});
-loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cDone').onclick = closeCustom; document.getElementById('cCancel').onclick = custCancel; document.getElementById('cClear').onclick = custClear; dragScroll(document.getElementById('cTabs'));
+loadSprites().then(() => { buildAuras(); buildMapPicker(); document.getElementById('cBuyGo').onclick = () => { if (buyTag) buyNow(buyTag.k, buyTag.nome, true).then(() => { if (buyTag && shop.has(buyTag.k)) { buyTag = null; show('cBuy', false); } }); };
+  document.getElementById('cDone').onclick = closeCustom; document.getElementById('cCancel').onclick = custCancel; document.getElementById('cClear').onclick = custClear; dragScroll(document.getElementById('cTabs'));
   document.getElementById('cRand').onclick = () => { // visual sorteado
     const pick = a => a[(Math.random() * a.length) | 0];
     const mine = list => list.filter(c => shop.has('c:' + c));
