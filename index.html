@@ -3138,6 +3138,8 @@ const net = {
     if (this.role === 'off' || this.role === 'migrating') return;
     this.sendT -= dt;
     if (this.sendT <= 0) { this.sendT = 0.05; for (const f of game.fighters) if (f.local) this.send(f.snapshot()); }
+    if (game.duel && game.duelSt && game.duelSt.ph === 'count' && game.duelPos && game.me && !game.me.dead) { // contagem: cada um parado no seu lado, sem energia
+      const me = game.me; me.x = game.duelPos.x; me.vx = 0; me.facing = game.duelPos.f; me.ki = 0; if (me.y < GROUND) { me.y = GROUND; me.vy = 0; } }
     if (this.role === 'host') {
       this.regT -= dt;
       // avisa o quadro só quando algo muda (entrou/saiu gente, nome, cenário) + uma confirmação a cada 15s
@@ -3361,7 +3363,7 @@ const TAGS = { dono: ['DONO', ['#7a5200', '#ffd23a', '#fff6c8', '#ffd23a', '#7a5
 function nameText(f, str, x, y, size, align, color, outline = '#120c1c', ow = 1.2) {
   const r = f && f.role !== undefined ? f.role : conta.roleOf(f);
   if (TAGS[r]) return tagText(TAGS[r][0], TAGS[r][1], TAGS[r][2], str, x, y, size, align, outline);
-  text(str, x, y, size, color, align, outline, ow);
+  text(str, x, y, size, '#ffffff', align, outline, ow); // todos os nomes em branco
 }
 function tagText(tag, cols, dark, str, x, y, size, align = 'left', outline = '#120c1c') {
   ctx.font = FONT(size); const tw = ctx.measureText(tag + ' ').width, w = tw + ctx.measureText(str).width;
@@ -3935,9 +3937,11 @@ const duelists = () => game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.
 function duelSet(st, send) {
   const prev = game.duelSt; game.duelSt = st;
   if (st.ph === 'count' && (prev.ph !== 'count' || prev.rd !== st.rd)) { // novo round: todo mundo renasce no seu lado
-    const me = game.me, i = duelists().indexOf(me);
-    me.deadT = 0; me.respawnReq = false; me.spawn(); me.invuln = 0;
-    me.x = i === 1 ? WW / 2 + 260 : WW / 2 - 260; me.y = GROUND; me.vx = me.vy = 0; me.facing = i === 1 ? -1 : 1; me.awakenT = 0;
+    const me = game.me, i = net.role === 'host' ? 0 : 1; // anfitrião SEMPRE à esquerda, convidado SEMPRE à direita (não depende da lista)
+    if (me.awakenT > 0) me.endAwaken(); me.awakenT = 0; if (typeof onFormHook === 'function') onFormHook(me, false); // destransforma
+    me.deadT = 0; me.respawnReq = false; me.spawn(); me.invuln = 0; me.ki = 0; me.hp = me.hpShown = me.maxHp;
+    game.duelPos = { x: i === 1 ? WW / 2 + 260 : WW / 2 - 260, f: i === 1 ? -1 : 1 };
+    me.x = game.duelPos.x; me.y = GROUND; me.vx = me.vy = 0; me.facing = game.duelPos.f; if (me.setState) me.setState('idle', 0);
   }
   if (st.ph === 'fight' && prev.ph !== 'fight') { game.fightAt = performance.now(); tone('square', 520, 1040, 0.2, 0.14); }
   if (st.ph === 'end') endDuel(st.w);
