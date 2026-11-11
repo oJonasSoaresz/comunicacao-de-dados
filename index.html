@@ -581,9 +581,9 @@
   /* missões e diária no menu */
   .mside2{position:absolute;left:0;top:calc(var(--wh,600px) * .17);display:flex;flex-direction:column;gap:8px;z-index:3}
   .mscr{position:relative}
-  .ib.big2{position:relative;flex-direction:column;gap:2px;width:calc(var(--wh,600px) * .14);height:calc(var(--wh,600px) * .14)}
+  .ib.big2{position:relative;flex-direction:column;gap:4px;width:calc(var(--wh,600px) * .17);height:calc(var(--wh,600px) * .15)}
   .ib.big2 i{font-style:normal;font-size:calc(var(--wh,600px) * .055)}
-  .ib.big2 span{font-size:calc(var(--wh,600px) * .018)}
+  .ib.big2 span{font-size:calc(var(--wh,600px) * .015)}
   .dot{position:absolute;top:-4px;right:-4px;width:12px;height:12px;border-radius:50%;background:#ff3340;border:2px solid #000}
   /* janelas de missões / diária */
   .card.rw{position:relative;padding-top:calc(var(--pad) * 1.1)!important}
@@ -607,6 +607,43 @@
   .dday.now{border-color:#ffb21e;box-shadow:0 0 12px rgba(255,170,30,.5)}
   .dday em{position:absolute;top:2px;right:4px;font-style:normal;color:#5dff8a;font-size:var(--fB)}
   #bClaimDaily{align-self:center;min-width:55%}
+  /* ===== R22 ===== */
+  button,input,select,textarea{font-family:inherit}
+  #missBox,#dailyBox{z-index:60}
+  /* tag DONO / YT igual à da batalha: texto com degradê animado + nome branco */
+  #accInfo .mpi .dn,#accInfo .mpi .yt{background:none!important;padding:0!important;font-style:normal;margin-right:6px;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;background-size:300% 100%!important;animation:tagsh 1.1s linear infinite;filter:drop-shadow(1px 0 0 #2a1600) drop-shadow(-1px 0 0 #2a1600) drop-shadow(0 1px 0 #2a1600) drop-shadow(0 -1px 0 #2a1600)}
+  #accInfo .mpi .dn{background-image:linear-gradient(90deg,#7a5200,#ffd23a 17%,#fff6c8 25%,#ffd23a 33%,#7a5200 50%,#ffd23a 67%,#fff6c8 75%,#ffd23a 83%,#7a5200)!important}
+  #accInfo .mpi .yt{background-image:linear-gradient(90deg,#8a0d0d,#ff2a2a 17%,#ffd0d0 25%,#ff2a2a 33%,#8a0d0d 50%,#ff2a2a 67%,#ffd0d0 75%,#ff2a2a 83%,#8a0d0d)!important;filter:drop-shadow(1px 0 0 #2a0000) drop-shadow(-1px 0 0 #2a0000) drop-shadow(0 1px 0 #2a0000) drop-shadow(0 -1px 0 #2a0000)}
+  @keyframes tagsh{from{background-position:100% 0}to{background-position:0 0}}
+  /* X de fechar nas telas grandes */
+  .scr{position:relative}
+  .scr>.msgx{top:calc(var(--pad) * .7);right:calc(var(--pad) * .7)}
+  .card.cust .ctop{padding-right:44px}
+  /* missões */
+  .rwh{margin:4px 2px 0;font-weight:normal;font-size:var(--fL);color:#cbbdf5;letter-spacing:1px}
+  #missList{max-height:calc(var(--wh,600px) * .62);overflow-y:auto;padding-right:2px}
+  .rwrow.ready{border-color:#ffb21e;box-shadow:0 0 10px rgba(255,170,30,.25)}
+  .rwrow.done{opacity:1;background:#152a22;border-color:#2f6b4c}
+  .rwrow.done .rwi b{color:#9fe8bd}
+  .rwb{font-size:var(--fS)!important}
+  .card button.b.rwb.got{opacity:1;background:#1f4d36;border-color:#4fd18a;color:#c9ffdc;box-shadow:inset 0 -4px 0 rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;gap:6px}
+  .tick{display:inline-block;width:6px;height:11px;border:solid #5dff8a;border-width:0 3px 3px 0;transform:rotate(45deg);margin:-3px 2px 0}
+  /* diária: nossa moeda */
+  .dday .coin{width:calc(var(--wh,600px) * .06);height:calc(var(--wh,600px) * .06)}
+  .dday .coin.big{width:calc(var(--wh,600px) * .08);height:calc(var(--wh,600px) * .08);filter:drop-shadow(0 0 6px #ffcf3a)}
+  .dday.d7{background:linear-gradient(#3a2560,#241640);border-color:#ffcf3a}
+  .dday em.tick{position:absolute;top:auto;bottom:8px;right:8px;margin:0}
+  /* criar sala: modo e jogadores em seletores ◀ ▶ */
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+  .step{display:flex;align-items:stretch;gap:6px;background:#1d1438;border:3px solid #4a3a8a;border-radius:12px;padding:4px}
+  .step .sa{flex:0 0 auto;width:calc(var(--wh,600px) * .1);border-radius:9px;background:#2a1e52;border:2px solid #6a4fc4;color:#ffcf3a;font-size:var(--fB);cursor:pointer}
+  .step .sa:active{transform:translateY(1px)}
+  .step .sv{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0}
+  .step .sv small{font-size:var(--fS);color:#cbbdf5;letter-spacing:1px}
+  .step .sv b{font-weight:normal;font-size:var(--fB);color:#fff;white-space:nowrap}
+  .step.off .sa{opacity:.3;pointer-events:none}
+  /* painel da personagem: rolagem só dentro dele */
+  .cpanel{overscroll-behavior:contain;touch-action:pan-y}
 </style>
 </head>
 <body>
@@ -632,9 +669,9 @@
         <div class="play">
           <button class="b pri big mb" id="bOpenCreate"><i>🌐</i><b>CRIAR SALA</b></button>
           <button class="b big mb vio" id="bOpenRooms"><i>⚔️</i><b>VER SALAS</b></button>
+          <button class="b mb" id="bChar"><i>👕</i><b>PERSONAGEM</b></button>
           <button class="b mb" id="bBots"><i>🤖</i><b>CONTRA BOTS</b></button>
           <button class="b mb" id="bTrain"><i>🎯</i><b>TREINO</b></button>
-          <button class="b mb" id="bChar"><i>👕</i><b>PERSONAGEM</b></button>
         </div>
       </div>
       <div class="mside2">
@@ -646,13 +683,14 @@
     </div>
   </div>
   <div id="createBox" class="ovl hidden">
-    <form class="card cbox scr" id="createForm" autocomplete="off">
+    <form class="card cbox scr" id="createForm" autocomplete="off"><button type="button" class="msgx" aria-label="fechar" onclick="document.getElementById('bCloseCreate').click()"></button>
       <div class="title"><b>CRIAR SALA</b></div>
       <div class="cfields">
         <div class="fld2"><input id="roomName" type="text" maxlength="18" placeholder="nome da sala (opcional)" autocomplete="off" autocorrect="off" spellcheck="false"></div>
         <div class="fld2"><input id="roomPw" type="text" maxlength="12" placeholder="🔒 senha (opcional)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       </div>
-      <div class="crow2"><div class="fld2"><span>MODO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel" title="sem fim">∞ LIVRE</button><button type="button" data-m="t" title="quem derrotar mais vence">⏱ 5 MIN</button><button type="button" data-m="d" title="1 contra 1, melhor de 3">⚔ DUELO</button></div></div>
+      <div class="steps"><div class="step" id="stMode"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>MODO</small><b id="stModeV">∞ LIVRE</b></div><button type="button" class="sa" data-d="1">&gt;</button></div><div class="step" id="stMx"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>JOGADORES</small><b id="stMxV">6</b></div><button type="button" class="sa" data-d="1">&gt;</button></div></div>
+      <div class="crow2 hidden"><div class="fld2"><span>MODO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel" title="sem fim">∞ LIVRE</button><button type="button" data-m="t" title="quem derrotar mais vence">⏱ 5 MIN</button><button type="button" data-m="d" title="1 contra 1, melhor de 3">⚔ DUELO</button></div></div>
       <div class="fld2"><span>JOGADORES</span><div class="modes nums" id="roomMx"><button type="button" data-x="2">2</button><button type="button" data-x="3">3</button><button type="button" data-x="4">4</button><button type="button" data-x="5">5</button><button type="button" data-x="6" class="sel">6</button></div></div></div>
       <div class="cbmaps">
         <h3>CENÁRIO <small id="mapName2"></small></h3>
@@ -663,7 +701,7 @@
     </form>
   </div>
   <div id="roomsBox" class="ovl hidden">
-    <div class="card rbox scr">
+    <div class="card rbox scr"><button type="button" class="msgx" aria-label="fechar" onclick="document.getElementById('bCloseRooms').click()"></button>
       <div class="title"><b>SALAS ONLINE</b><small>toque numa sala para entrar · ou digite o código</small></div>
       <div id="rooms"><div class="empty">Procurando salas...</div></div>
       <div class="rfoot">
@@ -711,7 +749,7 @@
     </div>
   </div>
   <div id="custom" class="ovl hidden">
-    <div class="card cust scr">
+    <div class="card cust scr"><button type="button" class="msgx" aria-label="fechar" onclick="(document.getElementById('cCancel').classList.contains('hidden') ? document.getElementById('cDone') : document.getElementById('cCancel')).click()"></button>
       
       <div class="ctop"><div class="title sm"><b>CRIAR PERSONAGEM</b></div><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
       <div class="cchars"><span>LUTADOR</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div></div>
@@ -733,7 +771,7 @@
   </div>
   <div id="missBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" id="missX" aria-label="fechar"></button>
-      <div class="title"><b>MISSÕES DO DIA</b><small>renovam todo dia à meia-noite</small></div>
+      <div class="title"><b>MISSÕES</b></div>
       <div id="missList" class="rwlist"></div>
     </div>
   </div>
@@ -3561,34 +3599,39 @@ document.getElementById('bGear').onclick = () => openSettings('menu');
 /* ---------- missões do dia e recompensa diária (servidor: SQL v11) ---------- */
 const MISSOES = [{ id: 'm1', t: 'Jogue 1 partida', f: 'm', n: 1, p: 20 }, { id: 'k3', t: 'Cause 3 derrotas', f: 'k', n: 3, p: 40 },
   { id: 'm3', t: 'Jogue 3 partidas', f: 'm', n: 3, p: 40 }, { id: 'k10', t: 'Cause 10 derrotas', f: 'k', n: 10, p: 100 }];
-const DIARIA = [20, 30, 40, 50, 60, 80, 150];
+const SEMANAIS = [{ id: 'wm15', t: 'Jogue 15 partidas', f: 'm', n: 15, p: 200 }, { id: 'wk40', t: 'Cause 40 derrotas', f: 'k', n: 40, p: 350 }];
+const DIARIA = [20, 30, 40, 50, 60, 80, 300];
 let dly = null;
 async function refreshDaily() {
   if (!conta.user || !conta.sb) return;
   try { if (conta.flushStats) await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('daily_status'); if (error || !data) { dly = null; return; }
-  dly = data; const pode = MISSOES.some(m => !dly.ms.includes(m.id) && dly[m.f] >= m.n);
+  dly = data; dly.w = dly.w || { k: 0, m: 0, ms: [] }; const pode = MISSOES.some(m => !dly.ms.includes(m.id) && dly[m.f] >= m.n) || SEMANAIS.some(m => !dly.w.ms.includes(m.id) && dly.w[m.f] >= m.n);
   show('dotMiss', pode); show('dotDaily', !dly.got);
 }
 function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); }
 function semV11() { notice('As missões e a recompensa diária ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.', 'AVISO'); }
 function drawMissoes() {
   const L = document.getElementById('missList'); L.innerHTML = '';
-  for (const m of MISSOES) { const v = Math.min(m.n, dly[m.f] || 0), feita = dly.ms.includes(m.id), ok = v >= m.n;
-    const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : '');
-    r.innerHTML = '<div class="rwi"><b>' + m.t + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div><span class="rwp"><i class="coin"></i>' + m.p + '</span>';
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'b' + (ok && !feita ? ' pri' : ''); b.disabled = feita || !ok; b.textContent = feita ? '✔' : 'RESGATAR';
-    b.onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
-      if (error) return notice(error.message, 'MISSÕES'); moedasGanhas(data); dly.ms.push(m.id); drawMissoes(); refreshDaily(); };
-    r.appendChild(b); L.appendChild(r); }
+  const grupo = (tit, lista, src) => { const h = document.createElement('h4'); h.className = 'rwh'; h.textContent = tit; L.appendChild(h);
+    for (const m of lista) { const v = Math.min(m.n, src[m.f] || 0), feita = src.ms.includes(m.id), ok = v >= m.n;
+      const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : ok ? ' ready' : '');
+      r.innerHTML = '<div class="rwi"><b>' + m.t + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div><span class="rwp"><i class="coin"></i>' + m.p + '</span>';
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
+      b.innerHTML = feita ? '<span class="tick"></span>RESGATADO' : 'RESGATAR';
+      b.onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
+        if (error) return notice(error.message, 'MISSÕES'); moedasGanhas(data); src.ms.push(m.id); drawMissoes(); refreshDaily(); };
+      r.appendChild(b); L.appendChild(r); } };
+  grupo('DIÁRIAS · renovam à meia-noite', MISSOES, dly); grupo('SEMANAIS · renovam na segunda-feira', SEMANAIS, dly.w);
 }
 function drawDiaria() {
   const D = document.getElementById('dailyDays'); D.innerHTML = ''; const feitos = dly.streak % 7 || (dly.got && dly.streak ? 7 : 0), hoje = dly.got ? feitos - 1 : feitos;
   DIARIA.forEach((p, i) => { const c = document.createElement('div'); c.className = 'dday' + (i < feitos ? ' got' : '') + (i === hoje ? ' now' : '');
-    c.innerHTML = '<small>DIA ' + (i + 1) + '</small><i>' + (i === 6 ? '💎' : '🪙') + '</i><b>' + p + '</b>' + (i < feitos ? '<em>✔</em>' : ''); D.appendChild(c); });
+    c.innerHTML = '<small>DIA ' + (i + 1) + '</small><i class="coin' + (i === 6 ? ' big' : '') + '"></i><b>' + p + '</b>' + (i < feitos ? '<em class="tick"></em>' : ''); if (i === 6) c.classList.add('d7'); D.appendChild(c); });
   const b = document.getElementById('bClaimDaily'); b.disabled = dly.got; b.textContent = dly.got ? 'VOLTE AMANHÃ' : 'RESGATAR';
 }
 async function abrirRecompensa(qual) {
+  if (!document.getElementById('missBox').classList.contains('hidden') || !document.getElementById('dailyBox').classList.contains('hidden')) return; // uma de cada vez
   if (!dly) { wait('carregando...'); await refreshDaily(); unwait(); }
   if (!dly) return semV11();
   if (qual === 'miss') { drawMissoes(); show('missBox', true); } else { drawDiaria(); show('dailyBox', true); }
@@ -3600,7 +3643,8 @@ document.getElementById('dailyX').onclick = () => show('dailyBox', false);
 document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_daily'); unwait();
   if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : error.message, 'RECOMPENSA');
   moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); refreshDaily(); };
-function cMore() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; p.classList.toggle('more', more); m.classList.toggle('hidden', !more); }
+function cMore() { if (cMore.r) return; cMore.r = requestAnimationFrame(() => { cMore.r = 0; cMore2(); }); }
+function cMore2() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; p.classList.toggle('more', more); m.classList.toggle('hidden', !more); }
 "use strict";
 /* =====================================================================
    PARTE 4 — INTERFACE, SESSÃO E LAÇO PRINCIPAL
@@ -4337,8 +4381,10 @@ function buildMenu() {
   const rn = document.getElementById('roomName');
   rn.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('bHost').click(); });
   const openPop = id => { setStatus(''); show('menu', false); show(id, true); }; // a janela fica sozinha na tela (o menu some atrás)
-  const syncMx = () => { const d = net.roomMode === 'd'; document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d; o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
+  const syncMx = () => { const d = net.roomMode === 'd'; const mb = document.querySelector('#roomMode button.sel'); document.getElementById('stModeV').textContent = mb ? mb.textContent : ''; document.getElementById('stMxV').textContent = d ? '2 (duelo)' : net.roomMx; document.getElementById('stMx').classList.toggle('off', d); document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d; o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
   document.querySelectorAll('#roomMx button').forEach(b => b.onclick = () => { net.roomMx = +b.dataset.x; syncMx(); });
+  const stepClick = (box, list) => document.querySelectorAll('#' + box + ' .sa').forEach(a => a.onclick = () => { const bs = [...document.querySelectorAll('#' + list + ' button')], i = bs.findIndex(b => b.classList.contains('sel')), n = bs[(i + +a.dataset.d + bs.length) % bs.length]; if (!n.disabled) n.click(); });
+  stepClick('stMode', 'roomMode'); stepClick('stMx', 'roomMx');
   document.querySelectorAll('#roomMode button').forEach(b => b.onclick = () => { net.roomMode = b.dataset.m; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o === b)); syncMx(); });
   document.getElementById('bOpenCreate').onclick = () => { net.roomMode = 'n'; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o.dataset.m === 'n')); net.roomMx = MAX_PLAYERS; syncMx(); rn.value = ''; document.getElementById('roomPw').value = ''; openPop('createBox'); const mb = document.querySelector('#maps2 button.mapb'); if (mb) mb.click(); document.getElementById('maps2').scrollLeft = 0; }; // sempre começa vazio
   document.getElementById('bChar').onclick = openCustom;
