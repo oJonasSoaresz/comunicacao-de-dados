@@ -554,7 +554,59 @@
   .authc input{padding:calc(var(--wh,600px) * .02) 10px!important}
   .authc .b{padding:calc(var(--wh,600px) * .026) 8px!important}
   .authc .ctabs button{font-size:var(--fB)!important;padding:calc(var(--wh,600px) * .02) 4px!important}
-  .authc .row label{min-width:calc(var(--wh,600px) * .2)}
+  .authc .row label{min-width:calc(var(--wh,600px) * .3);line-height:1.5}
+  .authc .fld>span{flex:0 0 calc(var(--wh,600px) * .3);line-height:1.6;white-space:normal}
+  /* ===== TEMA ÚNICO (mesmo visual do menu em todas as telas) ===== */
+  .ovl:not(#menu):not(#boot){background:radial-gradient(ellipse at 50% 40%,rgba(60,30,110,.4),rgba(10,6,24,.86) 75%)}
+  .card:not(.mscr){background:linear-gradient(#251a46,#170f2e)!important;border:3px solid #6a4fc4!important;border-radius:18px!important;box-shadow:0 5px 0 #0b0618,0 0 0 2px #0b0618,0 18px 40px rgba(0,0,0,.55)!important}
+  .card .title b{color:#ffcf3a!important;text-shadow:2px 2px 0 #000}
+  .card .title small{color:#cbbdf5}
+  .scr>.title,.scr>.ctop,.card.mid>.title{border-bottom:2px solid #3e2d78!important}
+  .card button.b{border-radius:12px;background:#2a1e52;border:3px solid #6a4fc4;box-shadow:inset 0 -4px 0 rgba(0,0,0,.35),0 3px 0 #0b0618;color:#fff}
+  .card button.b:disabled{opacity:.45}
+  .card button.b.pri{background:linear-gradient(#ffa21a,#e5700a);border-color:#ffd36a;box-shadow:inset 0 -4px 0 rgba(120,40,0,.35),0 3px 0 #5a2600;color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5)}
+  .card button.b.dang{background:linear-gradient(#e0434c,#b02630);border-color:#ff9aa0;box-shadow:inset 0 -4px 0 rgba(0,0,0,.3),0 3px 0 #3a0a0e}
+  .card input[type=text],.card input[type=email],.card input[type=password]{border-radius:10px!important;background:#0f0a22!important;border:3px solid #4a3a8a!important;color:#fff}
+  .card input:focus{border-color:#ffb21e!important;outline:none}
+  .modes button,#cTabs button,.ctabs button,#authTabs button{border-radius:10px!important;border:3px solid #4a3a8a!important;background:#1d1438!important;color:#cbbdf5}
+  .modes button.sel,#cTabs button.sel,.ctabs button.sel,#authTabs button.sel{border-color:#ffb21e!important;background:#3a2560!important;color:#ffcf3a}
+  #rooms .room,.copt,.arq,.mapb,.slotb{border-radius:12px!important}
+  .glogo.auth{height:calc(var(--wh,600px) * .26);width:auto;margin:0 auto 2px}
+  /* perfil */
+  .mpi b{color:#fff!important}
+  #accInfo .mpi .dn{font-style:normal;color:#1a1000;background:linear-gradient(#ffe066,#ffb21e);padding:1px 4px;border-radius:4px;margin-right:4px}
+  #accInfo .mpi .yt{font-style:normal;color:#fff;background:#e0262e;padding:1px 4px;border-radius:4px;margin-right:4px}
+  .mlv i{position:relative;width:calc(var(--wh,600px) * .34)!important;height:calc(var(--wh,600px) * .036)!important}
+  .mlv em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:calc(var(--wh,600px) * .018);color:#fff;text-shadow:1px 1px 0 #000}
+  /* missões e diária no menu */
+  .mside2{position:absolute;left:0;top:calc(var(--wh,600px) * .17);display:flex;flex-direction:column;gap:8px;z-index:3}
+  .mscr{position:relative}
+  .ib.big2{position:relative;flex-direction:column;gap:2px;width:calc(var(--wh,600px) * .14);height:calc(var(--wh,600px) * .14)}
+  .ib.big2 i{font-style:normal;font-size:calc(var(--wh,600px) * .055)}
+  .ib.big2 span{font-size:calc(var(--wh,600px) * .018)}
+  .dot{position:absolute;top:-4px;right:-4px;width:12px;height:12px;border-radius:50%;background:#ff3340;border:2px solid #000}
+  /* janelas de missões / diária */
+  .card.rw{position:relative;padding-top:calc(var(--pad) * 1.1)!important}
+  .rwlist{display:flex;flex-direction:column;gap:var(--gap)}
+  .rwrow{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#1d1438;border:2px solid #3e2d78;border-radius:12px}
+  .rwrow.done{opacity:.55}
+  .rwi{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+  .rwi b{font-weight:normal;font-size:var(--fB);color:#fff}
+  .rwbar{position:relative;height:14px;background:#0c0818;border:1px solid #6a4fc4;border-radius:7px;overflow:hidden}
+  .rwbar u{display:block;height:100%;background:linear-gradient(90deg,#38d6ff,#7b5cff)}
+  .rwbar em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:var(--fS);color:#fff;text-shadow:1px 1px 0 #000}
+  .rwp{display:flex;align-items:center;gap:4px;font-size:var(--fB);color:#ffcf3a;flex:0 0 auto}
+  .rwp .coin{width:14px;height:14px}
+  .rwrow .b{flex:0 0 auto;min-width:calc(var(--wh,600px) * .26);padding:8px 6px}
+  .ddays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .dday{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;background:#1d1438;border:3px solid #3e2d78;border-radius:12px}
+  .dday small{font-size:var(--fS);color:#cbbdf5}
+  .dday i{font-style:normal;font-size:calc(var(--wh,600px) * .06)}
+  .dday b{font-weight:normal;font-size:var(--fB);color:#ffcf3a}
+  .dday.got{opacity:.5}
+  .dday.now{border-color:#ffb21e;box-shadow:0 0 12px rgba(255,170,30,.5)}
+  .dday em{position:absolute;top:2px;right:4px;font-style:normal;color:#5dff8a;font-size:var(--fB)}
+  #bClaimDaily{align-self:center;min-width:55%}
 </style>
 </head>
 <body>
@@ -571,7 +623,7 @@
   <div id="menu" class="ovl hidden">
     <div class="card mscr">
       <div class="mbar">
-        <div class="mside"><div class="mprof" id="accInfo"><canvas id="mAva" width="24" height="24"></canvas><div class="mpi"><b id="mName">—</b><div class="mlv"><span id="mLv">NV 1</span><i><u id="mXp"></u></i></div></div></div></div>
+        <div class="mside"><div class="mprof" id="accInfo"><canvas id="mAva" width="24" height="24"></canvas><div class="mpi"><b id="mName">—</b><div class="mlv"><span id="mLv">NV 1</span><i><u id="mXp"></u><em id="mXpT">0/25</em></i></div></div></div></div>
         <img class="glogo menu" id="logoMenu" alt="CustomBattle Online">
         <div class="mside r"><div class="coinpill trp" title="derrotas causadas"><i class="trof">🏆</i><span id="mKills">0</span></div><div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bGear" title="ajustes" aria-label="ajustes">⚙</button></div>
       </div>
@@ -585,18 +637,22 @@
           <button class="b mb" id="bChar"><i>👕</i><b>PERSONAGEM</b></button>
         </div>
       </div>
+      <div class="mside2">
+        <button class="ib big2" id="bMiss" title="missões do dia"><i>📜</i><span>MISSÕES</span><b class="dot hidden" id="dotMiss"></b></button>
+        <button class="ib big2" id="bDaily" title="recompensa diária"><i>🎁</i><span>DIÁRIA</span><b class="dot hidden" id="dotDaily"></b></button>
+      </div>
       <button class="hidden" id="bSettings"></button>
       <div id="status" class="status"></div>
     </div>
   </div>
   <div id="createBox" class="ovl hidden">
     <form class="card cbox scr" id="createForm" autocomplete="off">
-      <div class="title"><b>CRIAR SALA</b><small>escolha como vai ser a luta · você é o anfitrião</small></div>
+      <div class="title"><b>CRIAR SALA</b></div>
       <div class="cfields">
-        <div class="fld2"><span>NOME DA SALA</span><input id="roomName" type="text" maxlength="18" placeholder="opcional" autocomplete="off" autocorrect="off" spellcheck="false"></div>
-        <div class="fld2"><span>SENHA</span><input id="roomPw" type="text" maxlength="12" placeholder="sem senha" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+        <div class="fld2"><input id="roomName" type="text" maxlength="18" placeholder="nome da sala (opcional)" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+        <div class="fld2"><input id="roomPw" type="text" maxlength="12" placeholder="🔒 senha (opcional)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       </div>
-      <div class="crow2"><div class="fld2"><span>MODO DE JOGO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel">∞ NORMAL<small>sem fim</small></button><button type="button" data-m="t">⏱ 5 MINUTOS<small>quem derrotar mais vence</small></button><button type="button" data-m="d">⚔ DUELO<small>1 contra 1 · melhor de 3</small></button></div></div>
+      <div class="crow2"><div class="fld2"><span>MODO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel" title="sem fim">∞ LIVRE</button><button type="button" data-m="t" title="quem derrotar mais vence">⏱ 5 MIN</button><button type="button" data-m="d" title="1 contra 1, melhor de 3">⚔ DUELO</button></div></div>
       <div class="fld2"><span>JOGADORES</span><div class="modes nums" id="roomMx"><button type="button" data-x="2">2</button><button type="button" data-x="3">3</button><button type="button" data-x="4">4</button><button type="button" data-x="5">5</button><button type="button" data-x="6" class="sel">6</button></div></div></div>
       <div class="cbmaps">
         <h3>CENÁRIO <small id="mapName2"></small></h3>
@@ -627,7 +683,7 @@
   </div>
   <div id="auth" class="ovl solid hidden">
     <form class="card authc" id="authForm" autocomplete="on">
-      <div class="logo"><b>CUSTOMBATTLE ONLINE</b><small id="authSub">entre na sua conta para jogar</small></div>
+      <div class="logo"><img class="glogo auth" id="logoAuth" alt="CustomBattle Online"><small id="authSub">entre na sua conta para jogar</small></div>
       <div class="ctabs" id="authTabs"><button type="button" data-m="in" class="sel">ENTRAR</button><button type="button" data-m="up">CRIAR CONTA</button></div>
       <div class="fld" id="authNameRow"><span>NOME</span><input id="authName" type="text" maxlength="18" placeholder="seu nome no jogo" autocomplete="nickname" autocorrect="off" spellcheck="false"></div>
       <div class="fld"><span id="authIdLbl">E-MAIL OU NOME</span><input id="authEmail" type="text" maxlength="120" placeholder="e-mail ou nome no jogo" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
@@ -673,6 +729,19 @@
         </div>
       </div>
       <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
+    </div>
+  </div>
+  <div id="missBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" id="missX" aria-label="fechar"></button>
+      <div class="title"><b>MISSÕES DO DIA</b><small>renovam todo dia à meia-noite</small></div>
+      <div id="missList" class="rwlist"></div>
+    </div>
+  </div>
+  <div id="dailyBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" id="dailyX" aria-label="fechar"></button>
+      <div class="title"><b>RECOMPENSA DIÁRIA</b><small>entre todo dia para ganhar mais</small></div>
+      <div id="dailyDays" class="ddays"></div>
+      <button type="button" class="b pri" id="bClaimDaily">RESGATAR</button>
     </div>
   </div>
   <div id="settings" class="ovl hidden">
@@ -3220,7 +3289,8 @@ function renderConta() {
   document.getElementById('accInfo').classList.toggle('on', on); if (!on) return;
   const xp = (p.kills | 0) * 10 + (p.matches | 0) * 4, lv = 1 + Math.floor(Math.sqrt(xp / 25)), a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
   document.getElementById('mName').innerHTML = (p.role === 'youtuber' ? '<i class="yt">YT</i> ' : p.role === 'dono' ? '<i class="dn">DONO</i> ' : '') + esc(dispName(p.name));
-  document.getElementById('mLv').textContent = 'NV ' + lv; document.getElementById('mXp').style.width = Math.round((xp - a) / (b - a) * 100) + '%';
+  document.getElementById('mLv').textContent = 'NV ' + lv; document.getElementById('mXp').style.width = Math.round((xp - a) / (b - a) * 100) + '%'; document.getElementById('mXpT').textContent = (xp - a) + ' / ' + (b - a) + ' XP';
+  refreshDaily();
   document.getElementById('mKills').textContent = p.kills | 0;
 }
 /* ---------------- LOJA: cada item de customização custa 10 moedas ----------------
@@ -3467,7 +3537,7 @@ const salasSB = {
 };
 </script>
 <script data-parte="interface">
-document.getElementById('logoMenu').src = document.getElementById('logoImg').src; // mesmo logotipo no menu
+document.getElementById('logoMenu').src = document.getElementById('logoAuth').src = document.getElementById('logoImg').src; // mesmo logotipo no menu e no login
 document.getElementById('bGear').onclick = () => openSettings('menu');
 /* aba de opções: quando há mais conteúdo abaixo, a borda de baixo some num degradê e aparece "▼ mais" */
 /* menu: o SEU lutador em destaque (parado ↔ bola de energia) + rostinho no rodapé */
@@ -3488,6 +3558,48 @@ document.getElementById('bGear').onclick = () => openSettings('menu');
   };
   requestAnimationFrame(loop);
 })();
+/* ---------- missões do dia e recompensa diária (servidor: SQL v11) ---------- */
+const MISSOES = [{ id: 'm1', t: 'Jogue 1 partida', f: 'm', n: 1, p: 20 }, { id: 'k3', t: 'Cause 3 derrotas', f: 'k', n: 3, p: 40 },
+  { id: 'm3', t: 'Jogue 3 partidas', f: 'm', n: 3, p: 40 }, { id: 'k10', t: 'Cause 10 derrotas', f: 'k', n: 10, p: 100 }];
+const DIARIA = [20, 30, 40, 50, 60, 80, 150];
+let dly = null;
+async function refreshDaily() {
+  if (!conta.user || !conta.sb) return;
+  try { if (conta.flushStats) await conta.flushStats(); } catch (e) {}
+  const { data, error } = await conta.sb.rpc('daily_status'); if (error || !data) { dly = null; return; }
+  dly = data; const pode = MISSOES.some(m => !dly.ms.includes(m.id) && dly[m.f] >= m.n);
+  show('dotMiss', pode); show('dotDaily', !dly.got);
+}
+function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); }
+function semV11() { notice('As missões e a recompensa diária ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.', 'AVISO'); }
+function drawMissoes() {
+  const L = document.getElementById('missList'); L.innerHTML = '';
+  for (const m of MISSOES) { const v = Math.min(m.n, dly[m.f] || 0), feita = dly.ms.includes(m.id), ok = v >= m.n;
+    const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : '');
+    r.innerHTML = '<div class="rwi"><b>' + m.t + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div><span class="rwp"><i class="coin"></i>' + m.p + '</span>';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'b' + (ok && !feita ? ' pri' : ''); b.disabled = feita || !ok; b.textContent = feita ? '✔' : 'RESGATAR';
+    b.onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
+      if (error) return notice(error.message, 'MISSÕES'); moedasGanhas(data); dly.ms.push(m.id); drawMissoes(); refreshDaily(); };
+    r.appendChild(b); L.appendChild(r); }
+}
+function drawDiaria() {
+  const D = document.getElementById('dailyDays'); D.innerHTML = ''; const feitos = dly.streak % 7 || (dly.got && dly.streak ? 7 : 0), hoje = dly.got ? feitos - 1 : feitos;
+  DIARIA.forEach((p, i) => { const c = document.createElement('div'); c.className = 'dday' + (i < feitos ? ' got' : '') + (i === hoje ? ' now' : '');
+    c.innerHTML = '<small>DIA ' + (i + 1) + '</small><i>' + (i === 6 ? '💎' : '🪙') + '</i><b>' + p + '</b>' + (i < feitos ? '<em>✔</em>' : ''); D.appendChild(c); });
+  const b = document.getElementById('bClaimDaily'); b.disabled = dly.got; b.textContent = dly.got ? 'VOLTE AMANHÃ' : 'RESGATAR';
+}
+async function abrirRecompensa(qual) {
+  if (!dly) { wait('carregando...'); await refreshDaily(); unwait(); }
+  if (!dly) return semV11();
+  if (qual === 'miss') { drawMissoes(); show('missBox', true); } else { drawDiaria(); show('dailyBox', true); }
+}
+document.getElementById('bMiss').onclick = () => abrirRecompensa('miss');
+document.getElementById('bDaily').onclick = () => abrirRecompensa('daily');
+document.getElementById('missX').onclick = () => show('missBox', false);
+document.getElementById('dailyX').onclick = () => show('dailyBox', false);
+document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_daily'); unwait();
+  if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : error.message, 'RECOMPENSA');
+  moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); refreshDaily(); };
 function cMore() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; p.classList.toggle('more', more); m.classList.toggle('hidden', !more); }
 "use strict";
 /* =====================================================================
