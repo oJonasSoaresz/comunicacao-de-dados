@@ -427,20 +427,7 @@
   .arq.pwcard b{font-weight:normal;font-size:clamp(7px,.9vw,10px)}
   .arq.pwcard.sel b{color:var(--acc)}
   .ctitle{position:relative}
-  .chead{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;flex:0 0 auto;padding:4px 2px 0;margin:0 0 14px}
-  .chead .ctitle{margin:0!important;line-height:1.2}
-  .chead .cpill{justify-self:end;position:static;transform:none;font-size:clamp(8px,1vw,11px);margin:0}
-  .card.cust .cchars{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 10px;margin:0 0 12px!important;background:#120d20;border:2px solid var(--line);border-radius:var(--r3)}
-  .cgrp{display:flex;align-items:center;gap:10px;min-width:0}
-  .cgrp>span{font-size:clamp(7px,.85vw,9px);color:var(--muted);letter-spacing:1px}
-  #wrap.short .chead{margin:0 0 8px;padding-top:4px}
-  #wrap.short .card.cust .cchars{padding:5px 8px;margin:0 0 8px!important}
-  #cBuy{position:absolute;left:10px;right:10px;bottom:10px;text-align:center;font-size:clamp(6px,.75vw,8px);line-height:1.6;color:#ffe58a;background:rgba(12,8,22,.82);border-radius:6px;padding:4px 6px;pointer-events:none;visibility:hidden;z-index:3}
-  .cprev.pw #cPoses,.cprev.pw #cStats{display:none}
-  #cBuy.on{visibility:visible}
-  #cBuy .coin{width:8px;height:8px;vertical-align:-1px}
-  .lkp{position:absolute;left:3px;bottom:3px;font-style:normal;font-size:6px;color:#ffe58a;background:rgba(0,0,0,.6);padding:2px 3px;border-radius:3px;pointer-events:none}
-  .arq.pwcard .lkp{left:auto;right:4px;bottom:4px}
+  .cchars .cpill{margin-left:auto;font-size:clamp(8px,1vw,11px)}
   .cprev{position:relative}
   /* bloqueados um pouco apagados */
   .copt.lk,.arq.pwcard.lk,#cSlots button.lk{opacity:.55}
@@ -546,15 +533,15 @@
   </div>
   <div id="custom" class="ovl hidden">
     <div class="card cust">
-      <div class="chead"><span></span><h2 class="ctitle">PERSONAGEM</h2><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
-      <div class="cchars"><div class="cgrp"><span>LUTADOR</span><div id="cChars"></div></div><div class="cgrp"><span>SLOTS</span><div id="cSlots"></div></div></div>
+      
+      <div class="cchars"><span>PERSONAGEM</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
       <div class="cwrap">
         <div class="cprev">
           <canvas id="cPrev" width="80" height="70"></canvas>
           <div class="cname" id="cName"></div>
           <div class="cposes" id="cPoses"></div>
           <div id="cStats"></div>
-          <div id="cBuy"></div>
+          
         </div>
         <div class="copts">
           <div class="ctabs" id="cTabs"></div>
@@ -2529,9 +2516,12 @@ Object.defineProperties(Fighter.prototype, Object.getOwnPropertyDescriptors({
     drawKiBall(x1, y, (11 + Math.sin(t * 25) * 2) * this.beamW(), c, t);
     if (Math.random() < 0.7) particles.push({ x: h.x + f * L, y: h.y + rnd(-8, 8), vx: f * rnd(-40, 80), vy: rnd(-80, 80), life: 0.25, max: 0.25, size: 2, color: c[1], glow: true });
   },
+  drawShield(cam) {
+    if (this.shieldT > 0) { const sx = this.x - cam.x, sy = this.y - cam.y - 28, c = this.pal_.ki; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = hexA(c[1], 0.7 + Math.sin(this.t * 12) * 0.2); ctx.lineWidth = 2; ctx.fillStyle = hexA(c[1], 0.12); ctx.beginPath(); ctx.ellipse(sx, sy, 22, 32, 0, 0, 7); ctx.fill(); ctx.stroke(); ctx.restore(); }
+  },
   drawOverhead(cam) {
     if (this.dead || (this.invisT > 0 && this !== game.me)) return;
-    if (this.shieldT > 0) { const sx = this.x - cam.x, sy = this.y - cam.y - 28, c = this.pal_.ki; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = hexA(c[1], 0.7 + Math.sin(this.t * 12) * 0.2); ctx.lineWidth = 2; ctx.fillStyle = hexA(c[1], 0.12); ctx.beginPath(); ctx.ellipse(sx, sy, 22, 32, 0, 0, 7); ctx.fill(); ctx.stroke(); ctx.restore(); }
+    this.drawShield(cam);
     if (this.paraT > 0 && this.state === 'hurt') { const sx = this.x - cam.x, sy = this.y - cam.y; ctx.strokeStyle = '#ffe680'; ctx.lineWidth = 1; for (let i = 0; i < 3; i++) { ctx.beginPath(); let px = sx - 12 + Math.random() * 24, py = sy - 50; ctx.moveTo(px, py); for (let k = 0; k < 4; k++) { px += rnd(-6, 6); py += 10; ctx.lineTo(px, py); } ctx.stroke(); } }
     const x = Math.round(this.x - cam.x), y = Math.round(this.y - cam.y - 54 - ((this.spr.parado || {})._pad ? 8 : 0)); // auréola: nome sobe
     nameText(this, dispName(this.name), x, y - 9, 5, 'center', this.pal_.swatch);
@@ -3830,7 +3820,7 @@ function swatches(list, cur, onPick, withDefault, pfx) {
 }
 function optCard(label, sel, draw, onPick, key) {
   const b = document.createElement('button'); b.className = 'copt' + (sel ? ' sel' : '');
-  if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i><i class="lkp">' + priceOf(key) + '</i>'); b.title = 'bloqueado · ' + priceOf(key) + ' moedas'; }
+  if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); b.title = 'bloqueado · ' + priceOf(key) + ' moedas'; }
   const c = makeCanvas(56, 56), x = c.getContext('2d'); x.imageSmoothingEnabled = false; draw(x);
   b.appendChild(c); const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp);
   b.onclick = () => { if (sel && key && !shop.has(key)) return tryBuy(key, label); onPick(); saveLook(); offerBuy(key, label); }; return b;
@@ -3869,7 +3859,7 @@ function buildCustomPanel() {
       const key = id === PW0[sl] ? '' : 'p:' + id, b = document.createElement('button'); b.type = 'button'; b.className = 'arq pwcard' + (chosenPw[sl] === id ? ' sel' : '');
       const c = makeCanvas(56, 56); c.getContext('2d').imageSmoothingEnabled = false; drawPowerIcon(c.getContext('2d'), id); b.appendChild(c);
       const tx = document.createElement('div'); tx.innerHTML = '<b>' + pw.name + '</b><span class="pwd">' + pw.desc + '</span><span class="pwd">⚡ ' + pw.cost + ' de energia</span>'; b.appendChild(tx);
-      if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i><i class="lkp">' + priceOf(key) + '</i>'); }
+      if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); }
       b.onclick = () => { if (chosenPw[sl] === id && key && !shop.has(key)) return tryBuy(key, pw.name); chosenPw[sl] = id; custDemo = { id, t0: performance.now() }; saveLook(); offerBuy(key, pw.name); };
       g.appendChild(b);
     }
@@ -3978,6 +3968,7 @@ function pvDraw(w, x) {
   for (const f of game.fighters) f.drawShadow(cam);
   for (const f of game.fighters) f.drawBeam(cam);
   for (const f of [w.dm, w.me]) f.draw(cam);
+  for (const f of game.fighters) f.drawShield(cam);
   for (const p of projectiles) p.draw(cam);
   drawParticles(cam);
   for (const p of popups) { x.globalAlpha = clamp(p.life / p.max * 2, 0, 1); text(p.text, p.x - cam.x, p.y - cam.y, p.size, p.color, 'center', '#1a0f24', 1); }
