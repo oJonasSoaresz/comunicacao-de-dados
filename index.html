@@ -630,7 +630,7 @@
   /* diária: nossa moeda */
   .dday .coin{width:calc(var(--wh,600px) * .06);height:calc(var(--wh,600px) * .06)}
   .dday .coin.big{width:calc(var(--wh,600px) * .08);height:calc(var(--wh,600px) * .08);filter:drop-shadow(0 0 6px #ffcf3a)}
-  .dday.d7{background:linear-gradient(#3a2560,#241640);box-shadow:0 0 14px rgba(255,190,40,.45)}
+  .dday.d7{background:linear-gradient(#3a2560,#241640)}
   .dday.d7.now{border-color:#ffb21e}
   .dday em.tick{position:absolute;top:auto;bottom:8px;right:8px;margin:0}
   /* criar sala: modo e jogadores em seletores ◀ ▶ */
@@ -668,6 +668,17 @@
   .gainfx .gc{position:absolute;left:50%;top:50%;width:14px;height:14px;animation:gcoin .9s ease-out forwards}
   @keyframes gainup{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-160%) scale(1)}}
   @keyframes gcoin{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--dx),var(--dy));opacity:0}}
+  /* ===== R24 ===== */
+  .cpw{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+  .cpw>.cpanel{flex:1;min-height:0}
+  .cpw>.cfade{left:2px;right:2px;bottom:2px;border-radius:0 0 10px 10px}
+  .cpw>.cmore{bottom:8px}
+  #mName{display:flex;align-items:center;gap:6px}
+  .tagc{background:transparent!important;border:0!important;box-shadow:none!important;height:calc(var(--wh,600px) * .036);width:auto;image-rendering:pixelated;flex:0 0 auto}
+  #missList{height:calc(var(--wh,600px) * .5);max-height:none}
+  .step{height:calc(var(--wh,600px) * .13);box-sizing:border-box}
+  .step .sv b,.step .sv small{line-height:1.2;height:1.2em}
+  .mbar .coinpill .coin{width:calc(var(--wh,600px) * .045)!important;height:calc(var(--wh,600px) * .045)!important}
 </style>
 </head>
 <body>
@@ -713,8 +724,8 @@
         <div class="fld2"><input id="roomName" type="text" maxlength="18" placeholder="nome da sala (opcional)" autocomplete="off" autocorrect="off" spellcheck="false"></div>
         <div class="fld2"><input id="roomPw" type="text" maxlength="12" placeholder="🔒 senha (opcional)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       </div>
-      <div class="steps"><div class="step" id="stMode"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>MODO</small><b id="stModeV">∞ LIVRE</b></div><button type="button" class="sa" data-d="1">&gt;</button></div><div class="step" id="stMx"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>JOGADORES</small><b id="stMxV">6</b></div><button type="button" class="sa" data-d="1">&gt;</button></div></div>
-      <div class="crow2 hidden"><div class="fld2"><span>MODO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel" title="sem fim">∞ LIVRE</button><button type="button" data-m="t" title="quem derrotar mais vence">⏱ 5 MIN</button><button type="button" data-m="d" title="1 contra 1, melhor de 3">⚔ DUELO</button></div></div>
+      <div class="steps"><div class="step" id="stMode"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>MODO</small><b id="stModeV">LIVRE</b></div><button type="button" class="sa" data-d="1">&gt;</button></div><div class="step" id="stMx"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>JOGADORES</small><b id="stMxV">6</b></div><button type="button" class="sa" data-d="1">&gt;</button></div></div>
+      <div class="crow2 hidden"><div class="fld2"><span>MODO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel" title="sem fim">LIVRE</button><button type="button" data-m="t" title="quem derrotar mais vence">5 MIN</button><button type="button" data-m="d" title="1 contra 1, melhor de 3">DUELO</button></div></div>
       <div class="fld2"><span>JOGADORES</span><div class="modes nums" id="roomMx"><button type="button" data-x="2">2</button><button type="button" data-x="3">3</button><button type="button" data-x="4">4</button><button type="button" data-x="5">5</button><button type="button" data-x="6" class="sel">6</button></div></div></div>
       <div class="cbmaps">
         <h3>CENÁRIO <small id="mapName2"></small></h3>
@@ -773,7 +784,7 @@
     </div>
   </div>
   <div id="custom" class="ovl hidden">
-    <div class="card cust scr"><button type="button" class="msgx" aria-label="fechar" onclick="(document.getElementById('cCancel').classList.contains('hidden') ? document.getElementById('cDone') : document.getElementById('cCancel')).click()"></button>
+    <div class="card cust scr"><button type="button" class="msgx" aria-label="fechar" onclick="if (document.getElementById('cCancel').classList.contains('hidden')) closeCustom(); else document.getElementById('cCancel').click()"></button>
       
       <div class="ctop"><div class="title sm"><b>CRIAR PERSONAGEM</b></div><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
       <div class="cchars"><span>LUTADOR</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div></div>
@@ -787,7 +798,7 @@
         </div>
         <div class="copts">
           <div class="ctabs" id="cTabs"></div>
-          <div class="cpanel" id="cPanel" onscroll="cMore()"></div><i class="cfade" id="cFade"></i><i class="cmore hidden" id="cMore">▼ mais</i>
+          <div class="cpw"><div class="cpanel" id="cPanel" onscroll="cMore()"></div><i class="cfade" id="cFade"></i><i class="cmore hidden" id="cMore">▼ mais</i></div>
         </div>
       </div>
       <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
@@ -3319,10 +3330,10 @@ function renderCoins() { const el = document.getElementById('coinN'), v = shop.i
 /* o nome dourado agora vem do cargo salvo no banco (a antiga tag {DONO} não vale mais) */
 const isOwnerF = f => conta.roleOf(f) === 'dono';
 /* nome de um lutador com o visual do cargo: dono = dourado · youtuber = tag YT vermelha + nome branco */
+const TAGS = { dono: ['DONO', ['#7a5200', '#ffd23a', '#fff6c8', '#ffd23a', '#7a5200'], '#2a1600'], youtuber: ['YT', ['#8a0d0d', '#ff2a2a', '#ffd0d0', '#ff2a2a', '#8a0d0d'], '#2a0000'] };
 function nameText(f, str, x, y, size, align, color, outline = '#120c1c', ow = 1.2) {
   const r = f && f.role !== undefined ? f.role : conta.roleOf(f);
-  if (r === 'dono') return tagText('DONO', ['#7a5200', '#ffd23a', '#fff6c8', '#ffd23a', '#7a5200'], '#2a1600', str, x, y, size, align, outline);
-  if (r === 'youtuber') return tagText('YT', ['#8a0d0d', '#ff2a2a', '#ffd0d0', '#ff2a2a', '#8a0d0d'], '#2a0000', str, x, y, size, align, outline);
+  if (TAGS[r]) return tagText(TAGS[r][0], TAGS[r][1], TAGS[r][2], str, x, y, size, align, outline);
   text(str, x, y, size, color, align, outline, ow);
 }
 function tagText(tag, cols, dark, str, x, y, size, align = 'left', outline = '#120c1c') {
@@ -3352,7 +3363,7 @@ function renderConta() {
   const p = conta.perfil, on = !!(conta.user && p);
   document.getElementById('accInfo').classList.toggle('on', on); if (!on) return;
   const xp = (p.kills | 0) * 10 + (p.matches | 0) * 4, lv = 1 + Math.floor(Math.sqrt(xp / 25)), a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
-  document.getElementById('mName').innerHTML = (p.role === 'youtuber' ? '<i class="yt">YT</i> ' : p.role === 'dono' ? '<i class="dn">DONO</i> ' : '') + esc(dispName(p.name));
+  document.getElementById('mName').innerHTML = (TAGS[p.role] ? '<canvas class="tagc" data-r="' + p.role + '" width="48" height="12"></canvas>' : '') + '<span>' + esc(dispName(p.name)) + '</span>';
   document.getElementById('mLv').textContent = 'NV ' + lv; document.getElementById('mXp').style.width = Math.round((xp - a) / (b - a) * 100) + '%'; document.getElementById('mXpT').textContent = (xp - a) + ' / ' + (b - a) + ' XP';
   refreshDaily();
   document.getElementById('mKills').textContent = p.kills | 0;
@@ -3617,6 +3628,8 @@ document.getElementById('bGear').onclick = () => openSettings('menu');
       x.drawImage(im, -Math.floor(im.width / 2), -im.height);
       if (pose === 'kiball') drawKiBall(20 + Math.sin(t * 6) * 1.5, -30, 6, pal.ki, t);
       x.restore(); } finally { ctx = save; }
+    for (const tc of document.querySelectorAll('canvas.tagc')) { const T = TAGS[tc.dataset.r], g = tc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, tc.width, tc.height);
+      const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } }
     const av = document.getElementById('mAva'), y = av.getContext('2d'), p0 = spr.parado; y.clearRect(0, 0, 24, 24); y.imageSmoothingEnabled = false;
     y.drawImage(p0, Math.floor(12 - p0.width / 2), -7 - (p0._pad || 0));
   };
@@ -4139,7 +4152,7 @@ function custSig() { return JSON.stringify([slotCur, chosenLook, chosenFxc, chos
 let custBackup = null;
 function custCancel() { if (custBackup) { setSlots(custBackup.slots, custBackup.cur); saveLook(); } closeCustom(); } // desfaz tudo desta visita
 function custClear() { chosenLook = newSlot().look; chosenFxc = { a: '', k: '' }; chosenArq = 'eq'; chosenTr = -1; chosenPw = { ...PW0 }; saveLook(); } // padrão de fábrica
-function custBtn() { const b = document.getElementById('cDone'), ch = custOpen && custSig() !== custStart; if (b) b.textContent = ch ? '✓ SALVAR' : '← VOLTAR'; show('cCancel', ch); }
+function custBtn() { const b = document.getElementById('cDone'), ch = custOpen && custSig() !== custStart; if (b) b.textContent = '✓ SALVAR'; show('cDone', ch); show('cCancel', ch); }
 let custStart = '';
 function openCustom() {
   offerBuy(''); custTab = 'corpo'; custOk = null;
@@ -4424,7 +4437,7 @@ function buildMenu() {
   const rn = document.getElementById('roomName');
   rn.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('bHost').click(); });
   const openPop = id => { setStatus(''); show('menu', false); show(id, true); }; // a janela fica sozinha na tela (o menu some atrás)
-  const syncMx = () => { const d = net.roomMode === 'd'; const mb = document.querySelector('#roomMode button.sel'); document.getElementById('stModeV').textContent = mb ? mb.textContent : ''; document.getElementById('stMxV').textContent = d ? '2 (duelo)' : net.roomMx; document.getElementById('stMx').classList.toggle('off', d); document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d; o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
+  const syncMx = () => { const d = net.roomMode === 'd'; const mb = document.querySelector('#roomMode button.sel'); document.getElementById('stModeV').textContent = mb ? mb.textContent : ''; document.getElementById('stMxV').textContent = d ? '2' : net.roomMx; document.getElementById('stMx').classList.toggle('off', d); document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d; o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
   document.querySelectorAll('#roomMx button').forEach(b => b.onclick = () => { net.roomMx = +b.dataset.x; syncMx(); });
   const stepClick = (box, list) => document.querySelectorAll('#' + box + ' .sa').forEach(a => a.onclick = () => { const bs = [...document.querySelectorAll('#' + list + ' button')], i = bs.findIndex(b => b.classList.contains('sel')), n = bs[(i + +a.dataset.d + bs.length) % bs.length]; if (!n.disabled) n.click(); });
   stepClick('stMode', 'roomMode'); stepClick('stMx', 'roomMx');
