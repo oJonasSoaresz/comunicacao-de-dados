@@ -432,34 +432,71 @@
   .copt.lk,.arq.pwcard.lk,#cSlots button.lk{opacity:.55}
   .copt.lk.sel,.arq.pwcard.lk.sel{opacity:.85}
   .cswatch button.lkc{opacity:.5}
-  /* ===== telas grandes: todas do MESMO tamanho, título no mesmo lugar ===== */
-  .mcard,.cbox,.rbox,.card.cust{width:min(94%,900px)!important;height:min(94%,calc(var(--wh,600px) * .94))!important;max-height:none!important;overflow:hidden}
-  .title{flex:0 0 auto}
-  .title b{letter-spacing:1px}
-  #wrap.short .title b,#wrap.short .logo b{font-size:15px}
-  #wrap.short .title small{font-size:7px}
-  .ctop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
-  .ctop .title{text-align:left}
-  .ctop .cpill{font-size:clamp(8px,1vw,11px)}
-  .mcard{justify-content:space-between}
-  .mcard .play{flex:1;min-height:0;align-content:stretch;grid-auto-rows:1fr}
-  .mcard .play .b{font-size:clamp(9px,1.2vw,12px)}
-  .mcard #accInfo{flex:0 0 auto}
-  .cbox{display:flex;flex-direction:column}
-  .cbox .cbmaps{flex:1;min-height:0;display:flex;flex-direction:column}
-  .cbox .mapstrip{flex:1;min-height:0}
-  .cbox .mapstrip button.mapb{flex:0 0 auto;height:100%;min-height:0}
-  .cbox .mapstrip button.mapb canvas{flex:1 1 0;min-height:0;height:0;width:auto;max-width:none;aspect-ratio:16/9}
+  /* ===================================================================
+     SISTEMA DE TELAS (feito para o celular deitado; no PC só cresce até um limite)
+     - toda tela grande = cabeçalho (NOME da tela + subtítulo, ações à direita) · conteúdo · rodapé
+     - rodapé: VOLTAR/secundário à esquerda, ação principal à direita
+     - tamanhos de letra pela ALTURA da tela (--wh): mesma proporção em qualquer aparelho
+     =================================================================== */
+  #wrap{--fT:clamp(15px,calc(var(--wh,600px) * .052),28px);--fS:clamp(7px,calc(var(--wh,600px) * .021),11px);--fB:clamp(8px,calc(var(--wh,600px) * .026),13px);--fL:clamp(7px,calc(var(--wh,600px) * .021),11px);--gap:clamp(6px,calc(var(--wh,600px) * .022),14px);--pad:clamp(10px,calc(var(--wh,600px) * .035),24px)}
+  .ovl>.card{zoom:var(--uz,1)}
+  .scr{width:min(96%,calc(var(--wh,600px) * 2.1))!important;height:94%!important;max-height:none!important;overflow:hidden!important;display:flex!important;flex-direction:column;gap:var(--gap)!important;padding:var(--pad)!important}
+  .card .title b,.card .logo b{font-size:var(--fT)!important;letter-spacing:1px;line-height:1.1}
+  .card .title small,.card .logo small{font-size:var(--fS)!important;margin-top:calc(var(--gap) * .4)!important}
+  .card button.b{font-size:var(--fB)}
+  .card input[type=text],.card input[type=email],.card input[type=password]{font-size:var(--fB)!important}
+  .fld2>span,.cchars>span,.row label,.cbmaps h3,.msec h3,.set label{font-size:var(--fL)!important;letter-spacing:1px}
+  .ctabs button,#cTabs button,.cposes button{font-size:var(--fL)!important}
+  /* cabeçalho igual em todas: nome à esquerda + linha embaixo */
+  .scr>.title,.scr>.ctop,.scr>.mtop,.card.mid>.title{flex:0 0 auto;text-align:left;padding-bottom:var(--gap);border-bottom:2px solid var(--line)}
+  .ctop,.mtop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap}
+  .ctop .title,.mtop .logo{text-align:left;min-width:0}
+  .coinpill{font-size:var(--fB)!important}
+  /* menu */
+  .mcard #accInfo{flex:0 0 auto;font-size:var(--fS)!important;margin-top:calc(var(--gap) * -.4)}
+  .mcard .play{flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1.25fr 1fr;gap:var(--gap)}
+  .mcard .play .mb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--gap) * .5);min-height:0;padding:6px}
+  .mcard .play .mb.big{grid-column:span 2}
+  .mb i{font-style:normal;font-size:calc(var(--fT) * 1.05);line-height:1}
+  .mb b{font-weight:normal;font-size:var(--fB)}
+  .mb small{font-size:var(--fS);opacity:.75}
+  .mcard .play .mb:not(.big) i{font-size:var(--fT)}
+  .mcard .status{display:none}
+  /* criar sala */
+  .cbox .crow2{display:grid;grid-template-columns:1.5fr 1fr;gap:var(--gap)}
+  .cbox .cfields{gap:var(--gap)}
+  .cbox .fld2{gap:calc(var(--gap) * .45)}
+  .modes{gap:calc(var(--gap) * .6)}
+  .modes button{font-size:var(--fB)!important;padding:calc(var(--wh,600px) * .018) 4px!important}
+  .modes button small{display:none}
   .modes.nums{grid-template-columns:repeat(5,1fr)}
-  .modes.nums button{min-width:0;padding:9px 4px}
   .modes.nums button:disabled{opacity:.35}
-  .authc{width:min(94%,680px)!important;padding:clamp(16px,3vw,30px)!important;gap:clamp(10px,1.8vw,16px)!important}
-  .authc input{padding:11px 10px!important}
-  .authc .b{padding:14px 8px!important}
+  .cbox .cbmaps{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(var(--gap) * .45)}
+  .cbox .cbmaps h3{margin:0}
+  .cbox .mapstrip{flex:1;min-height:0;align-items:center;padding:2px 2px 4px}
+  .cbox .mapstrip button.mapb{flex:0 0 auto;padding:4px;gap:4px;font-size:var(--fS)}
+  .cbox .mapstrip button.mapb canvas{width:calc(var(--wh,600px) * .27);height:calc(var(--wh,600px) * .152);max-width:none;aspect-ratio:auto}
+  .cbox .status{display:none}
+  .cbox .btns2{flex:0 0 auto}
+  /* salas */
+  .rbox #rooms{flex:1;min-height:0;max-height:none}
+  .rbox .rfoot{flex:0 0 auto;display:grid;grid-template-columns:auto 1fr;gap:var(--gap);align-items:end}
+  .rbox .rfoot>.b{order:-1;min-width:calc(var(--wh,600px) * .3)}
+  .rbox .status:empty{display:none}
+  /* personagem */
   .card.cust .cprev canvas{background:none}
-  #wrap.short .authc{padding:10px 18px!important;gap:7px!important}
-  #wrap.short .authc input{padding:6px 8px!important}
-  #wrap.short .authc .b{padding:10px 8px!important}
+  .card.cust .cchars{margin:0!important}
+  .card.cust .cwrap{flex:1;min-height:0}
+  .card.cust .cbtns{flex:0 0 auto}
+  /* telas médias (configurações, senha, pausa): mesmo estilo, menores */
+  .card.mid{width:min(92%,calc(var(--wh,600px) * 1.25),620px)!important;padding:var(--pad)!important;gap:var(--gap)!important}
+  .card.mid .btns.one{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+  /* entrar / criar conta: tela de abertura (logo no centro), maior */
+  .authc{width:min(92%,calc(var(--wh,600px) * 1.3),620px)!important;padding:var(--pad)!important;gap:var(--gap)!important}
+  .authc input{padding:calc(var(--wh,600px) * .02) 10px!important}
+  .authc .b{padding:calc(var(--wh,600px) * .026) 8px!important}
+  .authc .ctabs button{font-size:var(--fB)!important;padding:calc(var(--wh,600px) * .02) 4px!important}
+  .authc .row label{min-width:calc(var(--wh,600px) * .2)}
 </style>
 </head>
 <body>
@@ -474,9 +511,9 @@
     </div>
   </div>
   <div id="menu" class="ovl hidden">
-    <div class="card mcard">
+    <div class="card mcard scr">
       <div class="mtop">
-        <div class="logo"><b>ARENA DE KI</b><small>batalha livre online</small></div>
+        <div class="logo"><b>ARENA DE KI</b><small>MENU PRINCIPAL · batalha livre online</small></div>
         <div class="mright">
           <div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div>
           <button class="b" id="bAcc">SAIR</button>
@@ -484,25 +521,25 @@
       </div>
       <div id="accInfo"></div>
       <div class="play">
-        <button class="b pri big" id="bOpenCreate">🌐 CRIAR SALA</button>
-        <button class="b big" id="bOpenRooms">📋 VER SALAS</button>
-        <button class="b" id="bBots">⚔ CONTRA BOTS</button>
-        <button class="b" id="bTrain">🎯 TREINO</button>
-        <button class="b" id="bChar">🥋 PERSONAGEM</button>
-        <button class="b" id="bSettings">⚙ CONFIGURAÇÕES</button>
+        <button class="b pri big mb" id="bOpenCreate"><i>🌐</i><b>CRIAR SALA</b><small>você é o anfitrião</small></button>
+        <button class="b big mb" id="bOpenRooms"><i>📋</i><b>VER SALAS</b><small>entre numa luta aberta</small></button>
+        <button class="b mb" id="bBots"><i>⚔</i><b>CONTRA BOTS</b></button>
+        <button class="b mb" id="bTrain"><i>🎯</i><b>TREINO</b></button>
+        <button class="b mb" id="bChar"><i>🥋</i><b>PERSONAGEM</b></button>
+        <button class="b mb" id="bSettings"><i>⚙</i><b>AJUSTES</b></button>
       </div>
       <div id="status" class="status"></div>
     </div>
   </div>
   <div id="createBox" class="ovl hidden">
-    <form class="card cbox" id="createForm" autocomplete="off">
-      <div class="title"><b>CRIAR SALA</b><small>você é o anfitrião</small></div>
+    <form class="card cbox scr" id="createForm" autocomplete="off">
+      <div class="title"><b>CRIAR SALA</b><small>escolha como vai ser a luta · você é o anfitrião</small></div>
       <div class="cfields">
         <div class="fld2"><span>NOME DA SALA</span><input id="roomName" type="text" maxlength="18" placeholder="opcional" autocomplete="off" autocorrect="off" spellcheck="false"></div>
         <div class="fld2"><span>SENHA</span><input id="roomPw" type="text" maxlength="12" placeholder="sem senha" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       </div>
-      <div class="fld2"><span>MODO DE JOGO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel">∞ NORMAL<small>sem fim</small></button><button type="button" data-m="t">⏱ 5 MINUTOS<small>quem derrotar mais vence</small></button><button type="button" data-m="d">⚔ DUELO<small>1 contra 1 · melhor de 3</small></button></div></div>
-      <div class="fld2"><span>JOGADORES</span><div class="modes nums" id="roomMx"><button type="button" data-x="2">2</button><button type="button" data-x="3">3</button><button type="button" data-x="4">4</button><button type="button" data-x="5">5</button><button type="button" data-x="6" class="sel">6</button></div></div>
+      <div class="crow2"><div class="fld2"><span>MODO DE JOGO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel">∞ NORMAL<small>sem fim</small></button><button type="button" data-m="t">⏱ 5 MINUTOS<small>quem derrotar mais vence</small></button><button type="button" data-m="d">⚔ DUELO<small>1 contra 1 · melhor de 3</small></button></div></div>
+      <div class="fld2"><span>JOGADORES</span><div class="modes nums" id="roomMx"><button type="button" data-x="2">2</button><button type="button" data-x="3">3</button><button type="button" data-x="4">4</button><button type="button" data-x="5">5</button><button type="button" data-x="6" class="sel">6</button></div></div></div>
       <div class="cbmaps">
         <h3>CENÁRIO <small id="mapName2"></small></h3>
         <div id="maps2" class="mapstrip"></div>
@@ -512,8 +549,8 @@
     </form>
   </div>
   <div id="roomsBox" class="ovl hidden">
-    <div class="card rbox">
-      <div class="title"><b>SALAS ONLINE</b><small>toque numa sala para entrar</small></div>
+    <div class="card rbox scr">
+      <div class="title"><b>SALAS ONLINE</b><small>toque numa sala para entrar · ou digite o código</small></div>
       <div id="rooms"><div class="empty">Procurando salas...</div></div>
       <div class="rfoot">
         <div class="fld2 codeRow"><span>CÓDIGO</span><div class="crow"><input id="code" type="text" maxlength="4" placeholder="ABCD" autocomplete="off" autocorrect="off" spellcheck="false" style="text-transform:uppercase"><button class="b" id="bJoin">ENTRAR</button></div></div>
@@ -560,7 +597,7 @@
     </div>
   </div>
   <div id="custom" class="ovl hidden">
-    <div class="card cust">
+    <div class="card cust scr">
       
       <div class="ctop"><div class="title"><b>PERSONAGEM</b><small>visual, poderes e arquétipo</small></div><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
       <div class="cchars"><span>LUTADOR</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div></div>
@@ -581,8 +618,8 @@
     </div>
   </div>
   <div id="settings" class="ovl hidden">
-    <div class="card small">
-      <div class="title"><b>CONFIGURAÇÕES</b><small>botões na tela</small></div>
+    <div class="card small mid">
+      <div class="title"><b>CONFIGURAÇÕES</b><small>controles na tela e código</small></div>
       <div class="set"><label>Tamanho dos botões <span id="vSize"></span></label><input type="range" id="rSize" min="60" max="170" step="5"></div>
       <div class="set"><label>Visibilidade dos botões <span id="vOp"></span></label><input type="range" id="rOp" min="25" max="100" step="5"></div>
       <div class="btns one">
@@ -1614,8 +1651,10 @@ function resizeCanvas() {
   }
   ctx.imageSmoothingEnabled = false;
   U_PX = Math.min(r.height, r.width * 0.56) / 100;
-  wrap.style.setProperty('--u', U_PX + 'px'); wrap.style.setProperty('--wh', r.height + 'px');
-  wrap.classList.toggle('short', r.height < 560); wrap.classList.toggle('tiny', r.height < 400); wrap.classList.toggle('narrow', r.width < 600);
+  // telas (menus): desenhadas para o celular deitado (~380px de altura); em telas maiores tudo é AMPLIADO na mesma proporção
+  const uz = Math.max(1, Math.min(2.4, r.height / 380)), dh = r.height / uz, dw = r.width / uz;
+  wrap.style.setProperty('--u', U_PX + 'px'); wrap.style.setProperty('--wh', dh + 'px'); wrap.style.setProperty('--uz', uz);
+  wrap.classList.toggle('short', dh < 560); wrap.classList.toggle('tiny', dh < 400); wrap.classList.toggle('narrow', dw < 600);
   const sf = document.getElementById('safe');
   SAFE.l = sf.offsetLeft / r.width * VW; SAFE.r = (r.width - sf.offsetLeft - sf.offsetWidth) / r.width * VW;
   SAFE.t = sf.offsetTop / r.height * VH; SAFE.b = (r.height - sf.offsetTop - sf.offsetHeight) / r.height * VH;
