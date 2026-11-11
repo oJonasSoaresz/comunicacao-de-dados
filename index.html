@@ -461,7 +461,10 @@
   .msgc #msgText{line-height:1.8;padding:2px 6px}
   .msgc #msgBtns{justify-items:center}
   .msgc #msgOk{min-width:55%}
-  .msgx{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;background:#2b2244;color:#fff;border:2px solid #000;box-shadow:0 0 0 2px var(--line),inset 0 -3px 0 rgba(0,0,0,.35);font:inherit;font-size:13px;line-height:1;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center}
+  .msgx{position:absolute;top:10px;right:10px;width:30px;height:30px;padding:0;border-radius:50%;background:#d8323c;border:2px solid #000;box-shadow:0 0 0 2px #ff8a8f,inset 0 -3px 0 rgba(0,0,0,.3);cursor:pointer;z-index:2}
+  .msgx::before,.msgx::after{content:'';position:absolute;left:50%;top:50%;width:14px;height:3px;margin:-1.5px 0 0 -7px;background:#fff;border-radius:2px;transform:rotate(45deg)}
+  .msgx::after{transform:rotate(-45deg)}
+  .msgx:hover{background:#ef4650}
   .msgx:active{transform:translateY(1px)}
   /* personagem: título menor, mais espaço para as opções */
   .ctop .title.sm b{font-size:calc(var(--fT) * .62)!important}
@@ -471,7 +474,42 @@
   .copts{position:relative}
   .cmore{position:absolute;right:14px;bottom:6px;font-size:var(--fL);color:var(--acc);pointer-events:none;animation:cmb 1s ease-in-out infinite alternate;z-index:3}
   @keyframes cmb{to{transform:translateY(3px)}}
-  /* menu */
+  /* ===== MENU (cena: logo no topo, seu lutador à esquerda, botões à direita, perfil embaixo) ===== */
+  #menu{background:radial-gradient(ellipse at 50% 40%,rgba(60,30,110,.35),rgba(10,6,24,.82) 75%)}
+  .mscr{width:96%!important;height:94%!important;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;display:flex;flex-direction:column;gap:calc(var(--gap) * .8);overflow:visible!important}
+  .mbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;flex:0 0 auto}
+  .mside{display:flex;gap:8px}
+  .mside.r{justify-content:flex-end}
+  .ib{width:calc(var(--wh,600px) * .11);height:calc(var(--wh,600px) * .11);border-radius:12px;background:#2b2150;border:3px solid #6a4fc4;box-shadow:inset 0 -4px 0 rgba(0,0,0,.35),0 3px 0 #120a26;color:#fff;font-size:calc(var(--wh,600px) * .055);line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+  .ib:active{transform:translateY(2px)}
+  .mbar .glogo.menu{height:calc(var(--wh,600px) * .3)!important;width:auto;margin:-2px 0 -6px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
+  .mbar .coinpill{font-size:calc(var(--wh,600px) * .05)!important;padding:4px 12px 4px 6px;border:3px solid #6b5418;background:#1c1206;border-radius:999px}
+  .mbar .coinpill .coin{width:calc(var(--wh,600px) * .06);height:calc(var(--wh,600px) * .06)}
+  .mmid{flex:1;min-height:0;display:grid;grid-template-columns:30% 1fr;gap:var(--gap);align-items:stretch}
+  .mhero{position:relative;display:flex;align-items:flex-end;justify-content:center}
+  .mhero::after{content:'';position:absolute;left:8%;right:8%;bottom:4%;height:14%;border-radius:50%;border:3px solid #ffb21e;box-shadow:0 0 14px #ff9a1e,inset 0 0 10px #ff9a1e;background:radial-gradient(rgba(255,170,40,.25),transparent 70%);z-index:0}
+  .mhero canvas{background:transparent!important;border:0!important;box-shadow:none!important;position:relative;z-index:1;height:100%;max-width:100%;image-rendering:pixelated;object-fit:contain}
+  .mmid .play{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1.45fr 1fr;gap:var(--gap);min-height:0}
+  .play .mb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--gap) * .45);min-height:0;padding:6px;border-radius:14px;background:#2a1e52;border:3px solid #6a4fc4;box-shadow:inset 0 -5px 0 rgba(0,0,0,.35),0 4px 0 #120a26}
+  .play .mb.big{grid-column:span 2}
+  .play .mb.pri{background:linear-gradient(#ffa21a,#e5700a);border-color:#ffd36a;box-shadow:inset 0 -6px 0 rgba(120,40,0,.35),0 4px 0 #5a2600,0 0 18px rgba(255,150,30,.35)}
+  .play .mb.vio{background:linear-gradient(#7a4fe0,#5634b8);border-color:#c5b2ff}
+  .play .mb i{font-style:normal;line-height:1;font-size:calc(var(--wh,600px) * .085)}
+  .play .mb.big i{font-size:calc(var(--wh,600px) * .085)}
+  .play .mb b{white-space:nowrap;font-size:calc(var(--wh,600px) * .036);color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.55);letter-spacing:.5px}
+  .play .mb.big b{font-size:calc(var(--wh,600px) * .06)}
+  .play .mb small{font-size:calc(var(--wh,600px) * .028);color:#fff;background:rgba(0,0,0,.28);padding:3px 10px;border-radius:999px;opacity:1}
+  .mfoot{flex:0 0 auto;display:flex}
+  .mfoot #accInfo{width:fit-content;max-width:100%}
+  #accInfo{display:flex;align-items:center;gap:12px;padding:6px 18px 6px 6px;background:rgba(20,12,44,.88);border:3px solid #6a4fc4;border-radius:999px;font-size:calc(var(--wh,600px) * .036)!important;margin:0!important;max-width:100%}
+  #accInfo:not(.on){display:none}
+  #mAva{width:calc(var(--wh,600px) * .1);height:calc(var(--wh,600px) * .1);border-radius:50%;background:#3a2a6a;border:2px solid #ffb21e;image-rendering:pixelated;flex:0 0 auto}
+  #accTxt{display:flex;align-items:center;gap:12px;min-width:0;white-space:nowrap;overflow:hidden}
+  .mnm b{color:#ffcf3a}
+  .msep{width:2px;align-self:stretch;background:#6a4fc4}
+  .mst{color:#fff}
+  .mst em{font-style:normal;color:#ffcf3a}
+  #menu .status{display:none}
   .mcard #accInfo{flex:0 0 auto;font-size:var(--fS)!important;margin-top:calc(var(--gap) * -.4)}
   .mcard .play{flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1.25fr 1fr;gap:var(--gap)}
   .mcard .play .mb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--gap) * .5);min-height:0;padding:6px}
@@ -530,23 +568,24 @@
     </div>
   </div>
   <div id="menu" class="ovl hidden">
-    <div class="card mcard scr">
-      <div class="mtop">
+    <div class="card mscr">
+      <div class="mbar">
+        <div class="mside"><button class="ib" id="bGear" title="ajustes" aria-label="ajustes">⚙</button><button class="ib" id="bAcc" title="sair da conta" aria-label="sair da conta">⏻</button></div>
         <img class="glogo menu" id="logoMenu" alt="CustomBattle Online">
-        <div class="mright">
-          <div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div>
-          <button class="b" id="bAcc">SAIR</button>
+        <div class="mside r"><div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div></div>
+      </div>
+      <div class="mmid">
+        <div class="mhero"><canvas id="mHero" width="120" height="96"></canvas></div>
+        <div class="play">
+          <button class="b pri big mb" id="bOpenCreate"><i>🌐</i><b>CRIAR SALA</b><small>você é o anfitrião</small></button>
+          <button class="b big mb vio" id="bOpenRooms"><i>⚔️</i><b>VER SALAS</b><small>entre numa luta aberta</small></button>
+          <button class="b mb" id="bBots"><i>🤖</i><b>CONTRA BOTS</b></button>
+          <button class="b mb" id="bTrain"><i>🎯</i><b>TREINO</b></button>
+          <button class="b mb" id="bChar"><i>👕</i><b>PERSONAGEM</b></button>
+          <button class="b mb" id="bSettings"><i>⚙️</i><b>AJUSTES</b></button>
         </div>
       </div>
-      <div id="accInfo"></div>
-      <div class="play">
-        <button class="b pri big mb" id="bOpenCreate"><i>🌐</i><b>CRIAR SALA</b><small>você é o anfitrião</small></button>
-        <button class="b big mb" id="bOpenRooms"><i>📋</i><b>VER SALAS</b><small>entre numa luta aberta</small></button>
-        <button class="b mb" id="bBots"><i>⚔</i><b>CONTRA BOTS</b></button>
-        <button class="b mb" id="bTrain"><i>🎯</i><b>TREINO</b></button>
-        <button class="b mb" id="bChar"><i>🥋</i><b>PERSONAGEM</b></button>
-        <button class="b mb" id="bSettings"><i>⚙</i><b>AJUSTES</b></button>
-      </div>
+      <div class="mfoot"><div id="accInfo"><canvas id="mAva" width="24" height="24"></canvas><span id="accTxt"></span></div></div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -659,7 +698,7 @@
   </div>
   <div id="msgBox" class="ovl hidden">
     <form class="card small msgc" id="msgForm" autocomplete="off">
-      <button type="button" class="msgx hidden" id="msgX" aria-label="fechar">✕</button><div class="title"><b id="msgTitle">AVISO</b></div>
+      <button type="button" class="msgx hidden" id="msgX" aria-label="fechar"></button><div class="title"><b id="msgTitle">AVISO</b></div>
       <div id="msgText"></div>
       <div id="msgList" class="cgrid hidden"></div>
       <input id="msgIn" type="text" maxlength="40" class="hidden" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -3176,10 +3215,10 @@ function applyProfile(p) {
   try { localStorage.setItem('adk_slots', JSON.stringify({ cur: slotCur, slots })); } catch (e) {}
 }
 function renderConta() {
-  const info = document.getElementById('accInfo'); if (!info) return;
+  const info = document.getElementById('accTxt'); if (!info) return;
   const p = conta.perfil;
-  if (conta.user && p) { info.innerHTML = (p.role === 'youtuber' ? '<i class="yt">YT</i> ' : p.role === 'dono' ? '<i class="dn">DONO</i> ' : '') + '<b>' + esc(dispName(p.name)) + '</b> · ' + p.kills + ' derrotas causadas · ' + p.matches + ' partidas'; info.className = 'on'; }
-  else info.textContent = '';
+  if (conta.user && p) { info.innerHTML = '<span class="mnm">' + (p.role === 'youtuber' ? '<i class="yt">YT</i> ' : p.role === 'dono' ? '<i class="dn">DONO</i> ' : '') + '<b>' + esc(dispName(p.name)) + '</b></span><span class="msep"></span><span class="mst">🏆 <em>' + p.kills + '</em> derrotas causadas · <em>' + p.matches + '</em> partidas</span>'; document.getElementById('accInfo').className = 'on'; }
+  else { info.textContent = ''; document.getElementById('accInfo').className = ''; }
 }
 /* ---------------- LOJA: cada item de customização custa 10 moedas ----------------
    Dá para provar qualquer item (aparece na prévia), mas na luta só entra o que foi comprado.
@@ -3426,7 +3465,26 @@ const salasSB = {
 </script>
 <script data-parte="interface">
 document.getElementById('logoMenu').src = document.getElementById('logoImg').src; // mesmo logotipo no menu
+document.getElementById('bGear').onclick = () => document.getElementById('bSettings').click();
 /* aba de opções: quando há mais conteúdo abaixo, a borda de baixo some num degradê e aparece "▼ mais" */
+/* menu: o SEU lutador em destaque (parado ↔ bola de energia) + rostinho no rodapé */
+(function menuHero() {
+  const loop = now => { requestAnimationFrame(loop);
+    const m = document.getElementById('menu'); if (!m || m.classList.contains('hidden') || typeof chosenLook === 'undefined') return;
+    const t = now / 1000, c = document.getElementById('mHero'), x = c.getContext('2d'), spr = lookSprites(chosenLook).spr, pal = palForCustom(chosenChar, 0, chosenFxc);
+    const ph = t % 4, pose = ph < 1.6 ? 'parado' : ph < 2.6 ? 'carga2' : 'kiball', im = spr[pose] || spr.parado;
+    x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, c.width, c.height); x.imageSmoothingEnabled = false;
+    const save = ctx; ctx = x;
+    try { x.save(); x.translate(60, 86); x.scale(1.6, 1.6);
+      if (pose === 'carga2') { const fr = auraFramesFor(pal.aura); if (fr) { const a = fr[2 + (Math.floor(t / 0.08) % 2)]; x.globalAlpha = 0.9; x.drawImage(a, -a.width / 2 * AURA_SC, -a.height * AURA_SC + 3, a.width * AURA_SC, a.height * AURA_SC); x.globalAlpha = 1; } }
+      x.drawImage(im, -Math.floor(im.width / 2), -im.height);
+      if (pose === 'kiball') drawKiBall(20 + Math.sin(t * 6) * 1.5, -30, 6, pal.ki, t);
+      x.restore(); } finally { ctx = save; }
+    const av = document.getElementById('mAva'), y = av.getContext('2d'), p0 = spr.parado; y.clearRect(0, 0, 24, 24); y.imageSmoothingEnabled = false;
+    y.drawImage(p0, Math.floor(12 - p0.width / 2), -7 - (p0._pad || 0));
+  };
+  requestAnimationFrame(loop);
+})();
 function cMore() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; p.classList.toggle('more', more); m.classList.toggle('hidden', !more); }
 "use strict";
 /* =====================================================================
@@ -3925,9 +3983,9 @@ function buildCustomPanel() {
   document.getElementById('cName').textContent = dispName(playerName()).toUpperCase();
   buildCharList();
   const tabs = document.getElementById('cTabs'); tabs.innerHTML = '';
-  for (const [id, nm] of [['corpo', 'CORPO'], ['cabelo', 'CABELO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['energia', 'COR DA ENERGIA'], ['pk', 'BOLA DE ENERGIA'], ['pr', 'ESPECIAL 1'], ['ps', 'ESPECIAL 2'], ['arq', 'ARQUÉTIPO'], ['trans', 'TRANSFORMAÇÃO']]) {
+  for (const [id, nm] of [['corpo', 'CORPO'], ['cabelo', 'CABELO'], ['rabo', 'RABO'], ['itens', 'ITENS'], ['aura', 'COR DA AURA'], ['energia', 'COR DO PODER'], ['pk', 'BOLA DE ENERGIA'], ['pr', 'ESPECIAL 1'], ['ps', 'ESPECIAL 2'], ['arq', 'ARQUÉTIPO'], ['trans', 'TRANSFORMAÇÃO']]) {
     const b = document.createElement('button'); b.textContent = nm; b.className = custTab === id ? 'sel' : '';
-    b.onclick = () => { if (custTab === id) return; revertLocked(); offerBuy(''); custTab = id; custDemo = null; saveLook(); }; tabs.appendChild(b);
+    b.onclick = () => { if (custTab === id) return; revertLocked(); offerBuy(''); custTab = id; custDemo = null; saveLook(); document.getElementById('cPanel').scrollTop = 0; cMore(); }; tabs.appendChild(b);
   }
   const P = document.getElementById('cPanel'); P.innerHTML = '';
   const h4 = t => { const e = document.createElement('h4'); e.textContent = t; P.appendChild(e); };
@@ -3986,9 +4044,11 @@ function buildCustomPanel() {
     h4('NA CABEÇA'); g = grid();
     for (const [v, nm] of [[0, 'Nada'], [1, 'Auréola']]) g.appendChild(optCard(nm, (L.a ? 1 : 0) === v, partThumb({ ...L, a: v }, im => [Math.round(im.width / 2) - 16, Math.max(0, top0(im) - 4), 32]), () => { L.a = v; }, v && 'a:1'));
     h4('COR DA AURÉOLA'); P.appendChild(swatches(HALO_COLORS, L.ac, c => { L.ac = c; L.a = 1; }, false, 'ac'));
+  } else if (custTab === 'aura') {
+    h4('COR DA AURA (ao carregar energia)'); P.appendChild(swatches(FX_COLORS, chosenFxc.a, c => { chosenFxc.a = c; }, true, 'fa'));
+    const n = document.createElement('div'); n.className = 'cnote'; n.textContent = 'P = cor original. + = escolher qualquer cor.'; P.appendChild(n);
   } else {
-    h4('COR DA AURA'); P.appendChild(swatches(FX_COLORS, chosenFxc.a, c => { chosenFxc.a = c; }, true, 'fa'));
-    h4('COR DO PODER (bola de ki, feixe, especial)'); P.appendChild(swatches(FX_COLORS, chosenFxc.k, c => { chosenFxc.k = c; }, true, 'fk'));
+    h4('COR DO PODER (bola de energia, feixe, especiais)'); P.appendChild(swatches(FX_COLORS, chosenFxc.k, c => { chosenFxc.k = c; }, true, 'fk'));
     const n = document.createElement('div'); n.className = 'cnote';
     n.textContent = 'P = cor original. + = escolher qualquer cor.';
     P.appendChild(n);
@@ -4011,7 +4071,8 @@ function drawCustomPreview(t) {
   const W = pvOn ? PV.W : 80, H = pvOn ? PV.H : 70;
   if (c.width !== W || c.height !== H) { c.width = W; c.height = H; x.imageSmoothingEnabled = false; }
   if (pvOn) { drawPowerPreview(x, spr, palForCustom(chosenChar, 0, chosenFxc), performance.now()); return; }
-  if (custTab === 'energia' && custPose === 'auto') pose = Math.floor(t / 1.6) % 2 ? 'kiball' : 'carga2';
+  if (custTab === 'energia' && custPose === 'auto') pose = 'kiball';
+  if (custTab === 'aura' && custPose === 'auto') pose = 'carga2';
   const im = spr[pose] || spr.parado, pal = palForCustom(chosenChar, 0, chosenFxc);
   const fx = 40, fy = 64, sc = 1; // tamanho real do jogo (sem redesenhar nem esticar)
   const save = ctx; ctx = x; // as funções de desenho usam o ctx global
