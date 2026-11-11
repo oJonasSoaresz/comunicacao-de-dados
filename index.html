@@ -427,12 +427,39 @@
   .arq.pwcard b{font-weight:normal;font-size:clamp(7px,.9vw,10px)}
   .arq.pwcard.sel b{color:var(--acc)}
   .ctitle{position:relative}
-  .cchars .cpill{margin-left:auto;font-size:clamp(8px,1vw,11px)}
   .cprev{position:relative}
   /* bloqueados um pouco apagados */
   .copt.lk,.arq.pwcard.lk,#cSlots button.lk{opacity:.55}
   .copt.lk.sel,.arq.pwcard.lk.sel{opacity:.85}
   .cswatch button.lkc{opacity:.5}
+  /* ===== telas grandes: todas do MESMO tamanho, título no mesmo lugar ===== */
+  .mcard,.cbox,.rbox,.card.cust{width:min(94%,900px)!important;height:min(94%,calc(var(--wh,600px) * .94))!important;max-height:none!important;overflow:hidden}
+  .title{flex:0 0 auto}
+  .title b{letter-spacing:1px}
+  #wrap.short .title b,#wrap.short .logo b{font-size:15px}
+  #wrap.short .title small{font-size:7px}
+  .ctop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+  .ctop .title{text-align:left}
+  .ctop .cpill{font-size:clamp(8px,1vw,11px)}
+  .mcard{justify-content:space-between}
+  .mcard .play{flex:1;min-height:0;align-content:stretch;grid-auto-rows:1fr}
+  .mcard .play .b{font-size:clamp(9px,1.2vw,12px)}
+  .mcard #accInfo{flex:0 0 auto}
+  .cbox{display:flex;flex-direction:column}
+  .cbox .cbmaps{flex:1;min-height:0;display:flex;flex-direction:column}
+  .cbox .mapstrip{flex:1;min-height:0}
+  .cbox .mapstrip button.mapb{flex:0 0 auto;height:100%;min-height:0}
+  .cbox .mapstrip button.mapb canvas{flex:1 1 0;min-height:0;height:0;width:auto;max-width:none;aspect-ratio:16/9}
+  .modes.nums{grid-template-columns:repeat(5,1fr)}
+  .modes.nums button{min-width:0;padding:9px 4px}
+  .modes.nums button:disabled{opacity:.35}
+  .authc{width:min(94%,680px)!important;padding:clamp(16px,3vw,30px)!important;gap:clamp(10px,1.8vw,16px)!important}
+  .authc input{padding:11px 10px!important}
+  .authc .b{padding:14px 8px!important}
+  .card.cust .cprev canvas{background:none}
+  #wrap.short .authc{padding:10px 18px!important;gap:7px!important}
+  #wrap.short .authc input{padding:6px 8px!important}
+  #wrap.short .authc .b{padding:10px 8px!important}
 </style>
 </head>
 <body>
@@ -469,12 +496,13 @@
   </div>
   <div id="createBox" class="ovl hidden">
     <form class="card cbox" id="createForm" autocomplete="off">
-      <div class="title"><b>CRIAR SALA</b><small>até 6 jogadores · você é o anfitrião</small></div>
+      <div class="title"><b>CRIAR SALA</b><small>você é o anfitrião</small></div>
       <div class="cfields">
         <div class="fld2"><span>NOME DA SALA</span><input id="roomName" type="text" maxlength="18" placeholder="opcional" autocomplete="off" autocorrect="off" spellcheck="false"></div>
         <div class="fld2"><span>SENHA</span><input id="roomPw" type="text" maxlength="12" placeholder="sem senha" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       </div>
       <div class="fld2"><span>MODO DE JOGO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel">∞ NORMAL<small>sem fim</small></button><button type="button" data-m="t">⏱ 5 MINUTOS<small>quem derrotar mais vence</small></button><button type="button" data-m="d">⚔ DUELO<small>1 contra 1 · melhor de 3</small></button></div></div>
+      <div class="fld2"><span>JOGADORES</span><div class="modes nums" id="roomMx"><button type="button" data-x="2">2</button><button type="button" data-x="3">3</button><button type="button" data-x="4">4</button><button type="button" data-x="5">5</button><button type="button" data-x="6" class="sel">6</button></div></div>
       <div class="cbmaps">
         <h3>CENÁRIO <small id="mapName2"></small></h3>
         <div id="maps2" class="mapstrip"></div>
@@ -534,7 +562,8 @@
   <div id="custom" class="ovl hidden">
     <div class="card cust">
       
-      <div class="cchars"><span>PERSONAGEM</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
+      <div class="ctop"><div class="title"><b>PERSONAGEM</b><small>visual, poderes e arquétipo</small></div><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
+      <div class="cchars"><span>LUTADOR</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div></div>
       <div class="cwrap">
         <div class="cprev">
           <canvas id="cPrev" width="80" height="70"></canvas>
@@ -1320,7 +1349,7 @@ class Fighter {
     if (!this.net) { this.x = m.x; this.y = m.y; }
     const prevSt = this.net ? this.net.st : null;
     this.net = { ...m };
-    this.name = String(m.n || '?').slice(0, 18); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; if (m.ar !== undefined && m.ar !== this.arq) applyArq(this, m.ar); this.genki = !!m.gk; this.invisT = m.ivs ? 0.3 : 0; this.shieldT = m.sh ? 0.3 : 0; if (m.sk) this.ser = { kind: m.sk }; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
+    this.name = String(m.n || '?').slice(0, 18); this.pal = clamp(m.p | 0, 0, NAME_COLORS.length - 1); if (CHARS[m.c]) this.char = m.c; if (m.lk !== undefined) this.look = strToLook(m.lk); if (m.fc !== undefined) this.fxc = strToFxc(m.fc); this.isBot = !!m.bt; if (m.ar !== undefined && m.ar !== this.arq) applyArq(this, m.ar); this.genki = !!m.gk; this.invisT = m.ivs ? 0.3 : 0; this.shieldT = m.sh ? 0.3 : 0; this.paraT = m.pz ? 0.3 : 0; if (m.sk) this.ser = { kind: m.sk }; this.kills = m.k; this.deaths = m.d; this.ki = m.ki; this.invuln = m.iv ? 1 : 0;
     const predicting = this.predT && performance.now() - this.predT < 600;
     if (m.hp < this.hp - 0.5 && !predicting) this.flash = 0.08;
     // enquanto a rede não confirma, mantém o dano que já mostrei (não "devolve" a vida)
@@ -1345,7 +1374,7 @@ class Fighter {
     return { t: 's', id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
       ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
-      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', ivs: this.invisT > 0 ? 1 : 0, sh: this.shieldT > 0 ? 1 : 0, sk: this.state === 'rajada' && this.ser ? this.ser.kind : '', gk: this.genki ? 1 : 0 };
+      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', ivs: this.invisT > 0 ? 1 : 0, sh: this.shieldT > 0 ? 1 : 0, pz: this.paraT > 0 && this.state === 'hurt' ? 1 : 0, sk: this.state === 'rajada' && this.ser ? this.ser.kind : '', gk: this.genki ? 1 : 0 };
   }
 }
 
@@ -2594,7 +2623,7 @@ const ROOM_HEARTBEAT = 8, ROOM_EXPIRE = 22000; // anfitrião confirma a sala a c
 const LOBBY_ID = PREFIX + 'quadro-de-salas';
 const BOT_NAMES = ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann', 'Nilo', 'Yara', 'Ozzo'];
 const MAX_PLAYERS = 6;
-const roomMax = md => (md === undefined ? net.roomMode : md) === 'd' ? 2 : MAX_PLAYERS; // duelo: só 2
+const roomMax = (md, mx) => { if (md === undefined) { md = net.roomMode; mx = net.roomMx; } return md === 'd' ? 2 : clamp((mx | 0) || MAX_PLAYERS, 2, MAX_PLAYERS); }; // duelo: só 2 · sala: 2 a 6
 function peerOpts() {
   const q = new URLSearchParams(location.search).get('peer');
   if (q) { const [host, port] = q.split(':'); return { host, port: +port || 9000, path: '/', secure: false, debug: 0 }; }
@@ -2661,7 +2690,7 @@ const lobby = {
     for (const c of this.conns) if (c.open) c.send({ t: 'rooms', list });
   },
   // salas cheias não aparecem; voltam sozinhas quando alguém sai (o anfitrião avisa a nova quantidade)
-  list() { return [...this.regs.values()].filter(r => r.n < roomMax(r.md)).sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map, nm: r.nm, lk: !!r.lk, md: r.md || 'n' })); },
+  list() { return [...this.regs.values()].filter(r => r.n < roomMax(r.md, r.mx)).sort((a, b) => a.since - b.since).map(r => ({ code: r.code, host: r.host, n: r.n, map: r.map, nm: r.nm, lk: !!r.lk, md: r.md || 'n', mx: r.mx | 0 || MAX_PLAYERS })); },
   /* quem fica ligado ao quadro: quem está no menu, os anfitriões e o próprio quadro. Quem só está lutando numa sala se desliga. */
   sync() {
     // com a lista no Supabase funcionando, ninguém precisa do quadro P2P (só quem já é o quadro continua até sair)
@@ -2754,8 +2783,8 @@ const net = {
     if (game.timed && (game.ended || (game.started && game.matchLeft() < 20))) { c.send({ t: 'deny', why: 'fim' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; } // partida acabando: não entra
     const humans = this.conns.length + 1;
     if (humans >= roomMax()) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
-    if (humans + 1 + game.bots.length > MAX_PLAYERS) game.removeBot(); // abre espaço tirando um bot
-    c.send({ t: 'welcome', map: game.map || 'canyon', nm: this.roomName || '', left: Math.round(game.matchLeft()), md: this.roomMode || 'n', st: game.started ? 1 : 0 });
+    if (humans + 1 + game.bots.length > roomMax()) game.removeBot(); // abre espaço tirando um bot
+    c.send({ t: 'welcome', map: game.map || 'canyon', nm: this.roomName || '', left: Math.round(game.matchLeft()), md: this.roomMode || 'n', mx: roomMax(), st: game.started ? 1 : 0 });
     this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
   },
   joinRoom(code, onOk, onErr) {
@@ -2780,7 +2809,7 @@ const net = {
       if (!m) return;
       if (!done) { // espera o anfitrião aceitar (ou dizer que está cheia)
         if (gen !== this.gen) return;
-        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); this.joinLeft = m.left > 0 ? +m.left : MATCH_TIME; this.roomMode = ['t', 'd'].includes(m.md) ? m.md : 'n'; this.joinStarted = !!m.st; onOk(code); }
+        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); this.joinLeft = m.left > 0 ? +m.left : MATCH_TIME; this.roomMode = ['t', 'd'].includes(m.md) ? m.md : 'n'; this.roomMx = clamp(m.mx | 0 || MAX_PLAYERS, 2, MAX_PLAYERS); this.joinStarted = !!m.st; onOk(code); }
         else if (m.t === 'full') fail('Sala cheia.');
         else if (m.t === 'deny') fail(m.why === 'fim' ? 'Essa partida está terminando. Entre em outra sala.' : m.why === 'nome' ? 'NOME' : this.roomPw ? 'SENHA_ERRADA' : 'SENHA');
         return;
@@ -2844,7 +2873,7 @@ const net = {
     if (this.role === 'host') {
       this.regT -= dt;
       // avisa o quadro só quando algo muda (entrou/saiu gente, nome, cenário) + uma confirmação a cada 15s
-      const room = { code: this.code, host: dispName(game.me.name), nm: this.roomName || '', lk: !!this.roomPw, n: this.conns.length + 1, map: game.map || 'canyon', md: this.roomMode || 'n' }, rk = JSON.stringify(room);
+      const room = { code: this.code, host: dispName(game.me.name), nm: this.roomName || '', lk: !!this.roomPw, n: this.conns.length + 1, map: game.map || 'canyon', md: this.roomMode || 'n', mx: roomMax() }, rk = JSON.stringify(room);
       if (!game.ended && (rk !== this.regKey || this.regT <= 0)) { this.regT = ROOM_HEARTBEAT; this.regKey = rk; lobby.register(room); }
       if (game.duel && !game.ended) duelTick(dt);
       if (game.timed && !game.started && humanCount() >= 2) startMatch(true); // 5 minutos: só começa com 2 jogadores
@@ -3111,7 +3140,7 @@ async function buyNow(k, nome, direto) {
   if (!k || shop.has(k)) return;
   if (direto) return shop.buy([{ k, n: nome }]); // botão COMPRAR do selo: já mostra o preço
   const preco = shop.infinite() ? 0 : priceOf(k);
-  const ok = await msgOpen('ITEM BLOQUEADO', '🔒 ' + nome + '\n\nPreço: ' + preco + ' moedas · você tem ' + (shop.infinite() ? '∞' : wallet.n) + '\n\nVocê pode ver na prévia, mas para usar na luta precisa comprar.', '', true, 'COMPRAR');
+  const ok = await msgOpen('COMPRAR ITEM', '🔒 ' + nome + '\n\nPreço: ' + preco + ' moedas', '', true, 'COMPRAR');
   if (ok) await shop.buy([{ k, n: nome }]);
 }
 /* uma cor comprada vale em TODOS os itens e slots ('c:#hex'); a transformação comprada vale em todos os slots ('tr:x') */
@@ -3314,18 +3343,20 @@ const salasSB = {
   get ok() { return !!conta.sb && performance.now() - this.okAt < 15000; },
   async poll() {
     if (!conta.sb) return;
-    let { data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map,lk,md');
+    let { data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map,lk,md,mx');
+    if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map,lk,md')); // banco sem o tamanho da sala (SQL v10)
     if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map,lk')); // banco sem o modo (SQL v5 não rodado)
     if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map')); // banco sem a coluna lk (SQL v2 ainda não rodado)
     if (error || !Array.isArray(data)) { this.failAt = performance.now(); return; }
-    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18), lk: !!r.lk, md: ['t', 'd'].includes(r.md) ? r.md : 'n' }));
+    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18), lk: !!r.lk, md: ['t', 'd'].includes(r.md) ? r.md : 'n', mx: r.mx | 0 || MAX_PLAYERS }));
     roomsKey = ''; renderRooms();
   },
   reg(room) {
     if (!conta.sb) return; this.mine = room.code;
     conta.sb.from('rooms').upsert(room).then(r => {
       if (!r.error) { this.okAt = performance.now(); return; }
-      const { md, ...semMd } = room; conta.sb.from('rooms').upsert(semMd).then(r2 => { if (r2.error) { const { lk, ...semLk } = semMd; conta.sb.from('rooms').upsert(semLk).then(() => {}, () => {}); } }, () => {}); // banco antigo: sem md / sem lk
+      const { mx, ...semMx } = room; conta.sb.from('rooms').upsert(semMx).then(r1 => { if (!r1.error) return;
+      const { md, ...semMd } = semMx; conta.sb.from('rooms').upsert(semMd).then(r2 => { if (r2.error) { const { lk, ...semLk } = semMd; conta.sb.from('rooms').upsert(semLk).then(() => {}, () => {}); } }, () => {}); }, () => {}); // banco antigo: sem mx / sem md / sem lk
     }, () => {});
   },
   unreg(code) { if (!conta.sb) return; this.mine = null; conta.sb.from('rooms').delete().eq('code', code).then(() => {}, () => {}); },
@@ -3378,12 +3409,12 @@ function renderRooms() {
   const el = document.getElementById('rooms');
   if (!el) return;
   const ls = salasSB.ok ? 'ok' : lobby.status; // lista pelo Supabase ou pelo quadro P2P
-  const list = (salasSB.ok ? salasSB.rooms : lobby.rooms).filter(r => !(net.role === 'host' && r.code === net.code) && r.n < roomMax(r.md)); // sala cheia some da lista
+  const list = (salasSB.ok ? salasSB.rooms : lobby.rooms).filter(r => !(net.role === 'host' && r.code === net.code) && r.n < roomMax(r.md, r.mx)); // sala cheia some da lista
   const key = ls + JSON.stringify(list);
   if (key === roomsKey) return; roomsKey = key;
   if (!list.length) el.innerHTML = `<div class="empty">${ls === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : ls === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
-  else el.innerHTML = list.map(r => { const full = r.n >= roomMax(r.md), nm = r.nm || 'Sala de ' + dispName(r.host);
-    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}${r.lk ? ' data-lk="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="md${r.md === 't' ? ' t' : r.md === 'd' ? ' d' : ''}">${r.md === 't' ? '⏱ 5 MIN' : r.md === 'd' ? '⚔ DUELO' : '∞ NORMAL'}</span>${r.lk ? '<span class="lock" title="sala com senha">🔒</span>' : ''}<span class="cnt">${r.n}/${roomMax(r.md)}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
+  else el.innerHTML = list.map(r => { const full = r.n >= roomMax(r.md, r.mx), nm = r.nm || 'Sala de ' + dispName(r.host);
+    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}${r.lk ? ' data-lk="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="md${r.md === 't' ? ' t' : r.md === 'd' ? ' d' : ''}">${r.md === 't' ? '⏱ 5 MIN' : r.md === 'd' ? '⚔ DUELO' : '∞ NORMAL'}</span>${r.lk ? '<span class="lock" title="sala com senha">🔒</span>' : ''}<span class="cnt">${r.n}/${roomMax(r.md, r.mx)}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
 }
 
 /* ---------------- CHAT ----------------
@@ -3793,7 +3824,7 @@ function openCustom() {
   offerBuy(''); custTab = 'corpo'; custOk = null;
   custOpen = true; custDemo = null; if (!shop.has('sl:' + slotCur)) { slotCur = 0; loadSlot(); } dropLocked(); custOk = okSnap();
   show('menu', false); show('custom', true); storeSlot(); custBackup = JSON.parse(JSON.stringify({ slots, cur: slotCur })); custStart = custSig(); buildCustomPanel(); custBtn();
-  const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; requestAnimationFrame(() => { cc.scrollTop = 0; });
+  const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; document.getElementById('cTabs').scrollLeft = 0; document.getElementById('cPanel').scrollTop = 0; requestAnimationFrame(() => { document.getElementById('cTabs').scrollLeft = 0; }); requestAnimationFrame(() => { cc.scrollTop = 0; });
   cancelAnimationFrame(custRaf); const t0 = performance.now();
   const loop = now => { if (!custOpen) return; drawCustomPreview((now - t0) / 1000); custRaf = requestAnimationFrame(loop); };
   custRaf = requestAnimationFrame(loop);
@@ -3912,7 +3943,10 @@ function drawCustomPreview(t) {
   const spr = custSprites(); if (!spr) return;
   const auto = ['parado', 'frente', 'golpe1', 'golpe2', 'golpe3', 'carga2', 'kiball', 'defesa'];
   let pose = custPose === 'auto' ? auto[Math.floor(t / 0.9) % auto.length] : custPose;
-  const pvOn = ['pk', 'pr', 'ps'].includes(custTab), W = pvOn ? PV.W : 80, H = pvOn ? PV.H : 70;
+  const pvOn = ['pk', 'pr', 'ps'].includes(custTab);
+  if (pvOn) { const r = c.parentNode.querySelector('canvas').getBoundingClientRect(), box = c.parentNode.getBoundingClientRect(), cw = box.width - 20, ch = Math.max(40, r.height || 100), k = cw / ch;
+    PV.H = Math.round(clamp(320 / k, 96, 180)); PV.W = Math.round(PV.H * k); }
+  const W = pvOn ? PV.W : 80, H = pvOn ? PV.H : 70;
   if (c.width !== W || c.height !== H) { c.width = W; c.height = H; x.imageSmoothingEnabled = false; }
   if (pvOn) { drawPowerPreview(x, spr, palForCustom(chosenChar, 0, chosenFxc), performance.now()); return; }
   if (custTab === 'energia' && custPose === 'auto') pose = Math.floor(t / 1.6) % 2 ? 'kiball' : 'carga2';
@@ -3931,7 +3965,7 @@ function drawCustomPreview(t) {
 }
 /* prévia dos poderes: uma MINI-LUTA de verdade. Usa o mesmo motor do jogo (Fighter, Projectile, stepWorld),
    os mesmos quadros e efeitos: o poder sai, acerta o boneco, mostra o dano e o empurrão. Sem som e sem rede. */
-const PV = { W: 300, H: 100 };
+const PV = { W: 300, H: 100 }; // (ajustado ao formato da caixa da prévia)
 const PV_DIST = { hom: 206, disco: 96, bomba: 150, laser: 170, chuva: 178, kienzan: 150, cegar: 70, invis: 120, escudo: 150 };
 const PV_DUR = { kame: 3.4, genki: 3.6, chuva: 3, paral: 3.2, invis: 3.6, escudo: 3.4, fogos: 3.2, enxame: 3.2 };
 let pvW = null;
@@ -3939,23 +3973,30 @@ function pvSwap(w) { const o = { game, projectiles, particles, popups, shake, hi
   ({ game, projectiles, particles, popups, shake, hitstop, flashT, lzFx, blindT, PLATFORMS, killfeed } = w); return o; }
 function pvBuild(sl, id) {
   const X0 = 1000, d = PV_DIST[id] || 150;
-  const w = { game: { mode: 'preview', phase: 'play', fighters: [], bots: [], me: null, cam: { x: X0 - 36, y: GROUND - PV.H + 10 }, t: 0, byId(i) { return this.fighters.find(f => f.id === i); } },
+  const w = { game: { mode: 'preview', phase: 'play', fighters: [], bots: [], me: null, cam: { x: X0 + d / 2 - PV.W / 2, y: GROUND - PV.H + Math.round(PV.H * 0.12) }, t: 0, byId(i) { return this.fighters.find(f => f.id === i); } },
     projectiles: [], particles: [], popups: [], shake: 0, hitstop: 0, flashT: 0, lzFx: [], blindT: 0, PLATFORMS: [], killfeed: [], sl, id, t: 0, acc: 0, fl: 0 };
   const me = new Fighter({ id: 'pv-eu', name: '', local: true, ctrl: 'human' });
   me.look = { ...chosenLook }; me.fxc = { ...chosenFxc }; applyArq(me, chosenArq); me.pw = { ...chosenPw, [sl]: id };
-  me.infiniteKi = true; me.ki = 100; me.x = X0; me.facing = 1; me.t = 0;
+  me.infiniteKi = true; me.ki = 100; me.x = me.home0 = X0; me.facing = 1; me.t = 0;
   const dm = new Fighter({ id: 'pv-alvo', name: '', local: true, ctrl: 'human' }); applyArq(dm, 'eq');
   dm.look = validLook({ h: '', s: '#c9c9d4' }); dm.fxc = { a: '', k: '#ff4a4a' }; dm.pw = { ...PW0 }; dm.infiniteKi = true; dm.ki = 100;
   dm.x = X0 + d; dm.facing = -1; dm.home = { x: dm.x, y: GROUND }; dm.hp = dm.maxHp = dm.hpShown = 1e5; dm.t = 0;
-  dm.ai = { think: () => ({ ...emptyInput(), face: -1, kiP: id === 'escudo' && w.t > 0.8 && !w.dmShot ? (w.dmShot = 1) : 0 }) };
+  dm.ai = { think: () => { const i = { ...emptyInput(), face: -1 };
+    if (w.ret) { const dx = dm.home.x - dm.x; if (dx > 3) i.right = 1; else if (dx < -3) i.left = 1; } // volta andando para o lugar
+    else if (id === 'escudo' && w.t > 0.8 && !w.dmShot) i.kiP = w.dmShot = 1;
+    return i; } };
   w.game.fighters = [me, dm]; w.game.me = me; w.me = me; w.dm = dm; return w;
 }
 function pvTick(w, dt) { // um passo da mini-luta (com os "globais" já trocados)
-  w.t += dt; game.t += dt; const btn = { k: 'kiP', r: 'beamP', s: 'bigP' }[w.sl];
+  w.t += dt; game.t += dt;
+  if (!w.ret && w.t > (PV_DUR[w.id] || 2.6)) w.ret = 1;
+  if (w.ret && Math.abs(w.dm.x - w.dm.home.x) <= 3 && w.dm.state === 'idle' && w.dm.onGround && !projectiles.length && w.me.state === 'idle') { // recomeça sem cortes
+    w.ret = 0; w.t = 0; w.pressed = 0; w.dmShot = 0; w.dm.vx = 0; w.dm.facing = -1; w.me.x = w.me.home0; w.me.facing = 1; }
+  const btn = { k: 'kiP', r: 'beamP', s: 'bigP' }[w.sl];
   const press = w.t > 0.35 && !w.pressed; if (press) { w.pressed = 1; if (w.id === 'cegar') w.fl = 1; }
   if (hitstop > 0) { hitstop -= dt; return; }
   stepWorld(dt, f => f === w.me ? { ...emptyInput(), face: 1, [btn]: press ? 1 : 0 } : emptyInput());
-  if (w.dm.x < w.dm.home.x - 30 || w.dm.x > w.dm.home.x + 54) w.dm.x = clamp(w.dm.x, w.dm.home.x - 30, w.dm.home.x + 54);
+  const lim = game.cam.x + PV.W - 14; if (w.dm.x > lim) { w.dm.x = lim; w.dm.vx = Math.min(0, w.dm.vx); }
   for (const p of particles) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g || 0) * dt; p.vx *= Math.pow(0.1, dt); if (!p.g) p.vy *= Math.pow(0.1, dt); }
   particles = particles.filter(p => p.life > 0); if (particles.length > 400) particles.splice(0, particles.length - 400);
   for (const p of popups) { p.life -= dt; p.y -= 22 * dt; } popups = popups.filter(p => p.life > 0);
@@ -3979,7 +4020,7 @@ function pvDraw(w, x) {
 const custDemoId = () => { const sl = custTab[1]; return custDemo && POWERS[sl] && POWERS[sl][custDemo.id] ? custDemo.id : chosenPw[sl]; };
 function drawPowerPreview(x, spr, pal, now) {
   const sl = custTab[1], id = custDemoId(), sig = id + JSON.stringify([chosenLook, chosenFxc, chosenArq]);
-  if (!pvW || pvW.sig !== sig || pvW.t > (PV_DUR[id] || 2.6)) { pvW = pvBuild(sl, id); pvW.sig = sig; pvW.last = now; }
+  if (!pvW || pvW.sig !== sig + PV.W + 'x' + PV.H) { pvW = pvBuild(sl, id); pvW.sig = sig + PV.W + 'x' + PV.H; pvW.last = now; }
   const dt = Math.min(0.1, (now - pvW.last) / 1000); pvW.last = now; pvW.acc += dt;
   const keep = pvSwap(pvW), saveCtx = ctx; PV_MUTE = true; ctx = x;
   try {
@@ -4058,8 +4099,10 @@ function buildMenu() {
   const rn = document.getElementById('roomName');
   rn.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('bHost').click(); });
   const openPop = id => { setStatus(''); show('menu', false); show(id, true); }; // a janela fica sozinha na tela (o menu some atrás)
-  document.querySelectorAll('#roomMode button').forEach(b => b.onclick = () => { net.roomMode = b.dataset.m; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o === b)); });
-  document.getElementById('bOpenCreate').onclick = () => { net.roomMode = 'n'; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o.dataset.m === 'n')); rn.value = ''; document.getElementById('roomPw').value = ''; openPop('createBox'); setTimeout(scrollMapIntoView, 0); }; // sempre começa vazio
+  const syncMx = () => { const d = net.roomMode === 'd'; document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d; o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
+  document.querySelectorAll('#roomMx button').forEach(b => b.onclick = () => { net.roomMx = +b.dataset.x; syncMx(); });
+  document.querySelectorAll('#roomMode button').forEach(b => b.onclick = () => { net.roomMode = b.dataset.m; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o === b)); syncMx(); });
+  document.getElementById('bOpenCreate').onclick = () => { net.roomMode = 'n'; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o.dataset.m === 'n')); net.roomMx = MAX_PLAYERS; syncMx(); rn.value = ''; document.getElementById('roomPw').value = ''; openPop('createBox'); const mb = document.querySelector('#maps2 button.mapb'); if (mb) mb.click(); document.getElementById('maps2').scrollLeft = 0; }; // sempre começa vazio
   document.getElementById('bChar').onclick = openCustom;
   document.getElementById('resBack').onclick = () => game.toMenu();
   document.getElementById('msgForm').addEventListener('submit', e => { e.preventDefault(); if (msgDone) msgDone(document.getElementById('msgIn').classList.contains('hidden') ? true : document.getElementById('msgIn').value); });
@@ -4372,7 +4415,7 @@ function update(dt) {
   if (overlay && game.mode !== 'online') return; // offline: a pausa congela o jogo
   if (game.mode === 'treino' && tap('KeyE')) game.me.infiniteKi = !game.me.infiniteKi;
   if (game.mode === 'online' && net.role === 'host') {
-    if (tap('KeyB') && !game.duel && net.conns.length + 1 + game.bots.length < MAX_PLAYERS) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
+    if (tap('KeyB') && !game.duel && net.conns.length + 1 + game.bots.length < roomMax()) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
     if (tap('KeyN')) game.removeBot();
   }
   if (game.timed && game.started && !game.ended && game.matchLeft() <= 0) endMatch();
