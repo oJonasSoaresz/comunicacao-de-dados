@@ -1,0 +1,17 @@
+{
+  "background_color": "#0d0b14",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Arena de Ki Online",
+  "orientation": "landscape",
+  "scope": "https://ojonassoaresz.github.io/comunicacao-de-dados/",
+  "short_name": "Arena de Ki Online",
+  "start_url": "https://ojonassoaresz.github.io/comunicacao-de-dados/",
+  "theme_color": "#0d0b14",
+  "id": "https://ojonassoaresz.github.io/comunicacao-de-dados/",
+  "description": "Jogo online de batalhas com criação de salas e partidas entre jogadores.",
+  "lang": "pt",
+  "categories": [
+    "games"
+  ]
+}
