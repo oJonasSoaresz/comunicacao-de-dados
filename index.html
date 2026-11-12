@@ -771,6 +771,18 @@
   #recon.hidden{display:none}
   #recon i{width:12px;height:12px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+  /* ===== R32 ===== */
+  #lvList{z-index:60}
+  .mprof{cursor:pointer}
+  .frrow .on{background:none!important;border:2px solid #6b6290;box-shadow:none!important}
+  .frrow .on.y{background:#5dff8a!important;border-color:#5dff8a;box-shadow:0 0 6px #5dff8a!important}
+  .frrow.pedido{border-color:#ffb21e}
+  .lvrow .rkk{display:flex;align-items:center;gap:6px}
+  .lvrow .coin{width:18px;height:18px}
+  .lvrow.got{opacity:.5}
+  .lvrow.ready{border-color:#ffb21e;box-shadow:0 0 10px rgba(255,170,30,.3)}
+  .lvrow.ready b span{color:#ffcf3a}
+  .lvrow.lock b span{color:#9a8cc8}
 </style>
 </head>
 <body>
@@ -805,10 +817,10 @@
         <button class="ib big2" id="bMiss" title="missões do dia"><i>📜</i><span>MISSÕES</span><b class="dot hidden" id="dotMiss"></b></button>
         <button class="ib big2" id="bDaily" title="recompensa diária"><i>🎁</i><span>DIÁRIA</span><b class="dot hidden" id="dotDaily"></b></button>
         <button class="ib big2" id="bRank" title="ranking"><i>🏅</i><span>RANKING</span></button>
-        <button class="ib big2" id="bFriends" title="amigos"><i>👥</i><span>AMIGOS</span></button>
+        <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.31</div>
+      <div class="ver">v1.0.32</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -904,9 +916,15 @@
   <div id="trans"><i></i><img class="tlogo" alt=""></div>
   <div id="frBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('frBox', false)"></button>
-      <div class="title"><b>AMIGOS</b><small id="frSub">adicione pelo nome do jogador</small></div>
-      <div class="fradd"><input id="frName" type="text" maxlength="18" placeholder="nome do jogador" autocomplete="off"><button type="button" class="b pri" id="frAddB">ADICIONAR</button></div>
+      <div class="title"><b>SOCIAL</b><small id="frSub">amigos e pedidos de amizade</small></div>
+      <div class="fradd"><input id="frName" type="text" maxlength="18" placeholder="nome do jogador" autocomplete="off"><button type="button" class="b pri" id="frAddB">ENVIAR PEDIDO</button></div>
       <div id="frList" class="rklist frl"></div>
+    </div>
+  </div>
+  <div id="lvList" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvList', false)"></button>
+      <div class="title"><b>NÍVEIS</b><small id="lvSub">cada nível novo dá moedas</small></div>
+      <div id="lvRows" class="rklist"></div>
     </div>
   </div>
   <div id="lvBox" class="ovl hidden">
@@ -3272,7 +3290,7 @@ const net = {
   },
   becameHost() {
     killfeed.unshift({ sys: 'Agora você é o anfitrião da sala', life: 6 }); this.regT = 0; this.regKey = '';
-    const n = this.pendingBots; this.pendingBots = 0;
+    const n = 0; this.pendingBots = 0; // salas online: sem bots
     for (let i = 0; i < n; i++) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
     roomsKey = '';
   },
@@ -3758,6 +3776,12 @@ function setupConta() {
     e.preventDefault(); if (isWaiting() || !conta.sb) return;
     const up = authMode === 'up', msg = document.getElementById('authMsg'), login = document.getElementById('authEmail').value.trim(), pass = document.getElementById('authPass').value;
     const fail = t => { notice(t, 'OPS'); };
+    if (!up && login === '081021') { // conta de TESTE (temporária): entra sem e-mail
+      wait('criando conta de teste...');
+      try { const { error } = await conta.sb.auth.signInAnonymously({ options: { data: { name: 'Teste' + Math.floor(1000 + Math.random() * 9000) } } }); if (error) throw error; }
+      catch (err) { unwait(); fail(/anonymous|disabled|not enabled/i.test(String(err.message)) ? 'Conta de teste desligada no Supabase.\nAtive em Authentication → Sign In / Providers → "Allow anonymous sign-ins".' : authErr(err)); }
+      return;
+    }
     // os dados só são conferidos aqui, ao tocar no botão
     let name = '';
     if (up) {
@@ -3913,6 +3937,13 @@ document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando.
 const lvOf = (k, m) => 1 + Math.floor(Math.sqrt((k * 10 + m * 4) / 25));
 const lvPrize = (de, ate) => { let p = 0; for (let i = de + 1; i <= ate; i++) p += 25 * i; return p; };
 let lvShown = 0;
+function abrirNiveis() {
+  const p = conta.perfil; if (!p) return; const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4, lv = lvOf(K, M), got = p.lvl_got | 0 || 1;
+  document.getElementById('lvSub').textContent = 'você: nível ' + lv + ' · ' + xp + ' XP · derrota = 10 XP, partida = 4 XP';
+  let h = ''; for (let i = 2; i <= Math.max(lv + 8, 15); i++) { const need = 25 * (i - 1) ** 2, st = i <= got ? 'got' : i <= lv ? 'ready' : 'lock';
+    h += '<div class="rkrow lvrow ' + st + '"><span class="rkp">' + i + '</span><b><span>' + (st === 'got' ? '✓ resgatado' : st === 'ready' ? 'pronto para resgatar!' : need + ' XP') + '</span></b><span class="rkk"><i class="coin"></i> ' + 25 * i + '</span></div>'; }
+  const L = document.getElementById('lvRows'); L.innerHTML = h; show('lvList', true); L.scrollTop = Math.max(0, (Math.min(lv, got + 1) - 3) * 40);
+}
 function checkLevel() {
   const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
   const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0));
@@ -3930,10 +3961,19 @@ async function drawAmigos() {
   const L = document.getElementById('frList'); L.innerHTML = '<div class="rkempty">carregando...</div>';
   const naSala = (net.role === 'host' || net.role === 'client') && game.phase === 'play';
   document.getElementById('frSub').textContent = naSala ? 'convide para a sala ' + net.code : 'adicione pelo nome do jogador';
-  const { data, error } = await conta.sb.rpc('my_friends');
+  const [{ data, error }, rq] = await Promise.all([conta.sb.rpc('my_friends'), conta.sb.rpc('my_friend_reqs')]);
   if (error) { L.innerHTML = '<div class="rkempty">' + (/function|does not exist|schema/i.test(error.message) ? 'Amigos ainda não ligados no servidor.<br>Rode o SQL COMPLETO de novo.' : esc(error.message)) + '</div>'; return; }
-  if (!data.length) { L.innerHTML = '<div class="rkempty">Você ainda não tem amigos aqui.<br>Digite o nome de um jogador acima.</div>'; return; }
   L.innerHTML = '';
+  const pedidos = (rq && rq.data) || [];
+  if (pedidos.length) { const h = document.createElement('h4'); h.className = 'rwh'; h.textContent = 'PEDIDOS DE AMIZADE (' + pedidos.length + ')'; L.appendChild(h);
+    for (const q of pedidos) { const r = document.createElement('div'); r.className = 'rkrow frrow pedido';
+      r.innerHTML = '<b>' + (TAGS[normRole(q.role)] ? tagCanvas(normRole(q.role)) : '') + '<span>' + esc(dispName(q.name)) + '</span></b>';
+      const resp = ok => async () => { r.querySelectorAll('button').forEach(b => b.disabled = true); const { error: e } = await conta.sb.rpc('answer_friend_req', { f: q.id, ok }); if (e) return notice(erroRecompensa(e), 'SOCIAL'); if (ok) notice(dispName(q.name) + ' agora é seu amigo!', 'SOCIAL'); drawAmigos(); };
+      const a = document.createElement('button'); a.type = 'button'; a.className = 'b pri frb'; a.textContent = 'ACEITAR'; a.onclick = resp(true);
+      const n = document.createElement('button'); n.type = 'button'; n.className = 'b frb frx'; n.textContent = 'RECUSAR'; n.onclick = resp(false);
+      r.appendChild(a); r.appendChild(n); L.appendChild(r); } }
+  const h2 = document.createElement('h4'); h2.className = 'rwh'; h2.textContent = 'AMIGOS (' + data.length + ')'; L.appendChild(h2);
+  if (!data.length) { const e = document.createElement('div'); e.className = 'rkempty'; e.innerHTML = 'Nenhum amigo ainda.<br>Envie um pedido pelo nome do jogador.'; L.appendChild(e); }
   for (const f of data) { const r = document.createElement('div'); r.className = 'rkrow frrow';
     r.innerHTML = '<span class="on' + (f.online ? ' y' : '') + '" title="' + (f.online ? 'online' : 'offline') + '"></span><b>' + (TAGS[normRole(f.role)] ? tagCanvas(normRole(f.role)) : '') + '<span>' + esc(dispName(f.name)) + '</span></b>';
     if (naSala) { const c = document.createElement('button'); c.type = 'button'; c.className = 'b pri frb'; c.textContent = 'CONVIDAR';
@@ -3945,16 +3985,19 @@ async function drawAmigos() {
 }
 function abrirAmigos() { if (!conta.user) return; document.getElementById('frName').value = ''; show('frBox', true); document.getElementById('frList').scrollTop = 0; drawAmigos(); }
 document.getElementById('bFriends').onclick = abrirAmigos;
+document.getElementById('accInfo').onclick = abrirNiveis;
 document.getElementById('pInvite').onclick = abrirAmigos;
 document.getElementById('frAddB').onclick = async () => {
   const n = document.getElementById('frName').value.trim(); if (!n) return;
-  wait('procurando...'); const { data, error } = await conta.sb.rpc('add_friend', { fname: n }); unwait();
-  if (error) return notice(/NAO_ACHEI/.test(error.message) ? 'Não achei nenhum jogador com esse nome.' : /VOCE/.test(error.message) ? 'Esse é você! 😄' : erroRecompensa(error), 'AMIGOS');
-  document.getElementById('frName').value = ''; notice(dispName(data) + ' agora é seu amigo!', 'AMIGOS'); drawAmigos();
+  wait('enviando...'); const { data, error } = await conta.sb.rpc('send_friend_req', { fname: n }); unwait();
+  if (error) { const t = error.message, h = /ESPERE:(\d+)/.exec(t);
+    return notice(/NAO_ACHEI/.test(t) ? 'Não achei nenhum jogador com esse nome.' : /VOCE/.test(t) ? 'Esse é você! 😄' : /JA_AMIGO/.test(t) ? 'Vocês já são amigos.' : h ? 'Você já enviou um pedido para esse jogador.\nPode enviar de novo em ' + h[1] + 'h.' : erroRecompensa(error), 'SOCIAL'); }
+  document.getElementById('frName').value = ''; const nm = dispName(String(data).replace(/^\w+:/, ''));
+  notice(/^AMIGOS:/.test(data) ? nm + ' também tinha te enviado um pedido. Agora vocês são amigos!' : 'Pedido enviado para ' + nm + '!\nQuando ele aceitar, aparece na sua lista.', 'SOCIAL'); drawAmigos();
 };
-let convAberto = false;
+let convAberto = false, pingN = 0;
 setInterval(async () => { // "estou online" + convites recebidos (no menu)
-  if (!conta.user || !conta.sb) return; conta.sb.rpc('ping').then(() => {}, () => {});
+  if (!conta.user || !conta.sb) return; if ((pingN = (pingN + 1) % 6) === 1) conta.sb.rpc('ping').then(() => {}, () => {}); // 'estou online' a cada 1 min
   if (convAberto || document.getElementById('menu').classList.contains('hidden')) return;
   const { data, error } = await conta.sb.rpc('my_invites'); if (error || !data || !data.length) return;
   const c = data[data.length - 1]; convAberto = true;
@@ -4264,7 +4307,7 @@ game = {
   byId(id) { return this.fighters.find(f => f.id === id); },
   start(mode) {
     if (typeof transReveal === 'function') transReveal();
-    ['lvBox', 'missBox', 'dailyBox', 'rankBox', 'botBox', 'frBox'].forEach(id => show(id, false)); lvShown = 0;
+    ['lvList', 'lvBox', 'missBox', 'dailyBox', 'rankBox', 'botBox', 'frBox'].forEach(id => show(id, false)); lvShown = 0;
     const map = mode !== 'online' ? MAP_IDS[(Math.random() * MAP_IDS.length) | 0] : net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
     setMap(map); this.map = map;
     this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
@@ -4742,7 +4785,7 @@ function buildMenu() {
   const openPop = id => { setStatus(''); show('menu', false); show(id, true); }; // a janela fica sozinha na tela (o menu some atrás)
   const syncMx = () => { const d = net.roomMode === 'd', eq = net.roomMode === 'e'; if (eq && net.roomMx !== 4 && net.roomMx !== 6) net.roomMx = 6; const mb = document.querySelector('#roomMode button.sel'); document.getElementById('stModeV').textContent = mb ? mb.textContent : ''; document.getElementById('stMxV').textContent = d ? '2' : eq ? (net.roomMx / 2) + 'v' + (net.roomMx / 2) : net.roomMx; document.querySelector('#stMx small').textContent = eq ? 'TIMES' : 'JOGADORES'; document.getElementById('stMx').classList.toggle('off', d); document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d || (eq && !['4', '6'].includes(o.dataset.x)); o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
   document.querySelectorAll('#roomMx button').forEach(b => b.onclick = () => { net.roomMx = +b.dataset.x; syncMx(); });
-  const stepClick = (box, list) => document.querySelectorAll('#' + box + ' .sa').forEach(a => a.onclick = () => { const bs = [...document.querySelectorAll('#' + list + ' button')], i = bs.findIndex(b => b.classList.contains('sel')), n = bs[(i + +a.dataset.d + bs.length) % bs.length]; if (!n.disabled) n.click(); });
+  const stepClick = (box, list) => document.querySelectorAll('#' + box + ' .sa').forEach(a => a.onclick = () => { const bs = [...document.querySelectorAll('#' + list + ' button')], i = bs.findIndex(b => b.classList.contains('sel')), d = +a.dataset.d; for (let k = 1; k <= bs.length; k++) { const n = bs[(i + d * k + bs.length * 9) % bs.length]; if (!n.disabled) { n.click(); break; } } });
   stepClick('stMode', 'roomMode'); stepClick('stMx', 'roomMx');
   document.querySelectorAll('#roomMode button').forEach(b => b.onclick = () => { net.roomMode = b.dataset.m; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o === b)); syncMx(); });
   document.getElementById('bOpenCreate').onclick = () => { net.roomMode = 'n'; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o.dataset.m === 'n')); net.roomMx = MAX_PLAYERS; syncMx(); rn.value = ''; document.getElementById('roomPw').value = ''; openPop('createBox'); document.querySelector('#createForm').scrollTop = 0; const mb = document.querySelector('#maps2 button.mapb'); if (mb) mb.click(); document.getElementById('maps2').scrollLeft = 0; }; // sempre começa vazio
@@ -5058,7 +5101,7 @@ function update(dt) {
   if (overlay && game.mode !== 'online') return; // offline: a pausa congela o jogo
   if (game.mode === 'treino' && tap('KeyE')) game.me.infiniteKi = !game.me.infiniteKi;
   if (game.mode === 'online' && net.role === 'host') {
-    if (tap('KeyB') && !game.duel && net.conns.length + 1 + game.bots.length < roomMax()) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
+    if (tap('KeyB') && net.role === 'off' && !game.duel && net.conns.length + 1 + game.bots.length < roomMax()) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
     if (tap('KeyN')) game.removeBot();
   }
   if (game.timed && game.started && !game.ended && game.matchLeft() <= 0) endMatch();
