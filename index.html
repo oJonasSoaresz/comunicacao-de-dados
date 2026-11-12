@@ -783,6 +783,37 @@
   .lvrow.ready{border-color:#ffb21e;box-shadow:0 0 10px rgba(255,170,30,.3)}
   .lvrow.ready b span{color:#ffcf3a}
   .lvrow.lock b span{color:#9a8cc8}
+  /* ===== R33 ===== */
+  .lvtop{display:flex;align-items:center;gap:var(--gap)}
+  .lvbig{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:calc(var(--wh,600px) * .21);height:calc(var(--wh,600px) * .21);flex:0 0 auto;border-radius:50%;background:radial-gradient(#4a2f8a,#241640);border:3px solid #ffb21e;box-shadow:0 0 12px rgba(255,170,30,.35)}
+  .lvbig small{font-size:var(--fS);color:#cbbdf5}
+  .lvbig b{font-weight:normal;font-size:calc(var(--fT) * .9);color:#ffcf3a;text-shadow:2px 2px 0 #000}
+  .lvxp{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+  .lvxp small{font-size:var(--fS);color:#cbbdf5}
+  .lvxp .rwbar{height:18px}
+  #lvClaim{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:10px 12px}
+  #lvClaim .coin{width:16px;height:16px}
+  .lvtrail{display:flex;gap:0;overflow-x:auto;overflow-y:hidden;padding:14px 6px 8px;position:relative;scroll-behavior:smooth}
+  .lvn{position:relative;flex:0 0 calc(var(--wh,600px) * .2);display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 4px}
+  .lvn::before{content:'';position:absolute;top:calc(var(--wh,600px) * .055);left:-50%;width:100%;height:5px;background:#3e2d78;z-index:0}
+  .lvn:first-child::before{display:none}
+  .lvn.got::before,.lvn.ready::before{background:linear-gradient(90deg,#38d6ff,#7b5cff)}
+  .lvb{position:relative;z-index:1;width:calc(var(--wh,600px) * .11);height:calc(var(--wh,600px) * .11);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--fB);color:#fff;background:#241640;border:3px solid #4a3a8a}
+  .lvn.got .lvb{background:#1f4d36;border-color:#4fd18a}
+  .lvn.ready .lvb{background:linear-gradient(#ffa21a,#e5700a);border-color:#ffd36a;box-shadow:0 0 14px rgba(255,170,30,.6);animation:lvpulse 1s ease-in-out infinite alternate}
+  .lvn.next .lvb{border-color:#ffb21e}
+  @keyframes lvpulse{to{transform:scale(1.1)}}
+  .lvr{display:flex;align-items:center;gap:4px;padding:5px 8px;background:#1d1438;border:2px solid #3e2d78;border-radius:10px}
+  .lvr .coin{width:16px;height:16px}
+  .lvr b{font-weight:normal;font-size:var(--fS);color:#ffcf3a}
+  .lvn small{font-size:calc(var(--fS) * .9);color:#9a8cc8;white-space:nowrap;height:12px}
+  .lvn.ready small{color:#ffcf3a}
+  .lvn.lock{opacity:.65}
+  .lvlk{position:absolute;top:-4px;right:calc(50% - var(--wh,600px) * .07);font-style:normal;font-size:12px;z-index:2}
+  #dailyBox .card{min-height:calc(var(--wh,600px) * .7);justify-content:center}
+  #dailyBox .dday{padding:14px 2px}
+  .mhero{padding-left:calc(var(--wh,600px) * .2)}
+  .mmid{grid-template-columns:38% minmax(0,1fr)!important}
 </style>
 </head>
 <body>
@@ -817,10 +848,10 @@
         <button class="ib big2" id="bMiss" title="missões do dia"><i>📜</i><span>MISSÕES</span><b class="dot hidden" id="dotMiss"></b></button>
         <button class="ib big2" id="bDaily" title="recompensa diária"><i>🎁</i><span>DIÁRIA</span><b class="dot hidden" id="dotDaily"></b></button>
         <button class="ib big2" id="bRank" title="ranking"><i>🏅</i><span>RANKING</span></button>
-        <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span></button>
+        <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.32</div>
+      <div class="ver">v1.0.33</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -923,8 +954,10 @@
   </div>
   <div id="lvList" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvList', false)"></button>
-      <div class="title"><b>NÍVEIS</b><small id="lvSub">cada nível novo dá moedas</small></div>
-      <div id="lvRows" class="rklist"></div>
+      <div class="title"><b>NÍVEIS</b><small>derrota = 10 XP · partida = 4 XP</small></div>
+      <div class="lvtop"><div class="lvbig"><small>NÍVEL</small><b id="lvNow">1</b></div><div class="lvxp"><small>PRÓXIMO NÍVEL</small><div class="rwbar"><u id="lvXpB"></u><em id="lvXpT">0 / 25 XP</em></div></div>
+        <button type="button" class="b pri hidden" id="lvClaim" onclick="show('lvList', false); lvShown = 0; checkLevel();">RESGATAR <i class="coin"></i><span id="lvClaimN">0</span></button></div>
+      <div id="lvRows" class="lvtrail"></div>
     </div>
   </div>
   <div id="lvBox" class="ovl hidden">
@@ -3849,7 +3882,7 @@ function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.
   const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } } }
 (function menuHero() {
   const loop = now => { requestAnimationFrame(loop);
-    const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(() => { refreshDaily(); checkLevel(); }); } loop.was = vis;
+    const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(() => { refreshDaily(); checkLevel(); pedidosDot(); }); } loop.was = vis;
     if (!document.getElementById('rankBox').classList.contains('hidden')) drawTagCanvases();
     if (!vis || typeof chosenLook === 'undefined') return;
     const t = now / 1000, c = document.getElementById('mHero'), x = c.getContext('2d'), spr = lookSprites(chosenLook).spr, pal = palForCustom(chosenChar, 0, chosenFxc);
@@ -3904,7 +3937,7 @@ function drawMissoes(flash) {
 }
 function erroRecompensa(e) { const t = (e && e.message) || '';
   if (/JA_RESGATADO/.test(t)) return 'Você já resgatou esta recompensa.'; if (/NAO_CONCLUIDA/.test(t)) return 'Essa missão ainda não foi concluída.';
-  if (/function|does not exist|schema/i.test(t)) return 'As missões ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.'; return t || 'Não deu certo. Tente de novo.'; }
+  if (/function|does not exist|schema/i.test(t)) return 'Essa parte ainda não está ligada no servidor.\nRode o SQL COMPLETO de novo no Supabase.'; return t || 'Não deu certo. Tente de novo.'; }
 function ganhouFx(el, n) { // "+40" com moedinhas subindo do item resgatado
   const box = el.closest('.card'), r = el.getBoundingClientRect(), b = box.getBoundingClientRect(), z = parseFloat(getComputedStyle(box).zoom) || 1;
   const f = document.createElement('div'); f.className = 'gainfx'; f.innerHTML = '+' + n + ' <i class="coin"></i>';
@@ -3937,12 +3970,18 @@ document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando.
 const lvOf = (k, m) => 1 + Math.floor(Math.sqrt((k * 10 + m * 4) / 25));
 const lvPrize = (de, ate) => { let p = 0; for (let i = de + 1; i <= ate; i++) p += 25 * i; return p; };
 let lvShown = 0;
-function abrirNiveis() {
+function abrirNiveis() { // trilha de níveis (rola para os lados), parada no nível atual
   const p = conta.perfil; if (!p) return; const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4, lv = lvOf(K, M), got = p.lvl_got | 0 || 1;
-  document.getElementById('lvSub').textContent = 'você: nível ' + lv + ' · ' + xp + ' XP · derrota = 10 XP, partida = 4 XP';
-  let h = ''; for (let i = 2; i <= Math.max(lv + 8, 15); i++) { const need = 25 * (i - 1) ** 2, st = i <= got ? 'got' : i <= lv ? 'ready' : 'lock';
-    h += '<div class="rkrow lvrow ' + st + '"><span class="rkp">' + i + '</span><b><span>' + (st === 'got' ? '✓ resgatado' : st === 'ready' ? 'pronto para resgatar!' : need + ' XP') + '</span></b><span class="rkk"><i class="coin"></i> ' + 25 * i + '</span></div>'; }
-  const L = document.getElementById('lvRows'); L.innerHTML = h; show('lvList', true); L.scrollTop = Math.max(0, (Math.min(lv, got + 1) - 3) * 40);
+  const a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
+  document.getElementById('lvNow').textContent = lv; document.getElementById('lvXpT').textContent = (xp - a) + ' / ' + (b - a) + ' XP';
+  document.getElementById('lvXpB').style.width = Math.round((xp - a) / (b - a) * 100) + '%';
+  let h = ''; const fim = Math.max(lv + 10, 20);
+  for (let i = 2; i <= fim; i++) { const need = 25 * (i - 1) ** 2, st = i <= got ? 'got' : i <= lv ? 'ready' : 'lock';
+    h += '<div class="lvn ' + st + (i === lv + 1 ? ' next' : '') + '"><div class="lvb">' + i + '</div><div class="lvr"><i class="coin"></i><b>' + 25 * i + '</b></div><small>'
+      + (st === 'got' ? '<span class="tick"></span>' : st === 'ready' ? 'PRONTO!' : need + ' XP') + '</small>' + (st === 'lock' ? '<em class="lvlk">🔒</em>' : '') + '</div>'; }
+  const L = document.getElementById('lvRows'); L.innerHTML = h; show('lvList', true);
+  const pend = lv > got; show('lvClaim', pend); if (pend) document.getElementById('lvClaimN').textContent = lvPrize(got, lv);
+  requestAnimationFrame(() => { const alvo = L.querySelector('.ready') || L.querySelector('.next'); L.scrollLeft = alvo ? alvo.offsetLeft - L.clientWidth / 2 + alvo.offsetWidth / 2 : 0; });
 }
 function checkLevel() {
   const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
@@ -3964,7 +4003,7 @@ async function drawAmigos() {
   const [{ data, error }, rq] = await Promise.all([conta.sb.rpc('my_friends'), conta.sb.rpc('my_friend_reqs')]);
   if (error) { L.innerHTML = '<div class="rkempty">' + (/function|does not exist|schema/i.test(error.message) ? 'Amigos ainda não ligados no servidor.<br>Rode o SQL COMPLETO de novo.' : esc(error.message)) + '</div>'; return; }
   L.innerHTML = '';
-  const pedidos = (rq && rq.data) || [];
+  const pedidos = (rq && rq.data) || []; show('dotFr', pedidos.length > 0);
   if (pedidos.length) { const h = document.createElement('h4'); h.className = 'rwh'; h.textContent = 'PEDIDOS DE AMIZADE (' + pedidos.length + ')'; L.appendChild(h);
     for (const q of pedidos) { const r = document.createElement('div'); r.className = 'rkrow frrow pedido';
       r.innerHTML = '<b>' + (TAGS[normRole(q.role)] ? tagCanvas(normRole(q.role)) : '') + '<span>' + esc(dispName(q.name)) + '</span></b>';
@@ -3996,8 +4035,9 @@ document.getElementById('frAddB').onclick = async () => {
   notice(/^AMIGOS:/.test(data) ? nm + ' também tinha te enviado um pedido. Agora vocês são amigos!' : 'Pedido enviado para ' + nm + '!\nQuando ele aceitar, aparece na sua lista.', 'SOCIAL'); drawAmigos();
 };
 let convAberto = false, pingN = 0;
+async function pedidosDot() { if (!conta.user || !conta.sb) return; const { data, error } = await conta.sb.rpc('my_friend_reqs'); show('dotFr', !error && !!data && data.length > 0); }
 setInterval(async () => { // "estou online" + convites recebidos (no menu)
-  if (!conta.user || !conta.sb) return; if ((pingN = (pingN + 1) % 6) === 1) conta.sb.rpc('ping').then(() => {}, () => {}); // 'estou online' a cada 1 min
+  if (!conta.user || !conta.sb) return; if ((pingN = (pingN + 1) % 6) === 1) { conta.sb.rpc('ping').then(() => {}, () => {}); pedidosDot(); } // 'estou online' + pedidos a cada 1 min
   if (convAberto || document.getElementById('menu').classList.contains('hidden')) return;
   const { data, error } = await conta.sb.rpc('my_invites'); if (error || !data || !data.length) return;
   const c = data[data.length - 1]; convAberto = true;
