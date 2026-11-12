@@ -741,7 +741,7 @@
   /* ===== R30 ===== */
   .msgc .preco{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:calc(var(--fB) * 1.4);color:#ffcf3a}
   .msgc .preco .coin{width:1.6em;height:1.6em}
-  .buyfx{position:absolute;left:50%;top:45%;z-index:20;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 22px;background:#1f4d36;border:3px solid #5dff8a;border-radius:14px;box-shadow:0 0 24px rgba(93,255,138,.5);pointer-events:none;animation:buyin 1.4s ease-out forwards}
+  .buyfx-old{position:absolute;left:50%;top:45%;z-index:20;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 22px;background:#1f4d36;border:3px solid #5dff8a;border-radius:14px;box-shadow:0 0 24px rgba(93,255,138,.5);pointer-events:none;animation:buyin 1.4s ease-out forwards}
   .buyfx b{font-weight:normal;font-size:calc(var(--fB) * 1.3);color:#c9ffdc;text-shadow:2px 2px 0 #000}
   .buyfx small{font-size:var(--fS);color:#9fe8bd}
   .buyfx .spk{position:absolute;left:50%;top:50%;width:8px;height:8px;background:#ffe066;border-radius:2px;transform:rotate(45deg);animation:spk .9s ease-out forwards}
@@ -852,33 +852,61 @@
   .nvt.saiu{background:#4d1f26;color:#ffb0b8}
   .ib.nv{position:relative}
   /* janela de nível nova */
-  #lvBox .lvc{overflow:visible!important;padding-top:calc(var(--wh,600px) * .1)!important;gap:calc(var(--gap) * 1.1)!important;background:radial-gradient(ellipse at 50% 0%,#3d2675,#1b1036 70%)!important;border-color:#8a63ff!important;box-shadow:0 0 0 2px #0b0618,0 0 30px rgba(140,90,255,.45),0 18px 40px rgba(0,0,0,.6)!important}
-  .lvmed{position:absolute;left:50%;top:0;transform:translate(-50%,-55%);display:flex;align-items:center;justify-content:center}
-  .lvmed i{font-style:normal;display:flex;align-items:center;justify-content:center;width:calc(var(--wh,600px) * .18);height:calc(var(--wh,600px) * .18);border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffe066,#ff9a1e 60%,#b85a00);border:4px solid #ffd36a;box-shadow:0 0 0 3px #0b0618,0 0 20px rgba(255,180,40,.7);font-size:calc(var(--wh,600px) * .09);animation:lvst 1.4s ease-in-out infinite alternate}
-  .lvmed .lr{font-style:normal;font-size:calc(var(--wh,600px) * .08);color:#ffcf3a;filter:drop-shadow(0 2px 0 #0b0618);margin:0 -6px}
-  .lvmed .lr.r{transform:scaleX(-1)}
-  .lvttl{display:flex;align-items:center;gap:12px;justify-content:center;width:100%}
-  .lvttl::before,.lvttl::after{content:'◆';color:#ffb21e;font-size:10px}
-  .lvttl b{font-weight:normal;font-size:calc(var(--fT) * 1.25);color:#ffcf3a;text-shadow:0 3px 0 #8a4a00,0 0 14px rgba(255,180,40,.5),2px 2px 0 #000;letter-spacing:2px}
-  .lvrib{padding:5px 22px;background:linear-gradient(#4a2f8a,#33206a);border:2px solid #8a63ff;clip-path:polygon(8% 0,92% 0,100% 50%,92% 100%,8% 100%,0 50%);font-size:var(--fS);color:#e6dcff}
-  .lvbox{display:flex;align-items:center;justify-content:center;gap:16px;width:80%;padding:12px 10px;background:rgba(20,12,44,.85);border:2px solid #ffb21e;border-radius:14px;box-shadow:inset 0 0 18px rgba(255,170,30,.15)}
-  .lvbox .coin{width:calc(var(--wh,600px) * .12)!important;height:calc(var(--wh,600px) * .12)!important;filter:drop-shadow(0 0 8px rgba(255,200,60,.6))}
-  .lvbox .sep{width:2px;align-self:stretch;background:#6a4fc4}
-  .lvbox .lvq{display:flex;flex-direction:column;align-items:center}
-  .lvbox .lvq b{font-weight:normal;font-size:calc(var(--fT) * 1.3);color:#ffcf3a;text-shadow:2px 2px 0 #000}
-  .lvbox .lvq small{font-size:var(--fS);color:#ffcf3a;letter-spacing:1px}
-  .lvbox .lf{font-style:normal;font-size:calc(var(--wh,600px) * .06);opacity:.35;color:#c9a0ff}
-  #lvGet{min-width:65%;padding:calc(var(--wh,600px) * .03) 10px!important;font-size:calc(var(--fB) * 1.2)!important}
   .codep{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:calc(var(--fB) * 1.5);color:#ffcf3a}
   .codep .coin{width:1.3em;height:1.3em}
   .codep .xpi{font-size:.6em}
   .room .md.h{background:#5a1820;color:#ffc0c6}
-  .lvmed i.lr{width:auto!important;height:auto!important;background:none!important;border:0!important;box-shadow:none!important;animation:none!important;font-size:calc(var(--wh,600px) * .07)!important;transform:rotate(-30deg);margin:0 -4px}
-  .lvmed i.lr.r{transform:scaleX(-1) rotate(-30deg)}
   .prem{font-size:var(--fS)!important;gap:4px!important}
   .prem .coin{width:16px!important;height:16px!important}
   .rwrow .rwb{min-width:calc(var(--wh,600px) * .21)!important;padding:8px 4px!important}
   .rwrow .rwi b{line-height:1.35}
+  /* ===== R36 ===== */
+  #achBox{z-index:60}
+  .achl{height:calc(var(--wh,600px) * .56);overflow-y:auto}
+  .mbar .ib svg,.ib.nv svg{display:block;margin:auto}
+  #bAch{color:#ffcf3a}
+  /* subiu de nível */
+  .lvup{position:relative;align-items:center;text-align:center;gap:calc(var(--gap) * 1.1)!important;overflow:hidden!important;padding-top:calc(var(--pad) * 1.2)!important;
+    background:radial-gradient(ellipse at 50% 38%,#3b2670 0%,#251a46 55%,#170f2e 100%)!important}
+  .lvhead{font-size:calc(var(--fT) * .95);color:#ffcf3a;letter-spacing:2px;text-shadow:0 3px 0 #7a4600,2px 2px 0 #000;position:relative;z-index:1}
+  .lvbadge{position:relative;width:calc(var(--wh,600px) * .32);height:calc(var(--wh,600px) * .32);display:flex;align-items:center;justify-content:center}
+  .lvrays{position:absolute;inset:-35%;border-radius:50%;background:repeating-conic-gradient(rgba(255,190,60,.16) 0 10deg,transparent 10deg 20deg);-webkit-mask:radial-gradient(circle,#000 35%,transparent 70%);mask:radial-gradient(circle,#000 35%,transparent 70%);animation:lvspin 14s linear infinite}
+  @keyframes lvspin{to{transform:rotate(360deg)}}
+  .lvring{position:relative;width:78%;height:78%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    background:radial-gradient(circle at 50% 35%,#5a3aa8,#2a1a56 70%);border:4px solid #ffb21e;box-shadow:0 0 0 4px #120a26,0 0 0 7px #6a4fc4,0 0 26px rgba(255,170,30,.5),inset 0 -8px 0 rgba(0,0,0,.25);animation:lvpop .6s cubic-bezier(.2,1.6,.4,1)}
+  .lvring small{font-size:var(--fS);color:#cbbdf5;letter-spacing:2px}
+  .lvring b{font-weight:normal;font-size:calc(var(--fT) * 1.6);color:#fff;text-shadow:0 4px 0 #120a26,0 0 14px rgba(255,200,80,.6);line-height:1}
+  @keyframes lvpop{0%{transform:scale(.3)}100%{transform:scale(1)}}
+  .lvreward{display:flex;align-items:center;gap:12px;padding:8px 18px;background:#1d1438;border:2px solid #3e2d78;border-radius:12px}
+  .lvrl{font-size:var(--fS);color:#cbbdf5;letter-spacing:1px}
+  .lvrv{display:flex;align-items:center;gap:8px;font-size:calc(var(--fB) * 1.5);color:#ffcf3a}
+  .lvrv b{font-weight:normal}
+  .lvrv .coin{width:1.4em;height:1.4em}
+  .lvup #lvGet{min-width:60%;padding:calc(var(--wh,600px) * .03) 10px}
+  /* ===== R37 ===== */
+  .mbar .ib,.mbar .coinpill{position:relative}
+  .card.mid,.card.cust{position:relative}
+  .unlk{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(10,6,24,.55);border-radius:inherit;animation:unin .2s ease-out;cursor:pointer}
+  .unlk.sai{animation:unout .4s ease-in forwards}
+  .unlk-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 34px 18px;background:linear-gradient(#2b1d52,#1a1036);border:3px solid #5dff8a;border-radius:18px;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(93,255,138,.35);animation:unpop .45s cubic-bezier(.2,1.6,.4,1)}
+  .unlk-rays{position:absolute;left:50%;top:38%;width:320px;height:320px;margin:-160px 0 0 -160px;border-radius:50%;z-index:-1;background:repeating-conic-gradient(rgba(93,255,138,.18) 0 9deg,transparent 9deg 18deg);-webkit-mask:radial-gradient(circle,#000 25%,transparent 65%);mask:radial-gradient(circle,#000 25%,transparent 65%);animation:lvspin 6s linear infinite}
+  .unlk-seal{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 35%,#6dffa0,#1f9a55);border:4px solid #c9ffdc;box-shadow:0 0 0 3px #0b0618,0 0 18px rgba(93,255,138,.6);animation:unseal .6s .1s cubic-bezier(.2,1.8,.4,1) both}
+  .unlk-seal .tick{width:14px;height:26px;border-width:0 6px 6px 0;border-color:#0c2a18;margin-top:-6px}
+  .unlk-in b{font-weight:normal;font-size:calc(var(--fT) * .8);color:#ffcf3a;letter-spacing:2px;text-shadow:0 3px 0 #7a4600,2px 2px 0 #000}
+  .unlk-in small{font-size:var(--fB);color:#c9ffdc}
+  .unlk .spk{position:absolute;left:50%;top:38%;width:8px;height:8px;background:#ffe066;border-radius:2px;transform:rotate(45deg);opacity:0;animation:spk .9s ease-out forwards}
+  @keyframes unin{from{opacity:0}}
+  @keyframes unout{to{opacity:0;transform:scale(1.05)}}
+  @keyframes unpop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+  @keyframes unseal{0%{transform:scale(0) rotate(-90deg)}100%{transform:scale(1) rotate(0)}}
+  .przfx{position:absolute;left:0;right:0;top:50%;z-index:30;display:flex;justify-content:center;pointer-events:none;animation:przup 1.6s ease-out forwards}
+  .przin{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 26px;background:linear-gradient(#2b1d52,#1a1036);border:3px solid #ffb21e;border-radius:16px;box-shadow:0 0 0 3px #0b0618,0 0 30px rgba(255,170,30,.45)}
+  .przin small{font-size:var(--fB);color:#ffcf3a;letter-spacing:1px;text-shadow:2px 2px 0 #000}
+  .przv{display:flex;gap:16px;font-size:calc(var(--fT) * .8);color:#fff;text-shadow:2px 2px 0 #000}
+  .przv span{display:flex;align-items:center;gap:6px}
+  .przv .coin{width:1.1em;height:1.1em}
+  .przv .xpi{font-size:.45em;padding:.3em .4em}
+  @keyframes przup{0%{opacity:0;transform:translateY(-40%) scale(.6)}12%{opacity:1;transform:translateY(-50%) scale(1.08)}22%{transform:translateY(-50%) scale(1)}80%{opacity:1;transform:translateY(-50%)}100%{opacity:0;transform:translateY(-80%)}}
 </style>
 </head>
 <body>
@@ -897,7 +925,7 @@
       <div class="mbar">
         <div class="mside"><div class="mprof" id="accInfo"><canvas id="mAva" width="24" height="24"></canvas><div class="mpi"><b id="mName">—</b><div class="mlv"><span id="mLv">NV 1</span><i><u id="mXp"></u><em id="mXpT">0/25</em></i></div></div></div></div>
         <img class="glogo menu" id="logoMenu" alt="CustomBattle Online">
-        <div class="mside r"><button class="ib nv" id="bNews" title="novidades" aria-label="novidades">📰<b class="dot hidden" id="dotNv"></b></button><div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></div>
+        <div class="mside r"><div class="coinpill" id="coinPill" title="suas moedas"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bAch" title="conquistas" aria-label="conquistas"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 7.3 12H7a4 4 0 0 1-4-4V6a1 1 0 0 1 1-1h3V3zm10 4v3a2 2 0 0 0 2-2V7h-2zM5 7v1a2 2 0 0 0 2 2V7H5zM7 20h10v2H7z"/></svg><b class="dot hidden" id="dotAch"></b></button><button class="ib nv" id="bNews" title="novidades" aria-label="novidades"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H6a3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm16 5h1a1 1 0 0 1 1 1v8a2 2 0 0 1-4 0V9h2zM6 7v4h5V7H6zm7 0v1.5h3V7h-3zm0 3v1.5h3V10h-3zm-7 3v1.5h10V13H6zm0 3v1.5h10V16H6z"/></svg><b class="dot hidden" id="dotNv"></b></button><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></div>
       </div>
       <div class="mmid">
         <div class="mhero" id="mHeroBox" title="editar personagem"><canvas id="mHero" width="130" height="140"></canvas></div>
@@ -916,7 +944,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.35</div>
+      <div class="ver">v1.0.37</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1017,6 +1045,12 @@
       <div id="frList" class="rklist frl"></div>
     </div>
   </div>
+  <div id="achBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('achBox', false)"></button>
+      <div class="title"><b>CONQUISTAS</b><small id="achSub">metas para sempre · cada uma vale uma vez</small></div>
+      <div id="achList" class="rwlist achl"></div>
+    </div>
+  </div>
   <div id="nvBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('nvBox', false)"></button>
       <div class="title"><b>NOVIDADES</b><small>o que chegou, mudou e saiu</small></div>
@@ -1032,10 +1066,10 @@
     </div>
   </div>
   <div id="lvBox" class="ovl hidden">
-    <div class="card mid rw lvc"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvBox', false)"></button>
-      <div class="lvmed"><i class="lr">🌿</i><i>⭐</i><i class="lr r">🌿</i></div>
-      <div class="lvttl"><b id="lvT">NÍVEL 2</b></div><div class="lvrib">Recompensa de nível</div>
-      <div class="lvbox lvp"><i class="lf">❦</i><i class="coin"></i><span class="sep"></span><div class="lvq"><b id="lvP">50</b><small>MOEDAS</small></div><i class="lf">❦</i></div>
+    <div class="card mid lvup"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvBox', false)"></button>
+      <div class="lvhead">SUBIU DE NÍVEL!</div>
+      <div class="lvbadge"><i class="lvrays"></i><div class="lvring"><small>NÍVEL</small><b id="lvT">2</b></div></div>
+      <div class="lvreward"><span class="lvrl">RECOMPENSA</span><span class="lvrv"><i class="coin"></i><b id="lvP">50</b></span></div>
       <button type="button" class="b pri" id="lvGet">RESGATAR</button>
     </div>
   </div>
@@ -1058,7 +1092,7 @@
   <div id="missBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" id="missX" aria-label="fechar"></button>
       <div class="title"><b>MISSÕES</b></div>
-      <div class="mtabs" id="missTabs"><button type="button" data-t="d" class="sel">DIÁRIAS<b class="dot hidden" id="dotMD"></b></button><button type="button" data-t="w">SEMANAIS<b class="dot hidden" id="dotMW"></b></button><button type="button" data-t="a">CONQUISTAS<b class="dot hidden" id="dotMA"></b></button></div>
+      <div class="mtabs" id="missTabs"><button type="button" data-t="d" class="sel">DIÁRIAS<b class="dot hidden" id="dotMD"></b></button><button type="button" data-t="w">SEMANAIS<b class="dot hidden" id="dotMW"></b></button></div>
       <div class="rwinfo" id="missInfo"></div>
       <div id="missList" class="rwlist"></div>
     </div>
@@ -3699,11 +3733,21 @@ function offerBuy(k, nome) {
   if (!k || shop.has(k)) { el.classList.remove('on'); el.textContent = ''; return; }
   el.innerHTML = '🔒 ' + esc(nome) + ' · ' + (shop.infinite() ? 0 : priceOf(k)) + ' <i class="coin"></i><br>toque de novo para comprar'; el.classList.add('on');
 }
-function comprouFx(nome) { // selo verde "COMPRADO!" saltando sobre a tela de personagem + brilhos
+function comprouFx(nome) { // "DESBLOQUEADO!": luz girando, selo verde com check, nome do item e faíscas
   const box = document.querySelector('#custom .card'); if (!box || document.getElementById('custom').classList.contains('hidden')) return;
-  const f = document.createElement('div'); f.className = 'buyfx'; f.innerHTML = '<b>✓ COMPRADO!</b><small>' + esc(nome) + '</small>';
-  for (let i = 0; i < 10; i++) { const c = document.createElement('i'); c.className = 'spk'; c.style.setProperty('--dx', (Math.random() * 220 - 110) + 'px'); c.style.setProperty('--dy', (Math.random() * 120 - 70) + 'px'); c.style.animationDelay = (i * 0.025) + 's'; f.appendChild(c); }
-  box.appendChild(f); setTimeout(() => f.remove(), 1500); try { SFX.zap(); } catch (e) {}
+  const old = box.querySelector('.unlk'); if (old) old.remove();
+  const f = document.createElement('div'); f.className = 'unlk';
+  f.innerHTML = '<div class="unlk-in"><i class="unlk-rays"></i><div class="unlk-seal"><span class="tick"></span></div><b>DESBLOQUEADO!</b><small>' + esc(nome) + '</small></div>';
+  for (let i = 0; i < 14; i++) { const c = document.createElement('i'); c.className = 'spk'; const a = i / 14 * Math.PI * 2, r = 90 + Math.random() * 60;
+    c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px'); c.style.animationDelay = (0.15 + Math.random() * 0.1) + 's'; f.firstChild.appendChild(c); }
+  f.onclick = () => f.remove(); box.appendChild(f); setTimeout(() => f.classList.add('sai'), 1500); setTimeout(() => f.remove(), 1900); try { SFX.zap(); } catch (e) {}
+}
+/* recompensa resgatada: aviso no centro da janela (sempre visível, mesmo com a lista rolada) */
+function premioFx(box, c, xp, titulo) {
+  if (!box) return; const old = box.querySelector('.przfx'); if (old) old.remove();
+  const f = document.createElement('div'); f.className = 'przfx';
+  f.innerHTML = '<div class="przin"><small>' + (titulo || 'RESGATADO!') + '</small><div class="przv">' + (c ? '<span>+' + c + ' <i class="coin"></i></span>' : '') + (xp ? '<span>+' + xp + ' ' + XPI + '</span>' : '') + '</div></div>';
+  box.appendChild(f); setTimeout(() => f.remove(), 1600); try { SFX.zap(); } catch (e) {}
 }
 function tryBuy(k, nome) { return buyNow(k, nome).then(() => { if (custOpen) { saveLook(); if (shop.has(k)) offerBuy(''); } }); }
 async function buyNow(k, nome, direto) {
@@ -3990,7 +4034,7 @@ async function refreshDaily() {
   try { if (conta.flushStats) await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('daily_status'); if (error || !data) { dly = null; return; }
   dly = data; dly.w = dly.w || { k: 0, m: 0, ms: [] }; for (const id of pegos) { const o = id[0] === 'w' ? dly.w : dly; if (!o.ms.includes(id)) o.ms.push(id); } if (pegos.has('daily')) dly.got = true;
-  if (!document.getElementById('missBox').classList.contains('hidden')) drawMissoes(); await carregarConquistas(); const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w) || conqProntas();
+  if (!document.getElementById('missBox').classList.contains('hidden')) drawMissoes(); carregarConquistas(); const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w);
   show('dotMiss', pode); show('dotDaily', !dly.got);
 }
 function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); }
@@ -4002,8 +4046,7 @@ const prontas = (velha, src) => listaDe(src, velha).some(m => !src.ms.includes(m
 function drawMissoes(flash) {
   const L = document.getElementById('missList'); L.innerHTML = '';
   document.querySelectorAll('#missTabs button').forEach(b => b.classList.toggle('sel', b.dataset.t === missTab));
-  show('dotMD', prontas(MISSOES, dly)); show('dotMW', prontas(SEMANAIS, dly.w)); show('dotMA', conqProntas());
-  if (missTab === 'a') return drawConquistas(flash);
+  show('dotMD', prontas(MISSOES, dly)); show('dotMW', prontas(SEMANAIS, dly.w));
   const sem = missTab === 'w', src = sem ? dly.w : dly, lista = listaDe(src, sem ? SEMANAIS : MISSOES);
   document.getElementById('missInfo').textContent = sem ? 'renovam toda segunda-feira' : 'renovam todo dia à meia-noite';
   for (const m of lista) { const v = Math.min(m.n, m.v), feita = src.ms.includes(m.id), ok = v >= m.n;
@@ -4015,12 +4058,12 @@ function drawMissoes(flash) {
       if (error) { if (/JA_RESGATADO/.test(error.message)) { pegos.add(m.id); drawMissoes(); } else b.disabled = false; return notice(erroRecompensa(error), 'MISSÕES'); }
       pegos.add(m.id); const cur = m.id[0] === 'w' ? dly.w : dly; if (!cur.ms.includes(m.id)) cur.ms.push(m.id);
       const c = typeof data === 'object' && data ? data.c : data, x = typeof data === 'object' && data ? data.xp | 0 : 0; ganhouRecompensa(c, x); drawMissoes(m.id);
-      ganhouFx(document.querySelector('#missList .rwrow.flash') || L, c, x); refreshDaily(); };
+      premioFx(document.querySelector('#missBox .card'), c, x, 'MISSÃO CONCLUÍDA!'); refreshDaily(); };
     r.appendChild(b); L.appendChild(r); }
 }
 async function drawConquistas(flash) {
-  const L = document.getElementById('missList'); document.getElementById('missInfo').textContent = 'para sempre · cada uma vale uma vez';
-  if (!conqs) { L.innerHTML = '<div class="rkempty">carregando...</div>'; await carregarConquistas(); if (missTab !== 'a') return; }
+  const L = document.getElementById('achList');
+  if (!conqs) { L.innerHTML = '<div class="rkempty">carregando...</div>'; await carregarConquistas(); }
   if (!conqs) { L.innerHTML = '<div class="rkempty">Conquistas ainda não ligadas no servidor.<br>Rode o SQL COMPLETO de novo.</div>'; return; }
   L.innerHTML = ''; const ord = [...conqs].sort((a, b) => (a.got - b.got) || ((b.v >= b.n) - (a.v >= a.n)));
   for (const a of ord) { const ok = a.v >= a.n, r = document.createElement('div'); r.className = 'rwrow conq' + (a.got ? ' done' : ok ? ' ready' : '') + (flash === a.id ? ' flash' : '');
@@ -4028,9 +4071,10 @@ async function drawConquistas(flash) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (a.got ? ' got' : ok ? ' pri' : ''); b.disabled = a.got || !ok; b.innerHTML = a.got ? '<span class="tick"></span>FEITA' : 'RESGATAR';
     b.onclick = async () => { b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {} const { data, error } = await conta.sb.rpc('claim_achievement', { aid: a.id }); unwait();
       if (error) { b.disabled = false; return notice(erroRecompensa(error), 'CONQUISTAS'); }
-      a.got = true; ganhouRecompensa(data.c, data.xp); drawConquistas(a.id); ganhouFx(document.querySelector('#missList .rwrow.flash') || L, data.c, data.xp); refreshDaily(); };
+      a.got = true; conqPegas.add(a.id); ganhouRecompensa(data.c, data.xp); drawConquistas(a.id); premioFx(document.querySelector('#achBox .card'), data.c, data.xp, 'CONQUISTA!'); refreshDaily(); };
     r.appendChild(b); L.appendChild(r); }
-  show('dotMA', conqProntas());
+  show('dotAch', conqProntas());
+  const tot = conqs.length, feitas = conqs.filter(a => a.got).length; document.getElementById('achSub').textContent = feitas + ' de ' + tot + ' conquistadas · cada uma vale uma vez';
 }
 function ganhouRecompensa(c, xp) { if (c) moedasGanhas(c); if (xp && conta.perfil) { conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + xp; renderConta(); } }
 function erroRecompensa(e) { const t = (e && e.message) || '';
@@ -4053,7 +4097,7 @@ async function abrirRecompensa(qual) {
   if (!document.getElementById('missBox').classList.contains('hidden') || !document.getElementById('dailyBox').classList.contains('hidden')) return; // uma de cada vez
   if (!dly) { wait('carregando...'); await refreshDaily(); unwait(); }
   if (!dly) return semV11();
-  if (qual === 'miss') { missTab = prontas(MISSOES, dly) ? 'd' : prontas(SEMANAIS, dly.w) ? 'w' : conqProntas() ? 'a' : 'd'; drawMissoes(); show('missBox', true); document.getElementById('missList').scrollTop = 0; } else { drawDiaria(); show('dailyBox', true); }
+  if (qual === 'miss') { missTab = prontas(MISSOES, dly) ? 'd' : prontas(SEMANAIS, dly.w) ? 'w' : 'd'; drawMissoes(); show('missBox', true); document.getElementById('missList').scrollTop = 0; } else { drawDiaria(); show('dailyBox', true); }
 }
 document.getElementById('bMiss').onclick = () => abrirRecompensa('miss');
 document.getElementById('bDaily').onclick = () => abrirRecompensa('daily');
@@ -4085,13 +4129,13 @@ function checkLevel() {
   const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
   const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0);
   if (lv <= (p.lvl_got | 0) || lv <= lvShown || document.getElementById('menu').classList.contains('hidden')) return;
-  lvShown = lv; document.getElementById('lvT').textContent = 'NÍVEL ' + lv; document.getElementById('lvP').textContent = lvPrize(p.lvl_got | 0, lv); show('lvBox', true);
+  lvShown = lv; document.getElementById('lvT').textContent = lv; document.getElementById('lvP').textContent = lvPrize(p.lvl_got | 0, lv); show('lvBox', true);
 }
 document.getElementById('lvGet').onclick = async () => {
   const b = document.getElementById('lvGet'); b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('claim_levels'); unwait(); b.disabled = false;
   if (error) { show('lvBox', false); await conta.loadProfile(); return notice(/NADA/.test(error.message) ? 'Essa recompensa já foi resgatada.' : erroRecompensa(error), 'NÍVEL'); }
-  conta.perfil.lvl_got = data.lv; moedasGanhas(data.prize); ganhouFx(document.querySelector('#lvBox .lvp'), data.prize); setTimeout(() => show('lvBox', false), 1100);
+  conta.perfil.lvl_got = data.lv; moedasGanhas(data.prize); ganhouFx(document.querySelector('#lvBox .lvreward'), data.prize); setTimeout(() => show('lvBox', false), 1100);
 };
 /* ---------- amigos e convites ---------- */
 async function drawAmigos() {
@@ -4170,6 +4214,8 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.37', d: '12/11', itens: [['mudou', 'Aviso bonito ao desbloquear itens e ao resgatar missões e conquistas'], ['mudou', 'Moedas antes do troféu no topo do menu']] },
+  { v: '1.0.36', d: '12/11', itens: [['novo', 'Conquistas ganharam tela própria (botão do troféu, no topo)'], ['novo', '10 missões semanais por semana'], ['mudou', 'Nova tela de subir de nível'], ['mudou', 'Topo do menu: conquistas, moedas, novidades e ajustes']] },
   { v: '1.0.35', d: '12/11', itens: [['novo', 'Modo HIT KILL: qualquer golpe ou poder derrota na hora!'], ['novo', 'Conquistas: metas para sempre, com moedas e XP'], ['novo', 'Missões variadas: defesa, poderes, investida, dano e mais'], ['novo', 'Missões e conquistas também dão XP'], ['novo', 'Tela de Novidades (esta aqui!)'], ['mudou', 'Janela de subir de nível com visual novo'], ['mudou', 'Anel do personagem do menu centralizado nos pés'], ['saiu', 'Mostrador de troféus do menu']] },
   { v: '1.0.33', d: '12/11', itens: [['novo', 'Trilha de níveis com recompensas'], ['novo', 'Pedidos de amizade com aceitar e recusar'], ['mudou', 'Diária maior e mais bonita']] },
   { v: '1.0.31', d: '12/11', itens: [['novo', 'Modo EQUIPE 2v2 e 3v3'], ['novo', 'Recompensa ao subir de nível'], ['novo', 'Amigos e convite para sala'], ['novo', 'Reconexão automática na partida'], ['novo', 'Excluir conta nos Ajustes']] },
@@ -4182,10 +4228,11 @@ function abrirNovidades() {
   show('nvBox', true); document.getElementById('nvList').scrollTop = 0; try { localStorage.setItem('cb_ver_visto', VER_ATUAL); } catch (e) {} show('dotNv', false);
 }
 document.getElementById('bNews').onclick = abrirNovidades;
+document.getElementById('bAch').onclick = () => { if (!conta.user) return; show('achBox', true); document.getElementById('achList').scrollTop = 0; drawConquistas(); };
 setTimeout(() => { let v = ''; try { v = localStorage.getItem('cb_ver_visto') || ''; } catch (e) {} show('dotNv', v !== VER_ATUAL); }, 500);
 /* ---------- conquistas ---------- */
-let conqs = null;
-async function carregarConquistas() { if (!conta.user) return; const { data, error } = await conta.sb.rpc('my_achievements'); conqs = error ? null : data; return conqs; }
+let conqs = null; const conqPegas = new Set(); // resgatadas nesta sessão (uma resposta velha do servidor não desfaz)
+async function carregarConquistas() { if (!conta.user) return; const { data, error } = await conta.sb.rpc('my_achievements'); conqs = error ? null : data; if (conqs) for (const a of conqs) if (conqPegas.has(a.id)) a.got = true; show('dotAch', conqProntas()); if (conqs && !document.getElementById('achBox').classList.contains('hidden')) drawConquistas(); return conqs; }
 const conqProntas = () => !!conqs && conqs.some(a => !a.got && a.v >= a.n);
 function cMore() { if (cMore.r) return; cMore.r = requestAnimationFrame(() => { cMore.r = 0; cMore2(); }); }
 function cMore2() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; m.classList.toggle('hidden', !more); document.getElementById('cFade').classList.toggle('on', more); }
@@ -4469,7 +4516,7 @@ game = {
   byId(id) { return this.fighters.find(f => f.id === id); },
   start(mode) {
     if (typeof transReveal === 'function') transReveal();
-    ['lvList', 'lvBox', 'missBox', 'dailyBox', 'rankBox', 'botBox', 'frBox'].forEach(id => show(id, false)); lvShown = 0;
+    ['achBox', 'nvBox', 'lvList', 'lvBox', 'missBox', 'dailyBox', 'rankBox', 'botBox', 'frBox'].forEach(id => show(id, false)); lvShown = 0;
     const map = mode !== 'online' ? MAP_IDS[(Math.random() * MAP_IDS.length) | 0] : net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
     setMap(map); this.map = map;
     this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
