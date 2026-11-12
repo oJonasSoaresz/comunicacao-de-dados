@@ -731,13 +731,22 @@
   .rkrow.me{background:#3a2560;border-color:#5dff8a!important;box-shadow:0 0 10px rgba(93,255,138,.3)}
   .voce{font-style:normal;font-size:var(--fS);color:#0c2a18;background:#5dff8a;padding:2px 5px;border-radius:4px;margin-left:4px;flex:0 0 auto}
   #trans{position:absolute;inset:0;z-index:200;pointer-events:none;overflow:hidden;visibility:hidden}
-  #trans.go{visibility:visible}
+  #trans.in,#trans.out{visibility:visible;pointer-events:auto}
   #trans i{position:absolute;top:-20%;bottom:-20%;left:-60%;width:220%;background:repeating-linear-gradient(135deg,#2a1a52 0 24px,#1b1036 24px 48px);transform:skewX(-20deg) translateX(-110%);box-shadow:0 0 0 6px #ffb21e}
-  #trans.go i{animation:trwipe 1.25s cubic-bezier(.7,0,.3,1) forwards}
+  #trans.in i{transform:skewX(-20deg) translateX(-20%);transition:transform .45s cubic-bezier(.7,0,.3,1)}
+  #trans.out i{transform:skewX(-20deg) translateX(110%);transition:transform .6s cubic-bezier(.7,0,.3,1)}
   #trans .tlogo{position:absolute;left:50%;top:50%;width:min(60%,calc(var(--wh,600px) * 1.2));transform:translate(-50%,-50%) scale(.6);opacity:0}
-  #trans.go .tlogo{animation:trlogo 1.25s ease-out forwards}
-  @keyframes trwipe{0%{transform:skewX(-20deg) translateX(-110%)}38%,58%{transform:skewX(-20deg) translateX(-20%)}100%{transform:skewX(-20deg) translateX(110%)}}
-  @keyframes trlogo{0%,25%{opacity:0;transform:translate(-50%,-50%) scale(.6)}40%,58%{opacity:1;transform:translate(-50%,-50%) scale(1)}75%,100%{opacity:0;transform:translate(-50%,-50%) scale(1.25)}}
+  #trans.in .tlogo{opacity:1;transform:translate(-50%,-50%) scale(1);transition:opacity .3s .2s,transform .35s .2s cubic-bezier(.2,1.4,.4,1)}
+  #trans.out .tlogo{opacity:0;transform:translate(-50%,-50%) scale(1.25);transition:opacity .3s,transform .3s}
+  /* ===== R30 ===== */
+  .msgc .preco{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:calc(var(--fB) * 1.4);color:#ffcf3a}
+  .msgc .preco .coin{width:1.6em;height:1.6em}
+  .buyfx{position:absolute;left:50%;top:45%;z-index:20;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 22px;background:#1f4d36;border:3px solid #5dff8a;border-radius:14px;box-shadow:0 0 24px rgba(93,255,138,.5);pointer-events:none;animation:buyin 1.4s ease-out forwards}
+  .buyfx b{font-weight:normal;font-size:calc(var(--fB) * 1.3);color:#c9ffdc;text-shadow:2px 2px 0 #000}
+  .buyfx small{font-size:var(--fS);color:#9fe8bd}
+  .buyfx .spk{position:absolute;left:50%;top:50%;width:8px;height:8px;background:#ffe066;border-radius:2px;transform:rotate(45deg);animation:spk .9s ease-out forwards}
+  @keyframes buyin{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}25%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%)}}
+  @keyframes spk{0%{opacity:1;transform:translate(0,0) rotate(45deg)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(225deg) scale(.4)}}
 </style>
 </head>
 <body>
@@ -774,7 +783,7 @@
         <button class="ib big2" id="bRank" title="ranking"><i>🏅</i><span>RANKING</span></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.29</div>
+      <div class="ver">v1.0.30</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -3449,11 +3458,12 @@ function renderCoins() { const el = document.getElementById('coinN'), v = shop.i
 /* o nome dourado agora vem do cargo salvo no banco (a antiga tag {DONO} não vale mais) */
 const isOwnerF = f => conta.roleOf(f) === 'dono';
 /* nome de um lutador com o visual do cargo: dono = dourado · youtuber = tag YT vermelha + nome branco */
+const normRole = r => { r = String(r || '').toLowerCase().trim(); return /^(yt|youtube|youtuber)$/.test(r) ? 'youtuber' : /^(dono|owner|dev)$/.test(r) ? 'dono' : r; };
 const tagCanvas = r => '<canvas class="tagc" data-r="' + r + '" width="' + (TAGS[r][0].length * 8 + 4) + '" height="12"></canvas>'; // só a largura da tag (fica colada no nome)
 const TAGS = { dono: ['DONO', ['#7a5200', '#ffd23a', '#fff6c8', '#ffd23a', '#7a5200'], '#2a1600'], youtuber: ['YT', ['#8a0d0d', '#ff2a2a', '#ffd0d0', '#ff2a2a', '#8a0d0d'], '#2a0000'] };
 function nameText(f, str, x, y, size, align, color, outline = '#120c1c', ow = 1.2) {
-  const r = f && f.role !== undefined ? f.role : conta.roleOf(f);
-  if (TAGS[r]) return tagText(TAGS[r][0], TAGS[r][1], TAGS[r][2], str, x, y, size, align, outline);
+  let r = f && f.role !== undefined ? f.role : conta.roleOf(f);
+  r = normRole(r); if (TAGS[r]) return tagText(TAGS[r][0], TAGS[r][1], TAGS[r][2], str, x, y, size, align, outline);
   text(str, x, y, size, '#ffffff', align, outline, ow); // todos os nomes em branco
 }
 function tagText(tag, cols, dark, str, x, y, size, align = 'left', outline = '#120c1c') {
@@ -3483,7 +3493,7 @@ function renderConta() {
   const p = conta.perfil, on = !!(conta.user && p);
   document.getElementById('accInfo').classList.toggle('on', on); if (!on) return;
   const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4, lv = 1 + Math.floor(Math.sqrt(xp / 25)), a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
-  document.getElementById('mName').innerHTML = (TAGS[p.role] ? tagCanvas(p.role) : '') + '<span>' + esc(dispName(p.name)) + '</span>';
+  document.getElementById('mName').innerHTML = (TAGS[normRole(p.role)] ? tagCanvas(normRole(p.role)) : '') + '<span>' + esc(dispName(p.name)) + '</span>';
   document.getElementById('mLv').textContent = 'NV ' + lv; document.getElementById('mXp').style.width = Math.round((xp - a) / (b - a) * 100) + '%'; document.getElementById('mXpT').textContent = (xp - a) + ' / ' + (b - a) + ' XP';
   refreshDaily();
   document.getElementById('mKills').textContent = K;
@@ -3500,13 +3510,19 @@ function offerBuy(k, nome) {
   if (!k || shop.has(k)) { el.classList.remove('on'); el.textContent = ''; return; }
   el.innerHTML = '🔒 ' + esc(nome) + ' · ' + (shop.infinite() ? 0 : priceOf(k)) + ' <i class="coin"></i><br>toque de novo para comprar'; el.classList.add('on');
 }
+function comprouFx(nome) { // selo verde "COMPRADO!" saltando sobre a tela de personagem + brilhos
+  const box = document.querySelector('#custom .card'); if (!box || document.getElementById('custom').classList.contains('hidden')) return;
+  const f = document.createElement('div'); f.className = 'buyfx'; f.innerHTML = '<b>✓ COMPRADO!</b><small>' + esc(nome) + '</small>';
+  for (let i = 0; i < 10; i++) { const c = document.createElement('i'); c.className = 'spk'; c.style.setProperty('--dx', (Math.random() * 220 - 110) + 'px'); c.style.setProperty('--dy', (Math.random() * 120 - 70) + 'px'); c.style.animationDelay = (i * 0.025) + 's'; f.appendChild(c); }
+  box.appendChild(f); setTimeout(() => f.remove(), 1500); try { SFX.zap(); } catch (e) {}
+}
 function tryBuy(k, nome) { return buyNow(k, nome).then(() => { if (custOpen) { saveLook(); if (shop.has(k)) offerBuy(''); } }); }
 async function buyNow(k, nome, direto) {
   if (!k || shop.has(k)) return;
-  if (direto) return shop.buy([{ k, n: nome }]); // botão COMPRAR do selo: já mostra o preço
+  if (direto) return shop.buy([{ k, n: nome }]).then(() => { if (shop.has(k)) comprouFx(nome); }); // botão COMPRAR do selo: já mostra o preço
   const preco = shop.infinite() ? 0 : priceOf(k);
-  const ok = await msgOpen('COMPRAR ITEM', '🔒 ' + nome + '\n\nPreço: ' + preco + ' moedas', '', true, 'COMPRAR');
-  if (ok) await shop.buy([{ k, n: nome }]);
+  const ok = await msgOpen('COMPRAR ITEM', { html: '🔒 ' + esc(nome) + '<span class="preco"><i class="coin"></i>' + preco + '</span>' }, '', true, 'COMPRAR');
+  if (ok) { await shop.buy([{ k, n: nome }]); if (shop.has(k)) comprouFx(nome); }
 }
 /* uma cor comprada vale em TODOS os itens e slots ('c:#hex'); a transformação comprada vale em todos os slots ('tr:x') */
 const normItem = k => { const m = /^(hc|s|tc|ac|fa|fk|c):(#[0-9a-f]{6})$/i.exec(k || ''); return m ? 'c:' + m[2].toLowerCase() : /^tr:/.test(k || '') ? 'tr:x' : k; };
@@ -3736,9 +3752,15 @@ document.getElementById('logoMenu').src = document.getElementById('logoAuth').sr
 document.getElementById('bGear').onclick = () => openSettings('menu');
 /* aba de opções: quando há mais conteúdo abaixo, a borda de baixo some num degradê e aparece "▼ mais" */
 /* menu: o SEU lutador em destaque (parado ↔ bola de energia) + rostinho no rodapé */
-function battleTrans() { // cortina diagonal roxa com o logo, abrindo para a arena
-  const t = document.getElementById('trans'); if (!t) return; const lg = t.querySelector('.tlogo'); if (!lg.src) lg.src = document.getElementById('logoImg').src;
-  t.classList.remove('go'); void t.offsetWidth; t.classList.add('go'); clearTimeout(battleTrans.k); battleTrans.k = setTimeout(() => t.classList.remove('go'), 1300); }
+/* transição: transCover() fecha a cortina (com o logo); a troca de tela acontece por trás; transReveal() abre */
+let transAt = 0;
+function transCover() { const t = document.getElementById('trans'); if (!t) return; const lg = t.querySelector('.tlogo'); if (!lg.src) lg.src = document.getElementById('logoImg').src;
+  clearTimeout(transCover.k); t.className = 'in'; transAt = performance.now(); transCover.k = setTimeout(transHide, 15000); }
+function transReveal() { const t = document.getElementById('trans'); if (!t || t.className !== 'in') return; clearTimeout(transCover.k);
+  const falta = Math.max(0, 650 - (performance.now() - transAt)); // deixa o logo aparecer
+  setTimeout(() => { t.className = 'out'; transCover.k = setTimeout(transHide, 650); }, falta); }
+function transHide() { const t = document.getElementById('trans'); if (t) t.className = ''; }
+function comTransicao(fn) { transCover(); setTimeout(fn, 480); } // fecha → troca → abre (o start chama o transReveal)
 function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.tagc')) { const T = TAGS[tc.dataset.r], g = tc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, tc.width, tc.height);
   const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } } }
 (function menuHero() {
@@ -3766,12 +3788,13 @@ const MISSOES = [{ id: 'm1', t: 'Jogue 1 partida', f: 'm', n: 1, p: 20 }, { id: 
   { id: 'm3', t: 'Jogue 3 partidas', f: 'm', n: 3, p: 40 }, { id: 'k10', t: 'Cause 10 derrotas', f: 'k', n: 10, p: 100 }];
 const SEMANAIS = [{ id: 'wm15', t: 'Jogue 15 partidas', f: 'm', n: 15, p: 200 }, { id: 'wk40', t: 'Cause 40 derrotas', f: 'k', n: 40, p: 350 }];
 const DIARIA = [20, 30, 40, 50, 60, 80, 300];
-let dly = null;
+let dly = null; const pegos = new Set(); // resgatados nesta sessão (o servidor pode demorar a refletir)
 async function refreshDaily() {
   if (!conta.user || !conta.sb) return;
   try { if (conta.flushStats) await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('daily_status'); if (error || !data) { dly = null; return; }
-  dly = data; dly.w = dly.w || { k: 0, m: 0, ms: [] }; const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w);
+  dly = data; dly.w = dly.w || { k: 0, m: 0, ms: [] }; for (const id of pegos) { const o = id[0] === 'w' ? dly.w : dly; if (!o.ms.includes(id)) o.ms.push(id); } if (pegos.has('daily')) dly.got = true;
+  if (!document.getElementById('missBox').classList.contains('hidden')) drawMissoes(); const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w);
   show('dotMiss', pode); show('dotDaily', !dly.got);
 }
 function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); }
@@ -3791,8 +3814,8 @@ function drawMissoes(flash) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
     b.innerHTML = feita ? '<span class="tick"></span>RESGATADO' : 'RESGATAR';
     b.onclick = async () => { b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {} const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
-      if (error) { b.disabled = false; return notice(erroRecompensa(error), 'MISSÕES'); }
-      moedasGanhas(data); src.ms.push(m.id); drawMissoes(m.id); ganhouFx(document.querySelector('#missList .rwrow.flash') || L, data); refreshDaily(); };
+      if (error) { if (/JA_RESGATADO/.test(error.message)) { pegos.add(m.id); drawMissoes(); } else b.disabled = false; return notice(erroRecompensa(error), 'MISSÕES'); }
+      pegos.add(m.id); const cur = m.id[0] === 'w' ? dly.w : dly; if (!cur.ms.includes(m.id)) cur.ms.push(m.id); moedasGanhas(data); drawMissoes(m.id); ganhouFx(document.querySelector('#missList .rwrow.flash') || L, data); refreshDaily(); };
     r.appendChild(b); L.appendChild(r); }
 }
 function erroRecompensa(e) { const t = (e && e.message) || '';
@@ -3825,7 +3848,7 @@ setInterval(() => { if (!document.getElementById('menu').classList.contains('hid
 document.getElementById('dailyX').onclick = () => show('dailyBox', false);
 document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_daily'); unwait();
   if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : erroRecompensa(error), 'RECOMPENSA');
-  moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); ganhouFx(d, data); refreshDaily(); };
+  pegos.add('daily'); moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); ganhouFx(d, data); refreshDaily(); };
 function cMore() { if (cMore.r) return; cMore.r = requestAnimationFrame(() => { cMore.r = 0; cMore2(); }); }
 function cMore2() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; m.classList.toggle('hidden', !more); document.getElementById('cFade').classList.toggle('on', more); }
 "use strict";
@@ -4107,7 +4130,7 @@ game = {
   matchLeft() { return Math.max(0, (this.endAt - performance.now()) / 1000); }, mode: null, fighters: [], bots: [], me: null, cam: { x: 0, y: 0 }, t: 0,
   byId(id) { return this.fighters.find(f => f.id === id); },
   start(mode) {
-    if (typeof battleTrans === 'function') battleTrans();
+    if (typeof transReveal === 'function') transReveal();
     const map = mode !== 'online' ? MAP_IDS[(Math.random() * MAP_IDS.length) | 0] : net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
     setMap(map); this.map = map;
     this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
@@ -4173,7 +4196,7 @@ let msgDone = null;
 function msgOpen(title, text, input, cancel, okLabel) {
   return new Promise(res => {
     if (msgDone) msgDone(null);
-    document.getElementById('msgTitle').textContent = title; document.getElementById('msgText').textContent = text || '';
+    document.getElementById('msgTitle').textContent = title; const mt = document.getElementById('msgText'); if (text && text.html) mt.innerHTML = text.html; else mt.textContent = text || '';
     const inp = document.getElementById('msgIn'); inp.classList.toggle('hidden', !input); inp.value = ''; inp.placeholder = input || '';
     document.getElementById('msgOk').textContent = okLabel || 'OK'; show('msgCancel', false); show('msgX', !!cancel); document.getElementById('msgBtns').style.gridTemplateColumns = '1fr';
     msgDone = v => { msgDone = null; show('msgBox', false); res(v); };
@@ -4563,9 +4586,9 @@ function buildCharList() {
 function buildMenu() {
   const needNet = () => { if (typeof Peer === 'undefined') { setStatus('Biblioteca de rede não carregou.'); return false; } return true; };
   let busy = false;
-  document.getElementById('bTrain').onclick = () => { initAudio(); net.close(); game.start('treino'); };
+  document.getElementById('bTrain').onclick = () => { initAudio(); net.close(); comTransicao(() => game.start('treino')); };
   document.getElementById('bBots').onclick = () => show('botBox', true);
-  document.querySelectorAll('#botBox .difb').forEach(b => b.onclick = () => { show('botBox', false); game.botLv = +b.dataset.l; initAudio(); net.close(); game.start('bots'); });
+  document.querySelectorAll('#botBox .difb').forEach(b => b.onclick = () => { show('botBox', false); game.botLv = +b.dataset.l; initAudio(); net.close(); comTransicao(() => game.start('bots')); });
   document.getElementById('mHeroBox').onclick = () => document.getElementById('bChar').click();
   document.getElementById('bRank').onclick = async () => {
     const L = document.getElementById('rankList'); L.innerHTML = '<div class="rkempty">carregando...</div>'; show('rankBox', true); L.scrollTop = 0;
@@ -4574,7 +4597,7 @@ function buildMenu() {
     const rows = data || []; let h = '';
     for (let i = 0; i < 10; i++) { const r = rows[i], pos = '<span class="rkp">' + (i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1) + 'º') + '</span>';
       if (!r) { h += '<div class="rkrow vazio">' + pos + '<b>—</b><span class="rkk">—</span></div>'; continue; }
-      h += '<div class="rkrow' + (r.me ? ' me' : '') + (i < 3 ? ' t' + (i + 1) : '') + '">' + pos + '<b>' + (TAGS[r.role] ? tagCanvas(r.role) : '') + '<span>' + esc(dispName(r.name)) + '</span>' + (r.me ? '<em class="voce">VOCÊ</em>' : '') + '</b><span class="rkk">' + (r.kills | 0) + ' <small>kills</small></span></div>'; }
+      h += '<div class="rkrow' + (r.me ? ' me' : '') + (i < 3 ? ' t' + (i + 1) : '') + '">' + pos + '<b>' + (TAGS[normRole(r.role)] ? tagCanvas(normRole(r.role)) : '') + '<span>' + esc(dispName(r.name)) + '</span>' + (r.me ? '<em class="voce">VOCÊ</em>' : '') + '</b><span class="rkk">' + (r.kills | 0) + ' <small>kills</small></span></div>'; }
     L.innerHTML = h;
   };
   document.getElementById('bSettings').onclick = () => openSettings('menu');
@@ -4597,11 +4620,11 @@ function buildMenu() {
   document.getElementById('createForm').addEventListener('submit', e => { e.preventDefault(); document.getElementById('bHost').click(); });
   document.getElementById('bHost').onclick = async () => {
     if (busy) return; initAudio(); if (!needNet()) return;
-    busy = true; setStatus(''); wait('criando a sala...');
+    busy = true; setStatus(''); wait('criando a sala...'); transCover();
     net.roomName = roomName();
     net.roomPw = String(document.getElementById('roomPw').value || '').trim().slice(0, 12); // vazio = sala aberta
     net.hostRoom(code => { busy = false; unwait(); setStatus(''); game.start('online'); killfeed.unshift({ sys: (net.roomName ? 'Sala "' + net.roomName + '" criada!' : 'Sala criada!') + ' Código: ' + code, life: 12 }); net.regT = 0; },
-      err => { busy = false; unwait(); setStatus(err); });
+      err => { busy = false; unwait(); transHide(); setStatus(err); });
   };
   const join = async (code, pw = '') => {
     net.roomName = '';
@@ -4610,9 +4633,9 @@ function buildMenu() {
     if (!/^[A-Z]{4}$/.test(code)) { setStatus('Digite o código da sala (4 letras).'); return; }
     net.myName = playerName();
     net.roomPw = String(pw || '').trim().slice(0, 12);
-    setStatus(''); busy = true; wait('entrando na sala ' + code + '...');
+    setStatus(''); busy = true; wait('entrando na sala ' + code + '...'); transCover();
     net.joinRoom(code, () => { busy = false; unwait(); setStatus(''); show('pwBox', false); game.start('online'); }, err => {
-      busy = false; unwait(); net.close();
+      busy = false; unwait(); net.close(); transHide();
       if (err === 'SENHA' || err === 'SENHA_ERRADA') { setStatus(''); askPw(code, err === 'SENHA_ERRADA' ? 'Senha errada. Confira com o anfitrião.' : ''); }
       else if (err === 'NOME') { show('pwBox', false); setStatus('Já tem um jogador chamado "' + dispName(net.myName) + '" nessa sala.'); }
       else setStatus(err);
