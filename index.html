@@ -690,6 +690,35 @@
   .rwp .coin{width:20px!important;height:20px!important}
   .dday .coin{width:calc(var(--wh,600px) * .075)!important;height:calc(var(--wh,600px) * .075)!important}
   .dday .coin.big{width:calc(var(--wh,600px) * .1)!important;height:calc(var(--wh,600px) * .1)!important}
+  /* ===== R28 ===== */
+  .ver{position:absolute;left:4px;bottom:2px;font-size:calc(var(--wh,600px) * .02);color:rgba(255,255,255,.4);pointer-events:none;z-index:2}
+  .mhero{cursor:pointer}
+  .trof{font-size:calc(var(--wh,600px) * .036)!important}
+  .mbar .coinpill .coin{width:calc(var(--wh,600px) * .075)!important;height:calc(var(--wh,600px) * .075)!important}
+  .rwp .coin{width:24px!important;height:24px!important}
+  .play .mb{position:relative;isolation:isolate}
+  .play .mb::before{content:'';position:absolute;inset:0;border-radius:inherit;z-index:-1;background:repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 9px,transparent 9px 22px);pointer-events:none}
+  .play .mb.pri::before,.play .mb.vio::before{background:repeating-linear-gradient(135deg,rgba(255,255,255,.12) 0 9px,transparent 9px 22px)}
+  #pause .btns.one{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+  #pause #pExit{grid-column:1/-1;padding:calc(var(--wh,600px) * .04) 8px;font-size:var(--fB);background:linear-gradient(#e0434c,#b02630);border-color:#ff9aa0;box-shadow:inset 0 -4px 0 rgba(0,0,0,.3),0 3px 0 #3a0a0e}
+  .rbox #rooms:has(.empty){display:flex!important;align-items:center;justify-content:center}
+  .rbox #rooms .empty{margin:auto;font-size:var(--fB)!important;line-height:2}
+  .dif{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+  .difb{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px!important}
+  .difb i{font-style:normal;font-size:calc(var(--wh,600px) * .08)}
+  .difb b{font-weight:normal;font-size:var(--fB)}
+  .difb small{font-size:var(--fS);opacity:.75}
+  .card button.difb.e{border-color:#4fd18a}
+  .card button.difb.m{border-color:#ffb21e}
+  .card button.difb.h{border-color:#ff5560}
+  .rklist{display:flex;flex-direction:column;gap:6px;height:calc(var(--wh,600px) * .52);overflow-y:auto}
+  .rkrow{display:flex;align-items:center;gap:12px;padding:7px 12px;background:#1d1438;border:2px solid #3e2d78;border-radius:10px;font-size:var(--fB)}
+  .rkrow b{font-weight:normal;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rkrow.t1{border-color:#ffcf3a}.rkrow.t2{border-color:#cfd6e6}.rkrow.t3{border-color:#d58a4a}
+  .rkrow.me{background:#3a2560}
+  .rkp{width:2.4em;text-align:center;color:#cbbdf5}
+  .rkempty{margin:auto;text-align:center;color:#9a8cc8;font-size:var(--fB);line-height:2}
+  #botBox,#rankBox{z-index:60}
 </style>
 </head>
 <body>
@@ -711,7 +740,7 @@
         <div class="mside r"><div class="coinpill trp" title="derrotas causadas"><i class="trof">🏆</i><span id="mKills">0</span></div><div class="coinpill" id="coinPill" title="suas moedas: +5 a cada derrota causada"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></div>
       </div>
       <div class="mmid">
-        <div class="mhero"><canvas id="mHero" width="130" height="140"></canvas></div>
+        <div class="mhero" id="mHeroBox" title="editar personagem"><canvas id="mHero" width="130" height="140"></canvas></div>
         <div class="play">
           <button class="b pri big mb" id="bOpenCreate"><i>🌐</i><b>CRIAR SALA</b></button>
           <button class="b big mb vio" id="bOpenRooms"><i>⚔️</i><b>VER SALAS</b></button>
@@ -723,8 +752,10 @@
       <div class="mside2">
         <button class="ib big2" id="bMiss" title="missões do dia"><i>📜</i><span>MISSÕES</span><b class="dot hidden" id="dotMiss"></b></button>
         <button class="ib big2" id="bDaily" title="recompensa diária"><i>🎁</i><span>DIÁRIA</span><b class="dot hidden" id="dotDaily"></b></button>
+        <button class="ib big2" id="bRank" title="ranking"><i>🏅</i><span>RANKING</span></button>
       </div>
       <button class="hidden" id="bSettings"></button>
+      <div class="ver">v1.0.28</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -813,6 +844,22 @@
         </div>
       </div>
       <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
+    </div>
+  </div>
+  <div id="botBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('botBox', false)"></button>
+      <div class="title"><b>CONTRA BOTS</b><small>escolha a dificuldade</small></div>
+      <div class="dif">
+        <button type="button" class="b difb e" data-l="0"><i>🙂</i><b>FÁCIL</b><small>bots lentos e fracos</small></button>
+        <button type="button" class="b difb m" data-l="1"><i>😠</i><b>MÉDIO</b><small>luta equilibrada</small></button>
+        <button type="button" class="b difb h" data-l="2"><i>😈</i><b>DIFÍCIL</b><small>rápidos e fortes</small></button>
+      </div>
+    </div>
+  </div>
+  <div id="rankBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('rankBox', false)"></button>
+      <div class="title"><b>RANKING</b><small>top 10 · quem mais derrotou</small></div>
+      <div id="rankList" class="rklist"></div>
     </div>
   </div>
   <div id="missBox" class="ovl hidden">
@@ -1037,7 +1084,7 @@ function handleKill(m) {
 
 /* ---------------- bots ---------------- */
 class Bot {
-  constructor(me, mode) { this.me = me; this.mode = mode; this.t = 0; this.plan = emptyInput(); this.hold = 0; this.wander = 0; this.beamHold = 0; }
+  constructor(me, mode, lv = 1) { this.me = me; this.mode = mode; this.lv = lv; this.t = 0; this.plan = emptyInput(); this.hold = 0; this.wander = 0; this.beamHold = 0; }
   target() {
     let best = null, bd = 1e9;
     for (const f of game.fighters) if (f !== this.me && !f.dead) { const d = Math.hypot(f.x - this.me.x, (f.y - this.me.y) * 1.5); if (d < bd) { bd = d; best = f; } }
@@ -1056,6 +1103,7 @@ class Bot {
     for (const p of projectiles) {
       if (p.o === me.id || p.dead) continue;
       if (sign(me.x - p.x) === sign(p.vx) && Math.abs(me.x - p.x) < 100 && Math.abs(p.y - (me.y - 22)) < 30 && Math.random() < 0.08) {
+        if (Math.random() > [0.25, 1, 1][this.lv]) continue; // fácil quase não desvia
         if (me.ki > 15 && Math.random() < 0.5) { out.dashP = 1; out.left = dir > 0; out.right = dir < 0; return out; }
         if (me.onGround) { out.upP = 1; return out; }
       }
@@ -1067,7 +1115,7 @@ class Bot {
       o.up = (dy < -20 && me.ki > 12) ? 1 : 0; // segura o pulo para voar até o alvo
       if (o.up && !me.onGround && !me.flying && me.vy > -120) o.upP = 1; // aperta de novo no ar
       return o; }
-    this.t = rnd(0.15, 0.3);
+    this.t = rnd(0.15, 0.3) * [2.3, 1, 0.55][this.lv]; // fácil pensa devagar, difícil reage rápido
     const plan = emptyInput();
     if (me.ki < 25 && adx > 150) { plan.charge = 1; this.plan = plan; this.hold = rnd(2, 3.5); return plan; }
     if (dy < -50 && me.onGround) { out.upP = 1; plan.up = 1; }
@@ -1387,7 +1435,7 @@ class Fighter {
   isBeaming() { return this.state === 'beam' || (this.state === 'kame' && this.stateAge >= KAME.charge); }
   beamW() { return this.state === 'kame' ? 1.9 : 1; }
   beamDps() { return this.state === 'kame' ? KAME.dps : 140; }
-  dmgMul() { return (this.awakenT > 0 ? 1.2 : 1) * arqOf(this).dmg; }
+  dmgMul() { return (this.awakenT > 0 ? 1.2 : 1) * arqOf(this).dmg * (this.botMul || 1); }
   onPlatform() {
     if (this.y >= GROUND) return false;
     return PLATFORMS.some(p => Math.abs(this.y - p.y) < 1 && this.x >= p.x && this.x <= p.x + p.w);
@@ -2474,7 +2522,7 @@ function rr(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x
 let coinFly = [], coinHudPos = { x: 0, y: 0 }, coinHudT = 0;
 const COIN_IMG = new Image(); COIN_IMG.src = getComputedStyle(document.documentElement).getPropertyValue('--coin').trim().replace(/^url\(["']?|["']?\)$/g, '');
 function drawCoin(x, y, r) {
-  if (COIN_IMG.complete && COIN_IMG.naturalWidth) { const d = Math.round((r + 1) * 2.4), sm = ctx.imageSmoothingEnabled; ctx.imageSmoothingEnabled = true; ctx.drawImage(COIN_IMG, Math.round(x - d / 2), Math.round(y - d / 2), d, d); ctx.imageSmoothingEnabled = sm; return; }
+  if (COIN_IMG.complete && COIN_IMG.naturalWidth) { const d = Math.round((r + 1) * 3.1), sm = ctx.imageSmoothingEnabled; ctx.imageSmoothingEnabled = true; ctx.drawImage(COIN_IMG, Math.round(x - d / 2), Math.round(y - d / 2), d, d); ctx.imageSmoothingEnabled = sm; return; }
   ctx.fillStyle = '#5a3a00'; ctx.beginPath(); ctx.arc(x, y, r + 1, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#d99a10'; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#ffd23a'; ctx.beginPath(); ctx.arc(x - 0.5, y - 0.5, r * 0.72, 0, Math.PI * 2); ctx.fill();
@@ -2525,6 +2573,17 @@ function drawBar(x, y, w, h, ratio, ghost, color, dark) {
   ctx.fillStyle = dark; ctx.fillRect(x, y, ww, h); ctx.fillStyle = color; ctx.fillRect(x, y, ww, Math.ceil(h / 2));
   ctx.restore();
 }
+function headBox(img) { // acha a cabeça no sprite (primeira linha com pixels e a largura do topo) — guardado no próprio sprite
+  if (img._hb) return img._hb;
+  let c = img; if (!c.getContext) { c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); }
+  const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, W = c.width, H = c.height; let top = -1;
+  for (let y = 0; y < H && top < 0; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 40) { top = y; break; }
+  if (top < 0) return img._hb = { cx: W / 2, cy: H / 2 };
+  let mn = W, mx = -1; const y0 = top + 6, y1 = Math.min(H, top + 18); // faixa do rosto (abaixo das pontas do cabelo)
+  for (let y = y0; y < y1; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 40) { if (x < mn) mn = x; if (x > mx) mx = x; }
+  if (mx < 0) { mn = 0; mx = W; }
+  return img._hb = { cx: (mn + mx + 1) / 2, cy: top + 14 };
+}
 function drawHUD() {
   const me = game.me; if (!me) return;
   if (blindT > 0) { blindT -= 1 / 60; ctx.fillStyle = 'rgba(255,255,250,' + clamp(blindT / 1.2, 0, 0.96) + ')'; ctx.fillRect(0, 0, VW, VH); }
@@ -2554,7 +2613,7 @@ function drawHUD() {
   ctx.fillStyle = me.pal_.swatch; ctx.fillRect(L + 1, T + 1, 30, 30);
   ctx.fillStyle = '#2a1f3d'; ctx.fillRect(L + 2, T + 2, 28, 28);
   ctx.save(); ctx.beginPath(); ctx.rect(L + 2, T + 2, 28, 28); ctx.clip();
-  const face = me.dead ? me.spr.dano : me.spr.parado; ctx.drawImage(face, L + 2 + 14 - 16, T + 4 - (face._pad || 0)); ctx.restore();
+  const face = me.dead ? me.spr.dano : me.spr.parado, hb = headBox(face); ctx.drawImage(face, Math.round(L + 16 - hb.cx), Math.round(T + 17 - hb.cy)); ctx.restore();
   // barras de vida e energia
   const bx = L + 38, bw = 136;
   const hpR = me.hp / me.maxHp, hpG = me.hpShown / me.maxHp;
@@ -3669,7 +3728,7 @@ document.getElementById('bGear').onclick = () => openSettings('menu');
     for (const tc of document.querySelectorAll('canvas.tagc')) { const T = TAGS[tc.dataset.r], g = tc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, tc.width, tc.height);
       const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } }
     const av = document.getElementById('mAva'), y = av.getContext('2d'), p0 = spr.parado; y.clearRect(0, 0, 24, 24); y.imageSmoothingEnabled = false;
-    y.drawImage(p0, Math.floor(12 - p0.width / 2), -7 - (p0._pad || 0));
+    const hb = headBox(p0); y.drawImage(p0, Math.round(12 - hb.cx), Math.round(13 - hb.cy));
   };
   requestAnimationFrame(loop);
 })();
@@ -4055,7 +4114,9 @@ game = {
     f.pal = freeColor(f);
     if (f.char === 'base') f.look = randomLook(); // boneco/bots: visual sorteado
     applyArq(f, mode === 'dummy' ? 'eq' : ARQ_IDS[(Math.random() * ARQ_IDS.length) | 0]);
-    f.ai = new Bot(f, mode);
+    f.ai = new Bot(f, mode, mode === 'fight' ? (game.botLv == null ? 1 : game.botLv) : 1);
+    if (mode === 'fight') { f.botMul = [0.65, 1, 1.25][f.ai.lv]; // dano dos bots pela dificuldade
+      const pk = sl => { const ks = Object.keys(POWERS[sl]); return ks[(Math.random() * ks.length) | 0]; }; f.pw = { k: pk('k'), r: pk('r'), s: pk('s') }; } // poderes sorteados
     this.fighters.push(f); this.bots.push(f.ai);
     if (this.phase === 'play') f.spawn();
     return f;
@@ -4473,7 +4534,16 @@ function buildMenu() {
   const needNet = () => { if (typeof Peer === 'undefined') { setStatus('Biblioteca de rede não carregou.'); return false; } return true; };
   let busy = false;
   document.getElementById('bTrain').onclick = () => { initAudio(); net.close(); game.start('treino'); };
-  document.getElementById('bBots').onclick = () => { initAudio(); net.close(); game.start('bots'); };
+  document.getElementById('bBots').onclick = () => show('botBox', true);
+  document.querySelectorAll('#botBox .difb').forEach(b => b.onclick = () => { show('botBox', false); game.botLv = +b.dataset.l; initAudio(); net.close(); game.start('bots'); });
+  document.getElementById('mHeroBox').onclick = () => document.getElementById('bChar').click();
+  document.getElementById('bRank').onclick = async () => {
+    const L = document.getElementById('rankList'); L.innerHTML = '<div class="rkempty">carregando...</div>'; show('rankBox', true); L.scrollTop = 0;
+    const { data, error } = await conta.sb.rpc('top_kills');
+    if (error) { L.innerHTML = '<div class="rkempty">' + (/function|does not exist|schema/i.test(error.message) ? 'Ranking ainda não ligado no servidor.<br>Rode o SQL COMPLETO de novo.' : esc(error.message)) + '</div>'; return; }
+    if (!data || !data.length) { L.innerHTML = '<div class="rkempty">Ninguém pontuou ainda.<br>Seja o primeiro!</div>'; return; }
+    L.innerHTML = data.map((r, i) => '<div class="rkrow' + (r.me ? ' me' : '') + (i < 3 ? ' t' + (i + 1) : '') + '"><span class="rkp">' + (i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1) + 'º') + '</span><b>' + esc(dispName(r.name)) + '</b></div>').join('');
+  };
   document.getElementById('bSettings').onclick = () => openSettings('menu');
   const rn = document.getElementById('roomName');
   rn.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('bHost').click(); });
