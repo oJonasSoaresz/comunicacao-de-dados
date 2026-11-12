@@ -186,7 +186,7 @@
   .logo small{display:block;margin-top:4px;font-size:clamp(7px,.9vw,9px);color:var(--muted)}
   .mright{display:flex;align-items:center;gap:8px}
   .coinpill{display:flex;align-items:center;gap:7px;padding:7px 12px 7px 8px;background:#0f0b19;border:2px solid #6b5418;border-radius:999px;color:#ffe58a;font-size:clamp(9px,1.1vw,12px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.35)}
-  .coinpill.pulse{animation:cpulse .5s}
+  .coinpill.pulse{animation:none}
   @keyframes cpulse{40%{transform:scale(1.15);border-color:#ffd23a}}
   :root{--coin:url(data:image/png;base64,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)}
   i.coin{display:inline-block;width:16px;height:16px;background:var(--coin) center/contain no-repeat;vertical-align:middle;filter:drop-shadow(0 1px 0 rgba(0,0,0,.45))}
@@ -747,6 +747,30 @@
   .buyfx .spk{position:absolute;left:50%;top:50%;width:8px;height:8px;background:#ffe066;border-radius:2px;transform:rotate(45deg);animation:spk .9s ease-out forwards}
   @keyframes buyin{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}25%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%)}}
   @keyframes spk{0%{opacity:1;transform:translate(0,0) rotate(45deg)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(225deg) scale(.4)}}
+  /* ===== R31 ===== */
+  #frBox,#lvBox{z-index:60}
+  .fradd{display:grid;grid-template-columns:1fr auto;gap:var(--gap)}
+  .fradd .b{padding:0 14px}
+  .frl{height:calc(var(--wh,600px) * .42)}
+  .frrow .on{width:10px;height:10px;border-radius:50%;background:#55507a;flex:0 0 auto}
+  .frrow .on.y{background:#5dff8a;box-shadow:0 0 6px #5dff8a}
+  .frb{flex:0 0 auto;padding:6px 10px!important;font-size:var(--fS)!important}
+  .frx{background:#3a1c2c!important;border-color:#8a3a50!important}
+  .convn{color:#ffcf3a;font-weight:normal}
+  .lvc{align-items:center;text-align:center}
+  .lvc .title{text-align:center!important;border:0!important}
+  .lvstar{margin-bottom:6px;font-size:calc(var(--wh,600px) * .12);line-height:1;animation:lvst 1.2s ease-in-out infinite alternate}
+  @keyframes lvst{to{transform:scale(1.12) rotate(8deg);filter:drop-shadow(0 0 12px #ffcf3a)}}
+  .lvc .preco{display:flex;align-items:center;justify-content:center;gap:10px;font-size:calc(var(--fB) * 1.8);color:#ffcf3a}
+  .lvc .preco .coin{width:1.4em;height:1.4em}
+  #lvGet{min-width:55%}
+  #pause #pInvite{grid-column:1/-1}
+  #settings #bDelAcc{grid-column:1/-1;background:none!important;border-color:#6a3a50!important;color:#ff9aa0;box-shadow:none!important}
+  .room .md.e{background:#1d3a66;color:#bfe0ff}
+  #recon{position:absolute;top:calc(var(--wh,600px) * .14);left:50%;transform:translateX(-50%);z-index:150;display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(120,20,30,.92);border:2px solid #ff8a8f;border-radius:999px;color:#fff;font-size:12px;pointer-events:none}
+  #recon.hidden{display:none}
+  #recon i{width:12px;height:12px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -781,9 +805,10 @@
         <button class="ib big2" id="bMiss" title="missões do dia"><i>📜</i><span>MISSÕES</span><b class="dot hidden" id="dotMiss"></b></button>
         <button class="ib big2" id="bDaily" title="recompensa diária"><i>🎁</i><span>DIÁRIA</span><b class="dot hidden" id="dotDaily"></b></button>
         <button class="ib big2" id="bRank" title="ranking"><i>🏅</i><span>RANKING</span></button>
+        <button class="ib big2" id="bFriends" title="amigos"><i>👥</i><span>AMIGOS</span></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.30</div>
+      <div class="ver">v1.0.31</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -795,7 +820,7 @@
         <div class="fld2"><input id="roomPw" type="text" maxlength="12" placeholder="🔒 senha (opcional)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       </div>
       <div class="steps"><div class="step" id="stMode"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>MODO</small><b id="stModeV">LIVRE</b></div><button type="button" class="sa" data-d="1">&gt;</button></div><div class="step" id="stMx"><button type="button" class="sa" data-d="-1">&lt;</button><div class="sv"><small>JOGADORES</small><b id="stMxV">6</b></div><button type="button" class="sa" data-d="1">&gt;</button></div></div>
-      <div class="crow2 hidden"><div class="fld2"><span>MODO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel" title="sem fim">LIVRE</button><button type="button" data-m="t" title="quem derrotar mais vence">5 MIN</button><button type="button" data-m="d" title="1 contra 1, melhor de 3">DUELO</button></div></div>
+      <div class="crow2 hidden"><div class="fld2"><span>MODO</span><div class="modes" id="roomMode"><button type="button" data-m="n" class="sel" title="sem fim">LIVRE</button><button type="button" data-m="t" title="quem derrotar mais vence">5 MIN</button><button type="button" data-m="e" title="time contra time">EQUIPE</button><button type="button" data-m="d" title="1 contra 1, melhor de 3">DUELO</button></div></div>
       <div class="fld2"><span>JOGADORES</span><div class="modes nums" id="roomMx"><button type="button" data-x="2">2</button><button type="button" data-x="3">3</button><button type="button" data-x="4">4</button><button type="button" data-x="5">5</button><button type="button" data-x="6" class="sel">6</button></div></div></div>
       <div class="cbmaps">
         <h3>CENÁRIO <small id="mapName2"></small></h3>
@@ -849,6 +874,7 @@
       <div class="btns one">
         <button class="b pri" id="pContinue">CONTINUAR</button>
         <button class="b" id="pSettings">⚙ CONFIGURAÇÕES</button>
+        <button class="b" id="pInvite">👥 CONVIDAR AMIGOS</button>
         <button class="b" id="pExit">SAIR DA PARTIDA</button>
       </div>
     </div>
@@ -874,7 +900,22 @@
       <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
     </div>
   </div>
+  <div id="recon" class="hidden"><i></i>RECONECTANDO...</div>
   <div id="trans"><i></i><img class="tlogo" alt=""></div>
+  <div id="frBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('frBox', false)"></button>
+      <div class="title"><b>AMIGOS</b><small id="frSub">adicione pelo nome do jogador</small></div>
+      <div class="fradd"><input id="frName" type="text" maxlength="18" placeholder="nome do jogador" autocomplete="off"><button type="button" class="b pri" id="frAddB">ADICIONAR</button></div>
+      <div id="frList" class="rklist frl"></div>
+    </div>
+  </div>
+  <div id="lvBox" class="ovl hidden">
+    <div class="card mid rw lvc"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvBox', false)"></button>
+      <div class="lvstar">⭐</div><div class="title"><b id="lvT">NÍVEL 2!</b><small>você subiu de nível</small></div>
+      <div class="preco lvp"><i class="coin"></i><span id="lvP">50</span></div>
+      <button type="button" class="b pri" id="lvGet">RESGATAR</button>
+    </div>
+  </div>
   <div id="botBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('botBox', false)"></button>
       <div class="title"><b>CONTRA BOTS</b><small>escolha a dificuldade</small></div>
@@ -916,6 +957,7 @@
         <button class="b" id="bCode">🔑 CÓDIGO</button>
         <button class="b" id="bReset">RESTAURAR PADRÃO</button>
         <button class="b dang" id="bAcc">SAIR DA CONTA</button>
+        <button class="b" id="bDelAcc">EXCLUIR CONTA</button>
         <button class="b pri" id="bBack">VOLTAR</button>
       </div>
     </div>
@@ -1087,8 +1129,14 @@ function spawnProjectile(m, broadcast) {
   if (nearCam(m.x, m.y)) (m.big ? SFX.bigFire : SFX.ki)();
   if (broadcast) net.send({ t: 'pj', ...m });
 }
+/* equipes: aliados não se machucam */
+const TEAM_COL = ['#4aa3ff', '#ff5a5a'], TEAM_NM = ['AZUL', 'VERMELHO'];
+function isAlly(a, b) { return !!(game.teams && a && b && a !== b && a.team != null && a.team === b.team); }
+function allyOf(f, id) { return game.teams && isAlly(f, game.byId(id)); }
+function teamFree() { const c = [0, 0]; for (const f of game.fighters) if (f.team === 0 || f.team === 1) c[f.team]++; for (const k of net.conns) if (k.tm != null && !game.fighters.some(f => k.ids && k.ids.has(f.id))) c[k.tm]++; return c[1] < c[0] ? 1 : 0; }
 /* golpe corpo a corpo: aplica direto se a vítima é deste computador; senão manda pela rede */
 function deliverHit(target, p, src) {
+  if (isAlly(target, src)) return false;
   if (target.local) return target.takeHit(p, src);
   if (target.invuln > 0) return false;
   net.send({ t: 'hit', tg: target.id, from: src.id, ...p });
@@ -1116,7 +1164,7 @@ class Bot {
   constructor(me, mode, lv = 1) { this.me = me; this.mode = mode; this.lv = lv; this.t = 0; this.plan = emptyInput(); this.hold = 0; this.wander = 0; this.beamHold = 0; }
   target() {
     let best = null, bd = 1e9;
-    for (const f of game.fighters) if (f !== this.me && !f.dead) { const d = Math.hypot(f.x - this.me.x, (f.y - this.me.y) * 1.5); if (d < bd) { bd = d; best = f; } }
+    for (const f of game.fighters) if (f !== this.me && !f.dead && !isAlly(f, this.me)) { const d = Math.hypot(f.x - this.me.x, (f.y - this.me.y) * 1.5); if (d < bd) { bd = d; best = f; } }
     return best;
   }
   think(dt) {
@@ -1581,6 +1629,7 @@ class Fighter {
 
   /* ---------- receber dano (sempre no computador dono do lutador) ---------- */
   takeHit(p, src) {
+    if (isAlly(this, src)) return false;
     if (this.dead || this.invuln > 0) return false;
     const fromFront = sign(src.x - this.x) === this.facing;
     if (this.state === 'guard' && fromFront && !p.unblock) {
@@ -1674,6 +1723,7 @@ class Fighter {
     if (this.state === 'beam') { this.beamSnd -= dt; if (this.beamSnd <= 0) { this.beamSnd = 0.14; if (nearCam(this.x, this.y)) SFX.beamLoop(); } }
   }
   applyNet(m) {
+    if (m.tm === 0 || m.tm === 1) this.team = m.tm;
     if (!this.net) { this.x = m.x; this.y = m.y; }
     const prevSt = this.net ? this.net.st : null;
     this.net = { ...m };
@@ -1699,7 +1749,7 @@ class Fighter {
     this.lastSeen = performance.now();
   }
   snapshot() {
-    return { t: 's', id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
+    return { t: 's', tm: this.team == null ? undefined : this.team, id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
       ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
       bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', ivs: this.invisT > 0 ? 1 : 0, sh: this.shieldT > 0 ? 1 : 0, pz: this.paraT > 0 && this.state === 'hurt' ? 1 : 0, sk: this.state === 'rajada' && this.ser ? this.ser.kind : '', gk: this.genki ? 1 : 0 };
@@ -1713,14 +1763,14 @@ class Projectile {
     this.t += dt;
     if (this.hom && this.t >= (this.hd || 0)) { // persegue o inimigo mais perto (fogos: só depois de subir)
       let best = null, bd = 1e9;
-      for (const f of game.fighters) { if (f.id === this.o || f.dead) continue; const d = Math.hypot(f.x - this.x, f.y - 25 - this.y); if (d < bd) { bd = d; best = f; } }
+      for (const f of game.fighters) { if (f.id === this.o || f.dead || allyOf(f, this.o)) continue; const d = Math.hypot(f.x - this.x, f.y - 25 - this.y); if (d < bd) { bd = d; best = f; } }
       const sp = Math.max(240, Math.hypot(this.vx, this.vy || 0));
       if (best && bd < 700) { const a0 = Math.atan2(this.vy || 0, this.vx), a1 = Math.atan2(best.y - 25 - this.y, best.x - this.x); let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
         const tr = (this.tr || 5) * dt, a = a0 + clamp(da, -tr, tr); this.vx = Math.cos(a) * sp; this.vy = Math.sin(a) * sp; }
       if (this.t > 2.8) { this.explode(); return; }
     }
     if (this.gk) { // esfera suprema: acompanha a altura do inimigo mais perto à frente
-      let best = null, bd = 1e9; for (const f of game.fighters) { if (f.id === this.o || f.dead || sign(f.x - this.x) !== sign(this.vx)) continue; const d = Math.abs(f.x - this.x); if (d < bd) { bd = d; best = f; } }
+      let best = null, bd = 1e9; for (const f of game.fighters) { if (f.id === this.o || f.dead || allyOf(f, this.o) || sign(f.x - this.x) !== sign(this.vx)) continue; const d = Math.abs(f.x - this.x); if (d < bd) { bd = d; best = f; } }
       if (best) this.vy = clamp((best.y - 25 - this.y) * 2, -140, 140); else this.vy = 0;
     }
     if (this.boom) { // bumerangue: freia, volta e some perto de quem lançou (ou em 1,8s)
@@ -1739,7 +1789,7 @@ class Projectile {
     if (!this.saw) for (const p of PLATFORMS) if (this.x > p.x && this.x < p.x + p.w && Math.abs(this.y - (p.y + 5)) < this.r + 5) { this.explode(); return; }
     // colide com qualquer lutador; o dano só é aplicado no computador dono da vítima
     for (const f of game.fighters) {
-      if (f.id === this.o || f.dead || this.dead) continue;
+      if (f.id === this.o || f.dead || this.dead || allyOf(f, this.o)) continue;
       const b = f.body();
       if (this.x + this.r > b.x0 && this.x - this.r < b.x1 && this.y + this.r > b.y0 && this.y - this.r < b.y1) {
         if (f.invuln > 0) continue;
@@ -1769,7 +1819,7 @@ class Projectile {
   explode(blocked) {
     if (this.dead) return; this.dead = true;
     if (this.aoe) { // explosão em área: cada computador aplica nos SEUS lutadores
-      for (const f of game.fighters) { if (!f.local || f.dead || f.id === this.o || f.invuln > 0 || (this.hitIds || []).includes(f.id)) continue;
+      for (const f of game.fighters) { if (!f.local || f.dead || f.id === this.o || allyOf(f, this.o) || f.invuln > 0 || (this.hitIds || []).includes(f.id)) continue;
         if (Math.hypot(f.x - this.x, f.y - 25 - this.y) < this.aoe) f.takeHit({ dmg: this.dmg * 0.75, kbx: sign(f.x - this.x) * 200, kby: -150, stun: 0.45, kind: 'heavy' }, game.byId(this.o) || { id: this.o, name: '?', x: this.x, local: false, pal_: palFor(this.ch, this.pal) }); }
       spark(this.x, this.y, 30, this.col[1], 220, 0.5, 3); ring(this.x, this.y, '#ffffff', 6, this.aoe, 0.35); if (nearCam(this.x, this.y)) { shake = Math.max(shake, 4); SFX.boom(); }
     }
@@ -2616,7 +2666,14 @@ function headBox(img, skin) { // centro do ROSTO no sprite (pele dentro da cabe�
   if (n < 6) return img[key] = { cx: W / 2, cy: top + 14 };
   return img[key] = { cx: sx / n, cy: sy / n };
 }
+function teamMarks(cam) { if (!game.teams) return; for (const f of game.fighters) { if (f.dead || f.team == null) continue;
+  const x = Math.round(f.x - cam.x), y = Math.round(f.y - cam.y - 66); ctx.fillStyle = '#120c1c'; ctx.beginPath(); ctx.moveTo(x - 5, y - 1); ctx.lineTo(x + 5, y - 1); ctx.lineTo(x, y + 6); ctx.fill();
+  ctx.fillStyle = TEAM_COL[f.team]; ctx.beginPath(); ctx.moveTo(x - 3.5, y); ctx.lineTo(x + 3.5, y); ctx.lineTo(x, y + 4.5); ctx.fill(); } }
+function teamScore() { if (!game.teams) return; const k = [0, 0]; for (const f of game.fighters) if (f.team === 0 || f.team === 1) k[f.team] += f.kills | 0;
+  const y0 = Math.round(SAFE.t) + 2, cx = VW / 2; ctx.fillStyle = 'rgba(18,12,28,0.85)'; rr(cx - 46, y0, 92, 14, 7); ctx.fill();
+  text(String(k[0]), cx - 22, y0 + 4, 7, TEAM_COL[0], 'center', '#120c1c', 1); text('x', cx, y0 + 4, 6, '#ffffff', 'center', '#120c1c', 1); text(String(k[1]), cx + 22, y0 + 4, 7, TEAM_COL[1], 'center', '#120c1c', 1); }
 function drawHUD() {
+  teamScore();
   const me = game.me; if (!me) return;
   if (blindT > 0) { blindT -= 1 / 60; ctx.fillStyle = 'rgba(255,255,250,' + clamp(blindT / 1.2, 0, 0.96) + ')'; ctx.fillRect(0, 0, VW, VH); }
   if (game.duel) {
@@ -2779,6 +2836,7 @@ function render(dt) {
   for (const f of lzFx) { const a = f.t / 0.25, x0 = Math.min(f.x0, f.x1) - cam.x, L = Math.abs(f.x1 - f.x0), y = f.y - cam.y, w = 1 + a * 1.5;
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = hexA(f.c[2], 0.35 * a); ctx.fillRect(x0, y - 5 * w, L, 10 * w); ctx.fillStyle = hexA(f.c[1], 0.9 * a); ctx.fillRect(x0, y - 2.5 * w, L, 5 * w); ctx.fillStyle = hexA('#ffffff', a); ctx.fillRect(x0, y - w, L, 2 * w); ctx.restore(); }
   drawParticles(cam);
+  if (typeof teamMarks === 'function') teamMarks(cam);
   drawForeground(cam);
   for (const f of order) f.drawOverhead(cam);
   drawKillBadges(cam);
@@ -2990,7 +3048,7 @@ const ROOM_HEARTBEAT = 8, ROOM_EXPIRE = 22000; // anfitrião confirma a sala a c
 const LOBBY_ID = PREFIX + 'quadro-de-salas';
 const BOT_NAMES = ['Kaiko', 'Ranzo', 'Mibu', 'Toga', 'Zuri', 'Brann', 'Nilo', 'Yara', 'Ozzo'];
 const MAX_PLAYERS = 6;
-const roomMax = (md, mx) => { if (md === undefined) { md = net.roomMode; mx = net.roomMx; } return md === 'd' ? 2 : clamp((mx | 0) || MAX_PLAYERS, 2, MAX_PLAYERS); }; // duelo: só 2 · sala: 2 a 6
+const roomMax = (md, mx) => { if (md === undefined) { md = net.roomMode; mx = net.roomMx; } return md === 'd' ? 2 : md === 'e' ? ((mx | 0) === 4 ? 4 : 6) : clamp((mx | 0) || MAX_PLAYERS, 2, MAX_PLAYERS); }; // duelo: só 2 · sala: 2 a 6
 function peerOpts() {
   const q = new URLSearchParams(location.search).get('peer');
   if (q) { const [host, port] = q.split(':'); return { host, port: +port || 9000, path: '/', secure: false, debug: 0 }; }
@@ -3069,7 +3127,7 @@ const lobby = {
     if (!m) return;
     if (m.t === 'reg' && m.room && /^[A-Z]{4}$/.test(m.room.code)) {
       const old = this.regs.get(m.room.code);
-      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 18), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', md: ['t', 'd'].includes(m.room.md) ? m.room.md : 'n', nm: filterChat(String(m.room.nm || '')).slice(0, 18), lk: !!m.room.lk, t: Date.now(), since: old ? old.since : Date.now(), conn: conn || (old && old.conn) });
+      this.regs.set(m.room.code, { code: m.room.code, host: String(m.room.host || '?').slice(0, 18), n: clamp(m.room.n | 0, 1, 99), map: MAPS[m.room.map] ? m.room.map : 'canyon', md: ['t', 'd', 'e'].includes(m.room.md) ? m.room.md : 'n', nm: filterChat(String(m.room.nm || '')).slice(0, 18), lk: !!m.room.lk, t: Date.now(), since: old ? old.since : Date.now(), conn: conn || (old && old.conn) });
     } else if (m.t === 'unreg') this.regs.delete(m.code);
   },
   send(m) { if (this.isServer) { this.onReg(m); this.tickServer(); } else if (this.conn && this.conn.open) this.conn.send(m); },
@@ -3151,7 +3209,8 @@ const net = {
     const humans = this.conns.length + 1;
     if (humans >= roomMax()) { c.send({ t: 'full' }); setTimeout(() => { try { c.close(); } catch (_) {} }, 400); return; }
     if (humans + 1 + game.bots.length > roomMax()) game.removeBot(); // abre espaço tirando um bot
-    c.send({ t: 'welcome', map: game.map || 'canyon', nm: this.roomName || '', left: Math.round(game.matchLeft()), md: this.roomMode || 'n', mx: roomMax(), st: game.started ? 1 : 0 });
+    c.tm = game.teams ? teamFree() : 0;
+    c.send({ t: 'welcome', tm: c.tm, map: game.map || 'canyon', nm: this.roomName || '', left: Math.round(game.matchLeft()), md: this.roomMode || 'n', mx: roomMax(), st: game.started ? 1 : 0 });
     this.conns.push(c); this.members.push(c.peer); this.send({ t: 'members', list: this.members });
   },
   joinRoom(code, onOk, onErr) {
@@ -3176,7 +3235,7 @@ const net = {
       if (!m) return;
       if (!done) { // espera o anfitrião aceitar (ou dizer que está cheia)
         if (gen !== this.gen) return;
-        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); this.joinLeft = m.left > 0 ? +m.left : MATCH_TIME; this.roomMode = ['t', 'd'].includes(m.md) ? m.md : 'n'; this.roomMx = clamp(m.mx | 0 || MAX_PLAYERS, 2, MAX_PLAYERS); this.joinStarted = !!m.st; onOk(code); }
+        if (m.t === 'welcome') { done = true; this.pending = null; clearTimeout(to); this.host = c; this.role = 'client'; if (MAPS[m.map]) this.roomMap = m.map; this.roomName = filterChat(String(m.nm || '')).slice(0, 18); this.joinLeft = m.left > 0 ? +m.left : MATCH_TIME; this.roomMode = ['t', 'd', 'e'].includes(m.md) ? m.md : 'n'; this.joinTeam = m.tm === 1 ? 1 : 0; this.roomMx = clamp(m.mx | 0 || MAX_PLAYERS, 2, MAX_PLAYERS); this.joinStarted = !!m.st; onOk(code); }
         else if (m.t === 'full') fail('Sala cheia.');
         else if (m.t === 'deny') fail(m.why === 'fim' ? 'Essa partida está terminando. Entre em outra sala.' : m.why === 'nome' ? 'NOME' : this.roomPw ? 'SENHA_ERRADA' : 'SENHA');
         return;
@@ -3205,7 +3264,7 @@ const net = {
     const attempt = () => {
       if (gen !== this.gen || this.role !== 'migrating') return;
       const el = performance.now() - t0;
-      if (el > 25000) { game.toMenu('A sala fechou.'); return; }
+      if (el > 40000) { game.toMenu('Não deu para reconectar. A sala fechou ou a internet caiu.'); return; }
       if (el >= rank * 2000) this.claim(this.code, () => this.becameHost(), tryConnect);
       else tryConnect();
     };
@@ -3360,7 +3419,8 @@ const conta = {
   },
   async loadProfile() {
     gate.step('carregando sua conta...', 0.9);
-    let { data, error } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches,coins,owned,infinite').eq('id', this.user.id).maybeSingle();
+    let { data, error } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches,coins,owned,infinite,lvl_got').eq('id', this.user.id).maybeSingle();
+    if (error) ({ data, error } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches,coins,owned,infinite').eq('id', this.user.id).maybeSingle()); // banco sem nível (SQL v15)
     if (error) ({ data, error } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches,coins').eq('id', this.user.id).maybeSingle()); // banco sem a loja (SQL v5 não rodado)
     if (error) ({ data } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches').eq('id', this.user.id).maybeSingle()); // banco sem moedas (SQL v3 não rodado)
     if (!data || !this.user) { gate.profileFailed(); return; }
@@ -3729,7 +3789,7 @@ const salasSB = {
     if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map,lk')); // banco sem o modo (SQL v5 não rodado)
     if (error) ({ data, error } = await conta.sb.from('live_rooms').select('code,host,nm,n,map')); // banco sem a coluna lk (SQL v2 ainda não rodado)
     if (error || !Array.isArray(data)) { this.failAt = performance.now(); return; }
-    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18), lk: !!r.lk, md: ['t', 'd'].includes(r.md) ? r.md : 'n', mx: r.mx | 0 || MAX_PLAYERS }));
+    this.okAt = performance.now(); this.rooms = data.filter(r => /^[A-Z]{4}$/.test(r.code)).map(r => ({ code: r.code, host: String(r.host || '?').slice(0, 18), n: r.n | 0, map: MAPS[r.map] ? r.map : 'canyon', nm: filterChat(String(r.nm || '')).slice(0, 18), lk: !!r.lk, md: ['t', 'd', 'e'].includes(r.md) ? r.md : 'n', mx: r.mx | 0 || MAX_PLAYERS }));
     roomsKey = ''; renderRooms();
   },
   reg(room) {
@@ -3765,7 +3825,7 @@ function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.
   const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } } }
 (function menuHero() {
   const loop = now => { requestAnimationFrame(loop);
-    const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(refreshDaily); } loop.was = vis;
+    const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(() => { refreshDaily(); checkLevel(); }); } loop.was = vis;
     if (!document.getElementById('rankBox').classList.contains('hidden')) drawTagCanvases();
     if (!vis || typeof chosenLook === 'undefined') return;
     const t = now / 1000, c = document.getElementById('mHero'), x = c.getContext('2d'), spr = lookSprites(chosenLook).spr, pal = palForCustom(chosenChar, 0, chosenFxc);
@@ -3849,6 +3909,79 @@ document.getElementById('dailyX').onclick = () => show('dailyBox', false);
 document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_daily'); unwait();
   if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : erroRecompensa(error), 'RECOMPENSA');
   pegos.add('daily'); moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); ganhouFx(d, data); refreshDaily(); };
+/* ---------- recompensa de nível ---------- */
+const lvOf = (k, m) => 1 + Math.floor(Math.sqrt((k * 10 + m * 4) / 25));
+const lvPrize = (de, ate) => { let p = 0; for (let i = de + 1; i <= ate; i++) p += 25 * i; return p; };
+let lvShown = 0;
+function checkLevel() {
+  const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
+  const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0));
+  if (lv <= (p.lvl_got | 0) || lv <= lvShown || document.getElementById('menu').classList.contains('hidden')) return;
+  lvShown = lv; document.getElementById('lvT').textContent = 'NÍVEL ' + lv + '!'; document.getElementById('lvP').textContent = lvPrize(p.lvl_got | 0, lv); show('lvBox', true);
+}
+document.getElementById('lvGet').onclick = async () => {
+  const b = document.getElementById('lvGet'); b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {}
+  const { data, error } = await conta.sb.rpc('claim_levels'); unwait(); b.disabled = false;
+  if (error) { if (/NADA/.test(error.message)) { show('lvBox', false); return; } return notice(erroRecompensa(error), 'NÍVEL'); }
+  conta.perfil.lvl_got = data.lv; moedasGanhas(data.prize); ganhouFx(document.querySelector('#lvBox .lvp'), data.prize); setTimeout(() => show('lvBox', false), 1100);
+};
+/* ---------- amigos e convites ---------- */
+async function drawAmigos() {
+  const L = document.getElementById('frList'); L.innerHTML = '<div class="rkempty">carregando...</div>';
+  const naSala = (net.role === 'host' || net.role === 'client') && game.phase === 'play';
+  document.getElementById('frSub').textContent = naSala ? 'convide para a sala ' + net.code : 'adicione pelo nome do jogador';
+  const { data, error } = await conta.sb.rpc('my_friends');
+  if (error) { L.innerHTML = '<div class="rkempty">' + (/function|does not exist|schema/i.test(error.message) ? 'Amigos ainda não ligados no servidor.<br>Rode o SQL COMPLETO de novo.' : esc(error.message)) + '</div>'; return; }
+  if (!data.length) { L.innerHTML = '<div class="rkempty">Você ainda não tem amigos aqui.<br>Digite o nome de um jogador acima.</div>'; return; }
+  L.innerHTML = '';
+  for (const f of data) { const r = document.createElement('div'); r.className = 'rkrow frrow';
+    r.innerHTML = '<span class="on' + (f.online ? ' y' : '') + '" title="' + (f.online ? 'online' : 'offline') + '"></span><b>' + (TAGS[normRole(f.role)] ? tagCanvas(normRole(f.role)) : '') + '<span>' + esc(dispName(f.name)) + '</span></b>';
+    if (naSala) { const c = document.createElement('button'); c.type = 'button'; c.className = 'b pri frb'; c.textContent = 'CONVIDAR';
+      c.onclick = async () => { c.disabled = true; const { error: e } = await conta.sb.rpc('invite_friend', { f: f.id, code: net.code, pw: net.roomPw || '' }); c.textContent = e ? 'ERRO' : 'ENVIADO ✓'; if (e) c.disabled = false; }; r.appendChild(c); }
+    const x = document.createElement('button'); x.type = 'button'; x.className = 'b frb frx'; x.textContent = 'REMOVER';
+    x.onclick = async () => { if (!(await msgOpen('AMIGOS', 'Remover ' + dispName(f.name) + ' da sua lista?', '', true, 'REMOVER'))) return; await conta.sb.rpc('remove_friend', { f: f.id }); drawAmigos(); };
+    r.appendChild(x); L.appendChild(r); }
+  drawTagCanvases();
+}
+function abrirAmigos() { if (!conta.user) return; document.getElementById('frName').value = ''; show('frBox', true); document.getElementById('frList').scrollTop = 0; drawAmigos(); }
+document.getElementById('bFriends').onclick = abrirAmigos;
+document.getElementById('pInvite').onclick = abrirAmigos;
+document.getElementById('frAddB').onclick = async () => {
+  const n = document.getElementById('frName').value.trim(); if (!n) return;
+  wait('procurando...'); const { data, error } = await conta.sb.rpc('add_friend', { fname: n }); unwait();
+  if (error) return notice(/NAO_ACHEI/.test(error.message) ? 'Não achei nenhum jogador com esse nome.' : /VOCE/.test(error.message) ? 'Esse é você! 😄' : erroRecompensa(error), 'AMIGOS');
+  document.getElementById('frName').value = ''; notice(dispName(data) + ' agora é seu amigo!', 'AMIGOS'); drawAmigos();
+};
+let convAberto = false;
+setInterval(async () => { // "estou online" + convites recebidos (no menu)
+  if (!conta.user || !conta.sb) return; conta.sb.rpc('ping').then(() => {}, () => {});
+  if (convAberto || document.getElementById('menu').classList.contains('hidden')) return;
+  const { data, error } = await conta.sb.rpc('my_invites'); if (error || !data || !data.length) return;
+  const c = data[data.length - 1]; convAberto = true;
+  const ok = await msgOpen('CONVITE', { html: '<b class="convn">' + esc(dispName(c.from_name)) + '</b> te convidou para a sala<span class="preco">' + esc(c.code) + '</span>' }, '', true, 'ENTRAR'); convAberto = false;
+  if (ok && window.joinCode) window.joinCode(c.code, c.pw || '');
+}, 10000);
+/* ---------- excluir conta ---------- */
+document.getElementById('bDelAcc').onclick = async () => {
+  const t = await msgOpen('EXCLUIR CONTA', 'Isso apaga para sempre sua conta, moedas, itens, missões e amigos.\n\nPara confirmar, digite EXCLUIR:', 'EXCLUIR', true, 'EXCLUIR CONTA');
+  if (t == null || t === false) return; if (String(t).trim().toUpperCase() !== 'EXCLUIR') return notice('Conta NÃO excluída. Era preciso digitar EXCLUIR.', 'EXCLUIR CONTA');
+  wait('excluindo...'); const { error } = await conta.sb.rpc('delete_account'); unwait();
+  if (error) return notice(/function|does not exist|schema/i.test(error.message) ? 'Exclusão ainda não ligada no servidor. Rode o SQL COMPLETO de novo.' : error.message, 'EXCLUIR CONTA');
+  try { localStorage.removeItem('adk_slots'); } catch (e) {}
+  try { await conta.sb.auth.signOut({ scope: 'local' }); } catch (e) {}
+  await msgOpen('CONTA EXCLUÍDA', 'Sua conta foi apagada. Até a próxima!'); location.reload();
+};
+/* ---------- reconexão: aviso na tela enquanto volta, e retenta quando a internet voltar ---------- */
+setInterval(() => {
+  const el = document.getElementById('recon'); if (!el) return;
+  const pz = net.peer, caindo = game.phase === 'play' && (net.role === 'migrating' || !!(pz && pz.disconnected && !pz.destroyed));
+  el.classList.toggle('hidden', !caindo);
+  if (pz && pz.disconnected && !pz.destroyed && game.phase === 'play') { try { pz.reconnect(); } catch (e) {} }
+}, 1500);
+window.addEventListener('online', () => { const pz = net.peer; if (pz && pz.disconnected && !pz.destroyed) try { pz.reconnect(); } catch (e) {} });
+document.addEventListener('visibilitychange', () => { // voltou do segundo plano: confere se ainda está ligado ao anfitrião
+  if (document.hidden || game.phase !== 'play') return; const pz = net.peer; if (pz && pz.disconnected && !pz.destroyed) try { pz.reconnect(); } catch (e) {}
+  if (net.role === 'client' && (!net.host || !net.host.open)) { net.host = null; net.hostLost(); } });
 function cMore() { if (cMore.r) return; cMore.r = requestAnimationFrame(() => { cMore.r = 0; cMore2(); }); }
 function cMore2() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; m.classList.toggle('hidden', !more); document.getElementById('cFade').classList.toggle('on', more); }
 "use strict";
@@ -3898,7 +4031,7 @@ function renderRooms() {
   if (key === roomsKey) return; roomsKey = key;
   if (!list.length) el.innerHTML = `<div class="empty">${ls === 'ok' ? 'Nenhuma sala aberta agora.<br>Crie uma!' : ls === 'erro' ? 'Sem conexão com a internet.' : 'Procurando salas...'}</div>`;
   else el.innerHTML = list.map(r => { const full = r.n >= roomMax(r.md, r.mx), nm = r.nm || 'Sala de ' + dispName(r.host);
-    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}${r.lk ? ' data-lk="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="md${r.md === 't' ? ' t' : r.md === 'd' ? ' d' : ''}">${r.md === 't' ? '⏱ 5 MIN' : r.md === 'd' ? '⚔ DUELO' : '∞ NORMAL'}</span>${r.lk ? '<span class="lock" title="sala com senha">🔒</span>' : ''}<span class="cnt">${r.n}/${roomMax(r.md, r.mx)}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
+    return `<button class="room${full ? ' full' : ''}" data-code="${esc(r.code)}"${full ? ' data-full="1"' : ''}${r.lk ? ' data-lk="1"' : ''} title="${esc(nm)} · ${esc((MAPS[r.map] || MAPS.canyon).name)} · código ${esc(r.code)}"><img src="${mapThumbURL(r.map)}" alt=""><span class="md${r.md === 't' ? ' t' : r.md === 'd' ? ' d' : r.md === 'e' ? ' e' : ''}">${r.md === 't' ? '⏱ 5 MIN' : r.md === 'd' ? '⚔ DUELO' : r.md === 'e' ? '👥 ' + (roomMax(r.md, r.mx) / 2) + 'v' + (roomMax(r.md, r.mx) / 2) : '∞ NORMAL'}</span>${r.lk ? '<span class="lock" title="sala com senha">🔒</span>' : ''}<span class="cnt">${r.n}/${roomMax(r.md, r.mx)}</span>${full ? '<span class="stamp">CHEIA</span>' : ''}<span class="rn">${esc(nm)}</span></button>`; }).join('');
 }
 
 /* ---------------- CHAT ----------------
@@ -4131,6 +4264,7 @@ game = {
   byId(id) { return this.fighters.find(f => f.id === id); },
   start(mode) {
     if (typeof transReveal === 'function') transReveal();
+    ['lvBox', 'missBox', 'dailyBox', 'rankBox', 'botBox', 'frBox'].forEach(id => show(id, false)); lvShown = 0;
     const map = mode !== 'online' ? MAP_IDS[(Math.random() * MAP_IDS.length) | 0] : net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
     setMap(map); this.map = map;
     this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
@@ -4143,6 +4277,7 @@ game = {
     const cur = slots[slotCur], tr = cur.tr >= 0 && cur.tr !== slotCur && shop.has('tr:' + slotCur) ? slots[cur.tr] : null;
     this.me.forms = { base: formOf(cur), trans: tr ? formOf(tr) : null }; this.me.formOn = false;
     this.me.look = { ...this.me.forms.base.look }; this.me.fxc = { ...this.me.forms.base.fxc }; applyArq(this.me, cur.arq); this.me.pw = shop.equipPw(cur.pw);
+    this.teams = mode === 'online' && net.roomMode === 'e'; this.me.team = this.teams ? (net.role === 'client' ? (net.joinTeam | 0) : 0) : null;
     this.timed = mode === 'online' && net.roomMode === 't'; this.duel = mode === 'online' && net.roomMode === 'd'; this.duelSt = { ph: 'wait', t: 0, sc: {}, rd: 1 }; this.started = this.timed && net.role === 'client' && !!net.joinStarted;
     this.ended = false; this.endAt = performance.now() + (mode === 'online' && net.role === 'client' ? (net.joinLeft || MATCH_TIME) : MATCH_TIME) * 1000; show('results', false);
     this.me.pal = freeColor(this.me); this.fighters.push(this.me);
@@ -4167,6 +4302,7 @@ game = {
     f.pal = freeColor(f);
     if (f.char === 'base') f.look = randomLook(); // boneco/bots: visual sorteado
     applyArq(f, mode === 'dummy' ? 'eq' : ARQ_IDS[(Math.random() * ARQ_IDS.length) | 0]);
+    if (game.teams) f.team = teamFree();
     f.ai = new Bot(f, mode, mode === 'fight' ? (game.botLv == null ? 1 : game.botLv) : 1);
     if (mode === 'fight') { f.botMul = [0.65, 1, 1.25][f.ai.lv]; // dano dos bots pela dificuldade
       const pk = sl => { const ks = Object.keys(POWERS[sl]); return ks[(Math.random() * ks.length) | 0]; }; f.pw = { k: pk('k'), r: pk('r'), s: pk('s') }; } // poderes sorteados
@@ -4180,7 +4316,7 @@ game = {
     const msg = { t: 'leave', id: b.me.id }; net.send(msg);
   },
   toMenu(msg) {
-    net.leave(); blindT = 0; this.ended = false; this.timed = false; this.started = false; this.duel = false; show('results', false); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
+    net.leave(); blindT = 0; this.ended = false; this.timed = false; this.started = false; this.duel = false; this.teams = false; show('results', false); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
     overlay = null; editMode = false; ['pause', 'settings'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById('editbar').classList.add('hidden');
     if (conta.user && conta.perfil) document.getElementById('menu').classList.remove('hidden'); else gate.loggedOut();
     for (const k in keys) keys[k] = false;
@@ -4604,7 +4740,7 @@ function buildMenu() {
   const rn = document.getElementById('roomName');
   rn.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('bHost').click(); });
   const openPop = id => { setStatus(''); show('menu', false); show(id, true); }; // a janela fica sozinha na tela (o menu some atrás)
-  const syncMx = () => { const d = net.roomMode === 'd'; const mb = document.querySelector('#roomMode button.sel'); document.getElementById('stModeV').textContent = mb ? mb.textContent : ''; document.getElementById('stMxV').textContent = d ? '2' : net.roomMx; document.getElementById('stMx').classList.toggle('off', d); document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d; o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
+  const syncMx = () => { const d = net.roomMode === 'd', eq = net.roomMode === 'e'; if (eq && net.roomMx !== 4 && net.roomMx !== 6) net.roomMx = 6; const mb = document.querySelector('#roomMode button.sel'); document.getElementById('stModeV').textContent = mb ? mb.textContent : ''; document.getElementById('stMxV').textContent = d ? '2' : eq ? (net.roomMx / 2) + 'v' + (net.roomMx / 2) : net.roomMx; document.querySelector('#stMx small').textContent = eq ? 'TIMES' : 'JOGADORES'; document.getElementById('stMx').classList.toggle('off', d); document.querySelectorAll('#roomMx button').forEach(o => { o.disabled = d || (eq && !['4', '6'].includes(o.dataset.x)); o.classList.toggle('sel', +o.dataset.x === (d ? 2 : net.roomMx)); }); };
   document.querySelectorAll('#roomMx button').forEach(b => b.onclick = () => { net.roomMx = +b.dataset.x; syncMx(); });
   const stepClick = (box, list) => document.querySelectorAll('#' + box + ' .sa').forEach(a => a.onclick = () => { const bs = [...document.querySelectorAll('#' + list + ' button')], i = bs.findIndex(b => b.classList.contains('sel')), n = bs[(i + +a.dataset.d + bs.length) % bs.length]; if (!n.disabled) n.click(); });
   stepClick('stMode', 'roomMode'); stepClick('stMx', 'roomMx');
@@ -4626,7 +4762,7 @@ function buildMenu() {
     net.hostRoom(code => { busy = false; unwait(); setStatus(''); game.start('online'); killfeed.unshift({ sys: (net.roomName ? 'Sala "' + net.roomName + '" criada!' : 'Sala criada!') + ' Código: ' + code, life: 12 }); net.regT = 0; },
       err => { busy = false; unwait(); transHide(); setStatus(err); });
   };
-  const join = async (code, pw = '') => {
+  const join = window.joinCode = async (code, pw = '') => {
     net.roomName = '';
     if (busy) return; initAudio(); if (!needNet()) return;
     code = String(code || '').trim().toUpperCase();
@@ -4796,11 +4932,11 @@ function openPause() {
   document.getElementById('pauseInfo').textContent = game.mode === 'online'
     ? `sala ${net.code} · ${game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).length}/${roomMax()} jogadores · a partida continua`
     : 'jogo pausado';
-  show('pause', true); updateTouchUI();
+  show('pInvite', net.role === 'host' || net.role === 'client'); show('pause', true); updateTouchUI();
 }
 function closePause() { overlay = null; show('pause', false); updateTouchUI(); }
 function openSettings(from) {
-  settingsBack = from; show('bAcc', from === 'menu'); show('menu', false); show('pause', false); show('settings', true);
+  settingsBack = from; show('bAcc', from === 'menu'); show('bDelAcc', from === 'menu'); show('menu', false); show('pause', false); show('settings', true);
   if (game.phase === 'play') overlay = 'settings';
   syncSettingsUI(); updateTouchUI();
 }
