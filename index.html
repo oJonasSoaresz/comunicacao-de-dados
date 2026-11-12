@@ -955,6 +955,40 @@
   .card .coinpill.cpill{padding:3px 10px 3px 5px!important;gap:5px!important}
   .card .coinpill.cpill .coin{width:max(20px,1.7em)!important;height:max(20px,1.7em)!important}
   .mlv i{border-radius:999px!important;border-width:2px!important}
+
+  /* R40: painel DESBLOQUEADO em várias cores */
+  .unlk.glob{z-index:96;border-radius:0}
+  .unlk.err .unlk-in{border-color:#ff4d6a;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(255,77,106,.4)}
+  .unlk.err .unlk-rays{background:repeating-conic-gradient(rgba(255,77,106,.2) 0 9deg,transparent 9deg 18deg)}
+  .unlk.err .unlk-seal{background:radial-gradient(circle at 40% 35%,#ff7a8a,#b3152f);border-color:#ffd0d6;box-shadow:0 0 0 3px #0b0618,0 0 18px rgba(255,77,106,.6);animation:unseal .6s .1s cubic-bezier(.2,1.8,.4,1) both,mshake .4s .7s}
+  .unlk.err .xx{font-size:30px;color:#fff;text-shadow:2px 2px 0 #6a0016}
+  .unlk.err .unlk-in b{color:#ff6b80;text-shadow:0 3px 0 #6a0016,2px 2px 0 #000}
+  .unlk.err .unlk-in small{color:#ffd0d6;display:flex;align-items:center;gap:6px}
+  .unlk.err .spk{background:#ff8a9a}
+  .unlk.gold .unlk-in{border-color:#ffb21e;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(255,178,30,.4);text-align:center}
+  .unlk.gold .unlk-rays{background:repeating-conic-gradient(rgba(255,178,30,.2) 0 9deg,transparent 9deg 18deg)}
+  .unlk.gold .unlk-seal{background:none;border:0;box-shadow:none;width:76px;height:76px}
+  .unlk.gold .unlk-seal .coin{width:76px!important;height:76px!important;filter:drop-shadow(0 0 14px rgba(255,190,40,.7))}
+  .unlk.gold .unlk-in small{color:#fff;line-height:1.8}
+  .unlk-in .b{margin-top:6px;min-width:70%}
+  .unlk.gold{cursor:default}
+
+  /* R41 */
+  .unlk.err .xx{position:relative;display:block;width:30px;height:30px}
+  .unlk.err .xx::before,.unlk.err .xx::after{content:'';position:absolute;left:50%;top:50%;width:34px;height:7px;margin:-3.5px 0 0 -17px;background:#3a0010;border-radius:3px;transform:rotate(45deg)}
+  .unlk.err .xx::after{transform:rotate(-45deg)}
+  .unlk.err .unlk-seal{animation:unseal .6s .1s cubic-bezier(.2,1.8,.4,1) both!important}
+  .unlk-in small .coin,.unlk-in small .xpi{vertical-align:middle}
+  .unlk.gold .unlk-in{padding:30px 48px 26px;gap:14px;min-width:min(70vw,460px)}
+  .unlk.gold .unlk-in b{font-size:calc(var(--fT) * 1)}
+  .unlk.gold .unlk-in small{font-size:calc(var(--fB) * 1.15)}
+  .unlk.gold .unlk-seal,.unlk.gold .unlk-seal .coin{width:92px!important;height:92px!important}
+  #lvBox{isolation:isolate}
+  .lvray2{width:620px!important;height:620px!important;margin:-310px 0 0 -310px!important;background:repeating-conic-gradient(rgba(255,178,30,.18) 0 9deg,transparent 9deg 18deg)!important}
+  #lvBox .lvup{position:relative;z-index:1;background-color:#22163f!important;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.028) 0 10px,transparent 10px 24px)!important;border-color:#ffb21e!important;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(255,178,30,.35)!important;animation:unpop .45s cubic-bezier(.2,1.6,.4,1)}
+  .voa{position:fixed;z-index:9999;pointer-events:none;width:26px!important;height:26px!important}
+  .voa.xpi{width:auto!important;height:auto!important}
+  .mlv u{transition:width .7s .55s ease-out}
 </style>
 </head>
 <body>
@@ -992,7 +1026,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.39</div>
+      <div class="ver">v1.0.41</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1114,7 +1148,7 @@
     </div>
   </div>
   <div id="lvBox" class="ovl hidden">
-    <div class="card mid lvup"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvBox', false)"></button>
+    <i class="unlk-rays lvray2"></i><div class="card mid lvup"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvBox', false)"></button>
       <div class="lvhead">SUBIU DE NÍVEL!</div>
       <div class="lvbadge"><i class="lvrays"></i><div class="lvring"><small>NÍVEL</small><b id="lvT">2</b></div></div>
       <div class="lvreward"><span class="lvrl">RECOMPENSA</span><span class="lvrv"><i class="coin"></i><b id="lvP">50</b></span></div>
@@ -3633,7 +3667,7 @@ const conta = {
     if (error) ({ data, error } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches,coins').eq('id', this.user.id).maybeSingle()); // banco sem a loja (SQL v5 não rodado)
     if (error) ({ data } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches').eq('id', this.user.id).maybeSingle()); // banco sem moedas (SQL v3 não rodado)
     if (!data || !this.user) { gate.profileFailed(); return; }
-    this.perfil = data; this.coinsDb = 'coins' in data; applyProfile(data); wallet.sync(); renderConta(); gate.loggedIn();
+    this.perfil = data; this.coinsDb = 'coins' in data; applyProfile(data); wallet.sync(); renderConta(); gate.loggedIn(); setTimeout(() => boasVindas(), 700); setTimeout(() => boasVindas(), 2500);
   },
   async signUp(name, email, pass) { return this.sb.auth.signUp({ email, password: pass, options: { data: { name } } }); },
   /* entrar com e-mail OU nome de jogo + senha */
@@ -3725,8 +3759,35 @@ const wallet = {
     renderCoins();
   },
 };
-function renderCoins() { const el = document.getElementById('coinN'), v = shop.infinite() ? '∞' : wallet.n; if (el) el.textContent = v; const e2 = document.getElementById('cCoinN'); if (e2) e2.textContent = v; const p = document.getElementById('coinPill'); if (p) { p.classList.remove('pulse'); void p.offsetWidth; p.classList.add('pulse'); } }
+function renderCoins() { const v = shop.infinite() ? '∞' : wallet.n; contaAte(v); const p = document.getElementById('coinPill'); if (p) { p.classList.remove('pulse'); void p.offsetWidth; p.classList.add('pulse'); } }
 /* o nome dourado agora vem do cargo salvo no banco (a antiga tag {DONO} não vale mais) */
+/* número das moedas sobe aos poucos quando o jogador ganha */
+let coinVis = null, coinT = 0;
+function contaAte(v) {
+  const put = x => { for (const id of ['coinN', 'cCoinN']) { const e = document.getElementById(id); if (e) e.textContent = x; } };
+  cancelAnimationFrame(coinT); if (typeof v !== 'number' || coinVis == null || v <= coinVis) { coinVis = typeof v === 'number' ? v : null; put(v); return; }
+  const a = coinVis, t0 = performance.now() + 550, dur = 650; coinVis = v;
+  const step = now => { const k = Math.max(0, Math.min(1, (now - t0) / dur)); put(Math.round(a + (v - a) * k)); if (k < 1) coinT = requestAnimationFrame(step); };
+  coinT = requestAnimationFrame(step);
+}
+/* moedas / XP voando até o mostrador (poucas, para não pesar) */
+function voar(tipo, n) {
+  const vis = e => e && e.offsetParent !== null && e.getBoundingClientRect().width > 0;
+  const cands = tipo === 'c' ? [document.querySelector('#custom:not(.hidden) .cpill .coin'), document.querySelector('#menu:not(.hidden) #coinPill .coin')] : [document.querySelector('#menu:not(.hidden) .mlv i')];
+  const alvo = cands.find(vis); if (!alvo) return;
+  setTimeout(() => {
+    const src = [...document.querySelectorAll('.przin, .unlk-in, .lvup')].reverse().find(vis), r0 = src ? src.getBoundingClientRect() : { left: innerWidth / 2 - 20, top: innerHeight / 2 - 20, width: 40, height: 40 };
+    const r1 = alvo.getBoundingClientRect(), qtd = Math.min(7, 3 + Math.floor(n / 40));
+    for (let i = 0; i < qtd; i++) {
+      const el = document.createElement('i'); el.className = 'voa ' + (tipo === 'c' ? 'coin' : 'xpi'); if (tipo !== 'c') el.textContent = 'XP';
+      const x0 = r0.left + r0.width / 2 + (Math.random() - .5) * 60, y0 = r0.top + r0.height / 2 + (Math.random() - .5) * 30;
+      el.style.left = x0 + 'px'; el.style.top = y0 + 'px'; document.body.appendChild(el);
+      const dx = r1.left + r1.width / (tipo === 'c' ? 2 : 4) - x0, dy = r1.top + r1.height / 2 - y0;
+      el.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: 0 }, { transform: 'translate(calc(-50% + ' + (Math.random() - .5) * 50 + 'px),calc(-50% - 30px)) scale(1.1)', opacity: 1, offset: .3 }, { transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px)) scale(.7)', opacity: 1 }],
+        { duration: 750 + i * 60, delay: i * 55, easing: 'cubic-bezier(.5,0,.7,1)', fill: 'forwards' }).onfinish = () => { el.remove(); alvo.animate([{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 180 }); };
+    }
+  }, 60);
+}
 const isOwnerF = f => conta.roleOf(f) === 'dono';
 /* nome de um lutador com o visual do cargo: dono = dourado · youtuber = tag YT vermelha + nome branco */
 const normRole = r => { r = String(r || '').toLowerCase().trim(); return /^(yt|youtube|youtuber)$/.test(r) ? 'youtuber' : /^(dono|owner|dev)$/.test(r) ? 'dono' : r; };
@@ -3781,15 +3842,20 @@ function offerBuy(k, nome) {
   if (!k || shop.has(k)) { el.classList.remove('on'); el.textContent = ''; return; }
   el.innerHTML = '🔒 ' + esc(nome) + ' · ' + (shop.infinite() ? 0 : priceOf(k)) + ' <i class="coin"></i><br>toque de novo para comprar'; el.classList.add('on');
 }
-function comprouFx(nome) { // "DESBLOQUEADO!": luz girando, selo verde com check, nome do item e faíscas
-  const box = document.querySelector('#custom .card'); if (!box || document.getElementById('custom').classList.contains('hidden')) return;
-  const old = box.querySelector('.unlk'); if (old) old.remove();
-  const f = document.createElement('div'); f.className = 'unlk';
-  f.innerHTML = '<i class="unlk-rays"></i><div class="unlk-in"><div class="unlk-seal"><span class="tick"></span></div><b>DESBLOQUEADO!</b><small>' + esc(nome) + '</small></div>';
+function fxPanel(o) { // painel no estilo "DESBLOQUEADO!" (cor: ok | err | gold)
+  const cust = document.getElementById('custom'), box = o.box || (cust && !cust.classList.contains('hidden') ? cust.querySelector('.card') : document.getElementById('wrap'));
+  if (!box) return; const old = box.querySelector('.unlk'); if (old) old.remove();
+  const f = document.createElement('div'); f.className = 'unlk ' + (o.cor || 'ok') + (box.id === 'wrap' ? ' glob' : '');
+  f.innerHTML = '<i class="unlk-rays"></i><div class="unlk-in"><div class="unlk-seal">' + (o.seal || '<span class="tick"></span>') + '</div><b>' + o.titulo + '</b>' + (o.sub ? '<small>' + o.sub + '</small>' : '') + (o.btn ? '<button type="button" class="b pri">' + o.btn + '</button>' : '') + '</div>';
+  const inn = f.querySelector('.unlk-in');
   for (let i = 0; i < 14; i++) { const c = document.createElement('i'); c.className = 'spk'; const a = i / 14 * Math.PI * 2, r = 90 + Math.random() * 60;
-    c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px'); c.style.animationDelay = (0.15 + Math.random() * 0.1) + 's'; f.querySelector('.unlk-in').appendChild(c); }
-  f.onclick = () => f.remove(); box.appendChild(f); setTimeout(() => f.classList.add('sai'), 1500); setTimeout(() => f.remove(), 1900); try { SFX.zap(); } catch (e) {}
+    c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px'); c.style.animationDelay = (0.15 + Math.random() * 0.1) + 's'; inn.appendChild(c); }
+  const fecha = () => { f.classList.add('sai'); setTimeout(() => f.remove(), 400); };
+  if (o.btn) { const b = inn.querySelector('button'); b.onclick = async e => { e.stopPropagation(); b.disabled = true; await (o.onBtn && o.onBtn(inn)); setTimeout(fecha, 1300); }; }
+  else { f.onclick = () => f.remove(); setTimeout(fecha, o.tempo || 1500); }
+  box.appendChild(f); try { SFX.zap(); } catch (e) {} return f;
 }
+function comprouFx(nome) { const c = document.getElementById('custom'); if (!c || c.classList.contains('hidden')) return; fxPanel({ cor: 'ok', titulo: 'DESBLOQUEADO!', sub: esc(nome) }); }
 /* recompensa resgatada: aviso no centro da janela (sempre visível, mesmo com a lista rolada) */
 function premioFx(box, c, xp, titulo) {
   if (!box) return; const old = box.querySelector('.przfx'); if (old) old.remove();
@@ -3868,6 +3934,8 @@ const shop = {
     } finally { unwait(); if (custOpen) buildCustomPanel(); }
   },
 };
+const codeOk = sub => fxPanel({ cor: 'ok', box: document.getElementById('wrap'), titulo: 'CÓDIGO ATIVADO!', sub, tempo: 1900 });
+const codeErr = sub => fxPanel({ cor: 'err', box: document.getElementById('wrap'), seal: '<span class="xx"></span>', titulo: 'CÓDIGO INVÁLIDO!', sub, tempo: 2200 });
 async function useCode() {
   const c = await ask('CÓDIGO', 'Digite um código especial:', 'código');
   if (!c || !c.trim()) return;
@@ -3877,15 +3945,15 @@ async function useCode() {
     const { data, error } = await conta.sb.rpc('redeem_code', { code: c.trim() });
     unwait();
     if (error) throw error;
-    if (data === 'infinite') { conta.perfil.infinite = true; renderCoins(); notice('Código ativado: moedas infinitas!\nTodos os itens estão liberados.', 'CÓDIGO'); }
-    else if (/^coins:\d+$/.test(data || '')) { const n = +data.slice(6); conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); msgOpen('CÓDIGO', { html: 'Código ativado!<span class="codep">+' + n + ' ' + COINI + '</span>' }); }
-    else if (/^xp:\d+$/.test(data || '')) { const n = +data.slice(3); conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + n; renderConta(); msgOpen('CÓDIGO', { html: 'Código ativado!<span class="codep">+' + n + ' ' + XPI + '</span>' }); lvShown = 0; setTimeout(checkLevel, 600); }
+    if (data === 'infinite') { conta.perfil.infinite = true; renderCoins(); codeOk('Moedas infinitas: todos os itens liberados!'); }
+    else if (/^coins:\d+$/.test(data || '')) { const n = +data.slice(6); conta.perfil.coins = (conta.perfil.coins || 0) + n; conta.perfil.coins -= n; moedasGanhas(n); codeOk('+' + n + ' ' + COINI); }
+    else if (/^xp:\d+$/.test(data || '')) { const n = +data.slice(3); conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + n; renderConta(); voar('x', n); codeOk('+' + n + ' ' + XPI); lvShown = 0; setTimeout(checkLevel, 600); }
     else if (data === 'reset') { // conta zerada: tudo volta ao começo
-      conta.pend = { k: 0, d: 0, m: 0, c: 0, act: {} }; conqs = null; dly = null; pegos.clear(); try { localStorage.removeItem('adk_slots'); } catch (e) {}
+      conta.pend = { k: 0, d: 0, m: 0, c: 0, act: {} }; conqs = null; dly = null; pegos.clear(); conqPegas.clear(); lvShown = 0; bvVisto = false; show('dotAch', false); try { localStorage.removeItem('adk_slots'); } catch (e) {}
       setSlots([], 0); Object.assign(conta.perfil, { coins: 0, owned: [], infinite: false, kills: 0, deaths: 0, matches: 0, look: {}, fxc: {}, xp_bonus: 0, lvl_got: 1 });
-      wallet.sync(); renderConta(); notice('Conta resetada: moedas, itens, personagens e estatísticas voltaram ao começo.', 'CÓDIGO');
+      wallet.sync(); renderConta(); codeOk('Conta resetada: tudo voltou ao começo!'); setTimeout(() => { refreshDaily(); boasVindas(); }, 800);
     }
-    else notice('Código inválido.', 'CÓDIGO');
+    else codeErr('Esse código não existe ou já foi usado.');
   } catch (e) { unwait(); notice(/redeem_code|function|schema cache|column|coins|infinite|owned/i.test(String(e && e.message)) ? 'O banco do jogo está desatualizado. Rode o arquivo arena-de-ki-supabase-COMPLETO.sql no Supabase.\n(' + String(e && e.message) + ')' : 'Não deu para usar o código: ' + String(e && e.message), 'CÓDIGO'); }
 }
 /* nome usado na partida: o da conta (escolhido ao criar a conta) */
@@ -4053,7 +4121,7 @@ function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.
   const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } } }
 (function menuHero() {
   const loop = now => { requestAnimationFrame(loop);
-    const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(() => { refreshDaily(); checkLevel(); pedidosDot(); }); } loop.was = vis;
+    const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(() => { refreshDaily(); boasVindas().then(() => { lvShown = 0; checkLevel(); }); pedidosDot(); }); } loop.was = vis;
     if (!document.getElementById('rankBox').classList.contains('hidden')) drawTagCanvases();
     if (!vis || typeof chosenLook === 'undefined') return;
     const t = now / 1000, c = document.getElementById('mHero'), x = c.getContext('2d'), spr = lookSprites(chosenLook).spr, pal = palForCustom(chosenChar, 0, chosenFxc);
@@ -4085,7 +4153,7 @@ async function refreshDaily() {
   if (!document.getElementById('missBox').classList.contains('hidden')) drawMissoes(); carregarConquistas(); const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w);
   show('dotMiss', pode); show('dotDaily', !dly.got);
 }
-function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; wallet.sync(); }
+function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; if (n > 0) voar('c', n); wallet.sync(); }
 function semV11() { notice('As missões e a recompensa diária ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.', 'AVISO'); }
 let missTab = 'd';
 const prog = (src, f) => (src[f] || 0) + (conta.pend[f] | 0); // servidor + o que ainda não foi enviado
@@ -4124,7 +4192,7 @@ async function drawConquistas(flash) {
   show('dotAch', conqProntas());
   const tot = conqs.length, feitas = conqs.filter(a => a.got).length; document.getElementById('achSub').textContent = feitas + ' de ' + tot + ' conquistadas · cada uma vale uma vez';
 }
-function ganhouRecompensa(c, xp) { if (c) moedasGanhas(c); if (xp && conta.perfil) { conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + xp; renderConta(); } }
+function ganhouRecompensa(c, xp) { if (c) moedasGanhas(c); if (xp && conta.perfil) { conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + xp; voar('x', xp); renderConta(); } }
 function erroRecompensa(e) { const t = (e && e.message) || '';
   if (/JA_RESGATADO/.test(t)) return 'Você já resgatou esta recompensa.'; if (/NAO_CONCLUIDA/.test(t)) return 'Essa missão ainda não foi concluída.';
   if (/function|does not exist|schema/i.test(t)) return 'Essa parte ainda não está ligada no servidor.\nRode o SQL COMPLETO de novo no Supabase.'; return t || 'Não deu certo. Tente de novo.'; }
@@ -4155,11 +4223,18 @@ setInterval(() => { if (!document.getElementById('menu').classList.contains('hid
 document.getElementById('dailyX').onclick = () => show('dailyBox', false);
 document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_daily'); unwait();
   if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : erroRecompensa(error), 'RECOMPENSA');
-  pegos.add('daily'); moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); ganhouFx(d, data); refreshDaily(); };
+  pegos.add('daily'); moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); premioFx(document.querySelector('#dailyBox .card'), data, 0, 'RECOMPENSA DIÁRIA!'); refreshDaily(); };
 /* ---------- recompensa de nível ---------- */
 const lvOf = (k, m, b = 0) => 1 + Math.floor(Math.sqrt(Math.max(0, k * 10 + m * 4 + b) / 25));
 const lvPrize = (de, ate) => { let p = 0; for (let i = de + 1; i <= ate; i++) p += 25 * i; return p; };
 let lvShown = 0;
+let bvVisto = false, bvBusca = false; // boas-vindas: 150 moedas na primeira vez
+async function boasVindas() {
+  if (bvVisto || bvBusca || !conta.user || !conta.perfil || !document.getElementById('lvBox').classList.contains('hidden')) return; bvBusca = true;
+  const { data, error } = await conta.sb.rpc('welcome_pending'); bvBusca = false; if (error || !data || bvVisto) return; bvVisto = true; show('lvBox', false);
+  fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<i class="coin"></i>', titulo: 'BEM-VINDO!', sub: 'Tome 150 moedas para comprar<br>seu primeiro item e cor!', btn: 'PEGAR +150 <i class="coin"></i>',
+    onBtn: async inn => { const r = await conta.sb.rpc('claim_welcome'); if (!r.error) { moedasGanhas(r.data); premioFx(inn, r.data, 0, 'PRESENTE!'); } setTimeout(() => { lvShown = 0; checkLevel(); }, 1900); } });
+}
 function abrirNiveis() { // trilha de níveis (rola para os lados), parada no nível atual
   const p = conta.perfil; if (!p) return; const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4 + (p.xp_bonus | 0), lv = lvOf(K, M, p.xp_bonus | 0), got = p.lvl_got | 0 || 1;
   const a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
@@ -4176,6 +4251,7 @@ function abrirNiveis() { // trilha de níveis (rola para os lados), parada no n�
 function checkLevel() {
   const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
   const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0);
+  if (document.querySelector('.unlk.gold')) return;
   if (lv <= (p.lvl_got | 0) || lv <= lvShown || document.getElementById('menu').classList.contains('hidden')) return;
   lvShown = lv; document.getElementById('lvT').textContent = lv; document.getElementById('lvP').textContent = lvPrize(p.lvl_got | 0, lv); show('lvBox', true);
 }
@@ -4183,7 +4259,7 @@ document.getElementById('lvGet').onclick = async () => {
   const b = document.getElementById('lvGet'); b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('claim_levels'); unwait(); b.disabled = false;
   if (error) { show('lvBox', false); await conta.loadProfile(); return notice(/NADA/.test(error.message) ? 'Essa recompensa já foi resgatada.' : erroRecompensa(error), 'NÍVEL'); }
-  conta.perfil.lvl_got = data.lv; moedasGanhas(data.prize); ganhouFx(document.querySelector('#lvBox .lvreward'), data.prize); setTimeout(() => show('lvBox', false), 1100);
+  conta.perfil.lvl_got = data.lv; moedasGanhas(data.prize); premioFx(document.querySelector('#lvBox .card'), data.prize, 0, 'NÍVEL ' + data.lv + '!'); setTimeout(() => show('lvBox', false), 1500);
 };
 /* ---------- amigos e convites ---------- */
 async function drawAmigos() {
@@ -4262,6 +4338,8 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.41', d: '12/11', itens: [['novo', 'Moedas e XP voam até o mostrador quando você ganha'], ['mudou', 'Códigos com aviso verde (ativado) ou vermelho (inválido)'], ['mudou', 'Popup de nível com luz girando atrás'], ['mudou', 'Boas-vindas aparece logo ao criar a conta']] },
+  { v: '1.0.40', d: '12/11', itens: [['novo', 'Boas-vindas: 150 moedas para o primeiro item'], ['mudou', 'Aviso de moedas insuficientes no estilo do desbloqueio'], ['mudou', 'Resgate da diária e do nível com o mesmo aviso das conquistas'], ['mudou', 'Nível não resgatado aparece de novo ao voltar ao menu']] },
   { v: '1.0.39', d: '12/11', itens: [['mudou', 'Popups no estilo do DESBLOQUEADO, com luz girando atrás'], ['mudou', 'Janela de compra abre sempre; sem moedas só ao tentar comprar'], ['mudou', 'Barra de nível arredondada']] },
   { v: '1.0.38', d: '12/11', itens: [['mudou', 'Todos os avisos com o mesmo visual e um selo no topo'], ['mudou', 'Novo popup de compra e de moedas insuficientes'], ['mudou', 'Luz do desbloqueio sempre atrás do painel'], ['mudou', 'Moeda maior e listras diagonais nas janelas']] },
   { v: '1.0.37', d: '12/11', itens: [['mudou', 'Aviso bonito ao desbloquear itens e ao resgatar missões e conquistas'], ['mudou', 'Moedas antes do troféu no topo do menu']] },
@@ -4645,7 +4723,7 @@ function msgOpen(title, text, input, cancel, okLabel) {
   });
 }
 const notice = (text, title = 'AVISO') => msgOpen(title, text, '', false);
-function semMoedas(falta) { return msgOpen('MOEDAS INSUFICIENTES', { kind: 'pobre', html: '<div class="mitem">faltam</div><span class="preco falta"><i class="coin"></i>' + falta + '</span>' }, '', false, 'OK'); }
+function semMoedas(falta) { fxPanel({ cor: 'err', seal: '<span class="xx"></span>', titulo: 'MOEDAS INSUFICIENTES!', sub: 'faltam ' + falta + ' <i class="coin"></i>', tempo: 2200 }); }
 /* popup com os personagens criados para escolher a transformação */
 function pickTrans() {
   const box = document.getElementById('msgList'); box.innerHTML = '';
