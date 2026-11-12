@@ -719,6 +719,25 @@
   .rkp{width:2.4em;text-align:center;color:#cbbdf5}
   .rkempty{margin:auto;text-align:center;color:#9a8cc8;font-size:var(--fB);line-height:2}
   #botBox,#rankBox{z-index:60}
+  /* ===== R29 ===== */
+  #mName{gap:3px!important}
+  .rkrow{justify-content:flex-start}
+  .rkrow b{flex:1;min-width:0;display:flex;align-items:center;gap:4px}
+  .rkrow b span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rkrow .tagc{height:calc(var(--wh,600px) * .032)}
+  .rkk{flex:0 0 auto;color:#ffcf3a}
+  .rkk small{font-size:var(--fS);color:#cbbdf5}
+  .rkrow.vazio{opacity:.4}
+  .rkrow.me{background:#3a2560;border-color:#5dff8a!important;box-shadow:0 0 10px rgba(93,255,138,.3)}
+  .voce{font-style:normal;font-size:var(--fS);color:#0c2a18;background:#5dff8a;padding:2px 5px;border-radius:4px;margin-left:4px;flex:0 0 auto}
+  #trans{position:absolute;inset:0;z-index:200;pointer-events:none;overflow:hidden;visibility:hidden}
+  #trans.go{visibility:visible}
+  #trans i{position:absolute;top:-20%;bottom:-20%;left:-60%;width:220%;background:repeating-linear-gradient(135deg,#2a1a52 0 24px,#1b1036 24px 48px);transform:skewX(-20deg) translateX(-110%);box-shadow:0 0 0 6px #ffb21e}
+  #trans.go i{animation:trwipe 1.25s cubic-bezier(.7,0,.3,1) forwards}
+  #trans .tlogo{position:absolute;left:50%;top:50%;width:min(60%,calc(var(--wh,600px) * 1.2));transform:translate(-50%,-50%) scale(.6);opacity:0}
+  #trans.go .tlogo{animation:trlogo 1.25s ease-out forwards}
+  @keyframes trwipe{0%{transform:skewX(-20deg) translateX(-110%)}38%,58%{transform:skewX(-20deg) translateX(-20%)}100%{transform:skewX(-20deg) translateX(110%)}}
+  @keyframes trlogo{0%,25%{opacity:0;transform:translate(-50%,-50%) scale(.6)}40%,58%{opacity:1;transform:translate(-50%,-50%) scale(1)}75%,100%{opacity:0;transform:translate(-50%,-50%) scale(1.25)}}
 </style>
 </head>
 <body>
@@ -755,7 +774,7 @@
         <button class="ib big2" id="bRank" title="ranking"><i>🏅</i><span>RANKING</span></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.28</div>
+      <div class="ver">v1.0.29</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -846,6 +865,7 @@
       <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
     </div>
   </div>
+  <div id="trans"><i></i><img class="tlogo" alt=""></div>
   <div id="botBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('botBox', false)"></button>
       <div class="title"><b>CONTRA BOTS</b><small>escolha a dificuldade</small></div>
@@ -858,7 +878,7 @@
   </div>
   <div id="rankBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('rankBox', false)"></button>
-      <div class="title"><b>RANKING</b><small>top 10 · quem mais derrotou</small></div>
+      <div class="title"><b>RANKING DE KILLS</b><small>top 10 · quem mais derrotou</small></div>
       <div id="rankList" class="rklist"></div>
     </div>
   </div>
@@ -2573,16 +2593,19 @@ function drawBar(x, y, w, h, ratio, ghost, color, dark) {
   ctx.fillStyle = dark; ctx.fillRect(x, y, ww, h); ctx.fillStyle = color; ctx.fillRect(x, y, ww, Math.ceil(h / 2));
   ctx.restore();
 }
-function headBox(img) { // acha a cabeça no sprite (primeira linha com pixels e a largura do topo) — guardado no próprio sprite
-  if (img._hb) return img._hb;
+function headBox(img, skin) { // centro do ROSTO no sprite (pele dentro da cabeça), guardado por sprite+pele
+  const key = '_hb' + (skin || ''); if (img[key]) return img[key];
   let c = img; if (!c.getContext) { c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); }
   const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, W = c.width, H = c.height; let top = -1;
   for (let y = 0; y < H && top < 0; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 40) { top = y; break; }
-  if (top < 0) return img._hb = { cx: W / 2, cy: H / 2 };
-  let mn = W, mx = -1; const y0 = top + 6, y1 = Math.min(H, top + 18); // faixa do rosto (abaixo das pontas do cabelo)
-  for (let y = y0; y < y1; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 40) { if (x < mn) mn = x; if (x > mx) mx = x; }
-  if (mx < 0) { mn = 0; mx = W; }
-  return img._hb = { cx: (mn + mx + 1) / 2, cy: top + 14 };
+  if (top < 0) return img[key] = { cx: W / 2, cy: H / 2 };
+  const sk = skin && /^#[0-9a-f]{6}$/i.test(skin) ? [1, 3, 5].map(k => parseInt(skin.substr(k, 2), 16)) : null;
+  const isSkin = (r, g, b) => sk ? Math.abs(r - sk[0]) + Math.abs(g - sk[1]) + Math.abs(b - sk[2]) < 90 : (r > 90 && r > g && g > b && r - b > 25 && r - g < 110);
+  const sk2 = (x, y) => { const o = (y * W + x) * 4; return d[o + 3] > 40 && isSkin(d[o], d[o + 1], d[o + 2]); };
+  let fy = -1; for (let y = top; y < Math.min(H, top + 30) && fy < 0; y++) for (let x = 0; x < W; x++) if (sk2(x, y)) { fy = y; break; } // 1ª linha de pele = testa
+  let n = 0, sx = 0, sy = 0; if (fy >= 0) for (let y = fy; y < Math.min(H, fy + 9); y++) for (let x = 0; x < W; x++) if (sk2(x, y)) { n++; sx += x; sy += y; } // só o rosto (não o peito)
+  if (n < 6) return img[key] = { cx: W / 2, cy: top + 14 };
+  return img[key] = { cx: sx / n, cy: sy / n };
 }
 function drawHUD() {
   const me = game.me; if (!me) return;
@@ -2613,7 +2636,7 @@ function drawHUD() {
   ctx.fillStyle = me.pal_.swatch; ctx.fillRect(L + 1, T + 1, 30, 30);
   ctx.fillStyle = '#2a1f3d'; ctx.fillRect(L + 2, T + 2, 28, 28);
   ctx.save(); ctx.beginPath(); ctx.rect(L + 2, T + 2, 28, 28); ctx.clip();
-  const face = me.dead ? me.spr.dano : me.spr.parado, hb = headBox(face); ctx.drawImage(face, Math.round(L + 16 - hb.cx), Math.round(T + 17 - hb.cy)); ctx.restore();
+  const face = me.dead ? me.spr.dano : me.spr.parado, hb = headBox(face, me.look && me.look.s); ctx.drawImage(face, Math.round(L + 16 - hb.cx), Math.round(T + 17 - hb.cy)); ctx.restore();
   // barras de vida e energia
   const bx = L + 38, bw = 136;
   const hpR = me.hp / me.maxHp, hpG = me.hpShown / me.maxHp;
@@ -3426,6 +3449,7 @@ function renderCoins() { const el = document.getElementById('coinN'), v = shop.i
 /* o nome dourado agora vem do cargo salvo no banco (a antiga tag {DONO} não vale mais) */
 const isOwnerF = f => conta.roleOf(f) === 'dono';
 /* nome de um lutador com o visual do cargo: dono = dourado · youtuber = tag YT vermelha + nome branco */
+const tagCanvas = r => '<canvas class="tagc" data-r="' + r + '" width="' + (TAGS[r][0].length * 8 + 4) + '" height="12"></canvas>'; // só a largura da tag (fica colada no nome)
 const TAGS = { dono: ['DONO', ['#7a5200', '#ffd23a', '#fff6c8', '#ffd23a', '#7a5200'], '#2a1600'], youtuber: ['YT', ['#8a0d0d', '#ff2a2a', '#ffd0d0', '#ff2a2a', '#8a0d0d'], '#2a0000'] };
 function nameText(f, str, x, y, size, align, color, outline = '#120c1c', ow = 1.2) {
   const r = f && f.role !== undefined ? f.role : conta.roleOf(f);
@@ -3459,7 +3483,7 @@ function renderConta() {
   const p = conta.perfil, on = !!(conta.user && p);
   document.getElementById('accInfo').classList.toggle('on', on); if (!on) return;
   const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4, lv = 1 + Math.floor(Math.sqrt(xp / 25)), a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
-  document.getElementById('mName').innerHTML = (TAGS[p.role] ? '<canvas class="tagc" data-r="' + p.role + '" width="48" height="12"></canvas>' : '') + '<span>' + esc(dispName(p.name)) + '</span>';
+  document.getElementById('mName').innerHTML = (TAGS[p.role] ? tagCanvas(p.role) : '') + '<span>' + esc(dispName(p.name)) + '</span>';
   document.getElementById('mLv').textContent = 'NV ' + lv; document.getElementById('mXp').style.width = Math.round((xp - a) / (b - a) * 100) + '%'; document.getElementById('mXpT').textContent = (xp - a) + ' / ' + (b - a) + ' XP';
   refreshDaily();
   document.getElementById('mKills').textContent = K;
@@ -3712,9 +3736,15 @@ document.getElementById('logoMenu').src = document.getElementById('logoAuth').sr
 document.getElementById('bGear').onclick = () => openSettings('menu');
 /* aba de opções: quando há mais conteúdo abaixo, a borda de baixo some num degradê e aparece "▼ mais" */
 /* menu: o SEU lutador em destaque (parado ↔ bola de energia) + rostinho no rodapé */
+function battleTrans() { // cortina diagonal roxa com o logo, abrindo para a arena
+  const t = document.getElementById('trans'); if (!t) return; const lg = t.querySelector('.tlogo'); if (!lg.src) lg.src = document.getElementById('logoImg').src;
+  t.classList.remove('go'); void t.offsetWidth; t.classList.add('go'); clearTimeout(battleTrans.k); battleTrans.k = setTimeout(() => t.classList.remove('go'), 1300); }
+function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.tagc')) { const T = TAGS[tc.dataset.r], g = tc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, tc.width, tc.height);
+  const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } } }
 (function menuHero() {
   const loop = now => { requestAnimationFrame(loop);
     const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(refreshDaily); } loop.was = vis;
+    if (!document.getElementById('rankBox').classList.contains('hidden')) drawTagCanvases();
     if (!vis || typeof chosenLook === 'undefined') return;
     const t = now / 1000, c = document.getElementById('mHero'), x = c.getContext('2d'), spr = lookSprites(chosenLook).spr, pal = palForCustom(chosenChar, 0, chosenFxc);
     const ph = t % 4, pose = ph < 1.6 ? 'parado' : ph < 2.6 ? 'carga2' : 'kiball', im = spr[pose] || spr.parado;
@@ -3725,10 +3755,9 @@ document.getElementById('bGear').onclick = () => openSettings('menu');
       x.drawImage(im, -Math.floor(im.width / 2), -im.height);
       if (pose === 'kiball') drawKiBall(20 + Math.sin(t * 6) * 1.5, -30, 6, pal.ki, t);
       x.restore(); } finally { ctx = save; }
-    for (const tc of document.querySelectorAll('canvas.tagc')) { const T = TAGS[tc.dataset.r], g = tc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, tc.width, tc.height);
-      const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } }
+    drawTagCanvases();
     const av = document.getElementById('mAva'), y = av.getContext('2d'), p0 = spr.parado; y.clearRect(0, 0, 24, 24); y.imageSmoothingEnabled = false;
-    const hb = headBox(p0); y.drawImage(p0, Math.round(12 - hb.cx), Math.round(13 - hb.cy));
+    const hb = headBox(p0, chosenLook && chosenLook.s); y.drawImage(p0, Math.round(12 - hb.cx), Math.round(13 - hb.cy));
   };
   requestAnimationFrame(loop);
 })();
@@ -4078,6 +4107,7 @@ game = {
   matchLeft() { return Math.max(0, (this.endAt - performance.now()) / 1000); }, mode: null, fighters: [], bots: [], me: null, cam: { x: 0, y: 0 }, t: 0,
   byId(id) { return this.fighters.find(f => f.id === id); },
   start(mode) {
+    if (typeof battleTrans === 'function') battleTrans();
     const map = mode !== 'online' ? MAP_IDS[(Math.random() * MAP_IDS.length) | 0] : net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
     setMap(map); this.map = map;
     this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
@@ -4541,8 +4571,11 @@ function buildMenu() {
     const L = document.getElementById('rankList'); L.innerHTML = '<div class="rkempty">carregando...</div>'; show('rankBox', true); L.scrollTop = 0;
     const { data, error } = await conta.sb.rpc('top_kills');
     if (error) { L.innerHTML = '<div class="rkempty">' + (/function|does not exist|schema/i.test(error.message) ? 'Ranking ainda não ligado no servidor.<br>Rode o SQL COMPLETO de novo.' : esc(error.message)) + '</div>'; return; }
-    if (!data || !data.length) { L.innerHTML = '<div class="rkempty">Ninguém pontuou ainda.<br>Seja o primeiro!</div>'; return; }
-    L.innerHTML = data.map((r, i) => '<div class="rkrow' + (r.me ? ' me' : '') + (i < 3 ? ' t' + (i + 1) : '') + '"><span class="rkp">' + (i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1) + 'º') + '</span><b>' + esc(dispName(r.name)) + '</b></div>').join('');
+    const rows = data || []; let h = '';
+    for (let i = 0; i < 10; i++) { const r = rows[i], pos = '<span class="rkp">' + (i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1) + 'º') + '</span>';
+      if (!r) { h += '<div class="rkrow vazio">' + pos + '<b>—</b><span class="rkk">—</span></div>'; continue; }
+      h += '<div class="rkrow' + (r.me ? ' me' : '') + (i < 3 ? ' t' + (i + 1) : '') + '">' + pos + '<b>' + (TAGS[r.role] ? tagCanvas(r.role) : '') + '<span>' + esc(dispName(r.name)) + '</span>' + (r.me ? '<em class="voce">VOCÊ</em>' : '') + '</b><span class="rkk">' + (r.kills | 0) + ' <small>kills</small></span></div>'; }
+    L.innerHTML = h;
   };
   document.getElementById('bSettings').onclick = () => openSettings('menu');
   const rn = document.getElementById('roomName');
