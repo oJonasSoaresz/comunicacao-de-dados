@@ -814,6 +814,14 @@
   #dailyBox .dday{padding:14px 2px}
   .mhero{padding-left:calc(var(--wh,600px) * .2)}
   .mmid{grid-template-columns:38% minmax(0,1fr)!important}
+  /* ===== R34 ===== */
+  .mhero::after{left:calc(var(--wh,600px) * .2 + (100% - var(--wh,600px) * .2) * .24)!important;right:calc((100% - var(--wh,600px) * .2) * .24)!important;height:10%!important;bottom:4%!important}
+  .lvtrail{isolation:isolate}
+  .lvn::before{z-index:-1!important}
+  .lvb{background:#241640}
+  .lvn.lock{opacity:1!important}
+  .lvn.lock .lvb{color:#8a80b0;border-color:#3a3060}
+  .lvn.lock .lvr,.lvn.lock small{opacity:.6}
 </style>
 </head>
 <body>
@@ -851,7 +859,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.33</div>
+      <div class="ver">v1.0.34</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -2650,7 +2658,7 @@ function ownerText(str, x, y, size, align = 'left', outline = '#2a1600') {
 function rr(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, Math.min(r, h / 2, w / 2)); else ctx.rect(x, y, w, h); }
 /* ---- moedas: ícone, contador no HUD e moedinhas voando ---- */
 let coinFly = [], coinHudPos = { x: 0, y: 0 }, coinHudT = 0;
-const COIN_IMG = new Image(); COIN_IMG.src = getComputedStyle(document.documentElement).getPropertyValue('--coin').trim().replace(/^url\(["']?|["']?\)$/g, '');
+const COIN_IMG = new Image(); { const m = /--coin:url\((data:image\/png;base64,[A-Za-z0-9+\/=]+)\)/.exec([...document.querySelectorAll('style')].map(e => e.textContent).join('')); if (m) COIN_IMG.src = m[1]; } // moeda nova (lida direto do estilo)
 function drawCoin(x, y, r) {
   if (COIN_IMG.complete && COIN_IMG.naturalWidth) { const d = Math.round((r + 1) * 3.1), sm = ctx.imageSmoothingEnabled; ctx.imageSmoothingEnabled = true; ctx.drawImage(COIN_IMG, Math.round(x - d / 2), Math.round(y - d / 2), d, d); ctx.imageSmoothingEnabled = sm; return; }
   ctx.fillStyle = '#5a3a00'; ctx.beginPath(); ctx.arc(x, y, r + 1, 0, Math.PI * 2); ctx.fill();
@@ -4040,7 +4048,8 @@ setInterval(async () => { // "estou online" + convites recebidos (no menu)
   if (!conta.user || !conta.sb) return; if ((pingN = (pingN + 1) % 6) === 1) { conta.sb.rpc('ping').then(() => {}, () => {}); pedidosDot(); } // 'estou online' + pedidos a cada 1 min
   if (convAberto || document.getElementById('menu').classList.contains('hidden')) return;
   const { data, error } = await conta.sb.rpc('my_invites'); if (error || !data || !data.length) return;
-  const c = data[data.length - 1]; convAberto = true;
+  const c = data[data.length - 1]; { const { data: viva, error: e2 } = await conta.sb.from('live_rooms').select('code').eq('code', c.code); if (!e2 && (!viva || !viva.length)) return; } // a sala já fechou: ignora o convite
+  convAberto = true;
   const ok = await msgOpen('CONVITE', { html: '<b class="convn">' + esc(dispName(c.from_name)) + '</b> te convidou para a sala<span class="preco">' + esc(c.code) + '</span>' }, '', true, 'ENTRAR'); convAberto = false;
   if (ok && window.joinCode) window.joinCode(c.code, c.pw || '');
 }, 10000);
