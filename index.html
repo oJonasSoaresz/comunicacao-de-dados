@@ -888,8 +888,8 @@
   .card.mid,.card.cust{position:relative}
   .unlk{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(10,6,24,.55);border-radius:inherit;animation:unin .2s ease-out;cursor:pointer}
   .unlk.sai{animation:unout .4s ease-in forwards}
-  .unlk-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 34px 18px;background:linear-gradient(#2b1d52,#1a1036);border:3px solid #5dff8a;border-radius:18px;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(93,255,138,.35);animation:unpop .45s cubic-bezier(.2,1.6,.4,1)}
-  .unlk-rays{position:absolute;left:50%;top:38%;width:320px;height:320px;margin:-160px 0 0 -160px;border-radius:50%;z-index:-1;background:repeating-conic-gradient(rgba(93,255,138,.18) 0 9deg,transparent 9deg 18deg);-webkit-mask:radial-gradient(circle,#000 25%,transparent 65%);mask:radial-gradient(circle,#000 25%,transparent 65%);animation:lvspin 6s linear infinite}
+  .unlk-in{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 34px 18px;background:linear-gradient(#2b1d52,#1a1036);border:3px solid #5dff8a;border-radius:18px;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(93,255,138,.35);animation:unpop .45s cubic-bezier(.2,1.6,.4,1)}
+  .unlk-rays{position:absolute;left:50%;top:50%;width:420px;height:420px;margin:-210px 0 0 -210px;border-radius:50%;z-index:0;pointer-events:none;background:repeating-conic-gradient(rgba(93,255,138,.18) 0 9deg,transparent 9deg 18deg);-webkit-mask:radial-gradient(circle,#000 25%,transparent 65%);mask:radial-gradient(circle,#000 25%,transparent 65%);animation:lvspin 6s linear infinite}
   .unlk-seal{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 35%,#6dffa0,#1f9a55);border:4px solid #c9ffdc;box-shadow:0 0 0 3px #0b0618,0 0 18px rgba(93,255,138,.6);animation:unseal .6s .1s cubic-bezier(.2,1.8,.4,1) both}
   .unlk-seal .tick{width:14px;height:26px;border-width:0 6px 6px 0;border-color:#0c2a18;margin-top:-6px}
   .unlk-in b{font-weight:normal;font-size:calc(var(--fT) * .8);color:#ffcf3a;letter-spacing:2px;text-shadow:0 3px 0 #7a4600,2px 2px 0 #000}
@@ -907,6 +907,54 @@
   .przv .coin{width:1.1em;height:1.1em}
   .przv .xpi{font-size:.45em;padding:.3em .4em}
   @keyframes przup{0%{opacity:0;transform:translateY(-40%) scale(.6)}12%{opacity:1;transform:translateY(-50%) scale(1.08)}22%{transform:translateY(-50%) scale(1)}80%{opacity:1;transform:translateY(-50%)}100%{opacity:0;transform:translateY(-80%)}}
+
+  /* R38: padrão visual — listras diagonais, selo nos avisos, moeda maior */
+  i.coin{width:max(18px,1.45em);height:max(18px,1.45em);vertical-align:-.35em}
+  .rwp .coin{width:26px!important;height:26px!important}.gainfx .coin{width:1.35em;height:1.35em}
+  .mbar .coinpill .coin{vertical-align:middle}
+  .scr .coinpill:not(.mbar *) .coin,.card .coinpill .coin{width:max(28px,2.4em)!important;height:max(28px,2.4em)!important}
+  .lvrow .coin,#lvClaim .coin,.lvr .coin,.prem .coin{width:24px!important;height:24px!important}.przv .coin,.lvc .preco .coin,.lvrv .coin,.codep .coin{width:1.8em!important;height:1.8em!important}
+  .card,.przin,.unlk-in{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.028) 0 10px,transparent 10px 24px)!important}
+  .card{background-color:rgba(26,21,40,.94)}
+  .przin,.unlk-in{background-color:#22163f}
+  .card .title{position:relative}
+  .msgc{padding-top:calc(var(--pad) * 1.3 + 30px)!important;overflow:visible!important;margin-top:34px}
+  .mbadge{position:absolute;left:50%;top:-34px;width:64px;height:64px;margin-left:-32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;text-shadow:2px 2px 0 #000;border:4px solid #fff3c4;box-shadow:0 0 0 3px #0b0618,0 0 20px rgba(255,178,30,.5);background:radial-gradient(circle at 40% 35%,#ffd45a,#d27a00);animation:unseal .55s cubic-bezier(.2,1.8,.4,1) both;z-index:2}
+  .mbadge::after{content:'!'}
+  .k-ask .mbadge{background:radial-gradient(circle at 40% 35%,#9b86ff,#4b2fc0);border-color:#ddd5ff;box-shadow:0 0 0 3px #0b0618,0 0 20px rgba(123,92,255,.55)}.k-ask .mbadge::after{content:'?'}
+  .k-buy .mbadge{background:var(--coin) center/72% no-repeat,radial-gradient(circle at 40% 35%,#ffd45a,#c46a00)}.k-buy .mbadge::after{content:''}
+  #msgForm.k-buy{border-color:#ffb21e!important}
+  .k-pobre .mbadge{background:var(--coin) center/66% no-repeat,radial-gradient(circle at 40% 35%,#ff7a7a,#a3122a);border-color:#ffd0d0;box-shadow:0 0 0 3px #0b0618,0 0 22px rgba(255,60,80,.55);animation:unseal .55s cubic-bezier(.2,1.8,.4,1) both,mshake .4s .55s}
+  .k-pobre .mbadge::after{content:'';position:absolute;width:76%;height:6px;background:#fff;border-radius:3px;transform:rotate(-40deg);box-shadow:0 0 0 2px #7a0016}
+  #msgForm.k-pobre{border-color:#ff4d6a!important}
+  .k-pobre .title b{color:#ff6b80!important}
+  .msgc .mitem{font-size:calc(var(--fB) * 1.15);color:#fff}
+  .msgc .preco{background:#120b26;border:2px solid #3b2d66;border-radius:12px;padding:8px 18px;width:max-content;margin:10px auto 0}
+  .msgc .preco .coin{width:2.1em!important;height:2.1em!important}
+  .msgc .preco.falta{color:#ff6b80;border-color:#6a1a2c}
+  .msgc .mdica{display:block;margin-top:10px;color:var(--muted);font-size:var(--fB)}
+  @keyframes mshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* R39: popups no estilo do DESBLOQUEADO */
+  #menu .card{background-image:none!important}
+  .msgc{margin-top:0!important;padding-top:calc(var(--pad) * 1.2)!important;background-color:#22163f!important;border-width:3px!important;border-color:#ffb21e!important;border-radius:18px!important;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(255,178,30,.35)!important;animation:unpop .45s cubic-bezier(.2,1.6,.4,1);isolation:isolate}
+  .mrays{position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;z-index:-2;pointer-events:none;background:repeating-conic-gradient(rgba(255,178,30,.16) 0 9deg,transparent 9deg 18deg);-webkit-mask:radial-gradient(circle,#000 25%,transparent 65%);mask:radial-gradient(circle,#000 25%,transparent 65%);animation:lvspin 6s linear infinite}
+  .msgc::before{content:'';position:absolute;inset:0;border-radius:inherit;z-index:-1;background:#22163f repeating-linear-gradient(135deg,rgba(255,255,255,.028) 0 10px,transparent 10px 24px)}
+  .mbadge{position:relative!important;left:auto!important;top:auto!important;margin:0 auto!important}
+  .k-buy .mbadge{background:var(--coin) center/contain no-repeat!important;border:0!important;box-shadow:none!important;border-radius:0!important;filter:drop-shadow(0 0 14px rgba(255,190,40,.7)) drop-shadow(0 3px 0 rgba(0,0,0,.5));width:72px;height:72px}
+  .k-ask .mrays{background:repeating-conic-gradient(rgba(123,92,255,.2) 0 9deg,transparent 9deg 18deg)}
+  #msgForm.k-info{border-color:#ffb21e!important}
+  #msgForm.k-ask{border-color:#7b5cff!important;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(123,92,255,.4)!important}
+  .k-pobre .mbadge{background:radial-gradient(circle at 40% 35%,#ff7a8a,#b3152f)!important;animation:unseal .55s cubic-bezier(.2,1.8,.4,1) both,mshake .4s .55s}
+  .k-pobre .mbadge::after{content:'✕'!important;position:static!important;width:auto!important;height:auto!important;background:none!important;box-shadow:none!important;transform:none!important;font-size:30px;color:#fff}
+  .k-pobre .mrays{background:repeating-conic-gradient(rgba(255,77,106,.18) 0 9deg,transparent 9deg 18deg)}
+  #msgForm.k-pobre{border-color:#ff4d6a!important;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(255,77,106,.4)!important}
+  .msgc .title b{color:#ffcf3a!important;letter-spacing:2px;text-shadow:0 3px 0 #7a4600,2px 2px 0 #000!important}
+  .k-pobre .title b{color:#ff6b80!important;text-shadow:0 3px 0 #6a0016,2px 2px 0 #000!important}
+  .msgc .preco.falta{color:#ff8a9a}
+  .card .coinpill.cpill{padding:3px 10px 3px 5px!important;gap:5px!important}
+  .card .coinpill.cpill .coin{width:max(20px,1.7em)!important;height:max(20px,1.7em)!important}
+  .mlv i{border-radius:999px!important;border-width:2px!important}
 </style>
 </head>
 <body>
@@ -944,7 +992,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.37</div>
+      <div class="ver">v1.0.39</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1129,7 +1177,7 @@
   </div>
   <div id="msgBox" class="ovl hidden">
     <form class="card small msgc" id="msgForm" autocomplete="off">
-      <button type="button" class="msgx hidden" id="msgX" aria-label="fechar"></button><div class="title"><b id="msgTitle">AVISO</b></div>
+      <button type="button" class="msgx hidden" id="msgX" aria-label="fechar"></button><i class="mrays"></i><div class="mbadge" id="msgBadge"></div><div class="title"><b id="msgTitle">AVISO</b></div>
       <div id="msgText"></div>
       <div id="msgList" class="cgrid hidden"></div>
       <input id="msgIn" type="text" maxlength="40" class="hidden" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -3737,9 +3785,9 @@ function comprouFx(nome) { // "DESBLOQUEADO!": luz girando, selo verde com check
   const box = document.querySelector('#custom .card'); if (!box || document.getElementById('custom').classList.contains('hidden')) return;
   const old = box.querySelector('.unlk'); if (old) old.remove();
   const f = document.createElement('div'); f.className = 'unlk';
-  f.innerHTML = '<div class="unlk-in"><i class="unlk-rays"></i><div class="unlk-seal"><span class="tick"></span></div><b>DESBLOQUEADO!</b><small>' + esc(nome) + '</small></div>';
+  f.innerHTML = '<i class="unlk-rays"></i><div class="unlk-in"><div class="unlk-seal"><span class="tick"></span></div><b>DESBLOQUEADO!</b><small>' + esc(nome) + '</small></div>';
   for (let i = 0; i < 14; i++) { const c = document.createElement('i'); c.className = 'spk'; const a = i / 14 * Math.PI * 2, r = 90 + Math.random() * 60;
-    c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px'); c.style.animationDelay = (0.15 + Math.random() * 0.1) + 's'; f.firstChild.appendChild(c); }
+    c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px'); c.style.animationDelay = (0.15 + Math.random() * 0.1) + 's'; f.querySelector('.unlk-in').appendChild(c); }
   f.onclick = () => f.remove(); box.appendChild(f); setTimeout(() => f.classList.add('sai'), 1500); setTimeout(() => f.remove(), 1900); try { SFX.zap(); } catch (e) {}
 }
 /* recompensa resgatada: aviso no centro da janela (sempre visível, mesmo com a lista rolada) */
@@ -3754,7 +3802,7 @@ async function buyNow(k, nome, direto) {
   if (!k || shop.has(k)) return;
   if (direto) return shop.buy([{ k, n: nome }]).then(() => { if (shop.has(k)) comprouFx(nome); }); // botão COMPRAR do selo: já mostra o preço
   const preco = shop.infinite() ? 0 : priceOf(k);
-  const ok = await msgOpen('COMPRAR ITEM', { html: '🔒 ' + esc(nome) + '<span class="preco"><i class="coin"></i>' + preco + '</span>' }, '', true, 'COMPRAR');
+  const ok = await msgOpen('COMPRAR?', { kind: 'buy', html: '<div class="mitem">' + esc(nome) + '</div><span class="preco"><i class="coin"></i>' + preco + '</span>' }, '', true, 'COMPRAR');
   if (ok) { await shop.buy([{ k, n: nome }]); if (shop.has(k)) comprouFx(nome); }
 }
 /* uma cor comprada vale em TODOS os itens e slots ('c:#hex'); a transformação comprada vale em todos os slots ('tr:x') */
@@ -3803,7 +3851,7 @@ const shop = {
   async buy(list) {
     if (!list.length) return;
     const cost = this.infinite() ? 0 : list.reduce((a, i) => a + priceOf(i.k), 0);
-    if (cost > wallet.n) { notice('Moedas insuficientes: precisa de ' + cost + ' e você tem ' + wallet.n + '.\nGanhe moedas derrotando adversários!', 'LOJA'); return; }
+    if (cost > wallet.n) { semMoedas(cost - wallet.n); return; }
     wait('comprando...');
     try {
       await conta.flushStats(); // moedas ganhas há pouco entram antes da compra
@@ -4214,6 +4262,8 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.39', d: '12/11', itens: [['mudou', 'Popups no estilo do DESBLOQUEADO, com luz girando atrás'], ['mudou', 'Janela de compra abre sempre; sem moedas só ao tentar comprar'], ['mudou', 'Barra de nível arredondada']] },
+  { v: '1.0.38', d: '12/11', itens: [['mudou', 'Todos os avisos com o mesmo visual e um selo no topo'], ['mudou', 'Novo popup de compra e de moedas insuficientes'], ['mudou', 'Luz do desbloqueio sempre atrás do painel'], ['mudou', 'Moeda maior e listras diagonais nas janelas']] },
   { v: '1.0.37', d: '12/11', itens: [['mudou', 'Aviso bonito ao desbloquear itens e ao resgatar missões e conquistas'], ['mudou', 'Moedas antes do troféu no topo do menu']] },
   { v: '1.0.36', d: '12/11', itens: [['novo', 'Conquistas ganharam tela própria (botão do troféu, no topo)'], ['novo', '10 missões semanais por semana'], ['mudou', 'Nova tela de subir de nível'], ['mudou', 'Topo do menu: conquistas, moedas, novidades e ajustes']] },
   { v: '1.0.35', d: '12/11', itens: [['novo', 'Modo HIT KILL: qualquer golpe ou poder derrota na hora!'], ['novo', 'Conquistas: metas para sempre, com moedas e XP'], ['novo', 'Missões variadas: defesa, poderes, investida, dano e mais'], ['novo', 'Missões e conquistas também dão XP'], ['novo', 'Tela de Novidades (esta aqui!)'], ['mudou', 'Janela de subir de nível com visual novo'], ['mudou', 'Anel do personagem do menu centralizado nos pés'], ['saiu', 'Mostrador de troféus do menu']] },
@@ -4585,6 +4635,7 @@ let msgDone = null;
 function msgOpen(title, text, input, cancel, okLabel) {
   return new Promise(res => {
     if (msgDone) msgDone(null);
+    const kd = (text && text.kind) || (cancel ? 'ask' : 'info'); const fm = document.getElementById('msgForm'); fm.className = 'card small msgc k-' + kd; document.getElementById('msgBadge').className = 'mbadge'; void fm.offsetWidth;
     document.getElementById('msgTitle').textContent = title; const mt = document.getElementById('msgText'); if (text && text.html) mt.innerHTML = text.html; else mt.textContent = text || '';
     const inp = document.getElementById('msgIn'); inp.classList.toggle('hidden', !input); inp.value = ''; inp.placeholder = input || '';
     document.getElementById('msgOk').textContent = okLabel || 'OK'; show('msgCancel', false); show('msgX', !!cancel); document.getElementById('msgBtns').style.gridTemplateColumns = '1fr';
@@ -4594,6 +4645,7 @@ function msgOpen(title, text, input, cancel, okLabel) {
   });
 }
 const notice = (text, title = 'AVISO') => msgOpen(title, text, '', false);
+function semMoedas(falta) { return msgOpen('MOEDAS INSUFICIENTES', { kind: 'pobre', html: '<div class="mitem">faltam</div><span class="preco falta"><i class="coin"></i>' + falta + '</span>' }, '', false, 'OK'); }
 /* popup com os personagens criados para escolher a transformação */
 function pickTrans() {
   const box = document.getElementById('msgList'); box.innerHTML = '';
