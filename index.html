@@ -1019,6 +1019,18 @@
   /* R45 */
   body.arrasta,body.arrasta *{user-select:none!important;cursor:grabbing!important}
   .lvtop{background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 10px,transparent 10px 24px)!important;border:2px solid #3e2d78;border-radius:14px;padding:10px 14px}
+
+  /* R47 */
+  #bCode.off,#bCode:disabled{opacity:.35;pointer-events:none;filter:grayscale(1)}
+  .mside.r{position:relative}
+  #bBan{position:absolute;right:0;top:calc(100% + 10px);color:#ff6b80}
+  #banBox{z-index:62}
+  .banq{display:flex;gap:8px}.banq input{flex:1;min-width:0}
+  .tabs2{display:flex;gap:6px}.tabs2 button{flex:1;padding:8px;font-family:inherit;font-size:var(--fB);background:#1d1438;color:#cbbdf5;border:2px solid #3e2d78;border-radius:10px;cursor:pointer}.tabs2 button.on{background:#7b5cff;color:#fff;border-color:#b9a8ff}
+  .banlist{display:flex;flex-direction:column;gap:6px;max-height:calc(var(--wh,600px) * .42);overflow:auto;min-height:60px}
+  .banrow{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:12px}
+  .banrow.ban{border-color:#ff4d6a}.banrow>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.banrow small{color:var(--muted);font-size:var(--fS);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .banrow .b{flex:0 0 auto;padding:8px 12px}
 </style>
 </head>
 <body>
@@ -1037,7 +1049,7 @@
       <div class="mbar">
         <div class="mside"><div class="mprof" id="accInfo"><canvas id="mAva" width="24" height="24"></canvas><div class="mpi"><b id="mName">—</b><div class="mlv"><span id="mLv">NV 1</span><i><u id="mXp"></u><em id="mXpT">0/25</em></i></div></div></div></div>
         <img class="glogo menu" id="logoMenu" alt="CustomBattle Online">
-        <div class="mside r"><div class="coinpill" id="coinPill" title="suas moedas"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bAch" title="conquistas" aria-label="conquistas"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 7.3 12H7a4 4 0 0 1-4-4V6a1 1 0 0 1 1-1h3V3zm10 4v3a2 2 0 0 0 2-2V7h-2zM5 7v1a2 2 0 0 0 2 2V7H5zM7 20h10v2H7z"/></svg><b class="dot hidden" id="dotAch"></b></button><button class="ib nv" id="bNews" title="novidades" aria-label="novidades"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H6a3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm16 5h1a1 1 0 0 1 1 1v8a2 2 0 0 1-4 0V9h2zM6 7v4h5V7H6zm7 0v1.5h3V7h-3zm0 3v1.5h3V10h-3zm-7 3v1.5h10V13H6zm0 3v1.5h10V16H6z"/></svg><b class="dot hidden" id="dotNv"></b></button><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button></div>
+        <div class="mside r"><div class="coinpill" id="coinPill" title="suas moedas"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bAch" title="conquistas" aria-label="conquistas"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 7.3 12H7a4 4 0 0 1-4-4V6a1 1 0 0 1 1-1h3V3zm10 4v3a2 2 0 0 0 2-2V7h-2zM5 7v1a2 2 0 0 0 2 2V7H5zM7 20h10v2H7z"/></svg><b class="dot hidden" id="dotAch"></b></button><button class="ib nv" id="bNews" title="novidades" aria-label="novidades"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H6a3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm16 5h1a1 1 0 0 1 1 1v8a2 2 0 0 1-4 0V9h2zM6 7v4h5V7H6zm7 0v1.5h3V7h-3zm0 3v1.5h3V10h-3zm-7 3v1.5h10V13H6zm0 3v1.5h10V16H6z"/></svg><b class="dot hidden" id="dotNv"></b></button><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button><button class="ib hidden" id="bBan" title="banir" aria-label="banir"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 0 1 5.6 11.2L7.8 6.4A7 7 0 0 1 12 5zm0 14a7 7 0 0 1-5.6-11.2l9.8 9.8A7 7 0 0 1 12 19z"/></svg></button></div>
       </div>
       <div class="mmid">
         <div class="mhero" id="mHeroBox" title="editar personagem"><canvas id="mHero" width="130" height="140"></canvas></div>
@@ -1056,7 +1068,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.46</div>
+      <div class="ver">v1.0.48</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1161,6 +1173,14 @@
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('achBox', false)"></button>
       <div class="title"><b>CONQUISTAS</b><small id="achSub">metas para sempre · cada uma vale uma vez</small></div>
       <div id="achList" class="rwlist achl"></div>
+    </div>
+  </div>
+  <div id="banBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('banBox', false)"></button>
+      <div class="title"><b>BANIR JOGADORES</b><small>só donos · bane conta, e-mail, nome e IP</small></div>
+      <div class="banq"><input id="banIn" type="text" maxlength="40" placeholder="nome exato do jogador" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button type="button" class="b pri" id="banGo">BUSCAR</button></div>
+      <div class="tabs2" id="banTabs"><button type="button" class="on" data-t="b">BUSCA</button><button type="button" data-t="l">BANIDOS</button></div>
+      <div id="banList" class="banlist"></div>
     </div>
   </div>
   <div id="nvBox" class="ovl hidden">
@@ -1903,7 +1923,7 @@ class Fighter {
     if (game.hitkill && src && src !== this) p = Object.assign({}, p, { dmg: 99999 }); // HIT KILL: qualquer acerto derrota
     if (this.dead || this.invuln > 0) return false;
     const fromFront = sign(src.x - this.x) === this.facing;
-    if (this.state === 'guard' && fromFront && !p.unblock) {
+    if (this.state === 'guard' && fromFront && !p.unblock && !game.hitkill) {
       this.hp = Math.max(1, this.hp - p.dmg * 0.15); this.vx = p.kbx * 0.35; this.ki = Math.max(0, this.ki - 4);
       this.flash = 0.05; if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 58, 'DEFESA', '#9fe8ff', 5);
       return 'block';
@@ -3524,7 +3544,8 @@ const net = {
   },
   /* o anfitrião saiu: o 1º da lista assume a sala; os outros reconectam no mesmo código */
   hostLost() {
-    if (game.ended) return; // fim de jogo: a sala fecha mesmo
+    if (game.ended) return;
+    if (!navigator.onLine) { game.toMenu('Você perdeu a conexão e saiu da sala.'); return; } // fim de jogo: a sala fecha mesmo
     if (this.role !== 'client' || game.phase !== 'play') return;
     this.role = 'migrating';
     killfeed.unshift({ sys: 'O anfitrião saiu. Passando a sala...', life: 6 });
@@ -3697,7 +3718,7 @@ const conta = {
     if (error) ({ data, error } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches,coins').eq('id', this.user.id).maybeSingle()); // banco sem a loja (SQL v5 não rodado)
     if (error) ({ data } = await this.sb.from('profiles').select('name,personagem,look,fxc,role,kills,deaths,matches').eq('id', this.user.id).maybeSingle()); // banco sem moedas (SQL v3 não rodado)
     if (!data || !this.user) { gate.profileFailed(); return; }
-    this.perfil = data; this.coinsDb = 'coins' in data; applyProfile(data); wallet.sync(); renderConta(); gate.loggedIn(); setTimeout(() => boasVindas(), 700); setTimeout(() => boasVindas(), 2500);
+    this.perfil = data; this.coinsDb = 'coins' in data; applyProfile(data); wallet.sync(); renderConta(); gate.loggedIn(); checaBan(); show('bBan', normRole(data.role) === 'dono'); setTimeout(() => boasVindas(), 700); setTimeout(() => boasVindas(), 2500);
   },
   async signUp(name, email, pass) { return this.sb.auth.signUp({ email, password: pass, options: { data: { name } } }); },
   /* entrar com e-mail OU nome de jogo + senha */
@@ -3773,7 +3794,7 @@ const conta = {
 /* ---------------- MOEDAS ----------------
    +5 a cada derrota causada (jogadores e bots; o treino não conta).
    Com conta: ficam no perfil do Supabase. Como convidado: ficam neste aparelho. */
-const COIN_PER_KILL = 5;
+const COIN_PER_KILL = 5, COIN_HK = 2; // HIT KILL: matar é fácil, então rende menos
 const wallet = {
   n: 0, shown: 0, bump: 0,
   sync() { // de onde vêm as moedas: conta ou aparelho
@@ -3841,7 +3862,7 @@ function tagText(tag, cols, dark, str, x, y, size, align = 'left', outline = '#1
 function onKillHook(m) {
   if (!game.me) return;
   // moedas: quem EU derrotei (jogador ou bot), em qualquer modo menos o treino
-  if (m.k === game.me.id && m.v !== game.me.id && game.mode !== 'treino') wallet.add(COIN_PER_KILL, game.byId(m.v));
+  if (m.k === game.me.id && m.v !== game.me.id && game.mode !== 'treino') wallet.add(game.hitkill ? COIN_HK : COIN_PER_KILL, game.byId(m.v));
   if (game.mode !== 'online') return; // só o ONLINE conta para as estatísticas da conta
   if (m.k === game.me.id && m.k !== m.v) { conta.stat(1, 0, 0); if (game.hitkill && typeof actAdd === 'function') actAdd('hk'); }
   if (m.v === game.me.id) conta.stat(0, 1, 0);
@@ -4338,9 +4359,43 @@ document.getElementById('frAddB').onclick = async () => {
   notice(/^AMIGOS:/.test(data) ? nm + ' também tinha te enviado um pedido. Agora vocês são amigos!' : 'Pedido enviado para ' + nm + '!\nQuando ele aceitar, aparece na sua lista.', 'SOCIAL', 'ok'); drawAmigos();
 };
 let convAberto = false, pingN = 0;
+/* ---------- banimento (só donos) ---------- */
+let banTab = 'b';
+async function banDraw() {
+  const L = document.getElementById('banList'); L.innerHTML = '<small class="muted">carregando...</small>';
+  const q = document.getElementById('banIn').value.trim();
+  if (banTab === 'b' && !q) { L.innerHTML = '<small class="muted">Digite o nome exato do jogador e toque em BUSCAR.</small>'; return; }
+  const { data, error } = banTab === 'b' ? await conta.sb.rpc('admin_find', { q }) : await conta.sb.rpc('admin_bans');
+  if (error) { L.innerHTML = ''; return notice(/SO_DONO/.test(error.message) ? 'Só donos podem usar isso.' : /function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'BANIR', 'err'); }
+  L.innerHTML = (data || []).length ? '' : '<small class="muted">' + (banTab === 'b' ? 'Nenhum jogador com esse nome exato.' : 'Nenhum jogador banido.') + '</small>';
+  for (const u of data || []) {
+    const r = document.createElement('div'); r.className = 'banrow' + (u.banido ? ' ban' : '');
+    r.innerHTML = '<div><b>' + esc(dispName(u.name || '?')) + '</b><small>' + (banTab === 'b' ? esc(u.email || 'sem e-mail') + ' · IP ' + esc(u.ip || '?') + ' · ' + esc(u.role) : 'banido: ' + esc((u.tipos || []).join(', '))) + '</small></div>';
+    const b = document.createElement('button'); b.type = 'button'; const desban = banTab === 'l' || u.banido;
+    b.className = 'b ' + (desban ? 'bOk' : 'bErr'); b.textContent = desban ? 'DESBANIR' : 'BANIR';
+    if (banTab === 'b' && normRole(u.role) === 'dono') { b.disabled = true; b.textContent = 'DONO'; }
+    b.onclick = async () => {
+      if (!desban && !(await msgOpen('BANIR PARA SEMPRE?', 'Banir ' + dispName(u.name) + '?\nA conta, o e-mail, o nome e o IP ficam bloqueados.', '', true, 'BANIR'))) return;
+      wait('...'); const { error: e } = desban ? await conta.sb.rpc('admin_unban', { target: u.id }) : await conta.sb.rpc('admin_ban', { target: u.id, motivo: '' }); unwait();
+      if (e) return notice(/DONO/.test(e.message) ? 'Não dá para banir um dono.' : /VOCE/.test(e.message) ? 'Você não pode se banir.' : e.message, 'BANIR', 'err');
+      notice(dispName(u.name) + (desban ? ' foi desbanido.' : ' foi banido para sempre.'), 'BANIR', 'ok'); banDraw();
+    };
+    r.appendChild(b); L.appendChild(r);
+  }
+}
+function openBan() { if (normRole(conta.perfil && conta.perfil.role) !== 'dono') return; show('banBox', true); banDraw(); }
+setInterval(() => checaBan(), 10000); // banimento cai em até ~10 s, jogando ou no menu
+async function checaBan() {
+  if (!conta.user || !conta.sb || checaBan.on) return; checaBan.on = true;
+  let { data, error } = await conta.sb.rpc('ban_status'); if (error) { const r = await conta.sb.rpc('check_ban'); data = r.data ? 'conta' : null; }
+  checaBan.on = false; if (!data) return;
+  if (game.phase === 'play') game.toMenu0();
+  try { await conta.sb.auth.signOut({ scope: 'local' }); } catch (e) {} conta.setUser(null);
+  notice(data === 'ip' ? 'Alguém usando esta mesma internet (IP) foi banido pelos donos do jogo.\nPor isso, nenhuma conta consegue jogar por esta conexão.' : 'Esta conta foi banida pelos donos do jogo.', 'BANIDO', 'err');
+}
 async function pedidosDot() { if (!conta.user || !conta.sb) return; const { data, error } = await conta.sb.rpc('my_friend_reqs'); show('dotFr', !error && !!data && data.length > 0); }
 setInterval(async () => { // "estou online" + convites recebidos (no menu)
-  if (!conta.user || !conta.sb) return; if ((pingN = (pingN + 1) % 6) === 1) { conta.sb.rpc('ping').then(() => {}, () => {}); pedidosDot(); } // 'estou online' + pedidos a cada 1 min
+  if (!conta.user || !conta.sb) return; if ((pingN = (pingN + 1) % 6) === 1) { conta.sb.rpc('ping').then(() => {}, () => {}); checaBan(); pedidosDot(); } // 'estou online' + pedidos a cada 1 min
   if (convAberto || document.getElementById('menu').classList.contains('hidden')) return;
   const { data, error } = await conta.sb.rpc('my_invites'); if (error || !data || !data.length) return;
   const c = data[data.length - 1]; { const { data: viva, error: e2 } = await conta.sb.from('live_rooms').select('code').eq('code', c.code); if (!e2 && (!viva || !viva.length)) return; } // a sala já fechou: ignora o convite
@@ -4375,6 +4430,7 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.47', d: '12/11', itens: [['mudou', 'HIT KILL: defender não salva, e cada derrota rende menos moedas'], ['novo', 'Transição ao sair da partida'], ['mudou', 'Perdeu a internet: sai da sala'], ['novo', 'Painel de banimento para donos']] },
   { v: '1.0.45', d: '12/11', itens: [['mudou', 'No PC, segure e arraste para rolar qualquer lista'], ['mudou', 'Aviso verde ao remover amigo']] },
   { v: '1.0.44', d: '12/11', itens: [['mudou', 'Avisos de amigos e convites em verde (certo) ou vermelho (erro)'], ['mudou', 'Códigos bloqueados durante a batalha']] },
   { v: '1.0.43', d: '12/11', itens: [['mudou', 'Ícone da moeda no lugar da palavra'], ['mudou', 'Presente de boas-vindas com o aviso das conquistas']] },
@@ -4738,6 +4794,10 @@ game = {
     const msg = { t: 'leave', id: b.me.id }; net.send(msg);
   },
   toMenu(msg) {
+    if (this.phase === 'play' && !this.saindo) { this.saindo = true; transCover(); setTimeout(() => { this.saindo = false; this.toMenu0(msg); transReveal(); }, 480); return; }
+    this.toMenu0(msg);
+  },
+  toMenu0(msg) {
     net.leave(); blindT = 0; this.ended = false; this.timed = false; this.started = false; this.duel = false; this.teams = false; this.hitkill = false; show('results', false); this.phase = 'menu'; this.fighters = []; this.me = null; roomsKey = ''; setMap(chosenMap); renderRooms(); killBadges = []; chatLog = []; closeChat();
     overlay = null; editMode = false; ['pause', 'settings'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById('editbar').classList.add('hidden');
     if (conta.user && conta.perfil) document.getElementById('menu').classList.remove('hidden'); else gate.loggedOut();
@@ -4836,6 +4896,7 @@ function dragScroll(el) {
   addEventListener('pointerup', () => { if (!el) return; el = null; setTimeout(() => document.body.classList.remove('arrasta'), 0); });
   addEventListener('click', e => { if (moved > 5) { e.stopPropagation(); e.preventDefault(); moved = 0; } }, true);
 })();
+addEventListener('offline', () => { if (game.phase === 'play' && game.mode === 'online') game.toMenu('Você perdeu a conexão e saiu da sala.'); });
 /* SLOTS: até 3 personagens montados (visual + cores + arquétipo). O slot escolhido é o que entra na luta. */
 const SLOT_N = 3;
 const cleanFxc = c => ({ a: c && okHex(c.a) ? c.a : '', k: c && okHex(c.k) ? c.k : '' });
@@ -5205,8 +5266,8 @@ function buildMenu() {
     if (!/^[A-Z]{4}$/.test(code)) { setStatus('Digite o código da sala (4 letras).'); return; }
     net.myName = playerName();
     net.roomPw = String(pw || '').trim().slice(0, 12);
-    setStatus(''); busy = true; wait('entrando na sala ' + code + '...'); transCover();
-    net.joinRoom(code, () => { busy = false; unwait(); setStatus(''); show('pwBox', false); game.start('online'); }, err => {
+    setStatus(''); busy = true; wait('entrando na sala ' + code + '...');
+    net.joinRoom(code, () => { busy = false; unwait(); setStatus(''); transCover(); setTimeout(() => { show('pwBox', false); game.start('online'); }, 480); }, err => {
       busy = false; unwait(); net.close(); transHide();
       if (err === 'SENHA' || err === 'SENHA_ERRADA') { setStatus(''); askPw(code, err === 'SENHA_ERRADA' ? 'Senha errada. Confira com o anfitrião.' : ''); }
       else if (err === 'NOME') { show('pwBox', false); setStatus('Já tem um jogador chamado "' + dispName(net.myName) + '" nessa sala.'); }
@@ -5216,7 +5277,7 @@ function buildMenu() {
   /* janela da senha (o texto aparece enquanto digita) */
   let pwCode = '';
   const askPw = (code, msg) => {
-    pwCode = code; if (msg) notice(msg, 'SENHA');
+    pwCode = code; if (msg) notice(msg, 'SENHA', 'err');
     document.getElementById('pwSub').textContent = 'Sala ' + code + ' · digite a senha que o anfitrião passou';
     show('pwBox', true); const i = document.getElementById('pwIn'); if (!msg) i.value = ''; setTimeout(() => { i.focus(); i.select(); }, 50);
   };
@@ -5374,6 +5435,7 @@ function closePause() { overlay = null; show('pause', false); updateTouchUI(); }
 function openSettings(from) {
   settingsBack = from; show('bAcc', from === 'menu'); show('bDelAcc', from === 'menu'); show('menu', false); show('pause', false); show('settings', true);
   if (game.phase === 'play') overlay = 'settings';
+  const bc = document.getElementById('bCode'); bc.disabled = game.phase === 'play'; bc.classList.toggle('off', bc.disabled);
   syncSettingsUI(); updateTouchUI();
 }
 function closeSettings() {
@@ -5421,6 +5483,9 @@ function setupTouch() {
   document.getElementById('rOp').addEventListener('input', e => { settings.op = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
   document.getElementById('bEdit').onclick = startEdit;
   document.getElementById('bCode').onclick = useCode;
+  document.getElementById('bBan').onclick = openBan; document.getElementById('banGo').onclick = () => { banTab = 'b'; document.querySelectorAll('#banTabs button').forEach(x => x.classList.toggle('on', x.dataset.t === 'b')); banDraw(); };
+  document.getElementById('banIn').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('banGo').click(); });
+  document.querySelectorAll('#banTabs button').forEach(b => b.onclick = () => { banTab = b.dataset.t; document.querySelectorAll('#banTabs button').forEach(x => x.classList.toggle('on', x === b)); banDraw(); });
   document.getElementById('bReset').onclick = () => { settings.size = 100; settings.op = 100; settings.btn = {}; saveSettings(); syncSettingsUI(); layoutButtons(); };
   document.getElementById('bBack').onclick = closeSettings;
   document.getElementById('eDone').onclick = finishEdit;
