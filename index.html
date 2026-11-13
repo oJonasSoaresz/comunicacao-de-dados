@@ -825,7 +825,7 @@
   /* ===== R35 ===== */
   .mhero::after{bottom:0!important}
   .lvtrail{scroll-behavior:auto!important}
-  .play .mb:not(.big)::before{background:repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 9px,transparent 9px 22px)!important}
+  .play .mb:not(.big)::before{background:repeating-linear-gradient(135deg,rgba(255,255,255,.02) 0 9px,transparent 9px 22px)!important}
   .rkrow.t1,.rkrow.t2,.rkrow.t3{border-color:#3e2d78!important}
   .rkrow.me{border-color:#5dff8a!important}
   .mlv u,.rwbar u,#lvXpB{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.14) 0 5px,transparent 5px 11px),linear-gradient(90deg,#38d6ff,#7b5cff)!important}
@@ -989,6 +989,32 @@
   .voa{position:fixed;z-index:9999;pointer-events:none;width:26px!important;height:26px!important}
   .voa.xpi{width:auto!important;height:auto!important}
   .mlv u{transition:width .7s .55s ease-out}
+
+  /* R42: popup padrão — ok / err / gold, raios fortes */
+  .mrays{width:860px!important;height:860px!important;margin:-430px 0 0 -430px!important;background:repeating-conic-gradient(rgba(255,178,30,.16) 0 9deg,transparent 9deg 18deg)}
+  .k-ok .mrays{background:repeating-conic-gradient(rgba(93,255,138,.16) 0 9deg,transparent 9deg 18deg)}
+  .k-err .mrays{background:repeating-conic-gradient(rgba(255,77,106,.16) 0 9deg,transparent 9deg 18deg)}
+  #msgForm.k-ok{border-color:#5dff8a!important;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(93,255,138,.4)!important}
+  #msgForm.k-err{border-color:#ff4d6a!important;box-shadow:0 0 0 3px #0b0618,0 0 40px rgba(255,77,106,.4)!important}
+  .k-ok .mbadge{background:radial-gradient(circle at 40% 35%,#6dffa0,#1f9a55)!important;border-color:#c9ffdc!important;box-shadow:0 0 0 3px #0b0618,0 0 18px rgba(93,255,138,.6)!important}
+  .k-ok .mbadge::after{content:''!important;width:14px;height:26px;border:solid #0c2a18;border-width:0 6px 6px 0;transform:rotate(45deg);margin-top:-6px}
+  .k-err .mbadge{background:radial-gradient(circle at 40% 35%,#ff7a8a,#b3152f)!important;border-color:#ffd0d6!important;box-shadow:0 0 0 3px #0b0618,0 0 18px rgba(255,77,106,.6)!important}
+  .k-err .mbadge::after{content:''!important}
+  .k-err .mbadge::before,.k-err .mbadge::after{position:absolute;left:50%;top:50%;width:32px;height:7px;margin:-3.5px 0 0 -16px;background:#3a0010;border-radius:3px;transform:rotate(45deg)}
+  .k-err .mbadge::before{content:'';transform:rotate(-45deg)}
+  .k-err .title b{color:#ff6b80!important;text-shadow:0 3px 0 #6a0016,2px 2px 0 #000!important}
+  .k-ok .title b{color:#5dff8a!important;text-shadow:0 3px 0 #0c4a22,2px 2px 0 #000!important}
+  .k-gold .mbadge{background:var(--coin) center/contain no-repeat!important;border:0!important;box-shadow:none!important;border-radius:0!important;filter:drop-shadow(0 0 16px rgba(255,190,40,.8));width:84px!important;height:84px!important}
+  .k-gold .mbadge::after{content:''!important}
+  .unlk .unlk-in b i.coin.tc{width:34px!important;height:34px!important;vertical-align:-8px;margin:0 2px}
+  #msgForm.k-gold{border-color:#ffb21e!important}
+  .msgc .bvn{color:#ffcf3a;font-weight:normal}
+  .unlk-in{width:min(86%,440px);box-sizing:border-box;text-align:center}
+  .lvray2{width:1300px!important;height:1300px!important;margin:-650px 0 0 -650px!important;background:repeating-conic-gradient(rgba(255,178,30,.16) 0 9deg,transparent 9deg 18deg)!important;-webkit-mask:radial-gradient(circle,#000 20%,transparent 60%)!important;mask:radial-gradient(circle,#000 20%,transparent 60%)!important}
+
+  /* R44: cores por tipo — ok verde, erro vermelho */
+  button.bOk{background:linear-gradient(#5dff8a,#1f9a55)!important;color:#0c2a18!important;border-color:#c9ffdc!important}
+  button.bErr{background:linear-gradient(#ff7a8a,#b3152f)!important;color:#fff!important;border-color:#ffd0d6!important}
 </style>
 </head>
 <body>
@@ -1026,7 +1052,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.41</div>
+      <div class="ver">v1.0.44</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -3819,6 +3845,7 @@ function onKillHook(m) {
 function applyProfile(p) {
   if (p.look && Array.isArray(p.look.slots)) setSlots(p.look.slots, p.look.cur);
   else if (p.look && Object.keys(p.look).length) setSlots([{ look: p.look, fxc: p.fxc, arq: 'eq' }], 0); // conta antiga: vira o slot 1
+  else setSlots([], 0); // conta nova: personagem base
   try { localStorage.setItem('adk_slots', JSON.stringify({ cur: slotCur, slots })); } catch (e) {}
 }
 function renderConta() {
@@ -3930,28 +3957,29 @@ const shop = {
       wallet.sync(); tone('square', 990, 1480, 0.12, 0.1);
     } catch (e) {
       const m = String(e && e.message || e);
-      notice(/SEM_MOEDAS/.test(m) ? 'Moedas insuficientes.' : /buy_item|function|schema cache/i.test(m) ? 'A loja ainda não está ligada no servidor (falta rodar o arena-de-ki-supabase-COMPLETO.sql no Supabase).' : 'Não deu para comprar: ' + m, 'LOJA');
+      if (/SEM_MOEDAS/.test(m)) semMoedas(0); else notice( /buy_item|function|schema cache/i.test(m) ? 'A loja ainda não está ligada no servidor (falta rodar o arena-de-ki-supabase-COMPLETO.sql no Supabase).' : 'Não deu para comprar: ' + m, 'LOJA');
     } finally { unwait(); if (custOpen) buildCustomPanel(); }
   },
 };
-const codeOk = sub => fxPanel({ cor: 'ok', box: document.getElementById('wrap'), titulo: 'CÓDIGO ATIVADO!', sub, tempo: 1900 });
-const codeErr = sub => fxPanel({ cor: 'err', box: document.getElementById('wrap'), seal: '<span class="xx"></span>', titulo: 'CÓDIGO INVÁLIDO!', sub, tempo: 2200 });
+const codeOk = sub => msgOpen('CÓDIGO ATIVADO!', { kind: 'ok', html: '<span class="preco">' + sub + '</span>' });
+const codeErr = sub => msgOpen('CÓDIGO INVÁLIDO!', { kind: 'err', html: sub });
 async function useCode() {
+  if (game.phase === 'play' || game.phase === 'loading') return notice('Não dá para usar código durante a batalha.', 'CÓDIGO', 'err');
   const c = await ask('CÓDIGO', 'Digite um código especial:', 'código');
   if (!c || !c.trim()) return;
-  if (c.trim().toLowerCase() === 'reset' && !(await msgOpen('RESETAR A CONTA?', 'Isso apaga moedas, itens comprados, personagens e estatísticas. Não dá para desfazer.', '', true))) return;
+  if (c.trim().toLowerCase() === 'reset' && !(await msgOpen('RESETAR A CONTA?', { html: 'Isso apaga ' + COINI + ', itens comprados, personagens e estatísticas. Não dá para desfazer.' }, '', true))) return;
   wait('conferindo o código...');
   try {
     const { data, error } = await conta.sb.rpc('redeem_code', { code: c.trim() });
     unwait();
     if (error) throw error;
-    if (data === 'infinite') { conta.perfil.infinite = true; renderCoins(); codeOk('Moedas infinitas: todos os itens liberados!'); }
+    if (data === 'infinite') { conta.perfil.infinite = true; renderCoins(); codeOk('∞ ' + COINI + ' · tudo liberado!'); }
     else if (/^coins:\d+$/.test(data || '')) { const n = +data.slice(6); conta.perfil.coins = (conta.perfil.coins || 0) + n; conta.perfil.coins -= n; moedasGanhas(n); codeOk('+' + n + ' ' + COINI); }
     else if (/^xp:\d+$/.test(data || '')) { const n = +data.slice(3); conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + n; renderConta(); voar('x', n); codeOk('+' + n + ' ' + XPI); lvShown = 0; setTimeout(checkLevel, 600); }
     else if (data === 'reset') { // conta zerada: tudo volta ao começo
       conta.pend = { k: 0, d: 0, m: 0, c: 0, act: {} }; conqs = null; dly = null; pegos.clear(); conqPegas.clear(); lvShown = 0; bvVisto = false; show('dotAch', false); try { localStorage.removeItem('adk_slots'); } catch (e) {}
       setSlots([], 0); Object.assign(conta.perfil, { coins: 0, owned: [], infinite: false, kills: 0, deaths: 0, matches: 0, look: {}, fxc: {}, xp_bonus: 0, lvl_got: 1 });
-      wallet.sync(); renderConta(); codeOk('Conta resetada: tudo voltou ao começo!'); setTimeout(() => { refreshDaily(); boasVindas(); }, 800);
+      wallet.sync(); renderConta(); codeOk('Tudo voltou ao começo!').then(() => { refreshDaily(); boasVindas(); });
     }
     else codeErr('Esse código não existe ou já foi usado.');
   } catch (e) { unwait(); notice(/redeem_code|function|schema cache|column|coins|infinite|owned/i.test(String(e && e.message)) ? 'O banco do jogo está desatualizado. Rode o arquivo arena-de-ki-supabase-COMPLETO.sql no Supabase.\n(' + String(e && e.message) + ')' : 'Não deu para usar o código: ' + String(e && e.message), 'CÓDIGO'); }
@@ -4231,9 +4259,14 @@ let lvShown = 0;
 let bvVisto = false, bvBusca = false; // boas-vindas: 150 moedas na primeira vez
 async function boasVindas() {
   if (bvVisto || bvBusca || !conta.user || !conta.perfil || !document.getElementById('lvBox').classList.contains('hidden')) return; bvBusca = true;
-  const { data, error } = await conta.sb.rpc('welcome_pending'); bvBusca = false; if (error || !data || bvVisto) return; bvVisto = true; show('lvBox', false);
-  fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<i class="coin"></i>', titulo: 'BEM-VINDO!', sub: 'Tome 150 moedas para comprar<br>seu primeiro item e cor!', btn: 'PEGAR +150 <i class="coin"></i>',
-    onBtn: async inn => { const r = await conta.sb.rpc('claim_welcome'); if (!r.error) { moedasGanhas(r.data); premioFx(inn, r.data, 0, 'PRESENTE!'); } setTimeout(() => { lvShown = 0; checkLevel(); }, 1900); } });
+  const { data, error } = await conta.sb.rpc('welcome_pending'); bvBusca = false; if (error || !data || bvVisto) return;
+  if (!document.getElementById('msgBox').classList.contains('hidden') || document.getElementById('menu').classList.contains('hidden')) { setTimeout(boasVindas, 1500); return; }
+  bvVisto = true; show('lvBox', false);
+  const ok = await msgOpen('BEM-VINDO!', { kind: 'gold', html: 'Tome <b class="bvn">150 <i class="coin"></i></b> para comprar<br>seu primeiro item e cor!' }, '', false, 'RESGATAR');
+  if (!ok) { bvVisto = false; return; }
+  const r = await conta.sb.rpc('claim_welcome'); if (r.error) return;
+  const mb = document.querySelector('#menu .card'); premioFx(mb, r.data, 0, 'PRESENTE!'); moedasGanhas(r.data); await new Promise(z => setTimeout(z, 1700));
+  lvShown = 0; checkLevel();
 }
 function abrirNiveis() { // trilha de níveis (rola para os lados), parada no nível atual
   const p = conta.perfil; if (!p) return; const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4 + (p.xp_bonus | 0), lv = lvOf(K, M, p.xp_bonus | 0), got = p.lvl_got | 0 || 1;
@@ -4251,7 +4284,7 @@ function abrirNiveis() { // trilha de níveis (rola para os lados), parada no n�
 function checkLevel() {
   const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
   const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0);
-  if (document.querySelector('.unlk.gold')) return;
+  if (document.querySelector('#msgForm.k-gold') && !document.getElementById('msgBox').classList.contains('hidden')) return;
   if (lv <= (p.lvl_got | 0) || lv <= lvShown || document.getElementById('menu').classList.contains('hidden')) return;
   lvShown = lv; document.getElementById('lvT').textContent = lv; document.getElementById('lvP').textContent = lvPrize(p.lvl_got | 0, lv); show('lvBox', true);
 }
@@ -4273,7 +4306,7 @@ async function drawAmigos() {
   if (pedidos.length) { const h = document.createElement('h4'); h.className = 'rwh'; h.textContent = 'PEDIDOS DE AMIZADE (' + pedidos.length + ')'; L.appendChild(h);
     for (const q of pedidos) { const r = document.createElement('div'); r.className = 'rkrow frrow pedido';
       r.innerHTML = '<b>' + (TAGS[normRole(q.role)] ? tagCanvas(normRole(q.role)) : '') + '<span>' + esc(dispName(q.name)) + '</span></b>';
-      const resp = ok => async () => { r.querySelectorAll('button').forEach(b => b.disabled = true); const { error: e } = await conta.sb.rpc('answer_friend_req', { f: q.id, ok }); if (e) return notice(erroRecompensa(e), 'SOCIAL'); if (ok) notice(dispName(q.name) + ' agora é seu amigo!', 'SOCIAL'); drawAmigos(); };
+      const resp = ok => async () => { r.querySelectorAll('button').forEach(b => b.disabled = true); const { error: e } = await conta.sb.rpc('answer_friend_req', { f: q.id, ok }); if (e) return notice(erroRecompensa(e), 'SOCIAL', 'err'); if (ok) notice(dispName(q.name) + ' agora é seu amigo!', 'SOCIAL', 'ok'); drawAmigos(); };
       const a = document.createElement('button'); a.type = 'button'; a.className = 'b pri frb'; a.textContent = 'ACEITAR'; a.onclick = resp(true);
       const n = document.createElement('button'); n.type = 'button'; n.className = 'b frb frx'; n.textContent = 'RECUSAR'; n.onclick = resp(false);
       r.appendChild(a); r.appendChild(n); L.appendChild(r); } }
@@ -4282,7 +4315,7 @@ async function drawAmigos() {
   for (const f of data) { const r = document.createElement('div'); r.className = 'rkrow frrow';
     r.innerHTML = '<span class="on' + (f.online ? ' y' : '') + '" title="' + (f.online ? 'online' : 'offline') + '"></span><b>' + (TAGS[normRole(f.role)] ? tagCanvas(normRole(f.role)) : '') + '<span>' + esc(dispName(f.name)) + '</span></b>';
     if (naSala) { const c = document.createElement('button'); c.type = 'button'; c.className = 'b pri frb'; c.textContent = 'CONVIDAR';
-      c.onclick = async () => { c.disabled = true; const { error: e } = await conta.sb.rpc('invite_friend', { f: f.id, code: net.code, pw: net.roomPw || '' }); c.textContent = e ? 'ERRO' : 'ENVIADO ✓'; if (e) c.disabled = false; }; r.appendChild(c); }
+      c.onclick = async () => { c.disabled = true; const { error: e } = await conta.sb.rpc('invite_friend', { f: f.id, code: net.code, pw: net.roomPw || '' }); c.textContent = e ? 'ERRO' : 'ENVIADO ✓'; c.classList.add(e ? 'bErr' : 'bOk'); if (e) { c.disabled = false; notice('Não deu para enviar o convite.', 'CONVITE', 'err'); } }; r.appendChild(c); }
     const x = document.createElement('button'); x.type = 'button'; x.className = 'b frb frx'; x.textContent = 'REMOVER';
     x.onclick = async () => { if (!(await msgOpen('AMIGOS', 'Remover ' + dispName(f.name) + ' da sua lista?', '', true, 'REMOVER'))) return; await conta.sb.rpc('remove_friend', { f: f.id }); drawAmigos(); };
     r.appendChild(x); L.appendChild(r); }
@@ -4296,9 +4329,9 @@ document.getElementById('frAddB').onclick = async () => {
   const n = document.getElementById('frName').value.trim(); if (!n) return;
   wait('enviando...'); const { data, error } = await conta.sb.rpc('send_friend_req', { fname: n }); unwait();
   if (error) { const t = error.message, h = /ESPERE:(\d+)/.exec(t);
-    return notice(/NAO_ACHEI/.test(t) ? 'Não achei nenhum jogador com esse nome.' : /VOCE/.test(t) ? 'Esse é você! 😄' : /JA_AMIGO/.test(t) ? 'Vocês já são amigos.' : h ? 'Você já enviou um pedido para esse jogador.\nPode enviar de novo em ' + h[1] + 'h.' : erroRecompensa(error), 'SOCIAL'); }
+    return notice(/NAO_ACHEI/.test(t) ? 'Não achei nenhum jogador com esse nome.' : /VOCE/.test(t) ? 'Esse é você! 😄' : /JA_AMIGO/.test(t) ? 'Vocês já são amigos.' : h ? 'Você já enviou um pedido para esse jogador.\nPode enviar de novo em ' + h[1] + 'h.' : erroRecompensa(error), 'SOCIAL', 'err'); }
   document.getElementById('frName').value = ''; const nm = dispName(String(data).replace(/^\w+:/, ''));
-  notice(/^AMIGOS:/.test(data) ? nm + ' também tinha te enviado um pedido. Agora vocês são amigos!' : 'Pedido enviado para ' + nm + '!\nQuando ele aceitar, aparece na sua lista.', 'SOCIAL'); drawAmigos();
+  notice(/^AMIGOS:/.test(data) ? nm + ' também tinha te enviado um pedido. Agora vocês são amigos!' : 'Pedido enviado para ' + nm + '!\nQuando ele aceitar, aparece na sua lista.', 'SOCIAL', 'ok'); drawAmigos();
 };
 let convAberto = false, pingN = 0;
 async function pedidosDot() { if (!conta.user || !conta.sb) return; const { data, error } = await conta.sb.rpc('my_friend_reqs'); show('dotFr', !error && !!data && data.length > 0); }
@@ -4313,11 +4346,11 @@ setInterval(async () => { // "estou online" + convites recebidos (no menu)
 }, 10000);
 /* ---------- excluir conta ---------- */
 document.getElementById('bDelAcc').onclick = async () => {
-  const t = await msgOpen('EXCLUIR CONTA', 'Isso apaga para sempre sua conta, moedas, itens, missões e amigos.\n\nPara confirmar, digite EXCLUIR:', 'EXCLUIR', true, 'EXCLUIR CONTA');
+  const t = await msgOpen('EXCLUIR CONTA', { html: 'Isso apaga para sempre sua conta, ' + COINI + ', itens, missões e amigos.<br><br>Para confirmar, digite EXCLUIR:' }, 'EXCLUIR', true, 'EXCLUIR CONTA');
   if (t == null || t === false) return; if (String(t).trim().toUpperCase() !== 'EXCLUIR') return notice('Conta NÃO excluída. Era preciso digitar EXCLUIR.', 'EXCLUIR CONTA');
   wait('excluindo...'); const { error } = await conta.sb.rpc('delete_account'); unwait();
   if (error) return notice(/function|does not exist|schema/i.test(error.message) ? 'Exclusão ainda não ligada no servidor. Rode o SQL COMPLETO de novo.' : error.message, 'EXCLUIR CONTA');
-  try { localStorage.removeItem('adk_slots'); } catch (e) {}
+  try { ['adk_slots', 'adk_look', 'adk_fxc'].forEach(k => localStorage.removeItem(k)); } catch (e) {} setSlots([], 0);
   try { await conta.sb.auth.signOut({ scope: 'local' }); } catch (e) {}
   await msgOpen('CONTA EXCLUÍDA', 'Sua conta foi apagada. Até a próxima!'); location.reload();
 };
@@ -4338,6 +4371,9 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.44', d: '12/11', itens: [['mudou', 'Avisos de amigos e convites em verde (certo) ou vermelho (erro)'], ['mudou', 'Códigos bloqueados durante a batalha']] },
+  { v: '1.0.43', d: '12/11', itens: [['mudou', 'Ícone da moeda no lugar da palavra'], ['mudou', 'Presente de boas-vindas com o aviso das conquistas']] },
+  { v: '1.0.42', d: '12/11', itens: [['mudou', 'Códigos e boas-vindas no popup padrão'], ['mudou', 'Luz girando atrás do popup de nível'], ['mudou', 'Conta nova ou excluída volta ao personagem base']] },
   { v: '1.0.41', d: '12/11', itens: [['novo', 'Moedas e XP voam até o mostrador quando você ganha'], ['mudou', 'Códigos com aviso verde (ativado) ou vermelho (inválido)'], ['mudou', 'Popup de nível com luz girando atrás'], ['mudou', 'Boas-vindas aparece logo ao criar a conta']] },
   { v: '1.0.40', d: '12/11', itens: [['novo', 'Boas-vindas: 150 moedas para o primeiro item'], ['mudou', 'Aviso de moedas insuficientes no estilo do desbloqueio'], ['mudou', 'Resgate da diária e do nível com o mesmo aviso das conquistas'], ['mudou', 'Nível não resgatado aparece de novo ao voltar ao menu']] },
   { v: '1.0.39', d: '12/11', itens: [['mudou', 'Popups no estilo do DESBLOQUEADO, com luz girando atrás'], ['mudou', 'Janela de compra abre sempre; sem moedas só ao tentar comprar'], ['mudou', 'Barra de nível arredondada']] },
@@ -4605,7 +4641,7 @@ function endDuel(wid) {
   closeChat(); show('pause', false); show('settings', false); overlay = 'results'; for (const k in keys) keys[k] = false;
   document.getElementById('resList').innerHTML = ds.sort((a, b) => (sc[b.id] || 0) - (sc[a.id] || 0)).map((f, i) =>
     `<div class="rrow${f === me ? ' me' : ''}"><span class="pos">${f.id === wid ? '🏆' : ''}</span><span>${esc(dispName(f.name))}${f === me ? ' (você)' : ''}</span><span class="k">${sc[f.id] || 0} round${(sc[f.id] || 0) === 1 ? '' : 's'}</span><span class="pz">${f.id === wid ? '+' + DUEL_PRIZE + ' 🪙' : '—'}</span></div>`).join('');
-  document.getElementById('resPrize').textContent = wid === me.id ? 'Você venceu o duelo! +' + DUEL_PRIZE + ' moedas' : 'Você perdeu o duelo. Na próxima é sua!';
+  document.getElementById('resPrize').innerHTML = wid === me.id ? 'Você venceu o duelo! +' + DUEL_PRIZE + ' ' + COINI : 'Você perdeu o duelo. Na próxima é sua!';
   document.querySelector('#results .title b').textContent = 'FIM DO DUELO';
   show('results', true); updateTouchUI(); tone('square', 660, 990, 0.15, 0.12);
 }
@@ -4634,8 +4670,8 @@ function endMatch() {
     const pz = prizeOf(f);
     return `<div class="rrow${f === me ? ' me' : ''}"><span class="pos">${i + 1}º</span><span>${esc(dispName(f.name))}${f === me ? ' (você)' : ''}</span><span class="k">${f.kills} derrota${f.kills === 1 ? '' : 's'}</span><span class="pz">${pz ? '+' + pz + ' 🪙' : '—'}</span></div>`;
   }).join('');
-  document.getElementById('resPrize').textContent = mine ? `Você ficou em ${pos + 1}º e ganhou ${mine} moedas!`
-    : pos < 3 && me.kills === 0 ? 'Sem derrotas causadas, sem moedas. Na próxima, parta pra cima!' : `Você ficou em ${pos + 1}º.`;
+  document.getElementById('resPrize').innerHTML = mine ? `Você ficou em ${pos + 1}º e ganhou ${mine} ${COINI}!`
+    : pos < 3 && me.kills === 0 ? 'Sem derrotas causadas, sem ' + COINI + '. Na próxima, parta pra cima!' : `Você ficou em ${pos + 1}º.`;
   show('results', true); updateTouchUI(); tone('square', 660, 990, 0.15, 0.12); setTimeout(() => tone('square', 990, 1480, 0.25, 0.12), 140);
 }
 game = {
@@ -4722,8 +4758,8 @@ function msgOpen(title, text, input, cancel, okLabel) {
     setTimeout(() => (input ? inp : document.getElementById('msgOk')).focus(), 60);
   });
 }
-const notice = (text, title = 'AVISO') => msgOpen(title, text, '', false);
-function semMoedas(falta) { fxPanel({ cor: 'err', seal: '<span class="xx"></span>', titulo: 'MOEDAS INSUFICIENTES!', sub: 'faltam ' + falta + ' <i class="coin"></i>', tempo: 2200 }); }
+const notice = (text, title = 'AVISO', kind) => msgOpen(title, kind ? { kind, html: esc(String(text)).replace(/\n/g, '<br>') } : text, '', false);
+function semMoedas(falta) { fxPanel({ cor: 'err', seal: '<span class="xx"></span>', titulo: 'SEM MOEDAS!', sub: falta > 0 ? 'faltam ' + falta + ' <i class="coin"></i>' : '', tempo: 2200 }); }
 /* popup com os personagens criados para escolher a transformação */
 function pickTrans() {
   const box = document.getElementById('msgList'); box.innerHTML = '';
@@ -4801,7 +4837,7 @@ try {
   if (o && Array.isArray(o.slots)) setSlots(o.slots, o.cur);
   else { // versão antiga: o visual salvo vira o slot 1
     const l = JSON.parse(localStorage.getItem('adk_look') || 'null'), c = JSON.parse(localStorage.getItem('adk_fxc') || 'null');
-    setSlots([{ look: l || newSlot().look, fxc: c, arq: 'eq' }], 0);
+    setSlots([], 0); try { localStorage.removeItem('adk_look'); localStorage.removeItem('adk_fxc'); } catch (e) {}
   }
 } catch (e) { setSlots([], 0); }
 function useSlot(i) { if (typeof revertLocked === 'function') revertLocked(); storeSlot(); slotCur = i; loadSlot(); custOk = null; if (typeof offerBuy === 'function') offerBuy(''); saveLook(); }
