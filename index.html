@@ -1080,6 +1080,51 @@
   body.lite .ovl{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
   .set.tgl{display:flex;align-items:center;gap:10px}.set.tgl label{flex:1;display:flex;flex-direction:column;gap:4px}.set.tgl small{color:var(--muted);font-size:calc(var(--fS) * .85);line-height:1.5}
   .b.sw{min-width:9em}.b.sw.on{background:linear-gradient(#5dff8a,#1f9a55)!important;color:#0c2a18!important;border-color:#c9ffdc!important}
+
+  /* R58: passe, temporada, títulos e baú */
+  .mpass{position:absolute;right:calc(var(--wh,600px) * .145);top:calc(100% + 8px);display:grid;grid-template-columns:auto auto 1fr;grid-template-rows:auto auto;column-gap:10px;row-gap:4px;align-items:center;padding:4px 12px;
+    background:#22163f repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 10px,transparent 10px 24px);border:3px solid #ffb21e;border-radius:14px;color:#fff;font-family:inherit;cursor:pointer;box-shadow:0 0 0 2px #0b0618,0 4px 0 #7a4600;min-width:calc(var(--wh,600px) * .5)}
+  .mpass .mpl{color:#ffcf3a;font-size:var(--fS);letter-spacing:2px;text-shadow:2px 2px 0 #000}
+  .mpass .mpn{font-size:var(--fS);color:#fff;justify-self:end}
+  .mpass .mpdiv,.divc,.pdiv{font-size:calc(var(--fS) * .85);color:var(--dc,#d58a4a);border:2px solid var(--dc,#d58a4a);border-radius:999px;padding:2px 8px;letter-spacing:1px;background:rgba(0,0,0,.35);justify-self:start}
+  .mpass .mpbar{grid-column:1/-1;height:6px;background:#120b26;border:2px solid #3e2d78;border-radius:999px;overflow:hidden;display:block}
+  .mpass .mpbar u{display:block;height:100%;background:linear-gradient(90deg,#ffb21e,#ffe07a);border-radius:999px}
+  .mpass .dot{position:absolute;top:-6px;right:-6px}
+  .mtit{display:block;color:#ffcf3a;font-size:calc(var(--wh,600px) * .02);margin:-2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ptop{display:flex;align-items:center;gap:14px;background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:14px;padding:10px 14px}
+  .ptop .pdiv{font-size:var(--fB);padding:8px 12px}
+  .ptop .pinfo{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}.ptop .pinfo b{color:#ffcf3a;font-weight:normal;font-size:var(--fB)}.ptop small{color:var(--muted);font-size:calc(var(--fS) * .85)}
+  #passList{max-height:calc(var(--wh,600px) * .4);overflow-y:auto}
+  .rwrow.pass .pnv{flex:0 0 auto;width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#120b26;border:2px solid #3e2d78;color:#fff;font-size:var(--fS)}
+  .rwrow.pass.esp{border-color:#ffb21e;background:#2a1a4a repeating-linear-gradient(135deg,rgba(255,207,58,.06) 0 10px,transparent 10px 24px)}
+  .rwrow.pass.esp .pnv{border-color:#ffb21e;color:#ffcf3a}
+  .rwrow.pass small,.rwrow.titr small{color:var(--muted);font-size:calc(var(--fS) * .85);display:block;margin-top:4px}
+  .rwrow.titr .tnm{color:#ffcf3a}.rwrow.titr.lk{opacity:.6}
+  .rkme{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#1d1438;border:2px solid #3e2d78;border-radius:12px;font-size:var(--fS)}.rkme b{color:#ffcf3a;font-weight:normal}
+  .rkrow .divc{flex:0 0 auto}
+  .rkrow .selo{font-style:normal;color:#ffcf3a;font-size:calc(var(--fS) * .8);margin-left:6px}
+  .chest{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:14px}
+  .chest.pronto{border-color:#ffb21e;box-shadow:0 0 18px rgba(255,178,30,.25)}
+  .chest .chico{font-size:calc(var(--fB) * 2.2);filter:drop-shadow(0 2px 0 #000)}
+  .chest .chi{flex:1;display:flex;flex-direction:column;gap:4px}.chest .chi b{color:#ffcf3a;font-weight:normal;font-size:var(--fB)}.chest .chi small{color:var(--muted);font-size:calc(var(--fS) * .85)}
+  .chico.treme{animation:chtreme .12s linear infinite}
+  @keyframes chtreme{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg) scale(1.1)}75%{transform:rotate(12deg) scale(1.1)}}
+  .chraro{font-size:52px}
+
+  /* R60: popup com largura fixa; texto quebra dentro */
+  #msgForm.msgc{width:min(90%,440px)!important;max-width:min(90%,440px)!important;box-sizing:border-box}
+  .msgc .preco{width:auto!important;max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere;text-align:center;line-height:1.6}
+  .msgc #msgText,.msgc .mtxt{overflow-wrap:anywhere}
+  .unlk-in small{overflow-wrap:anywhere}
+  /* "mais" em qualquer lista com mais coisa embaixo */
+  .gmore{bottom:auto!important}
+  .gfade{bottom:auto!important;right:auto!important;border-radius:0 0 10px 10px}
+  .ovl .card{position:relative}
+  /* prévia do item ganho */
+  .unlk-seal.prev{width:96px!important;height:96px!important;border-radius:18px!important;background:#120b26!important;border:3px solid #ffb21e!important;box-shadow:0 0 0 3px #0b0618,0 0 22px rgba(255,178,30,.6)!important;display:flex;align-items:center;justify-content:center}
+  .unlk-seal.prev img{width:84px;height:84px;image-rendering:pixelated}
+  .ownrow{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:12px}
+  .ownrow div{flex:1;display:flex;flex-direction:column;gap:4px}.ownrow b{font-weight:normal;color:#fff;font-size:var(--fB)}.ownrow small{color:var(--muted);font-size:calc(var(--fS) * .85)}
 </style>
 </head>
 <body>
@@ -1117,7 +1162,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.56</div>
+      <div class="ver">v1.0.61</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1229,7 +1274,7 @@
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('banBox', false)"></button>
       <div class="title"><b>PAINEL DO DONO</b><small>banimentos e códigos · só donos</small></div>
       <div class="banq"><input id="banIn" type="text" maxlength="40" placeholder="nome exato do jogador" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button type="button" class="b pri" id="banGo">BUSCAR</button></div>
-      <div class="tabs2" id="banTabs"><button type="button" class="on" data-t="b">BANIR</button><button type="button" data-t="l">BANIDOS</button><button type="button" data-t="c">CÓDIGOS</button></div>
+      <div class="tabs2" id="banTabs"><button type="button" class="on" data-t="b">BANIR</button><button type="button" data-t="l">BANIDOS</button><button type="button" data-t="c">CÓDIGOS</button><button type="button" data-t="o">OPÇÕES</button></div>
       <div id="cgForm" class="cgform hidden">
         <div class="cgl"><input id="cgCode" type="text" maxlength="20" placeholder="código (vazio = aleatório)" autocomplete="off" autocapitalize="off" spellcheck="false"><input id="cgQtd" type="number" min="1" max="100000" value="100"></div>
         <div class="cgl"><div class="seg" id="cgTipo"><button type="button" class="on" data-v="coins">MOEDAS</button><button type="button" data-v="xp">XP</button></div>
@@ -1274,7 +1319,7 @@
   </div>
   <div id="rankBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('rankBox', false)"></button>
-      <div class="title"><b>RANKING DE KILLS</b><small>top 10 · quem mais derrotou</small></div>
+      <div class="title"><b>RANKING DE KILLS</b><small id="rankSub">top 10 · quem mais derrotou</small></div>
       <div id="rankList" class="rklist"></div>
     </div>
   </div>
@@ -1289,6 +1334,7 @@
   <div id="dailyBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" id="dailyX" aria-label="fechar"></button>
       <div class="title"><b>RECOMPENSA DIÁRIA</b><small>entre todo dia para ganhar mais</small></div>
+      <div class="chest" id="chestRow"><span class="chico" id="chIco">🧰</span><div class="chi"><b>BAÚ MISTERIOSO</b><small id="chSub">abra 1 vez por dia · chance de item raro!</small></div><button type="button" class="b pri" id="bChest">ABRIR</button></div>
       <div id="dailyDays" class="ddays"></div>
       <button type="button" class="b pri" id="bClaimDaily">RESGATAR</button>
     </div>
@@ -2114,7 +2160,7 @@ class Fighter {
     return { t: 's', tm: this.team == null ? undefined : this.team, id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
       ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
-      bt: this.ctrl.startsWith('ai') ? 1 : 0, lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', ivs: this.invisT > 0 ? 1 : 0, sh: this.shieldT > 0 ? 1 : 0, pz: this.paraT > 0 && this.state === 'hurt' ? 1 : 0, sk: this.state === 'rajada' && this.ser ? this.ser.kind : '', gk: this.genki ? 1 : 0 };
+      bt: this.ctrl.startsWith('ai') ? 1 : 0,  lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', ivs: this.invisT > 0 ? 1 : 0, sh: this.shieldT > 0 ? 1 : 0, pz: this.paraT > 0 && this.state === 'hurt' ? 1 : 0, sk: this.state === 'rajada' && this.ser ? this.ser.kind : '', gk: this.genki ? 1 : 0 };
   }
 }
 
@@ -2400,7 +2446,7 @@ function resizeCanvas() {
   let vw = Math.round(270 * a), vh = 270;
   if (vw > 720) { vw = 720; vh = Math.round(720 / a); }
   if (vw < 320) { vw = 320; vh = Math.min(WH, Math.round(320 / a)); }
-  const s = clamp(Math.ceil(r.height * dpr / vh), 1, 4);
+  const s = clamp(Math.ceil(r.height * dpr / vh), 1, LITE ? 2 : isTouchDevice() ? 3 : 4); // celular: no máximo 3x (menos pixels para pintar)
   if (vw !== VW || vh !== VH || s !== S) {
     VW = vw; VH = vh; S = s; cv.width = VW * S; cv.height = VH * S;
     if (BG) buildBackground();
@@ -2466,7 +2512,7 @@ function freeColor(except) {
   return free.length ? free[(Math.random() * free.length) | 0] : (Math.random() * NAME_COLORS.length) | 0;
 }
 function recolor(img, fn) {
-  const c = makeCanvas(img.width, img.height), x = c.getContext('2d');
+  const c = makeCanvas(img.width, img.height), x = c.getContext('2d', { willReadFrequently: true });
   x.drawImage(img, 0, 0);
   const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
   for (let i = 0; i < p.length; i += 4) { if (!p[i + 3]) continue; const o = fn(p[i], p[i + 1], p[i + 2], p[i + 3]); p[i] = o[0]; p[i + 1] = o[1]; p[i + 2] = o[2]; }
@@ -2549,22 +2595,38 @@ function haloLift(hair, k) {
   for (let y = 0; y < R.h && top > 1e8; y++) for (let x = Math.max(0, x0 - 1); x <= Math.min(R.w - 1, x1 + 1); x++) if (R.d[(y * R.w + x) * 4 + 3]) { top = y; break; }
   return (haloLiftCache[key] = top > 1e8 ? 0 : Math.max(0, hb + 2 - top)); // 2px de folga, como no careca
 }
+function montaPose(look, k, im, P) { // um quadro: rabo atrás, corpo, cabelo, auréola, scouter
+  const c = makeCanvas(im.width, im.height + P), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
+  const lay = (pid, col, dy = 0) => { const t = tintPart(pid, k, col); if (t) x.drawImage(t, 0, P - dy); };
+  if (look.t) lay(look.t === 2 ? 'tail2' : 'tail1', look.tc);
+  x.drawImage(look.s ? skinBody(k, im, look.s) : im, 0, P);
+  if (look.h) lay(look.h, look.hc);
+  if (look.a) lay('halo', look.ac, look.h ? haloLift(look.h, k) : 0);
+  if (look.sc) lay('scout', look.xc);
+  c._pad = P; return c;
+}
+function podaCache() { // guarda só os visuais mais recentes (antes apagava tudo de uma vez)
+  const ks = Object.keys(lookCache); for (let i = 0; i < ks.length - 30; i++) delete lookCache[ks[i]];
+  for (const c of [tintCache, skinCache]) { const q = Object.keys(c); if (q.length > 600) for (let i = 0; i < q.length - 300; i++) delete c[q[i]]; }
+  const t = Object.keys(thumbCache); for (let i = 0; i < t.length - 120; i++) delete thumbCache[t[i]];
+}
+const thumbCache = {};
 function lookSprites(look) {
   look = validLook(look) || {}; // completa campos que faltarem com as cores padrão
-  const key = lookToStr(look); if (lookCache[key]) return lookCache[key];
-  if (Object.keys(lookCache).length > 24) { for (const c of [lookCache, tintCache, skinCache]) for (const q in c) delete c[q]; } // seletor de cor livre gera muitas versões
+  const key = lookToStr(look); if (lookCache[key]) { const o = lookCache[key]; delete lookCache[key]; return (lookCache[key] = o); } // usado agora = mais recente
+  podaCache();
   const out = { spr: {}, white: {} }, base = SPR.chars.base, P = look.a ? LOOK_PAD : 0;
   for (const [k, im] of Object.entries(base)) {
-    const c = makeCanvas(im.width, im.height + P), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
-    const lay = (pid, col, dy = 0) => { const t = tintPart(pid, k, col); if (t) x.drawImage(t, 0, P - dy); };
-    if (look.t) lay(look.t === 2 ? 'tail2' : 'tail1', look.tc); // atrás do corpo: rabo e espada nas costas
-    x.drawImage(look.s ? skinBody(k, im, look.s) : im, 0, P);   // corpo (com a cor de pele)
-    if (look.h) lay(look.h, look.hc);                            // cabelo
-    if (look.a) lay('halo', look.ac, look.h ? haloLift(look.h, k) : 0); // auréola por cima, acima do cabelo
-    if (look.sc) lay('scout', look.xc);                          // scouter no olho
-    c._pad = P; out.spr[k] = c; out.white[k] = recolor(c, (r, g, b, a) => [255, 255, 255, a]);
+    const c = montaPose(look, k, im, P); out.spr[k] = c;
+    let w = null; Object.defineProperty(out.white, k, { enumerable: true, get: () => w || (w = recolor(c, (r, g, b, a) => [255, 255, 255, a])) }); // branco do dano: só quando apanhar
   }
   return (lookCache[key] = out);
+}
+function thumbSprite(look) { // miniatura: só a pose parada (muito mais leve que montar as 16)
+  look = validLook(look) || {}; const key = lookToStr(look);
+  if (lookCache[key]) return lookCache[key].spr.parado;
+  if (thumbCache[key]) return thumbCache[key];
+  const im = SPR.chars.base.parado; return (thumbCache[key] = montaPose(look, 'parado', im, look.a ? LOOK_PAD : 0));
 }
 
 /* ---------------- CRÉDITOS (edite aqui) ----------------
@@ -4077,7 +4139,8 @@ function renderConta() {
   const p = conta.perfil, on = !!(conta.user && p);
   document.getElementById('accInfo').classList.toggle('on', on); if (!on) return;
   const K = (p.kills | 0) + (conta.pend.k | 0), M = (p.matches | 0) + (conta.pend.m | 0), xp = K * 10 + M * 4 + (p.xp_bonus | 0), lv = 1 + Math.floor(Math.sqrt(xp / 25)), a = 25 * (lv - 1) ** 2, b = 25 * lv ** 2;
-  document.getElementById('mName').innerHTML = (TAGS[normRole(p.role)] ? tagCanvas(normRole(p.role)) : '') + '<span>' + esc(dispName(p.name)) + '</span>';
+  const nmH = (TAGS[normRole(p.role)] ? tagCanvas(normRole(p.role)) : '') + '<span>' + esc(dispName(p.name)) + '</span>', nmE = document.getElementById('mName');
+  if (nmE.dataset.k !== nmH) { nmE.dataset.k = nmH; nmE.innerHTML = nmH; drawTagCanvases(); } // só troca quando muda (antes recriava a tag e ela piscava)
   document.getElementById('mLv').textContent = 'NV ' + lv; document.getElementById('mXp').style.width = Math.round((xp - a) / (b - a) * 100) + '%'; document.getElementById('mXpT').textContent = (xp - a) + ' / ' + (b - a) + ' XP';
   refreshDaily();
 
@@ -4098,7 +4161,7 @@ function fxPanel(o) { // painel no estilo "DESBLOQUEADO!" (cor: ok | err | gold)
   const cust = document.getElementById('custom'), box = o.box || (cust && !cust.classList.contains('hidden') ? cust.querySelector('.card') : document.getElementById('wrap'));
   if (!box) return; const old = box.querySelector('.unlk'); if (old) old.remove();
   const f = document.createElement('div'); f.className = 'unlk ' + (o.cor || 'ok') + (box.id === 'wrap' ? ' glob' : '');
-  f.innerHTML = '<i class="unlk-rays"></i><div class="unlk-in"><div class="unlk-seal">' + (o.seal || '<span class="tick"></span>') + '</div><b>' + o.titulo + '</b>' + (o.sub ? '<small>' + o.sub + '</small>' : '') + (o.btn ? '<button type="button" class="b pri">' + o.btn + '</button>' : '') + '</div>';
+  f.innerHTML = '<i class="unlk-rays"></i><div class="unlk-in"><div class="unlk-seal' + (o.sealCls ? ' ' + o.sealCls : '') + '">' + (o.seal || '<span class="tick"></span>') + '</div><b>' + o.titulo + '</b>' + (o.sub ? '<small>' + o.sub + '</small>' : '') + (o.btn ? '<button type="button" class="b pri">' + o.btn + '</button>' : '') + '</div>';
   const inn = f.querySelector('.unlk-in');
   for (let i = 0; i < 14; i++) { const c = document.createElement('i'); c.className = 'spk'; const a = i / 14 * Math.PI * 2, r = 90 + Math.random() * 60;
     c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px'); c.style.animationDelay = (0.15 + Math.random() * 0.1) + 's'; inn.appendChild(c); }
@@ -4208,10 +4271,11 @@ async function useCode() {
     else if (/^coins:\d+$/.test(data || '')) { const n = +data.slice(6); conta.perfil.coins = (conta.perfil.coins || 0) + n; conta.perfil.coins -= n; moedasGanhas(n); codeOk('+' + n + ' ' + COINI); }
     else if (/^xp:\d+$/.test(data || '')) { const n = +data.slice(3); conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + n; renderConta(); voar('x', n); codeOk('+' + n + ' ' + XPI); lvShown = 0; setTimeout(checkLevel, 600); }
     else if (data === 'reset') { // conta zerada: tudo volta ao começo
-      conta.pend = { k: 0, d: 0, m: 0, c: 0, act: {} }; conqs = null; dly = null; pegos.clear(); conqPegas.clear(); lvShown = 0; bvVisto = false; show('dotAch', false); try { localStorage.removeItem('adk_slots'); } catch (e) {}
+      conta.pend = { k: 0, d: 0, m: 0, c: 0, act: {} }; conqs = null; dly = null; pegos.clear(); conqPegas.clear(); lvShown = 0; bvVisto = false; temp = null; show('dotAch', false); try { localStorage.removeItem('adk_slots'); } catch (e) {}
       setSlots([], 0); Object.assign(conta.perfil, { coins: 0, owned: [], infinite: false, kills: 0, deaths: 0, matches: 0, look: {}, fxc: {}, xp_bonus: 0, lvl_got: 1 });
       wallet.sync(); renderConta(); codeOk('Tudo voltou ao começo!').then(() => { refreshDaily(); boasVindas(); });
     }
+    else if (data === 'chest') { temp = { chest: true }; if (dly) show('dotDaily', true); codeOk('O baú diário pode ser aberto de novo!'); }
     else if (data === 'used') codeErr('Você já usou esse código (ou ele só podia ser usado uma vez).');
     else if (data === 'expired') codeErr('Esse código já expirou.');
     else codeErr('Esse código não existe ou já foi usado.');
@@ -4383,7 +4447,9 @@ function comTransicao(fn) { transCover(); setTimeout(fn, 480); } // fecha → tr
 function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.tagc')) { const T = TAGS[tc.dataset.r], g = tc.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, tc.width, tc.height);
   const sv = ctx; ctx = g; try { tagText(T[0], T[1], T[2], '', 2, 2, 8, 'left', '#120c1c'); } finally { ctx = sv; } } }
 (function menuHero() {
+  let tq = 0, avKey = '';
   const loop = now => { requestAnimationFrame(loop);
+    if (now - tq < 32) return; tq = now; // 30 quadros bastam para o herói parado
     const m = document.getElementById('menu'), vis = m && !m.classList.contains('hidden'); if (vis && !loop.was && conta.user) { renderConta(); conta.flushStats().then(() => { refreshDaily(); boasVindas().then(() => { lvShown = 0; checkLevel(); }); pedidosDot(); }); } loop.was = vis;
     if (!document.getElementById('rankBox').classList.contains('hidden')) drawTagCanvases();
     if (!vis || typeof chosenLook === 'undefined') return;
@@ -4397,6 +4463,7 @@ function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.
       if (pose === 'kiball') drawKiBall(20 + Math.sin(t * 6) * 1.5, -30, 6, pal.ki, t);
       x.restore(); } finally { ctx = save; }
     drawTagCanvases();
+    const ak = lookToStr(chosenLook); if (ak === avKey) return; avKey = ak;
     const av = document.getElementById('mAva'), y = av.getContext('2d'), p0 = spr.parado; y.clearRect(0, 0, 24, 24); y.imageSmoothingEnabled = false;
     const hb = headBox(p0, chosenLook && chosenLook.s); y.drawImage(p0, Math.round(12 - hb.cx), Math.round(13 - hb.cy));
   };
@@ -4408,13 +4475,49 @@ const MISSOES = [{ id: 'm1', t: 'Jogue 1 partida', f: 'm', n: 1, p: 20 }, { id: 
 const SEMANAIS = [{ id: 'wm15', t: 'Jogue 15 partidas', f: 'm', n: 15, p: 200 }, { id: 'wk40', t: 'Cause 40 derrotas', f: 'k', n: 40, p: 350 }];
 const DIARIA = [20, 30, 40, 50, 60, 80, 300];
 let dly = null; const pegos = new Set(); // resgatados nesta sessão (o servidor pode demorar a refletir)
+/* ===================== BAÚ MISTERIOSO (1 por dia) ===================== */
+const ITEM_NOMES = { 'h:hair2': 'Cabelo 2', 'h:hair3': 'Cabelo 3', 'h:hair6': 'Cabelo Lambido', 'h:hair8': 'Touca', 't:1': 'Rabo 1', 't:2': 'Rabo 2', 'a:1': 'Auréola', 'sc:1': 'Scouter', 'au:1': 'Aura Espetada', 'au:2': 'Aura Simples' };
+let temp = null, bauBusca = false;
+async function carregaBau() { // só pergunta se o baú está disponível (não redesenha o menu)
+  if (!conta.user || !conta.sb || bauBusca) return; bauBusca = true;
+  try { const { data, error } = await conta.sb.rpc('my_season'); temp = error || !data ? null : { chest: !!data.chest, free: !!data.free }; } finally { bauBusca = false; }
+  if (dly) show('dotDaily', !dly.got || !!(temp && temp.chest));
+  if (!document.getElementById('dailyBox').classList.contains('hidden')) drawBau();
+}
+function drawBau() { const ok = !!(temp && temp.chest), b = document.getElementById('bChest'); b.disabled = !ok; b.textContent = ok ? 'ABRIR' : 'AMANHÃ';
+  document.getElementById('chestRow').classList.toggle('pronto', ok); document.getElementById('chSub').textContent = temp && temp.free ? 'modo dono: sempre liberado' : ok ? 'abra 1 vez por dia · chance de item raro!' : 'você já abriu hoje · volte amanhã'; }
+function itemPreview(item) { // só o item, na cor escolhida, ampliado dentro do quadrinho
+  const L = validLook(chosenLook) || {}, [k, v] = item.split(':'), c = makeCanvas(84, 84), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
+  let im = null;
+  if (k === 'au') { const pal = palForCustom(chosenChar, 0, chosenFxc), kt = AURA_KIT[+v], fr = kt && auraKitFrames(pal.aura, +v); im = fr && fr[kt.lp[0]]; }
+  else { const pid = k === 'h' ? v : k === 't' ? (+v === 2 ? 'tail2' : 'tail1') : k === 'a' ? 'halo' : k === 'sc' ? 'scout' : '';
+    const col = k === 'h' ? L.hc : k === 't' ? L.tc : k === 'a' ? L.ac : L.xc; im = pid && tintPart(pid, 'parado', col || '#ffffff'); }
+  if (!im) return c.toDataURL();
+  const d = im.getContext ? im.getContext('2d').getImageData(0, 0, im.width, im.height).data : null; let x0 = 0, y0 = 0, x1 = im.width, y1 = im.height;
+  if (d) { x0 = 1e9; y0 = 1e9; x1 = -1; y1 = -1; for (let y = 0; y < im.height; y++) for (let q = 0; q < im.width; q++) if (d[(y * im.width + q) * 4 + 3]) { x0 = Math.min(x0, q); x1 = Math.max(x1, q + 1); y0 = Math.min(y0, y); y1 = Math.max(y1, y + 1); }
+    if (x1 < 0) return c.toDataURL(); }
+  const w = x1 - x0, h = y1 - y0, sc = Math.max(1, Math.floor(Math.min(72 / w, 72 / h)));
+  x.drawImage(im, x0, y0, w, h, Math.round(42 - w * sc / 2), Math.round(42 - h * sc / 2), w * sc, h * sc);
+  return c.toDataURL();
+}
+async function abrirBau() {
+  const b = document.getElementById('bChest'); if (b.disabled) return; b.disabled = true; const ico = document.getElementById('chIco'); ico.classList.add('treme');
+  const [{ data, error }] = await Promise.all([conta.sb.rpc('open_chest'), new Promise(z => setTimeout(z, 900))]); ico.classList.remove('treme');
+  if (error) { drawBau(); return notice(/JA_ABERTO/.test(error.message) ? 'Você já abriu o baú hoje. Volte amanhã!' : erroRecompensa(error), 'BAÚ', 'err'); }
+  temp = { ...(temp || {}), chest: !!(temp && temp.free) }; drawBau(); show('dotDaily', !dly || !dly.got || temp.chest);
+  const box = document.querySelector('#dailyBox .card');
+  if (data.tipo === 'item') { if (conta.perfil) conta.perfil.owned = [...(conta.perfil.owned || []), data.item]; fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(data.item) + '" alt="">', sealCls: 'prev', titulo: 'ITEM RARO!', sub: esc(ITEM_NOMES[data.item] || data.item) + '<br>já está liberado na customização', tempo: 2600 }); SFX.unlock(); }
+  else if (data.tipo === 'xp') { ganhouRecompensa(0, data.v); premioFx(box, 0, data.v, 'BAÚ MISTERIOSO!'); }
+  else { ganhouRecompensa(data.v, 0); premioFx(box, data.v, 0, data.raro ? 'BAÚ RARO!' : 'BAÚ MISTERIOSO!'); }
+}
+document.getElementById('bChest').onclick = abrirBau;
 async function refreshDaily() {
   if (!conta.user || !conta.sb) return;
   try { if (conta.flushStats) await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('daily_status'); if (error || !data) { dly = null; return; }
   dly = data; dly.w = dly.w || { k: 0, m: 0, ms: [] }; for (const id of pegos) { const o = id[0] === 'w' ? dly.w : dly; if (!o.ms.includes(id)) o.ms.push(id); } if (pegos.has('daily')) dly.got = true;
   if (!document.getElementById('missBox').classList.contains('hidden')) drawMissoes(); carregarConquistas(); const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w);
-  show('dotMiss', pode); show('dotDaily', !dly.got);
+  show('dotMiss', pode); show('dotDaily', !dly.got || !!(temp && temp.chest)); carregaBau();
 }
 function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; if (n > 0) { voar('c', n); coinAnim = true; } wallet.sync(); }
 function semV11() { notice('As missões e a recompensa diária ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.', 'AVISO'); }
@@ -4468,6 +4571,7 @@ function ganhouFx(el, n, xp) { // "+40" com moedinhas subindo do item resgatado
   box.appendChild(f); setTimeout(() => f.remove(), 1300); try { SFX.zap(); } catch (e) {}
 }
 function drawDiaria() {
+  drawBau();
   const D = document.getElementById('dailyDays'); D.innerHTML = ''; const feitos = dly.streak % 7 || (dly.got && dly.streak ? 7 : 0), hoje = dly.got ? feitos - 1 : feitos;
   DIARIA.forEach((p, i) => { const c = document.createElement('div'); c.className = 'dday' + (i < feitos ? ' got' : '') + (i === hoje && !dly.got ? ' now' : '');
     c.innerHTML = '<small>DIA ' + (i + 1) + '</small><i class="coin' + (i === 6 ? ' big' : '') + '"></i><b>' + p + '</b>' + (i < feitos ? '<em class="tick"></em>' : ''); if (i === 6) c.classList.add('d7'); D.appendChild(c); });
@@ -4575,8 +4679,14 @@ let convAberto = false, pingN = 0;
 let banTab = 'b';
 async function banDraw() {
   const L = document.getElementById('banList'); L.innerHTML = '<small class="muted">carregando...</small>';
-  show('cgForm', banTab === 'c'); document.querySelector('#banBox .banq').classList.toggle('hidden', banTab === 'c');
+  show('cgForm', banTab === 'c'); document.querySelector('#banBox .banq').classList.toggle('hidden', banTab === 'c' || banTab === 'o');
   if (banTab === 'c') return codesDraw(L);
+  if (banTab === 'o') { const free = !!(temp && temp.free);
+    L.innerHTML = '<div class="ownrow"><div><b>Baú diário sempre liberado</b><small>só para você: abre quantas vezes quiser, sem esperar o dia seguinte</small></div><button type="button" class="b sw' + (free ? ' on' : '') + '" id="bChestFree">' + (free ? 'LIGADO' : 'DESLIGADO') + '</button></div>';
+    document.getElementById('bChestFree').onclick = async () => { const v = !(temp && temp.free); wait('salvando...'); const { error } = await conta.sb.rpc('set_chest_free', { v }); unwait();
+      if (error) return notice(/function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'OPÇÕES', 'err');
+      temp = { ...(temp || {}), free: v, chest: v || (temp && temp.chest) }; banDraw(); carregaBau(); };
+    return; }
   const q = document.getElementById('banIn').value.trim();
   if (banTab === 'b' && !q) { L.innerHTML = '<small class="muted">Digite o nome exato do jogador e toque em BUSCAR.</small>'; return; }
   const { data, error } = banTab === 'b' ? await conta.sb.rpc('admin_find', { q }) : await conta.sb.rpc('admin_bans');
@@ -4660,6 +4770,8 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.59', d: '13/11', itens: [['mudou', 'Botões de resgatar respondem na hora'], ['mudou', 'Tag do menu sem piscar']] },
+  { v: '1.0.57', d: '13/11', itens: [['mudou', 'Jogo mais leve: personagem, miniaturas e menus otimizados']] },
   { v: '1.0.54', d: '13/11', itens: [['novo', 'Modo desempenho nas configurações'], ['novo', '5 cabelos novos: Arrepiado, Franja, Lambido, Longo e Touca'], ['novo', 'Scouter no olho'], ['novo', 'Auras Espetada e Simples']] },
   { v: '1.0.51', d: '13/11', itens: [['mudou', 'Nova tela de entrar e criar conta'], ['novo', 'Transição ao entrar e ao sair da conta']] },
   { v: '1.0.49', d: '13/11', itens: [['novo', 'Músicas e sons em todo o jogo, com volume nas configurações'], ['novo', 'Tela de créditos'], ['novo', 'Sala troca de anfitrião sozinha se a internet dele ficar ruim'], ['mudou', 'Missões prontas no topo, resgatadas no fim'], ['novo', 'Donos podem gerar códigos']] },
@@ -4693,6 +4805,20 @@ let conqs = null; const conqPegas = new Set(); // resgatadas nesta sessão (uma 
 async function carregarConquistas() { if (!conta.user) return; const { data, error } = await conta.sb.rpc('my_achievements'); conqs = error ? null : data; if (conqs) for (const a of conqs) if (conqPegas.has(a.id)) a.got = true; show('dotAch', conqProntas()); if (conqs && !document.getElementById('achBox').classList.contains('hidden')) drawConquistas(); return conqs; }
 const conqProntas = () => !!conqs && conqs.some(a => !a.got && a.v >= a.n);
 function cMore() { if (cMore.r) return; cMore.r = requestAnimationFrame(() => { cMore.r = 0; cMore2(); }); }
+(function maisGeral() { // o mesmo "▼ mais" discreto da customização, em toda lista que rola
+  const SEL = '.rwlist,.rklist,.banlist,.credlist,.setbody,.nvl,#rooms,.rlist';
+  const tick = () => {
+    if (!document.querySelector('.ovl:not(.hidden):not(#menu)')) return; // nada aberto: não gasta nada
+    for (const el of document.querySelectorAll('.ovl:not(.hidden) :is(' + SEL + ')')) {
+      const more = !!el.offsetParent && el.scrollHeight - el.scrollTop - el.clientHeight > 6;
+      if (!el._more && !more) continue;
+      if (!el._more) { const f = document.createElement('i'), m = document.createElement('i'); f.className = 'cfade gfade'; m.className = 'cmore gmore'; m.textContent = '▼ mais'; el.parentElement.append(f, m); el._more = m; el._fade = f; }
+      el._more.classList.toggle('hidden', !more); el._fade.classList.toggle('on', more);
+      if (more) { const b = el.offsetTop + el.offsetHeight; el._more.style.top = (b + 1) + 'px'; el._fade.style.top = (b - 38) + 'px'; el._fade.style.left = el.offsetLeft + 'px'; el._fade.style.width = el.offsetWidth + 'px'; }
+    }
+  };
+  setInterval(tick, 400); addEventListener('scroll', tick, true);
+})();
 function cMore2() { const p = document.getElementById('cPanel'), m = document.getElementById('cMore'); if (!p || !m) return; const more = p.scrollHeight - p.scrollTop - p.clientHeight > 6; m.classList.toggle('hidden', !more); document.getElementById('cFade').classList.toggle('on', more); }
 "use strict";
 /* =====================================================================
@@ -5119,15 +5245,15 @@ function dragScroll(el) {
 }
 /* arrastar com o mouse para rolar QUALQUER lista (missões, conquistas, ranking, níveis...) */
 (function dragAll() {
-  let el = null, sx = 0, sy = 0, sl = 0, st = 0, moved = 0;
+  let el = null, sx = 0, sy = 0, sl = 0, st = 0, moved = 0, dragFeito = false;
   const rola = n => { for (; n && n !== document.body; n = n.parentElement) { if (n.dataset && n.dataset.drag) return null; const cs = getComputedStyle(n);
     if ((/(auto|scroll)/.test(cs.overflowY) && n.scrollHeight > n.clientHeight + 2) || (/(auto|scroll)/.test(cs.overflowX) && n.scrollWidth > n.clientWidth + 2)) return n; } return null; };
-  addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button !== 0 || !e.target.closest || !e.target.closest('.ovl') || e.target.closest('input,textarea,select,input[type=range]')) return;
+  addEventListener('pointerdown', e => { moved = 0; if (e.pointerType !== 'mouse' || e.button !== 0 || !e.target.closest || !e.target.closest('.ovl') || e.target.closest('input,textarea,select,input[type=range]')) return;
     el = rola(e.target); if (!el) return; sx = e.clientX; sy = e.clientY; sl = el.scrollLeft; st = el.scrollTop; moved = 0; }, true);
   addEventListener('pointermove', e => { if (!el) return; const dx = e.clientX - sx, dy = e.clientY - sy; moved = Math.max(moved, Math.abs(dx) + Math.abs(dy));
     if (moved > 5) { document.body.classList.add('arrasta'); el.scrollLeft = sl - dx; el.scrollTop = st - dy; } });
-  addEventListener('pointerup', () => { if (!el) return; el = null; setTimeout(() => document.body.classList.remove('arrasta'), 0); });
-  addEventListener('click', e => { if (moved > 5) { e.stopPropagation(); e.preventDefault(); moved = 0; } }, true);
+  addEventListener('pointerup', () => { if (!el) return; dragFeito = moved > 5; el = null; setTimeout(() => document.body.classList.remove('arrasta'), 0); });
+  addEventListener('click', e => { if (moved > 5 && dragFeito) { e.stopPropagation(); e.preventDefault(); } moved = 0; dragFeito = false; }, true);
 })();
 addEventListener('offline', () => { if (game.phase === 'play' && game.mode === 'online') game.toMenu('Você perdeu a conexão e saiu da sala.'); });
 /* SLOTS: até 3 personagens montados (visual + cores + arquétipo). O slot escolhido é o que entra na luta. */
@@ -5181,7 +5307,7 @@ function openCustom() {
   show('menu', false); show('custom', true); storeSlot(); custBackup = JSON.parse(JSON.stringify({ slots, cur: slotCur })); custStart = custSig(); buildCustomPanel(); custBtn();
   const cc = document.querySelector('#custom .card'); cc.scrollTop = 0; document.getElementById('cTabs').scrollLeft = 0; document.getElementById('cPanel').scrollTop = 0; requestAnimationFrame(() => { document.getElementById('cTabs').scrollLeft = 0; }); requestAnimationFrame(() => { cc.scrollTop = 0; });
   cancelAnimationFrame(custRaf); const t0 = performance.now();
-  const loop = now => { if (!custOpen) return; drawCustomPreview((now - t0) / 1000); custRaf = requestAnimationFrame(loop); };
+  let tq = 0; const loop = now => { if (!custOpen) return; if (now - tq >= 32) { tq = now; drawCustomPreview((now - t0) / 1000); } custRaf = requestAnimationFrame(loop); };
   custRaf = requestAnimationFrame(loop);
 }
 function closeCustom() { revertLocked(); offerBuy(''); saveLook();  custOpen = false; cancelAnimationFrame(custRaf); show('custom', false); show('menu', true); }
@@ -5212,7 +5338,7 @@ function optCard(label, sel, draw, onPick, key) {
   b.onclick = () => { if (sel && key && !shop.has(key)) return tryBuy(key, label); onPick(); saveLook(); offerBuy(key, label); }; return b;
 }
 function partThumb(look, crop) { // miniatura: recorte do sprite montado, ampliado 2x (inteiro)
-  return x => { const im = lookSprites(look).spr.parado; const [sx, sy, w] = crop(im); x.drawImage(im, sx, sy, w, w, 0, 0, 56, 56); };
+  return x => { const im = thumbSprite(look); const [sx, sy, w] = crop(im); x.drawImage(im, sx, sy, w, w, 0, 0, 56, 56); };
 }
 function buildCustomPanel() {
   setTimeout(cMore, 30);
@@ -5463,8 +5589,8 @@ function buildMenu() {
   document.getElementById('bBots').onclick = () => show('botBox', true);
   document.querySelectorAll('#botBox .difb').forEach(b => b.onclick = () => { show('botBox', false); game.botLv = +b.dataset.l; initAudio(); net.close(); comTransicao(() => game.start('bots')); });
   document.getElementById('mHeroBox').onclick = () => document.getElementById('bChar').click();
-  document.getElementById('bRank').onclick = async () => {
-    const L = document.getElementById('rankList'); L.innerHTML = '<div class="rkempty">carregando...</div>'; show('rankBox', true); L.scrollTop = 0;
+  const rankKills = async () => {
+    const L = document.getElementById('rankList'); L.innerHTML = '<div class="rkempty">carregando...</div>'; L.scrollTop = 0;
     const { data, error } = await conta.sb.rpc('top_kills');
     if (error) { L.innerHTML = '<div class="rkempty">' + (/function|does not exist|schema/i.test(error.message) ? 'Ranking ainda não ligado no servidor.<br>Rode o SQL COMPLETO de novo.' : esc(error.message)) + '</div>'; return; }
     const rows = data || []; let h = '';
@@ -5473,6 +5599,7 @@ function buildMenu() {
       h += '<div class="rkrow' + (r.me ? ' me' : '') + (i < 3 ? ' t' + (i + 1) : '') + '">' + pos + '<b>' + (TAGS[normRole(r.role)] ? tagCanvas(normRole(r.role)) : '') + '<span>' + esc(dispName(r.name)) + '</span>' + (r.me ? '<em class="voce">VOCÊ</em>' : '') + '</b><span class="rkk">' + (r.kills | 0) + ' <small>kills</small></span></div>'; }
     L.innerHTML = h;
   };
+  document.getElementById('bRank').onclick = () => { show('rankBox', true); document.getElementById('rankList').scrollTop = 0; rankKills(); };
   document.getElementById('bSettings').onclick = () => openSettings('menu');
   const rn = document.getElementById('roomName');
   rn.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('bHost').click(); });
@@ -5725,7 +5852,7 @@ function setupTouch() {
   document.getElementById('rMus').addEventListener('input', e => { AUD.mus = +e.target.value; syncSettingsUI(); salvaVol(); });
   document.getElementById('rSfx').addEventListener('input', e => { AUD.sfx = +e.target.value; syncSettingsUI(); salvaVol(); });
   document.getElementById('rSfx').addEventListener('change', () => SFX.coin());
-  document.getElementById('bPerf').onclick = () => { LITE = !LITE; try { localStorage.setItem('adk_lite', LITE ? '1' : '0'); } catch (e) {} aplicaLite(); };
+  document.getElementById('bPerf').onclick = () => { LITE = !LITE; try { localStorage.setItem('adk_lite', LITE ? '1' : '0'); } catch (e) {} aplicaLite(); resizeCanvas(); };
   document.getElementById('bCred').onclick = () => { const L = document.getElementById('credList');
     L.innerHTML = CREDITOS.map(sec => '<div class="credsec"><h4>' + esc(sec.t) + '</h4>' + sec.itens.map(x => '<p>' + esc(x) + '</p>').join('') + '</div>').join(''); L.scrollTop = 0; show('settings', false); show('credBox', true); };
   document.getElementById('rSize').addEventListener('input', e => { settings.size = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
@@ -5774,7 +5901,7 @@ let lastRender = 0, rAcc = 0;
 function frame(now) {
   const dt = advance(now);
   rAcc += dt;
-  if (!document.hidden && (!LITE || now - lastRender >= 31)) { render(rAcc); rAcc = 0; lastRender = now; } // modo desempenho: ~30 quadros por segundo
+  if (!document.hidden && ((!LITE && game.phase === 'play') || now - lastRender >= 31)) { render(rAcc); rAcc = 0; lastRender = now; } // modo desempenho: ~30 quadros por segundo
   requestAnimationFrame(frame);
 }
 /* Com a aba em segundo plano o navegador para o requestAnimationFrame.
