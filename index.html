@@ -137,9 +137,9 @@
   button.mapb.sel{border-color:var(--acc);background:#2b2244;box-shadow:0 0 0 2px rgba(255,210,58,.35);color:var(--acc)}
   button.char.sel{border-color:var(--acc);background:#2b2244;box-shadow:0 0 0 2px rgba(255,210,58,.35);color:var(--acc)}
   /* o zoom automático do iPhone ao tocar no campo é barrado pelo maximum-scale=1 do viewport */
-  input[type=text],input[type=email],input[type=password]{flex:1;min-width:0;background:#0f0b19;border:2px solid var(--line);color:var(--fg);font-family:inherit;font-size:clamp(10px,1.1vw,12px);padding:9px 9px;outline:none;border-radius:0}
+  input[type=text],input[type=email],input[type=password],input[type=number]{flex:1;min-width:0;background:#0f0b19;border:2px solid var(--line);color:var(--fg);font-family:inherit;font-size:clamp(10px,1.1vw,12px);padding:9px 9px;outline:none;border-radius:0}
   input::placeholder{color:#6f6890;opacity:1}
-  input[type=text]:focus,input[type=email]:focus,input[type=password]:focus{border-color:var(--acc)}
+  input[type=text]:focus,input[type=email]:focus,input[type=password]:focus,input[type=number]:focus{border-color:var(--acc)}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,22px)}
   #wrap.narrow .cols{grid-template-columns:1fr}
   .col{display:flex;flex-direction:column;gap:10px;min-width:0}
@@ -172,7 +172,7 @@
   .card{border-radius:var(--r)}
   .cpanel,.cprev,#rooms,.copts,#chatbar,#editbar,.set{border-radius:var(--r2)}
   button.b,button.char,button.mapb,button.hairb,button.room,.copt,.ctabs button,#authTabs button,.cposes button,
-  input[type=text],input[type=email],input[type=password],#chatbar input,#selName{border-radius:var(--r3)}
+  input[type=text],input[type=email],input[type=password],input[type=number],#chatbar input,#selName{border-radius:var(--r3)}
   button.char canvas,button.mapb canvas,button.hairb canvas,.copt canvas{border-radius:calc(var(--r3) - 2px)}
   button.room .cnt,button.room .stamp,button.room .lock{border-radius:999px}
   #pwBox .card{max-width:min(94vw,440px)}
@@ -765,6 +765,7 @@
   .lvc .preco .coin{width:1.4em;height:1.4em}
   #lvGet{min-width:55%}
   #pause #pInvite{grid-column:1/-1}
+  #settings #bAcc{grid-column:1/-1}
   #settings #bDelAcc{grid-column:1/-1;background:none!important;border-color:#6a3a50!important;color:#ff9aa0;box-shadow:none!important}
   .room .md.e{background:#1d3a66;color:#bfe0ff}
   #recon{position:absolute;top:calc(var(--wh,600px) * .14);left:50%;transform:translateX(-50%);z-index:150;display:flex;align-items:center;gap:10px;padding:8px 16px;background:rgba(120,20,30,.92);border:2px solid #ff8a8f;border-radius:999px;color:#fff;font-size:12px;pointer-events:none}
@@ -1031,6 +1032,46 @@
   .banrow{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:12px}
   .banrow.ban{border-color:#ff4d6a}.banrow>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.banrow small{color:var(--muted);font-size:var(--fS);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .banrow .b{flex:0 0 auto;padding:8px 12px}
+
+  /* R49: configurações, créditos, painel de códigos */
+  .setc{max-height:calc(var(--wh,600px) * .9);display:flex;flex-direction:column}
+  .setbody{overflow-y:auto;min-height:0;flex:1;display:flex;flex-direction:column;gap:10px;padding-right:2px}
+  .setsec{background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+  .setsec h4{margin:0;color:#ffcf3a;font-size:var(--fS);letter-spacing:2px;font-weight:normal}
+  .btns.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .credlist{max-height:calc(var(--wh,600px) * .6);overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+  .credsec{background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:14px;padding:10px 14px}
+  .credsec h4{margin:0 0 6px;color:#ffcf3a;font-size:var(--fS);letter-spacing:2px;font-weight:normal}
+  .credsec p{margin:4px 0;color:#fff;font-size:var(--fS);line-height:1.6}
+  .cgform{display:flex;flex-direction:column;gap:8px}.cgl{display:flex;gap:8px;align-items:stretch}.cgl input{flex:1;min-width:0}.cgl #cgQtd{flex:0 0 110px}
+  .seg{display:flex;flex:1;gap:4px;background:#120b26;border:2px solid #3e2d78;border-radius:10px;padding:3px}
+  .seg button{flex:1;font-family:inherit;font-size:var(--fS);background:none;color:#cbbdf5;border:0;border-radius:7px;padding:7px 4px;cursor:pointer}.seg button.on{background:#7b5cff;color:#fff}
+  .cgc{color:#ffcf3a}.cgc span{color:#fff;font-weight:normal;margin-left:6px}
+  #banBox .banlist{max-height:calc(var(--wh,600px) * .32)}
+
+  /* R51: tela de login/cadastro */
+  #auth{isolation:isolate;overflow:hidden}
+  .authrays{width:1400px!important;height:1400px!important;margin:-700px 0 0 -700px!important;z-index:0!important;background:repeating-conic-gradient(rgba(255,178,30,.12) 0 9deg,transparent 9deg 18deg)!important;-webkit-mask:radial-gradient(circle,#000 18%,transparent 60%)!important;mask:radial-gradient(circle,#000 18%,transparent 60%)!important}
+  #auth .authc{position:relative;z-index:1;background:#22163f repeating-linear-gradient(135deg,rgba(255,255,255,.028) 0 10px,transparent 10px 24px)!important;border:3px solid #ffb21e!important;border-radius:20px!important;box-shadow:0 0 0 3px #0b0618,0 0 50px rgba(255,178,30,.3)!important}
+  .authc .fld{background:#120b26;border:2px solid #3e2d78;border-radius:14px;padding:4px 6px 4px 10px;gap:10px}
+  .authc .fld:focus-within{border-color:#ffb21e;box-shadow:0 0 0 2px rgba(255,178,30,.25)}
+  .authc .fld .fic{font-style:normal;font-size:calc(var(--fB) * 1.4);flex:0 0 auto}
+  .authc .fld>span{flex:0 0 calc(var(--wh,600px) * .24)!important;color:#ffcf3a!important;letter-spacing:1px}
+  .authc .fld input{background:transparent!important;border:0!important;box-shadow:none!important;padding-left:4px!important}
+  #auth #authTabs button.sel{background:linear-gradient(#ffc23a,#f08a00)!important;color:#2a1600!important;border-color:#fff3c4!important;text-shadow:none!important}
+  #authMsg:empty{display:none}
+  .authc .glogo.auth{max-height:calc(var(--wh,600px) * .2)!important;width:auto!important}
+  .authc .fld{padding:0 6px 0 10px}
+  #auth .authc{max-height:calc(var(--wh,600px) * .96);overflow-y:auto}
+  /* R52: login fixo, sem ícones */
+  #auth .authc{overflow:hidden!important;max-height:none!important;gap:calc(var(--wh,600px) * .018)!important;padding:calc(var(--wh,600px) * .03) var(--pad)!important}
+  .authc .glogo.auth{max-height:calc(var(--wh,600px) * .17)!important}
+  .authc .logo small{display:none}
+  .authc .fld{padding:0 6px 0 12px!important}
+  .authc .fld>span{flex:0 0 calc(var(--wh,600px) * .22)!important;font-size:calc(var(--fS) * .85)!important;color:#cbbdf5!important}
+  .authc .fld input{padding-top:calc(var(--wh,600px) * .016)!important;padding-bottom:calc(var(--wh,600px) * .016)!important}
+  .authc .ctabs button{padding:calc(var(--wh,600px) * .014) 4px!important}
+  .authc #authGo{padding:calc(var(--wh,600px) * .02) 8px!important}
 </style>
 </head>
 <body>
@@ -1068,7 +1109,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.48</div>
+      <div class="ver">v1.0.53</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1110,12 +1151,13 @@
     </div>
   </div>
   <div id="auth" class="ovl solid hidden">
+    <i class="unlk-rays authrays"></i>
     <form class="card authc" id="authForm" autocomplete="on">
       <div class="logo"><img class="glogo auth" id="logoAuth" alt="CustomBattle Online"><small id="authSub">entre na sua conta para jogar</small></div>
       <div class="ctabs" id="authTabs"><button type="button" data-m="in" class="sel">ENTRAR</button><button type="button" data-m="up">CRIAR CONTA</button></div>
       <div class="fld" id="authNameRow"><span>NOME</span><input id="authName" type="text" maxlength="18" placeholder="seu nome no jogo" autocomplete="nickname" autocorrect="off" spellcheck="false"></div>
       <div class="fld"><span id="authIdLbl">E-MAIL OU NOME</span><input id="authEmail" type="text" maxlength="120" placeholder="e-mail ou nome no jogo" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
-      <div class="fld"><span>SENHA</span><input id="authPass" type="password" maxlength="72" placeholder="sua senha" autocomplete="current-password" autocorrect="off" autocapitalize="off" spellcheck="false"><button type="button" class="eye" id="authEye" title="mostrar a senha">👁</button></div>
+      <div class="fld"><span>SENHA</span><input id="authPass" type="text" maxlength="72" placeholder="sua senha" autocomplete="current-password" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
       <div id="authMsg"></div>
       <button type="submit" class="b pri big" id="authGo">ENTRAR</button>
     </form>
@@ -1157,7 +1199,7 @@
           <div class="cpw"><div class="cpanel" id="cPanel" onscroll="cMore()"></div><i class="cfade" id="cFade"></i><i class="cmore hidden" id="cMore">▼ mais</i></div>
         </div>
       </div>
-      <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
+      <div class="cbtns"><button class="b" id="cClear">🧹 LIMPAR</button><button class="b" id="cRand">🎲 ALEATÓRIO</button><span class="sp"></span><button class="b hidden" id="cCancel">✕ CANCELAR</button><button class="b pri" id="cDone">← VOLTAR</button></div>
     </div>
   </div>
   <div id="recon" class="hidden"><i></i>RECONECTANDO...</div>
@@ -1177,9 +1219,16 @@
   </div>
   <div id="banBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('banBox', false)"></button>
-      <div class="title"><b>BANIR JOGADORES</b><small>só donos · bane conta, e-mail, nome e IP</small></div>
+      <div class="title"><b>PAINEL DO DONO</b><small>banimentos e códigos · só donos</small></div>
       <div class="banq"><input id="banIn" type="text" maxlength="40" placeholder="nome exato do jogador" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button type="button" class="b pri" id="banGo">BUSCAR</button></div>
-      <div class="tabs2" id="banTabs"><button type="button" class="on" data-t="b">BUSCA</button><button type="button" data-t="l">BANIDOS</button></div>
+      <div class="tabs2" id="banTabs"><button type="button" class="on" data-t="b">BANIR</button><button type="button" data-t="l">BANIDOS</button><button type="button" data-t="c">CÓDIGOS</button></div>
+      <div id="cgForm" class="cgform hidden">
+        <div class="cgl"><input id="cgCode" type="text" maxlength="20" placeholder="código (vazio = aleatório)" autocomplete="off" autocapitalize="off" spellcheck="false"><input id="cgQtd" type="number" min="1" max="100000" value="100"></div>
+        <div class="cgl"><div class="seg" id="cgTipo"><button type="button" class="on" data-v="coins">MOEDAS</button><button type="button" data-v="xp">XP</button></div>
+          <div class="seg" id="cgModo"><button type="button" class="on" data-v="each">1x POR JOGADOR</button><button type="button" data-v="once">SÓ 1 JOGADOR</button></div></div>
+        <div class="cgl"><div class="seg" id="cgVal"><button type="button" data-v="24">1 DIA</button><button type="button" class="on" data-v="168">7 DIAS</button><button type="button" data-v="720">30 DIAS</button><button type="button" data-v="0">SEM VALIDADE</button></div>
+          <button type="button" class="b pri" id="cgGo">GERAR</button></div>
+      </div>
       <div id="banList" class="banlist"></div>
     </div>
   </div>
@@ -1198,7 +1247,7 @@
     </div>
   </div>
   <div id="lvBox" class="ovl hidden">
-    <i class="unlk-rays lvray2"></i><div class="card mid lvup"><button type="button" class="msgx" aria-label="fechar" onclick="show('lvBox', false)"></button>
+    <i class="unlk-rays lvray2"></i><div class="card mid lvup">
       <div class="lvhead">SUBIU DE NÍVEL!</div>
       <div class="lvbadge"><i class="lvrays"></i><div class="lvring"><small>NÍVEL</small><b id="lvT">2</b></div></div>
       <div class="lvreward"><span class="lvrl">RECOMPENSA</span><span class="lvrv"><i class="coin"></i><b id="lvP">50</b></span></div>
@@ -1237,18 +1286,28 @@
     </div>
   </div>
   <div id="settings" class="ovl hidden">
-    <div class="card small mid">
-      <button type="button" class="msgx" aria-label="fechar" onclick="closeSettings()"></button><div class="title"><b>CONFIGURAÇÕES</b><small>controles na tela e código</small></div>
-      <div class="set"><label>Tamanho dos botões <span id="vSize"></span></label><input type="range" id="rSize" min="60" max="170" step="5"></div>
-      <div class="set"><label>Visibilidade dos botões <span id="vOp"></span></label><input type="range" id="rOp" min="25" max="100" step="5"></div>
-      <div class="btns one">
-        <button class="b" id="bEdit">POSICIONAR BOTÕES</button>
-        <button class="b" id="bCode">🔑 CÓDIGO</button>
-        <button class="b" id="bReset">RESTAURAR PADRÃO</button>
-        <button class="b dang" id="bAcc">SAIR DA CONTA</button>
-        <button class="b" id="bDelAcc">EXCLUIR CONTA</button>
-        <button class="b pri" id="bBack">VOLTAR</button>
+    <div class="card small mid setc">
+      <button type="button" class="msgx" aria-label="fechar" onclick="closeSettings()"></button><div class="title"><b>CONFIGURAÇÕES</b><small>som, controles e conta</small></div>
+      <div class="setbody">
+      <div class="btns two"><button class="b" id="bCode">🔑 CÓDIGO</button><button class="b" id="bCred">📜 CRÉDITOS</button></div>
+      <div class="setsec"><h4>ÁUDIO</h4>
+        <div class="set"><label>Música <span id="vMus"></span></label><input type="range" id="rMus" min="0" max="100" step="5"></div>
+        <div class="set"><label>Efeitos sonoros <span id="vSfx"></span></label><input type="range" id="rSfx" min="0" max="100" step="5"></div>
       </div>
+      <div class="setsec"><h4>CONTROLES NA TELA</h4>
+        <div class="set"><label>Tamanho dos botões <span id="vSize"></span></label><input type="range" id="rSize" min="60" max="170" step="5"></div>
+        <div class="set"><label>Visibilidade dos botões <span id="vOp"></span></label><input type="range" id="rOp" min="25" max="100" step="5"></div>
+        <div class="btns two"><button class="b" id="bEdit">POSICIONAR BOTÕES</button><button class="b" id="bReset">RESTAURAR PADRÃO</button></div>
+      </div>
+      <div class="btns two"><button class="b dang" id="bAcc">SAIR DA CONTA</button><button class="b" id="bDelAcc">EXCLUIR CONTA</button></div>
+      </div>
+      <button class="b pri hidden" id="bBack">VOLTAR</button>
+    </div>
+  </div>
+  <div id="credBox" class="ovl hidden">
+    <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('credBox', false); show('settings', true)"></button>
+      <div class="title"><b>CRÉDITOS</b><small>quem fez e o que foi usado</small></div>
+      <div id="credList" class="credlist"></div>
     </div>
   </div>
   <div id="results" class="ovl hidden">
@@ -2464,13 +2523,23 @@ function lookSprites(look) {
   return (lookCache[key] = out);
 }
 
+/* ---------------- CRÉDITOS (edite aqui) ----------------
+   Cada seção tem um título (t) e uma lista de linhas (itens). */
+const CREDITOS = [
+  { t: 'DESENVOLVIMENTO', itens: ['Jonas Soares'] },
+  { t: 'SPRITES', itens: [] },
+];
 /* ---------------- áudio sintetizado ---------------- */
-let actx = null, noiseBuf = null, master = null;
+let actx = null, noiseBuf = null, master = null, musBus = null;
+const AUD = { sfx: 80, mus: 60 }; try { Object.assign(AUD, JSON.parse(localStorage.getItem('adk_aud') || '{}')); } catch (e) {}
+function aplicaVol() { if (!actx) return; master.gain.value = 0.32 * AUD.sfx / 100; musBus.gain.value = 0.2 * AUD.mus / 100; }
+function salvaVol() { try { localStorage.setItem('adk_aud', JSON.stringify(AUD)); } catch (e) {} aplicaVol(); }
+addEventListener('pointerdown', () => { initAudio(); if (actx && actx.state === 'suspended') actx.resume(); }, true);
 function initAudio() {
   if (actx) return;
   try {
     actx = new (window.AudioContext || window.webkitAudioContext)();
-    master = actx.createGain(); master.gain.value = 0.3; master.connect(actx.destination);
+    master = actx.createGain(); master.connect(actx.destination); musBus = actx.createGain(); musBus.connect(actx.destination); aplicaVol();
     noiseBuf = actx.createBuffer(1, actx.sampleRate, actx.sampleRate);
     const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   } catch (e) { actx = null; }
@@ -2514,7 +2583,53 @@ const SFX = {
   charge() { tone('sawtooth', 55, 70, 0.13, 0.07); noise(0.12, 0.06, 'bandpass', 400); },
   ko() { tone('sawtooth', 400, 40, 1.0, 0.25); noise(0.6, 0.4, 'lowpass', 500); },
   spawn() { tone('triangle', 500, 1000, 0.25, 0.15); },
+  /* interface */
+  click() { tone('square', 720, 520, 0.045, 0.09); },
+  tab() { tone('triangle', 600, 900, 0.06, 0.14); },
+  pop() { tone('sine', 420, 820, 0.12, 0.22); tone('triangle', 840, 1240, 0.1, 0.08); },
+  close() { tone('sine', 700, 330, 0.1, 0.16); },
+  ok() { notas([[659, 0], [784, .07], [1047, .14]], 'triangle', 0.16, 0.2); },
+  err() { tone('sawtooth', 220, 150, 0.14, 0.14); setTimeout(() => tone('sawtooth', 180, 110, 0.18, 0.14), 140); },
+  coin() { notas([[988, 0], [1319, .06]], 'square', 0.09, 0.07); },
+  xp() { tone('triangle', 900, 1500, 0.08, 0.08); },
+  reward() { notas([[523, 0], [659, .08], [784, .16], [1047, .24]], 'square', 0.14, 0.09); notas([[1047, .24], [1568, .32]], 'triangle', 0.25, 0.1); },
+  unlock() { notas([[784, 0], [988, .07], [1175, .14], [1568, .21]], 'triangle', 0.18, 0.18); noise(0.4, 0.08, 'highpass', 5000); },
+  level() { notas([[392, 0], [523, .12], [659, .24], [784, .36], [1047, .5]], 'square', 0.22, 0.1); notas([[1047, .5], [1319, .5]], 'triangle', 0.6, 0.12); },
+  whoosh() { tone('sawtooth', 180, 900, 0.35, 0.05); noise(0.4, 0.14, 'bandpass', 1400); },
 };
+function notas(lista, tipo, dur, vol) { for (const [f, t] of lista) setTimeout(() => tone(tipo, f, f * 0.995, dur, vol), t * 1000); }
+/* ---------- música (gerada pelo jogo, em loop) ---------- */
+const MUS = {
+  cur: '', step: 0, next: 0, iv: null,
+  faixas: {
+    menu: { bpm: 92, acordes: [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]], baixo: 'triangle', lead: 'triangle', arp: [0, 1, 2, 1, 2, 1, 0, 2] },
+    luta: { bpm: 142, acordes: [[52, 55, 59], [48, 52, 55], [50, 54, 57], [47, 51, 54]], baixo: 'square', lead: 'square', arp: [0, 2, 1, 2, 0, 2, 1, 2] },
+  },
+  play(nome) {
+    if (nome === this.cur) return; this.cur = nome; this.step = 0;
+    if (!this.iv) this.iv = setInterval(() => this.agenda(), 90);
+  },
+  agenda() {
+    if (!actx || !musBus || !this.cur || document.hidden || AUD.mus <= 0) { this.next = 0; return; }
+    const f = this.faixas[this.cur], sp = 60 / f.bpm / 2; if (!this.next || this.next < actx.currentTime) this.next = actx.currentTime + 0.05;
+    while (this.next < actx.currentTime + 0.25) {
+      const k = this.step, ac = f.acordes[Math.floor(k / 16) % f.acordes.length], i = k % 16, hz = n => 440 * Math.pow(2, (n - 69) / 12);
+      if (i % 4 === 0) this.nota(f.baixo, hz(ac[0] - 12), this.next, sp * 3.2, this.cur === 'luta' ? 0.32 : 0.4);
+      if (this.cur === 'luta' && i % 2 === 1) this.nota('square', hz(ac[0] - 12), this.next, sp * 0.6, 0.12);
+      this.nota(f.lead, hz(ac[f.arp[i % 8]] + 12), this.next, sp * 0.9, this.cur === 'luta' ? 0.09 : 0.14);
+      if (this.cur === 'luta' && i % 4 === 2) { const t = this.next, s2 = actx.createBufferSource(), g = actx.createGain(), fl = actx.createBiquadFilter(); s2.buffer = noiseBuf; fl.type = 'highpass'; fl.frequency.value = 6000;
+        g.gain.setValueAtTime(0.12, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.05); s2.connect(fl); fl.connect(g); g.connect(musBus); s2.start(t); s2.stop(t + 0.06); }
+      this.step++; this.next += sp;
+    }
+  },
+  nota(tipo, f, t, dur, vol) { const o = actx.createOscillator(), g = actx.createGain(); o.type = tipo; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(musBus); o.start(t); o.stop(t + dur + 0.02); }
+};
+setInterval(() => MUS.play(typeof game !== 'undefined' && game.phase === 'play' ? 'luta' : 'menu'), 500);
+/* clique em qualquer botão da interface */
+addEventListener('click', e => { const b = e.target.closest && e.target.closest('button'); if (!b || b.disabled) return;
+  if (b.classList.contains('msgx')) SFX.close(); else if (b.closest('.tabs2,#missTabs,.ctabs,.tabs')) SFX.tab(); else SFX.click(); }, true);
 
 /* ---------------- efeitos ---------------- */
 let particles = [], popups = [], killfeed = [];
@@ -3471,6 +3586,7 @@ const net = {
         return;
       }
       if (!m || this.role !== 'host' || !this.conns.includes(c)) return;
+      if (m.t === 'hpr') { const rtt = performance.now() - (+m.k || 0); c.rtt = c.rtt == null ? rtt : c.rtt * 0.7 + rtt * 0.3; c.pong = performance.now(); return; } // medidor de conexão
       if (m.t === 's') c.ids.add(m.id); else if (m.t === 'leave') c.ids.delete(m.id);
       for (const o of this.conns) if (o !== c && o.open) o.send(m); // repassa para os outros
       handleNet(m);
@@ -3533,6 +3649,7 @@ const net = {
         return;
       }
       if (this.host !== c) return;
+      if (m.t === 'hp') { try { c.send({ t: 'hpr', k: m.k }); } catch (_) {} return; } // responde o medidor do anfitrião
       if (m.t === 'members') this.members = Array.isArray(m.list) ? m.list : [];
       else if (m.t === 'hostleave') { // o anfitrião avisou que saiu: já começa a troca, sem esperar a conexão cair
         this.pendingBots = clamp(m.bots | 0, 0, 6);
@@ -3563,7 +3680,25 @@ const net = {
     };
     setTimeout(attempt, rank === 0 ? 100 : 800);
   },
+  /* o anfitrião mede a conexão com cada jogador (1x por segundo). Se a internet DELE estiver ruim
+     (quase todos os jogadores com atraso alto ou sem resposta por ~6s), passa a sala para quem tem a melhor conexão. */
+  saude(dt) {
+    this.hpT = (this.hpT || 0) - dt; if (this.hpT > 0) return; this.hpT = 1;
+    const agora = performance.now(), cs = this.conns.filter(c => c.open);
+    for (const c of cs) { try { c.send({ t: 'hp', k: agora }); } catch (_) {} if (!c.pong) c.pong = agora; }
+    if (cs.length < 2 || game.ended || (game.duel && game.duelSt && game.duelSt.ph === 'count')) { this.ruim = 0; return; }
+    const mal = c => (c.rtt || 0) > 450 || agora - c.pong > 3000, nMal = cs.filter(mal).length;
+    this.ruim = nMal >= Math.ceil(cs.length * 0.6) ? (this.ruim || 0) + 1 : 0;
+    if (this.ruim < 6 || agora - (this.desdeT || 0) < 20000) return;
+    const bom = cs.filter(c => c.rtt != null && agora - c.pong < 8000).sort((a, b) => a.rtt - b.rtt)[0] || cs[0]; if (!bom) return; // quem responde mais rápido assume
+    // a sala passa para "bom": ele vai primeiro na lista de quem assume
+    this.members = [bom.peer, ...this.members.filter(id => id !== bom.peer)]; this.send({ t: 'members', list: this.members });
+    const code = this.code, pw = this.roomPw || '';
+    setTimeout(() => { game.toMenu('Sua internet ficou instável e a sala passou para outro jogador. Tentando voltar como jogador...');
+      setTimeout(() => { if (game.phase !== 'play' && window.joinCode) window.joinCode(code, pw); }, 4500); }, 300);
+  },
   becameHost() {
+    this.desdeT = performance.now(); this.ruim = 0;
     killfeed.unshift({ sys: 'Agora você é o anfitrião da sala', life: 6 }); this.regT = 0; this.regKey = '';
     const n = 0; this.pendingBots = 0; // salas online: sem bots
     for (let i = 0; i < n; i++) game.addBot('fight', BOT_NAMES[game.bots.length % BOT_NAMES.length]);
@@ -3597,6 +3732,7 @@ const net = {
       const room = { code: this.code, host: dispName(game.me.name), nm: this.roomName || '', lk: !!this.roomPw, n: this.conns.length + 1, map: game.map || 'canyon', md: this.roomMode || 'n', mx: roomMax() }, rk = JSON.stringify(room);
       if (!game.ended && (rk !== this.regKey || this.regT <= 0)) { this.regT = ROOM_HEARTBEAT; this.regKey = rk; lobby.register(room); }
       if (game.duel && !game.ended) duelTick(dt);
+      this.saude(dt);
       if (game.timed && !game.started && humanCount() >= 2) startMatch(true); // 5 minutos: só começa com 2 jogadores
       this.clockT = (this.clockT || 0) - dt; // o anfitrião manda o relógio da partida a cada 2s
       if (game.timed && game.started && this.clockT <= 0 && !game.ended) { this.clockT = 2; this.send({ t: 'clock', left: Math.max(0, game.matchLeft()) }); }
@@ -3835,7 +3971,7 @@ function voar(tipo, n) {
       el.style.left = x0 + 'px'; el.style.top = y0 + 'px'; document.body.appendChild(el);
       const dx = r1.left + r1.width / (tipo === 'c' ? 2 : 4) - x0, dy = r1.top + r1.height / 2 - y0;
       el.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: 0 }, { transform: 'translate(calc(-50% + ' + (Math.random() - .5) * 50 + 'px),calc(-50% - 30px)) scale(1.1)', opacity: 1, offset: .3 }, { transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px)) scale(.7)', opacity: 1 }],
-        { duration: 750 + i * 60, delay: i * 55, easing: 'cubic-bezier(.5,0,.7,1)', fill: 'forwards' }).onfinish = () => { el.remove(); alvo.animate([{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 180 }); };
+        { duration: 750 + i * 60, delay: i * 55, easing: 'cubic-bezier(.5,0,.7,1)', fill: 'forwards' }).onfinish = () => { el.remove(); if (i % 2 === 0) (tipo === 'c' ? SFX.coin : SFX.xp)(); alvo.animate([{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 180 }); };
     }
   }, 60);
 }
@@ -3905,11 +4041,12 @@ function fxPanel(o) { // painel no estilo "DESBLOQUEADO!" (cor: ok | err | gold)
   const fecha = () => { f.classList.add('sai'); setTimeout(() => f.remove(), 400); };
   if (o.btn) { const b = inn.querySelector('button'); b.onclick = async e => { e.stopPropagation(); b.disabled = true; await (o.onBtn && o.onBtn(inn)); setTimeout(fecha, 1300); }; }
   else { f.onclick = () => f.remove(); setTimeout(fecha, o.tempo || 1500); }
-  box.appendChild(f); try { SFX.zap(); } catch (e) {} return f;
+  box.appendChild(f); try { (o.cor === 'err' ? SFX.err : o.cor === 'ok' ? SFX.unlock : SFX.pop)(); } catch (e) {} return f;
 }
 function comprouFx(nome) { const c = document.getElementById('custom'); if (!c || c.classList.contains('hidden')) return; fxPanel({ cor: 'ok', titulo: 'DESBLOQUEADO!', sub: esc(nome) }); }
 /* recompensa resgatada: aviso no centro da janela (sempre visível, mesmo com a lista rolada) */
 function premioFx(box, c, xp, titulo) {
+  SFX.reward();
   if (!box) return; const old = box.querySelector('.przfx'); if (old) old.remove();
   const f = document.createElement('div'); f.className = 'przfx';
   f.innerHTML = '<div class="przin"><small>' + (titulo || 'RESGATADO!') + '</small><div class="przv">' + (c ? '<span>+' + c + ' <i class="coin"></i></span>' : '') + (xp ? '<span>+' + xp + ' ' + XPI + '</span>' : '') + '</div></div>';
@@ -4006,6 +4143,8 @@ async function useCode() {
       setSlots([], 0); Object.assign(conta.perfil, { coins: 0, owned: [], infinite: false, kills: 0, deaths: 0, matches: 0, look: {}, fxc: {}, xp_bonus: 0, lvl_got: 1 });
       wallet.sync(); renderConta(); codeOk('Tudo voltou ao começo!').then(() => { refreshDaily(); boasVindas(); });
     }
+    else if (data === 'used') codeErr('Você já usou esse código (ou ele só podia ser usado uma vez).');
+    else if (data === 'expired') codeErr('Esse código já expirou.');
     else codeErr('Esse código não existe ou já foi usado.');
   } catch (e) { unwait(); notice(/redeem_code|function|schema cache|column|coins|infinite|owned/i.test(String(e && e.message)) ? 'O banco do jogo está desatualizado. Rode o arquivo arena-de-ki-supabase-COMPLETO.sql no Supabase.\n(' + String(e && e.message) + ')' : 'Não deu para usar o código: ' + String(e && e.message), 'CÓDIGO'); }
 }
@@ -4037,14 +4176,17 @@ const gate = {
     const wasAuth = !document.getElementById('auth').classList.contains('hidden');
     this.done(); unwaitAll();
     if (game.phase === 'play') return;
-    show('auth', false); if (wasAuth || document.getElementById('menu').classList.contains('hidden')) showMenu();
+    if (wasAuth) { transCover(); setTimeout(() => { show('auth', false); showMenu(); transReveal(); }, 480); return; }
+    show('auth', false); if (document.getElementById('menu').classList.contains('hidden')) showMenu();
   },
   loggedOut() {
     if (!this.sprites || !conta.ready) return;
     this.done(); unwaitAll();
     if (game.phase === 'play') return; // caiu a conta no meio da luta: termina a luta e pede login na volta
-    ['menu', 'createBox', 'roomsBox', 'pwBox', 'custom', 'settings'].forEach(id => show(id, false));
-    openAuth();
+    const vai = () => { if (typeof msgDone === 'function') msgDone(null); document.querySelectorAll('.ovl').forEach(o => { if (o.id !== 'auth' && o.id !== 'boot' && o.id !== 'wait') o.classList.add('hidden'); }); openAuth(); };
+    if (saidaMsg) { const m = saidaMsg; saidaMsg = ''; const fim = () => { vai(); transReveal(); setTimeout(() => { if (m.startsWith('BAN:')) notice(m.slice(4), 'BANIDO', 'err'); else if (/exclu/.test(m)) notice(m, 'CONTA EXCLUÍDA', 'ok'); }, 450); };
+      if (document.getElementById('trans').className === 'in') fim(); else { transCover(); setTimeout(fim, 480); } return; }
+    vai();
   },
   profileFailed() { if (!this.shown) this.fail('Não foi possível carregar sua conta. Confira a internet.'); else { unwaitAll(); setStatus('Não foi possível carregar sua conta.'); } },
   spritesReady() { this.sprites = true; this.check(); },
@@ -4057,7 +4199,7 @@ const gate = {
 };
 function unwaitAll() { waitN = 0; clearTimeout(waitTO); show('wait', false); }
 function showMenu() { ['auth', 'createBox', 'roomsBox', 'pwBox'].forEach(id => show(id, false)); show('menu', true); renderConta(); updateTouchUI(); }
-let authMode = 'in';
+let authMode = 'in', saidaMsg = '';
 function openAuth() {
   authMode = 'in'; syncAuthUI(); document.getElementById('authMsg').textContent = '';
   show('auth', true);
@@ -4070,9 +4212,8 @@ function syncAuthUI() {
   document.getElementById('authIdLbl').textContent = up ? 'E-MAIL' : 'E-MAIL OU NOME';
   em.type = up ? 'email' : 'text'; em.placeholder = up ? 'seu@email.com' : 'e-mail ou nome no jogo'; em.autocomplete = up ? 'email' : 'username';
   // criando conta a senha aparece; para entrar fica escondida (o olho mostra)
-  pw.type = up || authEyeOn ? 'text' : 'password'; pw.autocomplete = up ? 'new-password' : 'current-password';
+  pw.type = 'text'; pw.autocomplete = up ? 'new-password' : 'current-password';
   pw.placeholder = up ? 'mínimo 6 caracteres' : 'sua senha';
-  const eye = document.getElementById('authEye'); eye.style.display = up ? 'none' : ''; eye.classList.toggle('on', authEyeOn);
   document.getElementById('authSub').textContent = up ? 'escolha seu nome no jogo: ele é só seu' : 'entre na sua conta para jogar';
   document.querySelectorAll('#authTabs button').forEach(x => x.classList.toggle('sel', x.dataset.m === authMode));
 }
@@ -4093,10 +4234,10 @@ const authErr = e => { const m = String(e && e.message || e || ''); const hit = 
 function setupConta() {
   wallet.sync();
   conta.init().then(() => { if (!conta.sb) gate.check(); }, () => gate.check());
-  document.getElementById('bAcc').onclick = async () => { wait('saindo da conta...'); try { await conta.signOut(); } finally { unwaitAll(); } };
+  document.getElementById('bAcc').onclick = async () => { saidaMsg = 'sair'; transCover(); await new Promise(z => setTimeout(z, 480)); wait('saindo da conta...'); try { await conta.signOut(); } finally { unwaitAll(); } };
   document.getElementById('bootRetry').onclick = () => location.reload();
   document.querySelectorAll('#authTabs button').forEach(x => x.onclick = () => { authMode = x.dataset.m; syncAuthUI(); document.getElementById('authMsg').textContent = ''; });
-  document.getElementById('authEye').onclick = () => { authEyeOn = !authEyeOn; syncAuthUI(); };
+
   document.getElementById('authForm').addEventListener('submit', async e => {
     e.preventDefault(); if (isWaiting() || !conta.sb) return;
     const up = authMode === 'up', msg = document.getElementById('authMsg'), login = document.getElementById('authEmail').value.trim(), pass = document.getElementById('authPass').value;
@@ -4163,7 +4304,7 @@ document.getElementById('bGear').onclick = () => openSettings('menu');
 /* menu: o SEU lutador em destaque (parado ↔ bola de energia) + rostinho no rodapé */
 /* transição: transCover() fecha a cortina (com o logo); a troca de tela acontece por trás; transReveal() abre */
 let transAt = 0;
-function transCover() { const t = document.getElementById('trans'); if (!t) return; const lg = t.querySelector('.tlogo'); if (!lg.src) lg.src = document.getElementById('logoImg').src;
+function transCover() { SFX.whoosh(); const t = document.getElementById('trans'); if (!t) return; const lg = t.querySelector('.tlogo'); if (!lg.src) lg.src = document.getElementById('logoImg').src;
   clearTimeout(transCover.k); t.className = 'in'; transAt = performance.now(); transCover.k = setTimeout(transHide, 15000); }
 function transReveal() { const t = document.getElementById('trans'); if (!t || t.className !== 'in') return; clearTimeout(transCover.k);
   const falta = Math.max(0, 650 - (performance.now() - transAt)); // deixa o logo aparecer
@@ -4218,7 +4359,8 @@ function drawMissoes(flash) {
   show('dotMD', prontas(MISSOES, dly)); show('dotMW', prontas(SEMANAIS, dly.w));
   const sem = missTab === 'w', src = sem ? dly.w : dly, lista = listaDe(src, sem ? SEMANAIS : MISSOES);
   document.getElementById('missInfo').textContent = sem ? 'renovam toda segunda-feira' : 'renovam todo dia à meia-noite';
-  for (const m of lista) { const v = Math.min(m.n, m.v), feita = src.ms.includes(m.id), ok = v >= m.n;
+  const ordem = m => src.ms.includes(m.id) ? 2 : Math.min(m.n, m.v) >= m.n ? 0 : 1;
+  for (const m of [...lista].sort((a, b) => ordem(a) - ordem(b))) { const v = Math.min(m.n, m.v), feita = src.ms.includes(m.id), ok = v >= m.n;
     const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : ok ? ' ready' : '') + (flash === m.id ? ' flash' : '');
     r.innerHTML = '<div class="rwi"><b>' + esc(m.t) + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div>' + premio(m.c, m.xp);
     const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
@@ -4285,7 +4427,7 @@ let bvVisto = false, bvBusca = false; // boas-vindas: 150 moedas na primeira vez
 async function boasVindas() {
   if (bvVisto || bvBusca || !conta.user || !conta.perfil || !document.getElementById('lvBox').classList.contains('hidden')) return; bvBusca = true;
   const { data, error } = await conta.sb.rpc('welcome_pending'); bvBusca = false; if (error || !data || bvVisto) return;
-  if (!document.getElementById('msgBox').classList.contains('hidden') || document.getElementById('menu').classList.contains('hidden')) { setTimeout(boasVindas, 1500); return; }
+  if (!document.getElementById('msgBox').classList.contains('hidden') || document.getElementById('menu').classList.contains('hidden') || document.querySelector('.ovl:not(.hidden):not(#menu):not(#msgBox)') || document.getElementById('trans').className) { setTimeout(boasVindas, 1500); return; } // só no menu, sem outra janela aberta
   bvVisto = true; show('lvBox', false);
   const ok = await msgOpen('BEM-VINDO!', { kind: 'gold', html: 'Tome <b class="bvn">150 <i class="coin"></i></b> para comprar<br>seu primeiro item e cor!' }, '', false, 'RESGATAR');
   if (!ok) { bvVisto = false; return; }
@@ -4310,8 +4452,9 @@ function checkLevel() {
   const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
   const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0);
   if (document.querySelector('#msgForm.k-gold') && !document.getElementById('msgBox').classList.contains('hidden')) return;
+  if (document.getElementById('trans').className) { setTimeout(checkLevel, 900); return; } // espera a transição terminar
   if (lv <= (p.lvl_got | 0) || lv <= lvShown || document.getElementById('menu').classList.contains('hidden')) return;
-  lvShown = lv; document.getElementById('lvT').textContent = lv; document.getElementById('lvP').textContent = lvPrize(p.lvl_got | 0, lv); show('lvBox', true);
+  lvShown = lv; document.getElementById('lvT').textContent = lv; document.getElementById('lvP').textContent = lvPrize(p.lvl_got | 0, lv); show('lvBox', true); SFX.level();
 }
 document.getElementById('lvGet').onclick = async () => {
   const b = document.getElementById('lvGet'); b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {}
@@ -4363,6 +4506,8 @@ let convAberto = false, pingN = 0;
 let banTab = 'b';
 async function banDraw() {
   const L = document.getElementById('banList'); L.innerHTML = '<small class="muted">carregando...</small>';
+  show('cgForm', banTab === 'c'); document.querySelector('#banBox .banq').classList.toggle('hidden', banTab === 'c');
+  if (banTab === 'c') return codesDraw(L);
   const q = document.getElementById('banIn').value.trim();
   if (banTab === 'b' && !q) { L.innerHTML = '<small class="muted">Digite o nome exato do jogador e toque em BUSCAR.</small>'; return; }
   const { data, error } = banTab === 'b' ? await conta.sb.rpc('admin_find', { q }) : await conta.sb.rpc('admin_bans');
@@ -4383,15 +4528,31 @@ async function banDraw() {
     r.appendChild(b); L.appendChild(r);
   }
 }
+async function codesDraw(L) {
+  const { data, error } = await conta.sb.rpc('admin_codes');
+  if (error) { L.innerHTML = ''; return notice(/function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'CÓDIGOS', 'err'); }
+  L.innerHTML = (data || []).length ? '' : '<small class="muted">Nenhum código gerado ainda.</small>';
+  const dt = v => v ? new Date(v).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+  for (const g of data || []) {
+    const venc = g.expira && new Date(g.expira) < new Date(), r = document.createElement('div'); r.className = 'banrow' + (venc ? ' ban' : '');
+    r.innerHTML = '<div><b class="cgc">' + esc(g.code.toUpperCase()) + ' <span>+' + g.qtd + ' ' + (g.tipo === 'xp' ? XPI : COINI) + '</span></b><small>' + (g.modo === 'once' ? 'só 1 jogador' : '1x por jogador') + ' · usado ' + g.usos + 'x · criado ' + dt(g.criado) + ' · ' + (g.expira ? (venc ? 'EXPIROU ' : 'vale até ') + dt(g.expira) : 'sem validade') + '</small></div>';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'b bErr'; b.textContent = 'EXCLUIR';
+    b.onclick = async () => { if (!(await msgOpen('EXCLUIR CÓDIGO?', 'Excluir o código ' + g.code.toUpperCase() + '?\nNinguém mais vai conseguir usar.', '', true, 'EXCLUIR'))) return;
+      const { error: e } = await conta.sb.rpc('admin_code_delete', { code: g.code }); if (e) return notice(e.message, 'CÓDIGOS', 'err'); banDraw(); };
+    r.appendChild(b); L.appendChild(r);
+  }
+}
+const segVal = id => document.querySelector('#' + id + ' .on').dataset.v;
 function openBan() { if (normRole(conta.perfil && conta.perfil.role) !== 'dono') return; show('banBox', true); banDraw(); }
 setInterval(() => checaBan(), 10000); // banimento cai em até ~10 s, jogando ou no menu
 async function checaBan() {
   if (!conta.user || !conta.sb || checaBan.on) return; checaBan.on = true;
   let { data, error } = await conta.sb.rpc('ban_status'); if (error) { const r = await conta.sb.rpc('check_ban'); data = r.data ? 'conta' : null; }
   checaBan.on = false; if (!data) return;
+  saidaMsg = 'BAN:' + (data === 'ip' ? 'Alguém usando esta mesma internet (IP) foi banido pelos donos do jogo.\nPor isso, nenhuma conta consegue jogar por esta conexão.' : 'Esta conta foi banida pelos donos do jogo.');
+  transCover(); await new Promise(z => setTimeout(z, 480)); // a cortina fecha antes de trocar de tela
   if (game.phase === 'play') game.toMenu0();
-  try { await conta.sb.auth.signOut({ scope: 'local' }); } catch (e) {} conta.setUser(null);
-  notice(data === 'ip' ? 'Alguém usando esta mesma internet (IP) foi banido pelos donos do jogo.\nPor isso, nenhuma conta consegue jogar por esta conexão.' : 'Esta conta foi banida pelos donos do jogo.', 'BANIDO', 'err');
+  try { await conta.sb.auth.signOut({ scope: 'local' }); } catch (e) {} conta.setUser(null); if (saidaMsg) gate.loggedOut();
 }
 async function pedidosDot() { if (!conta.user || !conta.sb) return; const { data, error } = await conta.sb.rpc('my_friend_reqs'); show('dotFr', !error && !!data && data.length > 0); }
 setInterval(async () => { // "estou online" + convites recebidos (no menu)
@@ -4410,8 +4571,8 @@ document.getElementById('bDelAcc').onclick = async () => {
   wait('excluindo...'); const { error } = await conta.sb.rpc('delete_account'); unwait();
   if (error) return notice(/function|does not exist|schema/i.test(error.message) ? 'Exclusão ainda não ligada no servidor. Rode o SQL COMPLETO de novo.' : error.message, 'EXCLUIR CONTA');
   try { ['adk_slots', 'adk_look', 'adk_fxc'].forEach(k => localStorage.removeItem(k)); } catch (e) {} setSlots([], 0);
-  try { await conta.sb.auth.signOut({ scope: 'local' }); } catch (e) {}
-  await msgOpen('CONTA EXCLUÍDA', 'Sua conta foi apagada. Até a próxima!'); location.reload();
+  saidaMsg = 'Sua conta foi excluída para sempre. Até a próxima!'; transCover(); await new Promise(z => setTimeout(z, 480));
+  try { await conta.sb.auth.signOut({ scope: 'local' }); } catch (e) {} conta.setUser(null); gate.loggedOut();
 };
 /* ---------- reconexão: aviso na tela enquanto volta, e retenta quando a internet voltar ---------- */
 setInterval(() => {
@@ -4430,6 +4591,8 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.51', d: '13/11', itens: [['mudou', 'Nova tela de entrar e criar conta'], ['novo', 'Transição ao entrar e ao sair da conta']] },
+  { v: '1.0.49', d: '13/11', itens: [['novo', 'Músicas e sons em todo o jogo, com volume nas configurações'], ['novo', 'Tela de créditos'], ['novo', 'Sala troca de anfitrião sozinha se a internet dele ficar ruim'], ['mudou', 'Missões prontas no topo, resgatadas no fim'], ['novo', 'Donos podem gerar códigos']] },
   { v: '1.0.47', d: '12/11', itens: [['mudou', 'HIT KILL: defender não salva, e cada derrota rende menos moedas'], ['novo', 'Transição ao sair da partida'], ['mudou', 'Perdeu a internet: sai da sala'], ['novo', 'Painel de banimento para donos']] },
   { v: '1.0.45', d: '12/11', itens: [['mudou', 'No PC, segure e arraste para rolar qualquer lista'], ['mudou', 'Aviso verde ao remover amigo']] },
   { v: '1.0.44', d: '12/11', itens: [['mudou', 'Avisos de amigos e convites em verde (certo) ou vermelho (erro)'], ['mudou', 'Códigos bloqueados durante a batalha']] },
@@ -4814,7 +4977,7 @@ let msgDone = null;
 function msgOpen(title, text, input, cancel, okLabel) {
   return new Promise(res => {
     if (msgDone) msgDone(null);
-    const kd = (text && text.kind) || (cancel ? 'ask' : 'info'); const fm = document.getElementById('msgForm'); fm.className = 'card small msgc k-' + kd; document.getElementById('msgBadge').className = 'mbadge'; void fm.offsetWidth;
+    const kd = (text && text.kind) || (cancel ? 'ask' : 'info'); try { (kd === 'ok' ? SFX.ok : kd === 'err' || kd === 'pobre' ? SFX.err : SFX.pop)(); } catch (e) {} const fm = document.getElementById('msgForm'); fm.className = 'card small msgc k-' + kd; document.getElementById('msgBadge').className = 'mbadge'; void fm.offsetWidth;
     document.getElementById('msgTitle').textContent = title; const mt = document.getElementById('msgText'); if (text && text.html) mt.innerHTML = text.html; else mt.textContent = text || '';
     const inp = document.getElementById('msgIn'); inp.classList.toggle('hidden', !input); inp.value = ''; inp.placeholder = input || '';
     document.getElementById('msgOk').textContent = okLabel || 'OK'; show('msgCancel', false); show('msgX', !!cancel); document.getElementById('msgBtns').style.gridTemplateColumns = '1fr';
@@ -5421,7 +5584,8 @@ function updateTouchUI() {
   const tc = document.getElementById('tChat'); if (tc) tc.style.display = (editMode || game.mode === 'online') ? '' : 'none';
   layoutButtons();
 }
-function show(id, on) { document.getElementById(id).classList.toggle('hidden', !on); }
+function show(id, on) { const el = document.getElementById(id); const abrindo = on && el.classList.contains('hidden'); el.classList.toggle('hidden', !on);
+  if (abrindo && el.classList.contains('ovl')) { el.scrollTop = 0; el.querySelectorAll('*').forEach(n => { if (n.scrollTop) n.scrollTop = 0; if (n.scrollLeft && !n.closest('#lvRows')) n.scrollLeft = 0; }); } } // toda tela abre no começo
 function closePop(id) { show(id, false); if (game.phase !== 'play' && conta.user && conta.perfil) show('menu', true); }
 function openPause() {
   if (game.phase !== 'play') return;
@@ -5444,6 +5608,8 @@ function closeSettings() {
   updateTouchUI();
 }
 function syncSettingsUI() {
+  document.getElementById('rMus').value = AUD.mus; document.getElementById('vMus').textContent = AUD.mus + '%';
+  document.getElementById('rSfx').value = AUD.sfx; document.getElementById('vSfx').textContent = AUD.sfx + '%';
   document.getElementById('rSize').value = settings.size; document.getElementById('vSize').textContent = settings.size + '%';
   document.getElementById('rOp').value = settings.op; document.getElementById('vOp').textContent = settings.op + '%';
 }
@@ -5479,11 +5645,23 @@ function onEscape() {
 }
 function setupTouch() {
   loadSettings(); buildButtons();
+  document.getElementById('rMus').addEventListener('input', e => { AUD.mus = +e.target.value; syncSettingsUI(); salvaVol(); });
+  document.getElementById('rSfx').addEventListener('input', e => { AUD.sfx = +e.target.value; syncSettingsUI(); salvaVol(); });
+  document.getElementById('rSfx').addEventListener('change', () => SFX.coin());
+  document.getElementById('bCred').onclick = () => { const L = document.getElementById('credList');
+    L.innerHTML = CREDITOS.map(sec => '<div class="credsec"><h4>' + esc(sec.t) + '</h4>' + sec.itens.map(x => '<p>' + esc(x) + '</p>').join('') + '</div>').join(''); L.scrollTop = 0; show('settings', false); show('credBox', true); };
   document.getElementById('rSize').addEventListener('input', e => { settings.size = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
   document.getElementById('rOp').addEventListener('input', e => { settings.op = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
   document.getElementById('bEdit').onclick = startEdit;
   document.getElementById('bCode').onclick = useCode;
-  document.getElementById('bBan').onclick = openBan; document.getElementById('banGo').onclick = () => { banTab = 'b'; document.querySelectorAll('#banTabs button').forEach(x => x.classList.toggle('on', x.dataset.t === 'b')); banDraw(); };
+  document.getElementById('bBan').onclick = openBan;
+  document.querySelectorAll('#cgForm .seg').forEach(sg => sg.querySelectorAll('button').forEach(b => b.onclick = () => sg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b))));
+  document.getElementById('cgGo').onclick = async () => {
+    const qtd = Math.max(1, Math.min(100000, +document.getElementById('cgQtd').value | 0));
+    wait('gerando...'); const { data, error } = await conta.sb.rpc('admin_code_create', { code: document.getElementById('cgCode').value.trim(), tipo: segVal('cgTipo'), qtd, modo: segVal('cgModo'), horas: +segVal('cgVal') }); unwait();
+    if (error) return notice(/EXISTE/.test(error.message) ? 'Já existe um código com esse nome.' : /RESERVADO/.test(error.message) ? 'Esse nome é reservado do jogo.' : /TAMANHO/.test(error.message) ? 'O código precisa ter de 3 a 20 letras ou números.' : /function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'CÓDIGOS', 'err');
+    document.getElementById('cgCode').value = ''; codeOk('Código ' + String(data).toUpperCase() + ' criado!'); banDraw();
+  }; document.getElementById('banGo').onclick = () => { banTab = 'b'; document.querySelectorAll('#banTabs button').forEach(x => x.classList.toggle('on', x.dataset.t === 'b')); banDraw(); };
   document.getElementById('banIn').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('banGo').click(); });
   document.querySelectorAll('#banTabs button').forEach(b => b.onclick = () => { banTab = b.dataset.t; document.querySelectorAll('#banTabs button').forEach(x => x.classList.toggle('on', x === b)); banDraw(); });
   document.getElementById('bReset').onclick = () => { settings.size = 100; settings.op = 100; settings.btn = {}; saveSettings(); syncSettingsUI(); layoutButtons(); };
