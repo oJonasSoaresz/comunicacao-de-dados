@@ -1015,6 +1015,10 @@
   /* R44: cores por tipo — ok verde, erro vermelho */
   button.bOk{background:linear-gradient(#5dff8a,#1f9a55)!important;color:#0c2a18!important;border-color:#c9ffdc!important}
   button.bErr{background:linear-gradient(#ff7a8a,#b3152f)!important;color:#fff!important;border-color:#ffd0d6!important}
+
+  /* R45 */
+  body.arrasta,body.arrasta *{user-select:none!important;cursor:grabbing!important}
+  .lvtop{background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 10px,transparent 10px 24px)!important;border:2px solid #3e2d78;border-radius:14px;padding:10px 14px}
 </style>
 </head>
 <body>
@@ -1052,7 +1056,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.44</div>
+      <div class="ver">v1.0.46</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -3788,10 +3792,10 @@ const wallet = {
 function renderCoins() { const v = shop.infinite() ? '∞' : wallet.n; contaAte(v); const p = document.getElementById('coinPill'); if (p) { p.classList.remove('pulse'); void p.offsetWidth; p.classList.add('pulse'); } }
 /* o nome dourado agora vem do cargo salvo no banco (a antiga tag {DONO} não vale mais) */
 /* número das moedas sobe aos poucos quando o jogador ganha */
-let coinVis = null, coinT = 0;
+let coinVis = null, coinT = 0, coinAnim = false;
 function contaAte(v) {
   const put = x => { for (const id of ['coinN', 'cCoinN']) { const e = document.getElementById(id); if (e) e.textContent = x; } };
-  cancelAnimationFrame(coinT); if (typeof v !== 'number' || coinVis == null || v <= coinVis) { coinVis = typeof v === 'number' ? v : null; put(v); return; }
+  cancelAnimationFrame(coinT); const anim = coinAnim; coinAnim = false; if (!anim || typeof v !== 'number' || coinVis == null || v <= coinVis) { coinVis = typeof v === 'number' ? v : null; put(v); return; }
   const a = coinVis, t0 = performance.now() + 550, dur = 650; coinVis = v;
   const step = now => { const k = Math.max(0, Math.min(1, (now - t0) / dur)); put(Math.round(a + (v - a) * k)); if (k < 1) coinT = requestAnimationFrame(step); };
   coinT = requestAnimationFrame(step);
@@ -4181,7 +4185,7 @@ async function refreshDaily() {
   if (!document.getElementById('missBox').classList.contains('hidden')) drawMissoes(); carregarConquistas(); const pode = prontas(MISSOES, dly) || prontas(SEMANAIS, dly.w);
   show('dotMiss', pode); show('dotDaily', !dly.got);
 }
-function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; if (n > 0) voar('c', n); wallet.sync(); }
+function moedasGanhas(n) { if (conta.perfil) conta.perfil.coins = (conta.perfil.coins || 0) + n; if (n > 0) { voar('c', n); coinAnim = true; } wallet.sync(); }
 function semV11() { notice('As missões e a recompensa diária ainda não estão ligadas no servidor.\nRode o SQL COMPLETO de novo no Supabase.', 'AVISO'); }
 let missTab = 'd';
 const prog = (src, f) => (src[f] || 0) + (conta.pend[f] | 0); // servidor + o que ainda não foi enviado
@@ -4317,7 +4321,7 @@ async function drawAmigos() {
     if (naSala) { const c = document.createElement('button'); c.type = 'button'; c.className = 'b pri frb'; c.textContent = 'CONVIDAR';
       c.onclick = async () => { c.disabled = true; const { error: e } = await conta.sb.rpc('invite_friend', { f: f.id, code: net.code, pw: net.roomPw || '' }); c.textContent = e ? 'ERRO' : 'ENVIADO ✓'; c.classList.add(e ? 'bErr' : 'bOk'); if (e) { c.disabled = false; notice('Não deu para enviar o convite.', 'CONVITE', 'err'); } }; r.appendChild(c); }
     const x = document.createElement('button'); x.type = 'button'; x.className = 'b frb frx'; x.textContent = 'REMOVER';
-    x.onclick = async () => { if (!(await msgOpen('AMIGOS', 'Remover ' + dispName(f.name) + ' da sua lista?', '', true, 'REMOVER'))) return; await conta.sb.rpc('remove_friend', { f: f.id }); drawAmigos(); };
+    x.onclick = async () => { if (!(await msgOpen('AMIGOS', 'Remover ' + dispName(f.name) + ' da sua lista?', '', true, 'REMOVER'))) return; const { error: er } = await conta.sb.rpc('remove_friend', { f: f.id }); drawAmigos(); notice(er ? 'Não deu para remover agora.' : dispName(f.name) + ' foi removido da sua lista.', 'AMIGOS', er ? 'err' : 'ok'); };
     r.appendChild(x); L.appendChild(r); }
   drawTagCanvases();
 }
@@ -4346,7 +4350,7 @@ setInterval(async () => { // "estou online" + convites recebidos (no menu)
 }, 10000);
 /* ---------- excluir conta ---------- */
 document.getElementById('bDelAcc').onclick = async () => {
-  const t = await msgOpen('EXCLUIR CONTA', { html: 'Isso apaga para sempre sua conta, ' + COINI + ', itens, missões e amigos.<br><br>Para confirmar, digite EXCLUIR:' }, 'EXCLUIR', true, 'EXCLUIR CONTA');
+  const t = await msgOpen('EXCLUIR CONTA', 'Isso apaga para sempre sua conta, moedas, itens, missões e amigos.\n\nPara confirmar, digite EXCLUIR:', 'EXCLUIR', true, 'EXCLUIR CONTA');
   if (t == null || t === false) return; if (String(t).trim().toUpperCase() !== 'EXCLUIR') return notice('Conta NÃO excluída. Era preciso digitar EXCLUIR.', 'EXCLUIR CONTA');
   wait('excluindo...'); const { error } = await conta.sb.rpc('delete_account'); unwait();
   if (error) return notice(/function|does not exist|schema/i.test(error.message) ? 'Exclusão ainda não ligada no servidor. Rode o SQL COMPLETO de novo.' : error.message, 'EXCLUIR CONTA');
@@ -4371,6 +4375,7 @@ const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.45', d: '12/11', itens: [['mudou', 'No PC, segure e arraste para rolar qualquer lista'], ['mudou', 'Aviso verde ao remover amigo']] },
   { v: '1.0.44', d: '12/11', itens: [['mudou', 'Avisos de amigos e convites em verde (certo) ou vermelho (erro)'], ['mudou', 'Códigos bloqueados durante a batalha']] },
   { v: '1.0.43', d: '12/11', itens: [['mudou', 'Ícone da moeda no lugar da palavra'], ['mudou', 'Presente de boas-vindas com o aviso das conquistas']] },
   { v: '1.0.42', d: '12/11', itens: [['mudou', 'Códigos e boas-vindas no popup padrão'], ['mudou', 'Luz girando atrás do popup de nível'], ['mudou', 'Conta nova ou excluída volta ao personagem base']] },
@@ -4819,6 +4824,18 @@ function dragScroll(el) {
   el.addEventListener('click', e => { if (moved > 4) { e.stopPropagation(); e.preventDefault(); moved = 0; } }, true);
   el.addEventListener('wheel', e => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { el.scrollLeft += e.deltaY; e.preventDefault(); } }, { passive: false });
 }
+/* arrastar com o mouse para rolar QUALQUER lista (missões, conquistas, ranking, níveis...) */
+(function dragAll() {
+  let el = null, sx = 0, sy = 0, sl = 0, st = 0, moved = 0;
+  const rola = n => { for (; n && n !== document.body; n = n.parentElement) { if (n.dataset && n.dataset.drag) return null; const cs = getComputedStyle(n);
+    if ((/(auto|scroll)/.test(cs.overflowY) && n.scrollHeight > n.clientHeight + 2) || (/(auto|scroll)/.test(cs.overflowX) && n.scrollWidth > n.clientWidth + 2)) return n; } return null; };
+  addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button !== 0 || !e.target.closest || !e.target.closest('.ovl') || e.target.closest('input,textarea,select,input[type=range]')) return;
+    el = rola(e.target); if (!el) return; sx = e.clientX; sy = e.clientY; sl = el.scrollLeft; st = el.scrollTop; moved = 0; }, true);
+  addEventListener('pointermove', e => { if (!el) return; const dx = e.clientX - sx, dy = e.clientY - sy; moved = Math.max(moved, Math.abs(dx) + Math.abs(dy));
+    if (moved > 5) { document.body.classList.add('arrasta'); el.scrollLeft = sl - dx; el.scrollTop = st - dy; } });
+  addEventListener('pointerup', () => { if (!el) return; el = null; setTimeout(() => document.body.classList.remove('arrasta'), 0); });
+  addEventListener('click', e => { if (moved > 5) { e.stopPropagation(); e.preventDefault(); moved = 0; } }, true);
+})();
 /* SLOTS: até 3 personagens montados (visual + cores + arquétipo). O slot escolhido é o que entra na luta. */
 const SLOT_N = 3;
 const cleanFxc = c => ({ a: c && okHex(c.a) ? c.a : '', k: c && okHex(c.k) ? c.k : '' });
