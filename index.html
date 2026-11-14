@@ -1242,6 +1242,20 @@
   .rwrow:has(.rwun) .prem{display:grid;grid-template-columns:auto auto;align-items:center;justify-items:start;gap:3px 5px}.rwrow:has(.rwun) .prem>*{margin:0!important}
   #banBox .cgc{font-size:var(--fB)!important}#banBox .banrow small{font-size:calc(var(--fS) * .9)!important}
   .unlk-in small .gemi{width:2em;height:2em}
+
+  /* R67: trilha de níveis alinhada (todo quadrinho do mesmo tamanho) */
+  .lvb{flex:0 0 auto!important;aspect-ratio:1}
+  .lvr2{flex:0 0 auto;box-sizing:border-box;width:calc(var(--wh,600px) * .17);height:calc(var(--wh,600px) * .2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--wh,600px) * .012);background:#1d1438;border:2px solid #3e2d78;border-radius:10px;padding:3px}
+  .lvr2:has(.lvim){border-color:#ffb21e;box-shadow:0 0 8px rgba(255,178,30,.3)}
+  .lvc{display:flex;align-items:center;gap:4px}.lvc b{font-weight:normal;font-size:var(--fS);color:#ffcf3a}.lvc.g b{color:#9fe0ff}
+  .lvc .coin,.lvc .gemi{width:calc(var(--wh,600px) * .045)!important;height:calc(var(--wh,600px) * .045)!important}
+  .lvim{width:calc(var(--wh,600px) * .095);height:calc(var(--wh,600px) * .095);image-rendering:pixelated;border-radius:8px;cursor:pointer}
+  .lvn.lock .lvr2{opacity:.7}
+  .lvn small{flex:0 0 auto}
+  /* ícone do item sem "quadrado dentro do quadrado" */
+  .unlk-seal.prev img{width:100%!important;height:100%!important;border-radius:14px}
+  .rwun img{width:100%;height:100%;border-radius:8px}
+  #lvBox{z-index:70!important} /* o aviso de nível fica por cima de qualquer janela do menu */
 </style>
 </head>
 <body>
@@ -1279,7 +1293,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.66</div>
+      <div class="ver">v1.0.67</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -4779,12 +4793,18 @@ function abrirNiveis() { // trilha de níveis (rola para os lados), parada no n�
   document.getElementById('lvXpB').style.width = Math.round((xp - a) / (b - a) * 100) + '%';
   let h = ''; const fim = Math.max(lv + 10, 25);
   for (let i = 2; i <= fim; i++) { const need = 25 * (i - 1) ** 2, st = i <= got ? 'got' : i <= lv ? 'ready' : 'lock';
-    h += '<div class="lvn ' + st + (i === lv + 1 ? ' next' : '') + '"><div class="lvb">' + i + '</div><div class="lvr"><i class="coin"></i><b>' + 15 * i + '</b></div>' + (LV_GEMS(i) ? '<div class="lvr lvg"><i class="gemi"></i><b>' + LV_GEMS(i) + '</b></div>' : '') + LV_ITENS(i).map(k => '<div class="lvit" data-trv="' + k + '" title="' + esc(nomeItem(k)) + '"><img src="' + itemThumb(k) + '" alt=""></div>').join('') + '<small>'
+    h += '<div class="lvn ' + st + (i === lv + 1 ? ' next' : '') + '"><div class="lvb">' + i + '</div><div class="lvr2"><span class="lvc"><i class="coin"></i><b>' + 15 * i + '</b></span>' + (LV_GEMS(i) ? '<span class="lvc g"><i class="gemi"></i><b>' + LV_GEMS(i) + '</b></span>' : '') + LV_ITENS(i).map(k => '<img class="lvim" data-trv="' + k + '" title="' + esc(nomeItem(k)) + '" src="' + itemThumb(k) + '" alt="">').join('') + '</div><small>'
       + (st === 'got' ? '<span class="tick"></span>' : st === 'ready' ? 'PRONTO!' : need + ' XP') + '</small>' + (st === 'lock' ? '<em class="lvlk">🔒</em>' : '') + '</div>'; }
   const L = document.getElementById('lvRows'); L.innerHTML = h; show('lvList', true);
   const pend = lv > got; show('lvClaim', pend); if (pend) document.getElementById('lvClaimN').textContent = lvPrize(got, lv);
   const alvo = L.querySelector('.ready') || L.querySelector('.next'); L.scrollLeft = alvo ? alvo.offsetLeft - L.clientWidth / 2 + alvo.offsetWidth / 2 : 0;
 }
+/* subiu de nível: o aviso aparece logo, em qualquer janela do menu (não espera sair e voltar) */
+setInterval(() => { const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null || game.phase === 'play') return;
+  const hid = id => { const e = document.getElementById(id); return !e || e.classList.contains('hidden'); };
+  if (hid('menu') || !hid('lvBox') || !hid('lvList') || !hid('msgBox') || document.querySelector('.przfx,.unlk')) return;
+  const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0);
+  if (lv > (p.lvl_got | 0)) { lvShown = 0; checkLevel(); } }, 1200);
 function checkLevel() {
   const p = conta.perfil; if (!conta.user || !p || p.lvl_got == null) return;
   const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0);
@@ -4935,6 +4955,7 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? BAUI + '<b>' + 
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.67', d: '14/11', itens: [['corrigido', 'Aviso de nível aparece na hora, em qualquer janela'], ['mudou', 'Trilha de níveis alinhada: moedas e item no mesmo quadro']] },
   { v: '1.0.66', d: '14/11', itens: [['mudou', 'Itens de nível mais espaçados (e cristais a cada 5 níveis)'], ['novo', 'Ícones dos itens na trilha de níveis e nas conquistas'], ['mudou', 'Novo aviso de item bloqueado'], ['corrigido', 'Controles deslizantes não pulam mais ao rolar a tela']] },
   { v: '1.0.65', d: '14/11', itens: [['novo', 'Cristais: moeda rara das conquistas e missões semanais'], ['novo', 'Poderes, transformação e aura liberados por nível'], ['novo', 'Auréola, Aura Espetada e Touca: só por conquistas'], ['novo', 'Baús nas missões semanais e no dia 7 da diária'], ['mudou', 'Itens e cores mais baratos']] },
   { v: '1.0.64', d: '14/11', itens: [['mudou', 'Economia rebalanceada: itens mais valiosos, prêmios menores'], ['novo', 'Créditos de sprites e efeitos'], ['novo', 'Botão do canal no YouTube'], ['mudou', 'Controles deslizantes novos nas configurações']] },
