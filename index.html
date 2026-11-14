@@ -1125,6 +1125,40 @@
   .unlk-seal.prev img{width:84px;height:84px;image-rendering:pixelated}
   .ownrow{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#1d1438 repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 10px,transparent 10px 24px);border:2px solid #3e2d78;border-radius:12px}
   .ownrow div{flex:1;display:flex;flex-direction:column;gap:4px}.ownrow b{font-weight:normal;color:#fff;font-size:var(--fB)}.ownrow small{color:var(--muted);font-size:calc(var(--fS) * .85)}
+
+  /* R62: HUD compacta do menu (botões menores, herói no centro, ações no canto) */
+  .mbar{align-items:start!important}
+  .mprof{flex:0 1 auto!important;width:max-content;max-width:100%;height:auto!important;min-height:calc(var(--wh,600px) * .095);padding:3px 12px 3px 3px!important;border-width:2px!important;border-radius:12px!important}
+  .mprof canvas{width:calc(var(--wh,600px) * .08)!important;height:calc(var(--wh,600px) * .08)!important}
+  #mName{font-size:calc(var(--wh,600px) * .03)!important}
+  .mlv{font-size:calc(var(--wh,600px) * .02)!important}
+  .mlv i{width:calc(var(--wh,600px) * .26)!important;height:calc(var(--wh,600px) * .028)!important}
+  .mlv em{font-size:calc(var(--wh,600px) * .015)!important}
+  .mbar .glogo.menu{height:calc(var(--wh,600px) * .17)!important}
+  .mbar .coinpill{height:calc(var(--wh,600px) * .075)!important;font-size:calc(var(--wh,600px) * .03)!important;border-width:2px!important;padding:0 10px 0 4px!important}
+  .mbar .coinpill .coin{width:calc(var(--wh,600px) * .055)!important;height:calc(var(--wh,600px) * .055)!important}
+  .mbar .ib{width:calc(var(--wh,600px) * .085)!important;height:calc(var(--wh,600px) * .085)!important;border-width:2px!important;border-radius:10px!important}
+  #bBan{width:calc(var(--wh,600px) * .085)!important;height:calc(var(--wh,600px) * .085)!important}
+  .mside2{top:calc(var(--wh,600px) * .2)!important;gap:6px!important}
+  .ib.big2{width:calc(var(--wh,600px) * .13)!important;height:calc(var(--wh,600px) * .11)!important;gap:3px!important;border-width:2px!important;border-radius:10px!important}
+  .ib.big2 i{font-size:calc(var(--wh,600px) * .042)!important}
+  .ib.big2 span{font-size:calc(var(--wh,600px) * .013)!important}
+  .mmid{grid-template-columns:minmax(0,1fr) calc(var(--wh,600px) * .82)!important;align-items:end!important}
+  .mhero{padding-left:calc(var(--wh,600px) * .16)!important;min-height:0;height:100%;overflow:visible}
+  .mmid{grid-template-rows:minmax(0,1fr)!important}
+  .mhero canvas{position:absolute!important;inset:0 0 0 calc(var(--wh,600px) * .16);width:calc(100% - var(--wh,600px) * .16)!important;height:100%!important}
+  .mmid .play{grid-template-rows:auto auto!important;align-self:end;gap:6px!important}
+  .play .mb{height:calc(var(--wh,600px) * .13);border-width:2px!important;border-radius:12px!important;gap:calc(var(--wh,600px) * .012)!important;flex-direction:row!important}
+  .play .mb.big{height:calc(var(--wh,600px) * .17);flex-direction:column!important}
+  .play .mb i{font-size:calc(var(--wh,600px) * .05)!important}
+  .play .mb.big i{font-size:calc(var(--wh,600px) * .06)!important}
+  .play .mb b{font-size:calc(var(--wh,600px) * .02)!important}
+  .play .mb.big b{font-size:calc(var(--wh,600px) * .032)!important;line-height:1.2}
+  .play .mb{padding:4px!important;justify-content:center!important}
+  .play .mb i{line-height:1!important}
+  #mName{line-height:1.2}
+  .mprof .mpi{gap:4px!important}
+  .play .mb:not(.big){flex-direction:column!important}
 </style>
 </head>
 <body>
@@ -1162,7 +1196,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.61</div>
+      <div class="ver">v1.0.62</div>
       <div id="status" class="status"></div>
     </div>
   </div>
