@@ -1129,7 +1129,7 @@
   /* R62: HUD compacta do menu (botões menores, herói no centro, ações no canto) */
   .mbar{align-items:start!important}
   .mprof{flex:0 1 auto!important;width:max-content;max-width:100%;height:auto!important;min-height:calc(var(--wh,600px) * .095);padding:3px 12px 3px 3px!important;border-width:2px!important;border-radius:12px!important}
-  .mprof canvas{width:calc(var(--wh,600px) * .08)!important;height:calc(var(--wh,600px) * .08)!important}
+  .mprof #mAva{width:calc(var(--wh,600px) * .08)!important;height:calc(var(--wh,600px) * .08)!important;flex:0 0 auto}
   #mName{font-size:calc(var(--wh,600px) * .03)!important}
   .mlv{font-size:calc(var(--wh,600px) * .02)!important}
   .mlv i{width:calc(var(--wh,600px) * .26)!important;height:calc(var(--wh,600px) * .028)!important}
@@ -1159,6 +1159,20 @@
   #mName{line-height:1.2}
   .mprof .mpi{gap:4px!important}
   .play .mb:not(.big){flex-direction:column!important}
+
+  /* R63: ajustes da HUD compacta */
+  .mprof{padding:calc(var(--wh,600px) * .014) calc(var(--wh,600px) * .026) calc(var(--wh,600px) * .014) calc(var(--wh,600px) * .016)!important;gap:calc(var(--wh,600px) * .016)!important;align-items:center!important}
+  .mprof .mpi{gap:calc(var(--wh,600px) * .008)!important;justify-content:center}
+  #mName{padding:0!important;margin:0}
+  #mName .tagc{height:calc(var(--wh,600px) * .03)!important;width:auto!important}
+  .mlv{align-items:center!important}
+  .ib.big2 span{font-size:calc(var(--wh,600px) * .0175)!important;text-shadow:1px 1px 0 #000}
+  .ib.big2{width:calc(var(--wh,600px) * .145)!important;height:calc(var(--wh,600px) * .12)!important;gap:calc(var(--wh,600px) * .012)!important}
+  .ib.big2 i{font-size:calc(var(--wh,600px) * .038)!important;line-height:1!important}
+  .mside2{gap:calc(var(--wh,600px) * .012)!important}
+  .mbar .ib,#bBan{width:calc(var(--wh,600px) * .098)!important;height:calc(var(--wh,600px) * .098)!important}
+  .mbar .coinpill{height:calc(var(--wh,600px) * .085)!important}
+  .mbar .glogo.menu{height:calc(var(--wh,600px) * .21)!important}
 </style>
 </head>
 <body>
@@ -1196,7 +1210,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.62</div>
+      <div class="ver">v1.0.63</div>
       <div id="status" class="status"></div>
     </div>
   </div>
