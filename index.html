@@ -1173,6 +1173,31 @@
   .mbar .ib,#bBan{width:calc(var(--wh,600px) * .098)!important;height:calc(var(--wh,600px) * .098)!important}
   .mbar .coinpill{height:calc(var(--wh,600px) * .085)!important}
   .mbar .glogo.menu{height:calc(var(--wh,600px) * .21)!important}
+
+  /* R64 */
+  .ib.yt{background:#2b2150}
+  #credBox .card{display:flex;flex-direction:column;max-height:calc(var(--wh,600px) * .92)}
+  #credBox .credlist{flex:1;min-height:0;max-height:none}
+  .crchips{display:flex;flex-wrap:wrap;gap:6px}.crchips span{background:#120b26;border:2px solid #3e2d78;border-radius:999px;padding:5px 10px;font-size:var(--fS);color:#fff}
+  input[type=range]{height:calc(var(--wh,600px) * .07)!important;min-height:34px;touch-action:none!important;cursor:pointer;--pc:50%}
+  input[type=range]::-webkit-slider-runnable-track{height:12px!important;border-radius:999px!important;border:2px solid #3e2d78!important;background:linear-gradient(90deg,#ffb21e var(--pc),#120b26 var(--pc))!important}
+  input[type=range]::-moz-range-track{height:12px!important;border-radius:999px!important;border:2px solid #3e2d78!important;background:linear-gradient(90deg,#ffb21e var(--pc),#120b26 var(--pc))!important}
+  input[type=range]::-webkit-slider-thumb{width:26px!important;height:26px!important;margin-top:-9px!important;border-radius:50%!important;background:radial-gradient(circle at 40% 35%,#ffe07a,#f08a00)!important;border:3px solid #fff3c4!important;box-shadow:0 0 0 2px #0b0618,0 2px 0 #0b0618}
+  input[type=range]::-moz-range-thumb{width:22px!important;height:22px!important;border-radius:50%!important;background:radial-gradient(circle at 40% 35%,#ffe07a,#f08a00)!important;border:3px solid #fff3c4!important}
+  .gfade{border-radius:0!important}
+  .cpw>.cfade{left:2px!important;right:2px!important;bottom:2px!important;border-radius:0 0 calc(var(--r2) - 2px) calc(var(--r2) - 2px)!important}
+
+  /* R65: cristais, baús e itens por progresso */
+  .gemi,.baui{font-style:normal;line-height:1}
+  .mbar .coinpill.gem{border-color:#2f6fae!important;background:#07182c!important;color:#9fe0ff!important}
+  .mbar .coinpill.gem .gemi{font-size:calc(var(--wh,600px) * .04)}
+  .prem .gemi,.prem .baui{font-size:1.15em;margin-left:4px}.prem .gmn{color:#9fe0ff}
+  .przv .gemi,.przv .baui{font-size:1.2em}
+  .msgc .preco .gemi{font-size:1.5em;margin-right:6px}
+  .dday .baui.big{font-size:calc(var(--wh,600px) * .06);display:block}
+  .rwi .libera{display:block;margin-top:5px;color:#5dff8a;font-size:calc(var(--fS) * .85)}
+  .lvn .lvun{display:block;font-style:normal;color:#5dff8a;font-size:calc(var(--fS) * .72);line-height:1.5;text-align:center;margin-top:3px;max-width:11em}
+  #msgForm.k-gem .mbadge{background:none!important;filter:drop-shadow(0 0 14px rgba(90,190,255,.7));display:flex;align-items:center;justify-content:center}#msgForm.k-gem .mbadge::after{content:'💎'!important;font-size:56px;line-height:1}#msgForm.k-gem{border-color:#4aa8ff!important}
 </style>
 </head>
 <body>
@@ -1191,7 +1216,7 @@
       <div class="mbar">
         <div class="mside"><div class="mprof" id="accInfo"><canvas id="mAva" width="24" height="24"></canvas><div class="mpi"><b id="mName">—</b><div class="mlv"><span id="mLv">NV 1</span><i><u id="mXp"></u><em id="mXpT">0/25</em></i></div></div></div></div>
         <img class="glogo menu" id="logoMenu" alt="CustomBattle Online">
-        <div class="mside r"><div class="coinpill" id="coinPill" title="suas moedas"><i class="coin"></i><span id="coinN">0</span></div><button class="ib" id="bAch" title="conquistas" aria-label="conquistas"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 7.3 12H7a4 4 0 0 1-4-4V6a1 1 0 0 1 1-1h3V3zm10 4v3a2 2 0 0 0 2-2V7h-2zM5 7v1a2 2 0 0 0 2 2V7H5zM7 20h10v2H7z"/></svg><b class="dot hidden" id="dotAch"></b></button><button class="ib nv" id="bNews" title="novidades" aria-label="novidades"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H6a3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm16 5h1a1 1 0 0 1 1 1v8a2 2 0 0 1-4 0V9h2zM6 7v4h5V7H6zm7 0v1.5h3V7h-3zm0 3v1.5h3V10h-3zm-7 3v1.5h10V13H6zm0 3v1.5h10V16H6z"/></svg><b class="dot hidden" id="dotNv"></b></button><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button><button class="ib hidden" id="bBan" title="banir" aria-label="banir"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 0 1 5.6 11.2L7.8 6.4A7 7 0 0 1 12 5zm0 14a7 7 0 0 1-5.6-11.2l9.8 9.8A7 7 0 0 1 12 19z"/></svg></button></div>
+        <div class="mside r"><div class="coinpill" id="coinPill" title="suas moedas"><i class="coin"></i><span id="coinN">0</span></div><div class="coinpill gem" id="gemPill" title="cristais: ganhe em conquistas e missões semanais"><i class="gemi">💎</i><span id="gemN">0</span></div><button class="ib" id="bAch" title="conquistas" aria-label="conquistas"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 7.3 12H7a4 4 0 0 1-4-4V6a1 1 0 0 1 1-1h3V3zm10 4v3a2 2 0 0 0 2-2V7h-2zM5 7v1a2 2 0 0 0 2 2V7H5zM7 20h10v2H7z"/></svg><b class="dot hidden" id="dotAch"></b></button><button class="ib nv" id="bNews" title="novidades" aria-label="novidades"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M4 4h13a1 1 0 0 1 1 1v13a2 2 0 0 0 2 2H6a3 3 0 0 1-3-3V5a1 1 0 0 1 1-1zm16 5h1a1 1 0 0 1 1 1v8a2 2 0 0 1-4 0V9h2zM6 7v4h5V7H6zm7 0v1.5h3V7h-3zm0 3v1.5h3V10h-3zm-7 3v1.5h10V13H6zm0 3v1.5h10V16H6z"/></svg><b class="dot hidden" id="dotNv"></b></button><button class="ib yt" id="bYt" title="canal no YouTube" aria-label="YouTube"><svg viewBox="0 0 24 24" width="62%" height="62%" aria-hidden="true"><path fill="#ff2a2a" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8z"/><path fill="#fff" d="M10 15.2V8.8l5.5 3.2z"/></svg></button><button class="ib" id="bGear" title="ajustes" aria-label="ajustes"><svg viewBox="0 0 24 24" width="58%" height="58%" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.48-.41h-3.84a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button><button class="ib hidden" id="bBan" title="banir" aria-label="banir"><svg viewBox="0 0 24 24" width="56%" height="56%" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 0 1 5.6 11.2L7.8 6.4A7 7 0 0 1 12 5zm0 14a7 7 0 0 1-5.6-11.2l9.8 9.8A7 7 0 0 1 12 19z"/></svg></button></div>
       </div>
       <div class="mmid">
         <div class="mhero" id="mHeroBox" title="editar personagem"><canvas id="mHero" width="130" height="140"></canvas></div>
@@ -1210,7 +1235,7 @@
         <button class="ib big2" id="bFriends" title="social"><i>👥</i><span>SOCIAL</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.63</div>
+      <div class="ver">v1.0.65</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1283,7 +1308,7 @@
     </div>
   </div>
   <div id="custom" class="ovl hidden">
-    <div class="card cust scr"><button type="button" class="msgx" aria-label="fechar" onclick="if (document.getElementById('cCancel').classList.contains('hidden')) closeCustom(); else document.getElementById('cCancel').click()"></button>
+    <div class="card cust scr"><button type="button" class="msgx" aria-label="fechar" onclick="custOpen && custSig() !== custStart ? custCancel() : closeCustom()"></button>
       
       <div class="ctop"><div class="title sm"><b>CRIAR PERSONAGEM</b></div><span class="coinpill cpill" title="suas moedas"><i class="coin"></i><span id="cCoinN">0</span></span></div>
       <div class="cchars"><span>LUTADOR</span><div id="cChars"></div><span class="sl">SLOTS</span><div id="cSlots"></div></div>
@@ -2458,6 +2483,15 @@ function layoutFrame() {
   const find = (t, f) => { for (let e = t; e && e !== document.body; e = e.parentElement) if (f(e)) return e; return null; };
   const setRange = (r, t) => { const b = r.getBoundingClientRect(), k = clamp((t.clientY - b.top) / b.height, 0, 1), mn = +r.min || 0, mx = +r.max || 100, st = +r.step || 1;
     const v = Math.round((mn + k * (mx - mn)) / st) * st; if (+r.value !== v) { r.value = v; r.dispatchEvent(new Event('input', { bubbles: true })); r.dispatchEvent(new Event('change', { bubbles: true })); } };
+  const setRangeX = (r, t) => { const b = r.getBoundingClientRect(), k = clamp((t.clientX - b.left - 13) / (b.width - 26), 0, 1), mn = +r.min || 0, mx = +r.max || 100, st = +r.step || 1;
+    const v = Math.round((mn + k * (mx - mn)) / st) * st; if (+r.value !== v) { r.value = v; r.dispatchEvent(new Event('input', { bubbles: true })); r.dispatchEvent(new Event('change', { bubbles: true })); } };
+  let rngX = null; // deitado (sem girar): o controle segue o dedo desde o primeiro toque, em qualquer ponto da barra
+  document.addEventListener('touchstart', e => { if (ROT || e.touches.length !== 1) return; const tg = e.target; rngX = tg.matches && tg.matches('input[type=range]') ? tg : null; if (rngX) { e.preventDefault(); setRangeX(rngX, e.touches[0]); } }, { passive: false });
+  document.addEventListener('touchmove', e => { if (rngX) { e.preventDefault(); setRangeX(rngX, e.touches[0]); } }, { passive: false });
+  document.addEventListener('touchend', () => { rngX = null; });
+  const pinta = r => r.style.setProperty('--pc', ((+r.value - (+r.min || 0)) / ((+r.max || 100) - (+r.min || 0)) * 100) + '%');
+  document.addEventListener('input', e => { if (e.target.matches && e.target.matches('input[type=range]')) pinta(e.target); }, true);
+  setInterval(() => { if (!document.getElementById('settings').classList.contains('hidden')) document.querySelectorAll('#settings input[type=range]').forEach(pinta); }, 400);
   document.addEventListener('touchstart', e => { if (!ROT || e.touches.length !== 1) return; cancelAnimationFrame(raf); const t = e.touches[0], tg = e.target;
     if (tg.closest && tg.closest('#touch')) { el = null; return; }
     rng = tg.matches && tg.matches('input[type=range]') ? tg : null; if (rng) { e.preventDefault(); setRange(rng, t); return; }
@@ -2681,7 +2715,7 @@ function thumbSprite(look) { // miniatura: só a pose parada (muito mais leve qu
    Cada seção tem um título (t) e uma lista de linhas (itens). */
 const CREDITOS = [
   { t: 'DESENVOLVIMENTO', itens: ['Jonas Soares'] },
-  { t: 'SPRITES', itens: [] },
+  { t: 'SPRITES E EFEITOS', chips: true, itens: ['Alqumistask', 'Álvaro 99', 'ArisRad', 'Aslo345', 'Azaze|1300', 'Bite035', 'Black Vinas', 'BlackSanYT', 'Breckhhh', 'DG00DWIN71', 'Dino', 'Dryy7', 'Dyan', 'ErickJcRack507', 'Felipe Spriter', 'Godkuuxfy', 'Hutsey', 'JuanGomesGG', 'Marcowwwww', 'Maxell', 'Nightmarex07', 'OmegaSuper', 'orumaitoobeso', 'Pedrocar|os8772', 'Pierre/Parker2017', 'qsaba101', 'Skyler', 'SonGoken', 'SuperSaiyanPanda17', 'Tekeshi007'] },
 ];
 /* ---------------- áudio sintetizado ---------------- */
 let actx = null, noiseBuf = null, master = null, musBus = null;
@@ -3233,20 +3267,7 @@ function drawBar(x, y, w, h, ratio, ghost, color, dark) {
   ctx.fillStyle = dark; ctx.fillRect(x, y, ww, h); ctx.fillStyle = color; ctx.fillRect(x, y, ww, Math.ceil(h / 2));
   ctx.restore();
 }
-function headBox(img, skin) { // centro do ROSTO no sprite (pele dentro da cabeça), guardado por sprite+pele
-  const key = '_hb' + (skin || ''); if (img[key]) return img[key];
-  let c = img; if (!c.getContext) { c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); }
-  const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, W = c.width, H = c.height; let top = -1;
-  for (let y = 0; y < H && top < 0; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 40) { top = y; break; }
-  if (top < 0) return img[key] = { cx: W / 2, cy: H / 2 };
-  const sk = skin && /^#[0-9a-f]{6}$/i.test(skin) ? [1, 3, 5].map(k => parseInt(skin.substr(k, 2), 16)) : null;
-  const isSkin = (r, g, b) => sk ? Math.abs(r - sk[0]) + Math.abs(g - sk[1]) + Math.abs(b - sk[2]) < 90 : (r > 90 && r > g && g > b && r - b > 25 && r - g < 110);
-  const sk2 = (x, y) => { const o = (y * W + x) * 4; return d[o + 3] > 40 && isSkin(d[o], d[o + 1], d[o + 2]); };
-  let fy = -1; for (let y = top; y < Math.min(H, top + 30) && fy < 0; y++) for (let x = 0; x < W; x++) if (sk2(x, y)) { fy = y; break; } // 1ª linha de pele = testa
-  let n = 0, sx = 0, sy = 0; if (fy >= 0) for (let y = fy; y < Math.min(H, fy + 9); y++) for (let x = 0; x < W; x++) if (sk2(x, y)) { n++; sx += x; sy += y; } // só o rosto (não o peito)
-  if (n < 6) return img[key] = { cx: W / 2, cy: top + 14 };
-  return img[key] = { cx: sx / n, cy: sy / n };
-}
+function headBox(img) { return { cx: img.width / 2, cy: (img._pad || 0) + 15 }; } // cabeça fica sempre no mesmo lugar do sprite parado (o espaço da auréola é descontado)
 function teamMarks(cam) { if (!game.teams) return; for (const f of game.fighters) { if (f.dead || f.team == null) continue;
   const x = Math.round(f.x - cam.x), y = Math.round(f.y - cam.y - 66); ctx.fillStyle = '#120c1c'; ctx.beginPath(); ctx.moveTo(x - 5, y - 1); ctx.lineTo(x + 5, y - 1); ctx.lineTo(x, y + 6); ctx.fill();
   ctx.fillStyle = TEAM_COL[f.team]; ctx.beginPath(); ctx.moveTo(x - 3.5, y); ctx.lineTo(x + 3.5, y); ctx.lineTo(x, y + 4.5); ctx.fill(); } }
@@ -3283,7 +3304,7 @@ function drawHUD() {
   ctx.fillStyle = me.pal_.swatch; ctx.fillRect(L + 1, T + 1, 30, 30);
   ctx.fillStyle = '#2a1f3d'; ctx.fillRect(L + 2, T + 2, 28, 28);
   ctx.save(); ctx.beginPath(); ctx.rect(L + 2, T + 2, 28, 28); ctx.clip();
-  const face = me.dead ? me.spr.dano : me.spr.parado, hb = headBox(face, me.look && me.look.s); ctx.drawImage(face, Math.round(L + 16 - hb.cx), Math.round(T + 17 - hb.cy)); ctx.restore();
+  const face = me.spr.parado, hb = headBox(face); if (me.dead) ctx.globalAlpha = 0.45; ctx.drawImage(face, Math.round(L + 16 - hb.cx), Math.round(T + 17 - hb.cy)); ctx.restore();
   // barras de vida e energia
   const bx = L + 38, bw = 136;
   const hpR = me.hp / me.maxHp, hpG = me.hpShown / me.maxHp;
@@ -4104,7 +4125,7 @@ const conta = {
 /* ---------------- MOEDAS ----------------
    +5 a cada derrota causada (jogadores e bots; o treino não conta).
    Com conta: ficam no perfil do Supabase. Como convidado: ficam neste aparelho. */
-const COIN_PER_KILL = 5, COIN_HK = 2; // HIT KILL: matar é fácil, então rende menos
+const COIN_PER_KILL = 4, COIN_HK = 1; // HIT KILL: matar é fácil, então rende menos
 const wallet = {
   n: 0, shown: 0, bump: 0,
   sync() { // de onde vêm as moedas: conta ou aparelho
@@ -4120,7 +4141,8 @@ const wallet = {
     renderCoins();
   },
 };
-function renderCoins() { const v = shop.infinite() ? '∞' : wallet.n; contaAte(v); const p = document.getElementById('coinPill'); if (p) { p.classList.remove('pulse'); void p.offsetWidth; p.classList.add('pulse'); } }
+function renderGems() { const e = document.getElementById('gemN'); if (e) e.textContent = shop.infinite() ? '∞' : gemsN(); }
+function renderCoins() { renderGems(); const v = shop.infinite() ? '∞' : wallet.n; contaAte(v); const p = document.getElementById('coinPill'); if (p) { p.classList.remove('pulse'); void p.offsetWidth; p.classList.add('pulse'); } }
 /* o nome dourado agora vem do cargo salvo no banco (a antiga tag {DONO} não vale mais) */
 /* número das moedas sobe aos poucos quando o jogador ganha */
 let coinVis = null, coinT = 0, coinAnim = false;
@@ -4196,13 +4218,26 @@ function renderConta() {
 /* ---------------- LOJA: cada item de customização custa 10 moedas ----------------
    Dá para provar qualquer item (aparece na prévia), mas na luta só entra o que foi comprado.
    Itens: cabelo, rabo, auréola e CADA cor (cabelo, pele, rabo, auréola, aura, poder). Grátis: o visual inicial. */
-const PRICE = { color: 50, item: 100, trans: 250 }; // cores 50 · cabelo/rabo/auréola 100 · transformação 250
+const PRICE = { color: 60, item: 200, trans: 0 };
+/* itens que NÃO se compram: saem de nível (lv) ou de conquista (ach) */
+const UNLOCK = { 'p:tri': { lv: 2 }, 'p:rajada': { lv: 3 }, 'p:chuva': { lv: 4 }, 'p:hom': { lv: 5 }, 'p:cegar': { lv: 6 }, 'tr:x': { lv: 7 }, 'p:fogos': { lv: 8 }, 'p:disco': { lv: 9 }, 'au:2': { lv: 10 }, 'p:invis': { lv: 12 },
+  'a:1': { ach: 'a_k50', t: 'Derrote 50 adversários' }, 'au:1': { ach: 'a_awk10', t: 'Desperte 10 vezes' }, 'h:hair8': { ach: 'a_m25', t: 'Jogue 25 partidas' } };
+const GEM_PRICE = { 'sc:1': 15, 'cp:1': 30 }; // itens especiais: só com cristais
+const GEMI = '<i class="gemi">💎</i>', BAUI = '<i class="baui">🧰</i>';
+const nivelAtual = () => { const p = conta.perfil; return p ? lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0) : 1; };
+const regraOk = r => r.lv ? nivelAtual() >= r.lv : (typeof conqPegas !== 'undefined' && conqPegas.has(r.ach)) || !!(typeof temp !== 'undefined' && temp && (temp.ach || []).includes(r.ach));
+const comoLibera = r => r.lv ? 'Libera no nível ' + r.lv : 'Libera na conquista:\n' + r.t;
+const nomeItem = k => { if (typeof ITEM_NOMES !== 'undefined' && ITEM_NOMES[k]) return ITEM_NOMES[k]; if (/^tr:/.test(k)) return 'Transformação'; const m = /^p:(\w+)$/.exec(k); if (m) for (const sl of ['k', 'r', 's']) if (POWERS[sl][m[1]]) return POWERS[sl][m[1]].name; return k; };
+const gemsN = () => (conta.perfil && conta.perfil.gems) | 0; // cores 50 · cabelo/rabo/auréola 100 · transformação 250
 /* janelinha de compra: aparece embaixo, do lado das opções (não tampa a prévia) */
 /* item bloqueado: aparece na prévia NA HORA; o selo 'COMPRAR' fica sobre a prévia (não mexe no tamanho da tela) */
 /* item bloqueado: 1º toque = prova na prévia; 2º toque no MESMO item = janela de compra. Só um aviso discreto embaixo do nome. */
 function offerBuy(k, nome) {
   const el = document.getElementById('cBuy'); if (!el) return;
   if (!k || shop.has(k)) { el.classList.remove('on'); el.textContent = ''; return; }
+  const nk = normItem(k);
+  if (UNLOCK[nk]) { el.innerHTML = '🔒 ' + esc(nome) + '<br>' + esc(comoLibera(UNLOCK[nk])).replace(/\n/g, ' '); el.classList.add('on'); return; }
+  if (GEM_PRICE[nk]) { el.innerHTML = '🔒 ' + esc(nome) + ' · ' + GEM_PRICE[nk] + ' ' + GEMI + '<br>toque de novo para comprar'; el.classList.add('on'); return; }
   el.innerHTML = '🔒 ' + esc(nome) + ' · ' + (shop.infinite() ? 0 : priceOf(k)) + ' <i class="coin"></i><br>toque de novo para comprar'; el.classList.add('on');
 }
 function fxPanel(o) { // painel no estilo "DESBLOQUEADO!" (cor: ok | err | gold)
@@ -4220,16 +4255,21 @@ function fxPanel(o) { // painel no estilo "DESBLOQUEADO!" (cor: ok | err | gold)
 }
 function comprouFx(nome) { const c = document.getElementById('custom'); if (!c || c.classList.contains('hidden')) return; fxPanel({ cor: 'ok', titulo: 'DESBLOQUEADO!', sub: esc(nome) }); }
 /* recompensa resgatada: aviso no centro da janela (sempre visível, mesmo com a lista rolada) */
-function premioFx(box, c, xp, titulo) {
+function ganhouExtra(g, bau) { if (g && conta.perfil) { conta.perfil.gems = gemsN() + g; renderGems(); } if (bau) { temp = { ...(temp || {}), chest: true, n: ((temp && temp.n) | 0) + bau }; show('dotDaily', true); } }
+function premioFx(box, c, xp, titulo, g, bau) {
   SFX.reward();
   if (!box) return; const old = box.querySelector('.przfx'); if (old) old.remove();
   const f = document.createElement('div'); f.className = 'przfx';
-  f.innerHTML = '<div class="przin"><small>' + (titulo || 'RESGATADO!') + '</small><div class="przv">' + (c ? '<span>+' + c + ' <i class="coin"></i></span>' : '') + (xp ? '<span>+' + xp + ' ' + XPI + '</span>' : '') + '</div></div>';
+  f.innerHTML = '<div class="przin"><small>' + (titulo || 'RESGATADO!') + '</small><div class="przv">' + (c ? '<span>+' + c + ' <i class="coin"></i></span>' : '') + (xp ? '<span>+' + xp + ' ' + XPI + '</span>' : '') + (g ? '<span>+' + g + ' ' + GEMI + '</span>' : '') + (bau ? '<span>+' + bau + ' ' + BAUI + '</span>' : '') + '</div></div>';
   box.appendChild(f); setTimeout(() => f.remove(), 1600); try { SFX.zap(); } catch (e) {}
 }
 function tryBuy(k, nome) { return buyNow(k, nome).then(() => { if (custOpen) { saveLook(); if (shop.has(k)) offerBuy(''); } }); }
 async function buyNow(k, nome, direto) {
   if (!k || shop.has(k)) return;
+  const nk = normItem(k);
+  if (UNLOCK[nk]) return notice(nome + ' não se compra.\n' + comoLibera(UNLOCK[nk]) + '.', 'BLOQUEADO');
+  if (GEM_PRICE[nk] && !direto) { const pg_ = msgOpen('COMPRAR?', { kind: 'buy', html: '<div class="mitem">' + esc(nome) + '</div><span class="preco">' + GEMI + GEM_PRICE[nk] + '</span>' }, '', true, 'COMPRAR'); document.getElementById('msgForm').classList.add('k-gem'); const okg = await pg_;
+    if (okg) { await shop.buy([{ k, n: nome }]); if (shop.has(k)) comprouFx(nome); } return; }
   if (direto) return shop.buy([{ k, n: nome }]).then(() => { if (shop.has(k)) comprouFx(nome); }); // botão COMPRAR do selo: já mostra o preço
   const preco = shop.infinite() ? 0 : priceOf(k);
   const ok = await msgOpen('COMPRAR?', { kind: 'buy', html: '<div class="mitem">' + esc(nome) + '</div><span class="preco"><i class="coin"></i>' + preco + '</span>' }, '', true, 'COMPRAR');
@@ -4237,7 +4277,7 @@ async function buyNow(k, nome, direto) {
 }
 /* uma cor comprada vale em TODOS os itens e slots ('c:#hex'); a transformação comprada vale em todos os slots ('tr:x') */
 const normItem = k => { const m = /^(hc|s|tc|ac|fa|fk|xc|c):(#[0-9a-f]{6})$/i.exec(k || ''); return m ? 'c:' + m[2].toLowerCase() : /^tr:/.test(k || '') ? 'tr:x' : k; };
-const priceOf = k => { k = normItem(k); if (/^cp:/.test(k)) return 500; return /^(h|t|a|sl|p|sc|au):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color; };
+const priceOf = k => { k = normItem(k); if (UNLOCK[k] || GEM_PRICE[k]) return 0; return /^(h|t|a|sl|p|sc|au):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color; };
 const ITEM_PRICE = PRICE.color;
 const PALETTE = () => new Set([].concat(HAIR_COLORS, SKIN_COLORS, TAIL_COLORS, HALO_COLORS, FX_COLORS, SCOUT_COLORS).map(c => c.toLowerCase()));
 const FREE_ITEMS = new Set(['h:hair1', 'c:#3a3a4a', 'c:#cfcfcf', 'c:#7a4a26', 'c:#ffd23a', 'sl:0']);
@@ -4246,6 +4286,7 @@ const shop = {
   has(k) {
     if (!k) return true; const n = normItem(k);
     if (FREE_ITEMS.has(n) || this.infinite()) return true;
+    if (UNLOCK[n] && regraOk(UNLOCK[n])) return true; // liberado por nível ou conquista
     if (n.startsWith('c:') && !PALETTE().has(n.slice(2))) return this.has('cp:1'); // cor fora da paleta: precisa do seletor de cor livre
     const own = conta.perfil && Array.isArray(conta.perfil.owned) ? conta.perfil.owned : [];
     return own.some(o => normItem(o) === n); // compras antigas ('hc:#..', 'tr:0') também valem
@@ -4285,8 +4326,10 @@ const shop = {
   },
   async buy(list) {
     if (!list.length) return;
-    const cost = this.infinite() ? 0 : list.reduce((a, i) => a + priceOf(i.k), 0);
+    const trava = list.find(i => UNLOCK[normItem(i.k)]); if (trava) { notice(trava.n + ' não se compra.\n' + comoLibera(UNLOCK[normItem(trava.k)]) + '.', 'BLOQUEADO'); return; }
+    const cost = this.infinite() ? 0 : list.reduce((a, i) => a + priceOf(i.k), 0), gcost = this.infinite() ? 0 : list.reduce((a, i) => a + (GEM_PRICE[normItem(i.k)] || 0), 0);
     if (cost > wallet.n) { semMoedas(cost - wallet.n); return; }
+    if (gcost > gemsN()) { fxPanel({ cor: 'err', seal: '<span class="xx"></span>', titulo: 'SEM CRISTAIS!', sub: 'faltam ' + (gcost - gemsN()) + ' ' + GEMI + '<br>ganhe em conquistas e missões semanais', tempo: 2600 }); return; }
     wait('comprando...');
     try {
       await conta.flushStats(); // moedas ganhas há pouco entram antes da compra
@@ -4294,7 +4337,7 @@ const shop = {
         const { data, error } = await conta.sb.rpc('buy_item', { item: normItem(it.k) });
         if (error) throw error;
         if (!Array.isArray(conta.perfil.owned)) conta.perfil.owned = [];
-        conta.perfil.owned.push(normItem(it.k)); conta.perfil.coins = data | 0;
+        conta.perfil.owned.push(normItem(it.k)); conta.perfil.coins = data | 0; if (GEM_PRICE[normItem(it.k)] && !this.infinite()) { conta.perfil.gems = gemsN() - GEM_PRICE[normItem(it.k)]; renderGems(); }
       }
       wallet.sync(); tone('square', 990, 1480, 0.12, 0.1);
     } catch (e) {
@@ -4319,7 +4362,7 @@ async function useCode() {
     else if (/^coins:\d+$/.test(data || '')) { const n = +data.slice(6); conta.perfil.coins = (conta.perfil.coins || 0) + n; conta.perfil.coins -= n; moedasGanhas(n); codeOk('+' + n + ' ' + COINI); }
     else if (/^xp:\d+$/.test(data || '')) { const n = +data.slice(3); conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + n; renderConta(); voar('x', n); codeOk('+' + n + ' ' + XPI); lvShown = 0; setTimeout(checkLevel, 600); }
     else if (data === 'reset') { // conta zerada: tudo volta ao começo
-      conta.pend = { k: 0, d: 0, m: 0, c: 0, act: {} }; conqs = null; dly = null; pegos.clear(); conqPegas.clear(); lvShown = 0; bvVisto = false; temp = null; show('dotAch', false); try { localStorage.removeItem('adk_slots'); } catch (e) {}
+      conta.pend = { k: 0, d: 0, m: 0, c: 0, act: {} }; conqs = null; dly = null; pegos.clear(); conqPegas.clear(); lvShown = 0; bvVisto = false; temp = null; if (conta.perfil) conta.perfil.gems = 0; renderGems(); show('dotAch', false); try { localStorage.removeItem('adk_slots'); } catch (e) {}
       setSlots([], 0); Object.assign(conta.perfil, { coins: 0, owned: [], infinite: false, kills: 0, deaths: 0, matches: 0, look: {}, fxc: {}, xp_bonus: 0, lvl_got: 1 });
       wallet.sync(); renderConta(); codeOk('Tudo voltou ao começo!').then(() => { refreshDaily(); boasVindas(); });
     }
@@ -4521,22 +4564,24 @@ function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.
 const MISSOES = [{ id: 'm1', t: 'Jogue 1 partida', f: 'm', n: 1, p: 20 }, { id: 'k3', t: 'Cause 3 derrotas', f: 'k', n: 3, p: 40 },
   { id: 'm3', t: 'Jogue 3 partidas', f: 'm', n: 3, p: 40 }, { id: 'k10', t: 'Cause 10 derrotas', f: 'k', n: 10, p: 100 }];
 const SEMANAIS = [{ id: 'wm15', t: 'Jogue 15 partidas', f: 'm', n: 15, p: 200 }, { id: 'wk40', t: 'Cause 40 derrotas', f: 'k', n: 40, p: 350 }];
-const DIARIA = [20, 30, 40, 50, 60, 80, 300];
+const DIARIA = [10, 15, 20, 25, 30, 40, 0]; // dia 7 = baú
 let dly = null; const pegos = new Set(); // resgatados nesta sessão (o servidor pode demorar a refletir)
 /* ===================== BAÚ MISTERIOSO (1 por dia) ===================== */
-const ITEM_NOMES = { 'h:hair2': 'Cabelo 2', 'h:hair3': 'Cabelo 3', 'h:hair6': 'Cabelo Lambido', 'h:hair8': 'Touca', 't:1': 'Rabo 1', 't:2': 'Rabo 2', 'a:1': 'Auréola', 'sc:1': 'Scouter', 'au:1': 'Aura Espetada', 'au:2': 'Aura Simples' };
+const ITEM_NOMES = { 'tr:x': 'Transformação', 'cp:1': 'Cor livre', 'h:hair2': 'Cabelo 2', 'h:hair3': 'Cabelo 3', 'h:hair6': 'Cabelo Lambido', 'h:hair8': 'Touca', 't:1': 'Rabo 1', 't:2': 'Rabo 2', 'a:1': 'Auréola', 'sc:1': 'Scouter', 'au:1': 'Aura Espetada', 'au:2': 'Aura Simples' };
 let temp = null, bauBusca = false;
 async function carregaBau() { // só pergunta se o baú está disponível (não redesenha o menu)
   if (!conta.user || !conta.sb || bauBusca) return; bauBusca = true;
-  try { const { data, error } = await conta.sb.rpc('my_season'); temp = error || !data ? null : { chest: !!data.chest, free: !!data.free }; } finally { bauBusca = false; }
+  try { const { data, error } = await conta.sb.rpc('my_season'); temp = error || !data ? null : { chest: !!data.chest, free: !!data.free, n: data.n | 0, ach: data.ach || [] }; if (data && !error && conta.perfil && data.gems != null) { conta.perfil.gems = data.gems | 0; renderGems(); } } finally { bauBusca = false; }
   if (dly) show('dotDaily', !dly.got || !!(temp && temp.chest));
   if (!document.getElementById('dailyBox').classList.contains('hidden')) drawBau();
 }
-function drawBau() { const ok = !!(temp && temp.chest), b = document.getElementById('bChest'); b.disabled = !ok; b.textContent = ok ? 'ABRIR' : 'AMANHÃ';
-  document.getElementById('chestRow').classList.toggle('pronto', ok); document.getElementById('chSub').textContent = temp && temp.free ? 'modo dono: sempre liberado' : ok ? 'abra 1 vez por dia · chance de item raro!' : 'você já abriu hoje · volte amanhã'; }
+function drawBau() { const ok = !!(temp && temp.chest), b = document.getElementById('bChest'); b.disabled = !ok; b.textContent = ok ? 'ABRIR' + (temp.n > 1 ? ' (' + temp.n + ')' : '') : 'AMANHÃ';
+  document.getElementById('chestRow').classList.toggle('pronto', ok); document.getElementById('chSub').textContent = temp && temp.free ? 'modo dono: sempre liberado' : ok ? (temp.n > 1 ? 'você tem ' + temp.n + ' baús · ' : '1 grátis por dia · ') + 'chance de item raro!' : 'sem baús agora · 1 grátis amanhã, mais nas missões semanais'; }
 function itemPreview(item) { // só o item, na cor escolhida, ampliado dentro do quadrinho
   const L = validLook(chosenLook) || {}, [k, v] = item.split(':'), c = makeCanvas(84, 84), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
   let im = null;
+  if (k === 'p') { const q = makeCanvas(56, 56); q.getContext('2d').imageSmoothingEnabled = false; drawPowerIcon(q.getContext('2d'), v); x.drawImage(q, 0, 0, 56, 56, 0, 0, 84, 84); return c.toDataURL(); }
+  if (k === 'tr') { x.font = '48px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('⚡', 42, 46); return c.toDataURL(); }
   if (k === 'au') { const pal = palForCustom(chosenChar, 0, chosenFxc), kt = AURA_KIT[+v], fr = kt && auraKitFrames(pal.aura, +v); im = fr && fr[kt.lp[0]]; }
   else { const pid = k === 'h' ? v : k === 't' ? (+v === 2 ? 'tail2' : 'tail1') : k === 'a' ? 'halo' : k === 'sc' ? 'scout' : '';
     const col = k === 'h' ? L.hc : k === 't' ? L.tc : k === 'a' ? L.ac : L.xc; im = pid && tintPart(pid, 'parado', col || '#ffffff'); }
@@ -4552,9 +4597,10 @@ async function abrirBau() {
   const b = document.getElementById('bChest'); if (b.disabled) return; b.disabled = true; const ico = document.getElementById('chIco'); ico.classList.add('treme');
   const [{ data, error }] = await Promise.all([conta.sb.rpc('open_chest'), new Promise(z => setTimeout(z, 900))]); ico.classList.remove('treme');
   if (error) { drawBau(); return notice(/JA_ABERTO/.test(error.message) ? 'Você já abriu o baú hoje. Volte amanhã!' : erroRecompensa(error), 'BAÚ', 'err'); }
-  temp = { ...(temp || {}), chest: !!(temp && temp.free) }; drawBau(); show('dotDaily', !dly || !dly.got || temp.chest);
+  { const n = Math.max(0, ((temp && temp.n) | 0) - 1); temp = { ...(temp || {}), n, chest: n > 0 || !!(temp && temp.free) }; } drawBau(); show('dotDaily', !dly || !dly.got || temp.chest);
   const box = document.querySelector('#dailyBox .card');
   if (data.tipo === 'item') { if (conta.perfil) conta.perfil.owned = [...(conta.perfil.owned || []), data.item]; fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(data.item) + '" alt="">', sealCls: 'prev', titulo: 'ITEM RARO!', sub: esc(ITEM_NOMES[data.item] || data.item) + '<br>já está liberado na customização', tempo: 2600 }); SFX.unlock(); }
+  else if (data.tipo === 'gems') { ganhouExtra(data.v); premioFx(box, 0, 0, 'CRISTAIS!', data.v); }
   else if (data.tipo === 'xp') { ganhouRecompensa(0, data.v); premioFx(box, 0, data.v, 'BAÚ MISTERIOSO!'); }
   else { ganhouRecompensa(data.v, 0); premioFx(box, data.v, 0, data.raro ? 'BAÚ RARO!' : 'BAÚ MISTERIOSO!'); }
 }
@@ -4582,27 +4628,31 @@ function drawMissoes(flash) {
   const ordem = m => src.ms.includes(m.id) ? 2 : Math.min(m.n, m.v) >= m.n ? 0 : 1;
   for (const m of [...lista].sort((a, b) => ordem(a) - ordem(b))) { const v = Math.min(m.n, m.v), feita = src.ms.includes(m.id), ok = v >= m.n;
     const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : ok ? ' ready' : '') + (flash === m.id ? ' flash' : '');
-    r.innerHTML = '<div class="rwi"><b>' + esc(m.t) + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div>' + premio(m.c, m.xp);
+    r.innerHTML = '<div class="rwi"><b>' + esc(m.t) + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div>' + (sem ? premio(0, m.xp, 1, 1) : premio(m.c, m.xp));
     const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
     b.innerHTML = feita ? '<span class="tick"></span>RESGATADO' : 'RESGATAR';
     b.onclick = async () => { b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {} const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
       if (error) { if (/JA_RESGATADO/.test(error.message)) { pegos.add(m.id); drawMissoes(); } else b.disabled = false; return notice(erroRecompensa(error), 'MISSÕES'); }
       pegos.add(m.id); const cur = m.id[0] === 'w' ? dly.w : dly; if (!cur.ms.includes(m.id)) cur.ms.push(m.id);
-      const c = typeof data === 'object' && data ? data.c : data, x = typeof data === 'object' && data ? data.xp | 0 : 0; ganhouRecompensa(c, x); drawMissoes(m.id);
-      premioFx(document.querySelector('#missBox .card'), c, x, 'MISSÃO CONCLUÍDA!'); refreshDaily(); };
+      const c = typeof data === 'object' && data ? data.c : data, x = typeof data === 'object' && data ? data.xp | 0 : 0; ganhouRecompensa(c, x); ganhouExtra(data && data.g, data && data.bau); drawMissoes(m.id);
+      premioFx(document.querySelector('#missBox .card'), c, x, 'MISSÃO CONCLUÍDA!', data && data.g, data && data.bau); refreshDaily(); };
     r.appendChild(b); L.appendChild(r); }
 }
+const ACH_ITEM = Object.fromEntries(Object.entries(UNLOCK).filter(([, r]) => r.ach).map(([k, r]) => [r.ach, k]));
+const LV_ITENS = lv => Object.entries(UNLOCK).filter(([, r]) => r.lv === lv).map(([k]) => k);
 async function drawConquistas(flash) {
   const L = document.getElementById('achList');
   if (!conqs) { L.innerHTML = '<div class="rkempty">carregando...</div>'; await carregarConquistas(); }
   if (!conqs) { L.innerHTML = '<div class="rkempty">Conquistas ainda não ligadas no servidor.<br>Rode o SQL COMPLETO de novo.</div>'; return; }
   L.innerHTML = ''; const ord = [...conqs].sort((a, b) => (a.got - b.got) || ((b.v >= b.n) - (a.v >= a.n)));
   for (const a of ord) { const ok = a.v >= a.n, r = document.createElement('div'); r.className = 'rwrow conq' + (a.got ? ' done' : ok ? ' ready' : '') + (flash === a.id ? ' flash' : '');
-    r.innerHTML = '<span class="cqi">' + a.ic + '</span><div class="rwi"><b>' + esc(a.t) + '</b><div class="rwbar"><u style="width:' + Math.round(Math.min(a.v, a.n) / a.n * 100) + '%"></u><em>' + Math.min(a.v, a.n).toLocaleString('pt-BR') + ' / ' + a.n.toLocaleString('pt-BR') + '</em></div></div>' + premio(a.c, a.xp);
+    r.innerHTML = '<span class="cqi">' + a.ic + '</span><div class="rwi"><b>' + esc(a.t) + '</b><div class="rwbar"><u style="width:' + Math.round(Math.min(a.v, a.n) / a.n * 100) + '%"></u><em>' + Math.min(a.v, a.n).toLocaleString('pt-BR') + ' / ' + a.n.toLocaleString('pt-BR') + '</em></div>' + (ACH_ITEM[a.id] ? '<small class="libera">🔓 libera: ' + esc(nomeItem(ACH_ITEM[a.id])) + '</small>' : '') + '</div>' + premio(a.c, a.xp, a.c >= 300 ? 5 : a.c >= 100 ? 3 : a.c >= 50 ? 2 : 1);
     const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (a.got ? ' got' : ok ? ' pri' : ''); b.disabled = a.got || !ok; b.innerHTML = a.got ? '<span class="tick"></span>FEITA' : 'RESGATAR';
     b.onclick = async () => { b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {} const { data, error } = await conta.sb.rpc('claim_achievement', { aid: a.id }); unwait();
       if (error) { b.disabled = false; return notice(erroRecompensa(error), 'CONQUISTAS'); }
-      a.got = true; conqPegas.add(a.id); ganhouRecompensa(data.c, data.xp); drawConquistas(a.id); premioFx(document.querySelector('#achBox .card'), data.c, data.xp, 'CONQUISTA!'); refreshDaily(); };
+      a.got = true; conqPegas.add(a.id); ganhouRecompensa(data.c, data.xp); ganhouExtra(data.g); drawConquistas(a.id); premioFx(document.querySelector('#achBox .card'), data.c, data.xp, 'CONQUISTA!', data.g);
+      if (ACH_ITEM[a.id]) setTimeout(() => fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(ACH_ITEM[a.id]) + '" alt="">', sealCls: 'prev', titulo: 'ITEM LIBERADO!', sub: esc(nomeItem(ACH_ITEM[a.id])) + '<br>já está na customização', tempo: 2600 }), 1700);
+      refreshDaily(); };
     r.appendChild(b); L.appendChild(r); }
   show('dotAch', conqProntas());
   const tot = conqs.length, feitas = conqs.filter(a => a.got).length; document.getElementById('achSub').textContent = feitas + ' de ' + tot + ' conquistadas · cada uma vale uma vez';
@@ -4622,7 +4672,7 @@ function drawDiaria() {
   drawBau();
   const D = document.getElementById('dailyDays'); D.innerHTML = ''; const feitos = dly.streak % 7 || (dly.got && dly.streak ? 7 : 0), hoje = dly.got ? feitos - 1 : feitos;
   DIARIA.forEach((p, i) => { const c = document.createElement('div'); c.className = 'dday' + (i < feitos ? ' got' : '') + (i === hoje && !dly.got ? ' now' : '');
-    c.innerHTML = '<small>DIA ' + (i + 1) + '</small><i class="coin' + (i === 6 ? ' big' : '') + '"></i><b>' + p + '</b>' + (i < feitos ? '<em class="tick"></em>' : ''); if (i === 6) c.classList.add('d7'); D.appendChild(c); });
+    c.innerHTML = '<small>DIA ' + (i + 1) + '</small>' + (i === 6 ? '<i class="baui big">🧰</i><b>BAÚ</b>' : '<i class="coin"></i><b>' + p + '</b>') + (i < feitos ? '<em class="tick"></em>' : ''); if (i === 6) c.classList.add('d7'); D.appendChild(c); });
   const b = document.getElementById('bClaimDaily'); b.disabled = dly.got; b.textContent = dly.got ? 'VOLTE AMANHÃ' : 'RESGATAR';
 }
 async function abrirRecompensa(qual) {
@@ -4639,10 +4689,10 @@ setInterval(() => { if (!document.getElementById('menu').classList.contains('hid
 document.getElementById('dailyX').onclick = () => show('dailyBox', false);
 document.getElementById('bClaimDaily').onclick = async () => { wait('resgatando...'); const { data, error } = await conta.sb.rpc('claim_daily'); unwait();
   if (error) return notice(/JA_RESGATADO/.test(error.message) ? 'Você já resgatou hoje. Volte amanhã!' : erroRecompensa(error), 'RECOMPENSA');
-  pegos.add('daily'); moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); premioFx(document.querySelector('#dailyBox .card'), data, 0, 'RECOMPENSA DIÁRIA!'); refreshDaily(); };
+  pegos.add('daily'); moedasGanhas(data); dly.got = true; dly.streak++; drawDiaria(); const d = document.querySelector('#dailyDays .dday.now') || document.getElementById('bClaimDaily'); d.classList.add('flash'); if (!data) ganhouExtra(0, 1); premioFx(document.querySelector('#dailyBox .card'), data, 0, 'RECOMPENSA DIÁRIA!', 0, data ? 0 : 1); drawBau(); refreshDaily(); };
 /* ---------- recompensa de nível ---------- */
 const lvOf = (k, m, b = 0) => 1 + Math.floor(Math.sqrt(Math.max(0, k * 10 + m * 4 + b) / 25));
-const lvPrize = (de, ate) => { let p = 0; for (let i = de + 1; i <= ate; i++) p += 25 * i; return p; };
+const lvPrize = (de, ate) => { let p = 0; for (let i = de + 1; i <= ate; i++) p += 15 * i; return p; };
 let lvShown = 0;
 let bvVisto = false, bvBusca = false; // boas-vindas: 150 moedas na primeira vez
 async function boasVindas() {
@@ -4650,7 +4700,7 @@ async function boasVindas() {
   const { data, error } = await conta.sb.rpc('welcome_pending'); bvBusca = false; if (error || !data || bvVisto) return;
   if (!document.getElementById('msgBox').classList.contains('hidden') || document.getElementById('menu').classList.contains('hidden') || document.querySelector('.ovl:not(.hidden):not(#menu):not(#msgBox)') || document.getElementById('trans').className) { setTimeout(boasVindas, 1500); return; } // só no menu, sem outra janela aberta
   bvVisto = true; show('lvBox', false);
-  const ok = await msgOpen('BEM-VINDO!', { kind: 'gold', html: 'Tome <b class="bvn">150 <i class="coin"></i></b> para comprar<br>seu primeiro item e cor!' }, '', false, 'RESGATAR');
+  const ok = await msgOpen('BEM-VINDO!', { kind: 'gold', html: 'Tome <b class="bvn">300 <i class="coin"></i></b> para comprar<br>seu primeiro item e cor!' }, '', false, 'RESGATAR');
   if (!ok) { bvVisto = false; return; }
   const r = await conta.sb.rpc('claim_welcome'); if (r.error) return;
   const mb = document.querySelector('#menu .card'); premioFx(mb, r.data, 0, 'PRESENTE!'); moedasGanhas(r.data); await new Promise(z => setTimeout(z, 1700));
@@ -4663,7 +4713,7 @@ function abrirNiveis() { // trilha de níveis (rola para os lados), parada no n�
   document.getElementById('lvXpB').style.width = Math.round((xp - a) / (b - a) * 100) + '%';
   let h = ''; const fim = Math.max(lv + 10, 20);
   for (let i = 2; i <= fim; i++) { const need = 25 * (i - 1) ** 2, st = i <= got ? 'got' : i <= lv ? 'ready' : 'lock';
-    h += '<div class="lvn ' + st + (i === lv + 1 ? ' next' : '') + '"><div class="lvb">' + i + '</div><div class="lvr"><i class="coin"></i><b>' + 25 * i + '</b></div><small>'
+    h += '<div class="lvn ' + st + (i === lv + 1 ? ' next' : '') + '"><div class="lvb">' + i + '</div><div class="lvr"><i class="coin"></i><b>' + 15 * i + '</b></div>' + (LV_ITENS(i).length ? '<em class="lvun">🔓 ' + LV_ITENS(i).map(k => esc(nomeItem(k))).join('<br>') + '</em>' : '') + '<small>'
       + (st === 'got' ? '<span class="tick"></span>' : st === 'ready' ? 'PRONTO!' : need + ' XP') + '</small>' + (st === 'lock' ? '<em class="lvlk">🔒</em>' : '') + '</div>'; }
   const L = document.getElementById('lvRows'); L.innerHTML = h; show('lvList', true);
   const pend = lv > got; show('lvClaim', pend); if (pend) document.getElementById('lvClaimN').textContent = lvPrize(got, lv);
@@ -4681,7 +4731,8 @@ document.getElementById('lvGet').onclick = async () => {
   const b = document.getElementById('lvGet'); b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {}
   const { data, error } = await conta.sb.rpc('claim_levels'); unwait(); b.disabled = false;
   if (error) { show('lvBox', false); await conta.loadProfile(); return notice(/NADA/.test(error.message) ? 'Essa recompensa já foi resgatada.' : erroRecompensa(error), 'NÍVEL'); }
-  conta.perfil.lvl_got = data.lv; moedasGanhas(data.prize); premioFx(document.querySelector('#lvBox .card'), data.prize, 0, 'NÍVEL ' + data.lv + '!'); setTimeout(() => show('lvBox', false), 1500);
+  const lvAntes = conta.perfil.lvl_got | 0; conta.perfil.lvl_got = data.lv; moedasGanhas(data.prize); premioFx(document.querySelector('#lvBox .card'), data.prize, 0, 'NÍVEL ' + data.lv + '!'); setTimeout(() => show('lvBox', false), 1500);
+  { const novos = []; for (let i = lvAntes + 1; i <= data.lv; i++) novos.push(...LV_ITENS(i)); if (novos.length) setTimeout(() => fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(novos[0]) + '" alt="">', sealCls: 'prev', titulo: novos.length > 1 ? 'ITENS LIBERADOS!' : 'ITEM LIBERADO!', sub: novos.map(k => esc(nomeItem(k))).join('<br>') + '<br>já ' + (novos.length > 1 ? 'estão' : 'está') + ' na customização', tempo: 3000 }), 1700); }
 };
 /* ---------- amigos e convites ---------- */
 async function drawAmigos() {
@@ -4814,10 +4865,12 @@ document.addEventListener('visibilitychange', () => { // voltou do segundo plano
   if (net.role === 'client' && (!net.host || !net.host.open)) { net.host = null; net.hostLost(); } });
 /* ---------- XP: ícone, ações contadas (missões e conquistas), novidades ---------- */
 const XPI = '<i class="xpi">XP</i>', COINI = '<i class="coin"></i>';
-const premio = (c, xp) => '<span class="prem">' + (c ? COINI + '<b>' + c + '</b>' : '') + (xp ? XPI + '<b class="xpn">' + xp + '</b>' : '') + '</span>';
+const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? BAUI + '<b>' + bau + '</b>' : '') + (c ? COINI + '<b>' + c + '</b>' : '') + (g ? GEMI + '<b class="gmn">' + g + '</b>' : '') + (xp ? XPI + '<b class="xpn">' + xp + '</b>' : '') + '</span>';
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.65', d: '14/11', itens: [['novo', 'Cristais: moeda rara das conquistas e missões semanais'], ['novo', 'Poderes, transformação e aura liberados por nível'], ['novo', 'Auréola, Aura Espetada e Touca: só por conquistas'], ['novo', 'Baús nas missões semanais e no dia 7 da diária'], ['mudou', 'Itens e cores mais baratos']] },
+  { v: '1.0.64', d: '14/11', itens: [['mudou', 'Economia rebalanceada: itens mais valiosos, prêmios menores'], ['novo', 'Créditos de sprites e efeitos'], ['novo', 'Botão do canal no YouTube'], ['mudou', 'Controles deslizantes novos nas configurações']] },
   { v: '1.0.59', d: '13/11', itens: [['mudou', 'Botões de resgatar respondem na hora'], ['mudou', 'Tag do menu sem piscar']] },
   { v: '1.0.57', d: '13/11', itens: [['mudou', 'Jogo mais leve: personagem, miniaturas e menus otimizados']] },
   { v: '1.0.54', d: '13/11', itens: [['novo', 'Modo desempenho nas configurações'], ['novo', '5 cabelos novos: Arrepiado, Franja, Lambido, Longo e Touca'], ['novo', 'Scouter no olho'], ['novo', 'Auras Espetada e Simples']] },
@@ -5057,7 +5110,7 @@ function setupChat() {
 const MATCH_TIME = 300;
 /* prêmio da partida de 5 min: cresce com o número de PESSOAS na sala (bots não contam e não ocupam o pódio)
    2 jogadores: 1º 30 · 3: 45/24 · 4: 60/32/16 · 6: 90/48/24. Sempre só para quem fez pelo menos 1 derrota. */
-const prizesFor = n => n < 2 ? [] : [15 * n, n >= 3 ? 8 * n : 0, n >= 4 ? 4 * n : 0];
+const prizesFor = n => n < 2 ? [] : [10 * n, n >= 3 ? 5 * n : 0, n >= 4 ? 3 * n : 0];
 /* despertar com transformação: troca visual, cores e arquétipo (a vida mantém a proporção) */
 function onFormHook(f, on) {
   if (!f.forms || !f.forms.trans || f.formOn === on) return;
@@ -5068,7 +5121,7 @@ function onFormHook(f, on) {
 /* ---------------- DUELO: 1 contra 1, melhor de 3 ----------------
    O anfitrião manda o estado ({t:'duel'}): wait (esperando oponente) -> count (5s) -> fight -> between (3s) -> count ... -> end.
    Quem vence 2 rounds ganha o duelo e +10 moedas. */
-const DUEL_PRIZE = 10;
+const DUEL_PRIZE = 8;
 const duelists = () => game.fighters.filter(f => !f.ctrl.startsWith('ai') && !f.isBot).sort((a, b) => (a.id < b.id ? -1 : 1));
 function duelSet(st, send) {
   const prev = game.duelSt; game.duelSt = st;
@@ -5347,7 +5400,7 @@ function custSig() { return JSON.stringify([slotCur, chosenLook, chosenFxc, chos
 let custBackup = null;
 function custCancel() { if (custBackup) { setSlots(custBackup.slots, custBackup.cur); saveLook(); } closeCustom(); } // desfaz tudo desta visita
 function custClear() { chosenLook = newSlot().look; chosenFxc = { a: '', k: '' }; chosenArq = 'eq'; chosenTr = -1; chosenPw = { ...PW0 }; saveLook(); } // padrão de fábrica
-function custBtn() { const b = document.getElementById('cDone'), ch = custOpen && custSig() !== custStart; if (b) b.textContent = '✓ SALVAR'; show('cDone', ch); show('cCancel', ch); }
+function custBtn() { const b = document.getElementById('cDone'), ch = custOpen && custSig() !== custStart; if (b) b.textContent = '✓ SALVAR'; show('cDone', ch); }
 let custStart = '';
 function openCustom() {
   offerBuy(''); custTab = 'corpo'; custOk = null;
@@ -5371,7 +5424,7 @@ function swatches(list, cur, onPick, withDefault, pfx) {
   if (cur && !list.includes(cur)) add(cur, 'mine'); // a cor livre escolhida aparece como mais uma bolinha
   // "+": abre o seletor de cor do aparelho (qualquer cor, sem encher a tela de bolinhas)
   const lb = document.createElement('label'); lb.className = 'more'; lb.title = 'outra cor'; lb.textContent = '+';
-  if (pfx && !shop.has('cp:1')) { lb.title = 'seletor de cor livre · 500 moedas'; lb.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); lb.onclick = e => { e.preventDefault(); buyNow('cp:1', 'Seletor de cor livre (qualquer cor, em tudo)'); }; lb.style.position = 'relative'; w.appendChild(lb); return w; }
+  if (pfx && !shop.has('cp:1')) { lb.title = 'seletor de cor livre · 30 cristais'; lb.insertAdjacentHTML('beforeend', '<i class="lockb">🔒</i>'); lb.onclick = e => { e.preventDefault(); buyNow('cp:1', 'Seletor de cor livre (qualquer cor, em tudo)'); }; lb.style.position = 'relative'; w.appendChild(lb); return w; }
   const inp = document.createElement('input'); inp.type = 'color'; inp.value = cur && /^#[0-9a-f]{6}$/i.test(cur) ? cur : (list[0] || '#ffffff');
   inp.oninput = () => onPick(inp.value.toLowerCase());          // prévia ao vivo enquanto arrasta
   inp.onchange = () => { onPick(inp.value.toLowerCase()); saveLook(); if (pfx) offerBuy(pfx + ':' + inp.value.toLowerCase(), 'Cor ' + inp.value.toLowerCase()); };
@@ -5901,8 +5954,9 @@ function setupTouch() {
   document.getElementById('rSfx').addEventListener('input', e => { AUD.sfx = +e.target.value; syncSettingsUI(); salvaVol(); });
   document.getElementById('rSfx').addEventListener('change', () => SFX.coin());
   document.getElementById('bPerf').onclick = () => { LITE = !LITE; try { localStorage.setItem('adk_lite', LITE ? '1' : '0'); } catch (e) {} aplicaLite(); resizeCanvas(); };
+  document.getElementById('bYt').onclick = () => { try { window.open('https://www.youtube.com/@jonassoares8872', '_blank', 'noopener'); } catch (e) { location.href = 'https://www.youtube.com/@jonassoares8872'; } };
   document.getElementById('bCred').onclick = () => { const L = document.getElementById('credList');
-    L.innerHTML = CREDITOS.map(sec => '<div class="credsec"><h4>' + esc(sec.t) + '</h4>' + sec.itens.map(x => '<p>' + esc(x) + '</p>').join('') + '</div>').join(''); L.scrollTop = 0; show('settings', false); show('credBox', true); };
+    L.innerHTML = CREDITOS.map(sec => '<div class="credsec"><h4>' + esc(sec.t) + '</h4>' + (sec.chips ? '<div class="crchips">' + sec.itens.map(x => '<span>' + esc(x) + '</span>').join('') + '</div>' : sec.itens.map(x => '<p>' + esc(x) + '</p>').join('')) + '</div>').join(''); L.scrollTop = 0; show('settings', false); show('credBox', true); };
   document.getElementById('rSize').addEventListener('input', e => { settings.size = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
   document.getElementById('rOp').addEventListener('input', e => { settings.op = +e.target.value; syncSettingsUI(); layoutButtons(); saveSettings(); });
   document.getElementById('bEdit').onclick = startEdit;
