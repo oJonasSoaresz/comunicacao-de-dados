@@ -1663,6 +1663,24 @@
   .baufx.quase .bfwrap{animation:bfquase2 .5s ease-in-out infinite!important}
   @keyframes bfquase2{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
   .unlk{z-index:100}
+
+  /* R91: polimento do baú */
+  .baufx .bfrays{transition:opacity .5s ease,filter .6s ease}
+  .baufx .bfrays::after{content:'';position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(rgba(200,90,255,.32) 0 9deg,transparent 9deg 18deg);opacity:0;transition:opacity .6s ease}
+  .baufx.raro .bfrays{background:repeating-conic-gradient(rgba(255,207,58,.16) 0 9deg,transparent 9deg 18deg)!important}
+  .baufx.raro .bfrays::after{opacity:1}
+  .bfbau{transition:filter .6s ease}
+  .baufx.quase .bfbau{filter:drop-shadow(0 0 34px rgba(200,90,255,1))!important}
+  .baufx.quase{animation:bfquaseshake .5s ease-out}
+  @keyframes bfquaseshake{25%{transform:translate(-5px,2px)}50%{transform:translate(5px,-2px)}75%{transform:translate(-2px,1px)}}
+  .baufx.aberto{animation:bfbig .5s cubic-bezier(.3,1.5,.5,1)}
+  @keyframes bfbig{10%{transform:translate(-12px,6px) scale(1.03)}25%{transform:translate(10px,-8px)}40%{transform:translate(-8px,4px)}60%{transform:translate(5px,-3px)}80%{transform:translate(-2px,1px)}}
+  .bfflash.forte{animation:bffl3 .7s ease-out!important}
+  @keyframes bffl3{0%{opacity:1}25%{opacity:.9}100%{opacity:0}}
+  .baufx.aberto::after{content:'';position:absolute;left:50%;top:46%;width:20px;height:20px;margin:-10px;border-radius:50%;border:6px solid #fff3b0;box-shadow:0 0 30px #ffcf3a;animation:bfring .6s ease-out forwards;pointer-events:none}
+  .baufx.raro.aberto::after{border-color:#ffc4ff;box-shadow:0 0 30px #ff6bff}
+  @keyframes bfring{from{transform:scale(1);opacity:1}to{transform:scale(40);opacity:0}}
+  .bfburst i{width:18px!important;height:18px!important;left:-9px!important;top:-9px!important}
 </style>
 </head>
 <body>
@@ -1702,7 +1720,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.90</div>
+      <div class="ver">v1.0.91</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -5238,23 +5256,23 @@ function itemPreview(item) { // só o item, na cor escolhida, ampliado dentro do
 function bauToques(req) { // baú no centro: 3 toques (4 se vier item raro); abre na hora do último toque
   return new Promise(fim => {
     const o = document.createElement('div'); o.className = 'baufx'; let n = 0, meta = 0, res = null, feito = false;
-    req.then(r => { res = r; meta = r && r.data && r.data.tipo === 'item' ? 6 : 3; }, e => { res = { error: e }; meta = 3; });
+    req.then(r => { res = r; meta = r && r.data && r.data.tipo === 'item' ? 8 : 4; }, e => { res = { error: e }; meta = 3; });
     o.innerHTML = '<i class="bfrays"></i><div class="bfwrap"><div class="bfbau"></div></div><b class="bftxt">TOQUE PARA ABRIR!</b><div class="bfburst"></div><div class="bfflash"></div>';
     document.getElementById('wrap').appendChild(o);
     const bau = o.querySelector('.bfbau'), fl = o.querySelector('.bfflash');
     const flash = cls => { fl.className = 'bfflash'; void fl.offsetWidth; fl.classList.add(cls); };
     const abre = () => { feito = true; const raro = res && res.data && res.data.tipo === 'item';
       o.classList.remove('quase'); o.classList.add('aberto', 'treme'); if (raro) o.classList.add('raro'); o.querySelector('.bftxt').textContent = raro ? 'ITEM RARO!' : '';
-      const bs = o.querySelector('.bfburst'); let h = ''; for (let i = 0; i < 18; i++) h += '<i style="--a:' + (i * 20) + 'deg;--d:' + (60 + Math.random() * 50) + '%"></i>'; bs.innerHTML = h; bs.classList.add('on');
+      const bs = o.querySelector('.bfburst'); let h = ''; for (let i = 0; i < 28; i++) h += '<i style="--a:' + (i * 360 / 28) + 'deg;--d:' + (60 + Math.random() * 50) + '%"></i>'; bs.innerHTML = h; bs.classList.add('on');
       flash('forte'); try { SFX.level && SFX.level(); } catch (x) {}
       setTimeout(() => { o.classList.add('sai'); setTimeout(() => { o.remove(); fim(res); }, 260); }, raro ? 650 : 380); }; // o prêmio aparece só depois que a tela do baú sai
     o.addEventListener('pointerdown', e => e.preventDefault());
     o.querySelector('.bfwrap').addEventListener('pointerdown', async e => { e.preventDefault(); e.stopPropagation(); if (feito) return; n++; // só conta tocando no baú
       bau.classList.remove('bate'); void bau.offsetWidth; bau.classList.add('bate'); bau.style.setProperty('--z', 1 + n * 0.08); o.style.setProperty('--tr', n);
       try { (SFX.hit || SFX.coin)(); } catch (x) {} flash('on');
-      if (n >= 3) { if (!res) { o.querySelector('.bftxt').textContent = '...'; await req.catch(() => {}); }
+      if (n >= 4) { if (!res) { o.querySelector('.bftxt').textContent = '...'; await req.catch(() => {}); }
         if (!feito && n >= meta) abre();
-        else if (!feito && meta === 6 && n === 3) { o.classList.add('raro', 'quase'); o.querySelector('.bftxt').textContent = 'CONTINUE TOCANDO!'; flash('forte'); } } // raro: o baú fica roxo e pede mais um toque
+        else if (!feito && meta === 8 && n === 4) { o.classList.add('raro', 'quase'); o.querySelector('.bftxt').textContent = 'CONTINUE TOCANDO!'; flash('forte'); } } // raro: o baú fica roxo e pede mais um toque
     });
   });
 }
@@ -5265,9 +5283,9 @@ async function abrirBau() {
   { const n = Math.max(0, ((temp && temp.n) | 0) - 1); temp = { ...(temp || {}), n, chest: n > 0 || !!(temp && temp.free) }; } drawBau(); show('dotDaily', !dly || !dly.got || temp.chest);
   const box = document.querySelector('#dailyBox .card');
   if (data.tipo === 'item') { if (conta.perfil) conta.perfil.owned = [...(conta.perfil.owned || []), data.item]; fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(data.item) + '" alt="">', sealCls: 'prev', titulo: 'ITEM RARO!', sub: esc(nomeItem(data.item)) + '<br>já está liberado na customização', tempo: 2600 }); SFX.unlock(); }
-  else if (data.tipo === 'gems') { ganhouExtra(data.v); premioFx(box, 0, 0, 'CRISTAIS!', data.v); }
-  else if (data.tipo === 'xp') { ganhouRecompensa(0, data.v); premioFx(box, 0, data.v, 'BAÚ MISTERIOSO!'); }
-  else { ganhouRecompensa(data.v, 0); premioFx(box, data.v, 0, data.raro ? 'BAÚ RARO!' : 'BAÚ MISTERIOSO!'); }
+  else if (data.tipo === 'gems') { ganhouExtra(data.v); premioFx(box, 0, 0, 'DIAMANTES!', data.v); }
+  else if (data.tipo === 'xp') { ganhouRecompensa(0, data.v); premioFx(box, 0, data.v, 'XP!'); }
+  else { ganhouRecompensa(data.v, 0); premioFx(box, data.v, 0, data.raro ? 'MUITAS MOEDAS!' : 'MOEDAS!'); }
 }
 document.getElementById('bChest').onclick = abrirBau;
 setInterval(() => { if (!conta.user || !dly || game.phase === 'play') return; // bolinhas vermelhas: recalcula com o progresso local
@@ -5647,6 +5665,7 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.91', d: '16/11', itens: [['mudou', 'Baú ainda mais caprichado']] },
   { v: '1.0.89', d: '16/11', itens: [['mudou', 'Baú raro fica roxo e pede um toque a mais']] },
   { v: '1.0.88', d: '16/11', itens: [['corrigido', 'Aviso de nível não abre por cima de outras janelas']] },
   { v: '1.0.87', d: '16/11', itens: [['mudou', 'Baú abre com explosão; item raro pede 4 toques'], ['novo', 'Toque em qualquer recompensa para ver o que é']] },
