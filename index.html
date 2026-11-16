@@ -1734,6 +1734,9 @@
   /* R99: fundo mais escuro e botões no estilo da referência */
   #menu{background:linear-gradient(rgba(12,6,34,.38),rgba(12,6,34,.38)),var(--menubg) center bottom/cover no-repeat,#141033!important}
   #menu .mprof{border:2px solid #ffcf3a!important;box-shadow:none!important;background:linear-gradient(#2c1a55,#1a0f38)!important}
+
+  /* R103: fundo novo só nas telas que substituem o menu; popups mantêm o menu atrás */
+  #boot,#auth,#createBox,#roomsBox,#custom,body:not(:has(#pause:not(.hidden))) #settings{background:linear-gradient(rgba(12,6,34,.62),rgba(12,6,34,.62)),var(--menubg) center bottom/cover no-repeat,#141033!important}
 </style>
 </head>
 <body>
@@ -1773,7 +1776,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.101</div>
+      <div class="ver">v1.0.103</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -5729,7 +5732,7 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
-  { v: '1.0.101', d: '16/11', itens: [['mudou', 'Novo fundo do menu e contorno amarelo no perfil']] },
+  { v: '1.0.103', d: '16/11', itens: [['mudou', 'Novo fundo no menu e nas telas de sala, login e configurações']] },
   { v: '1.0.98', d: '16/11', itens: [['novo', 'Menu com cenário novo e pedestal']] },
   { v: '1.0.97', d: '16/11', itens: [['mudou', 'Visual padronizado em todas as telas']] },
   { v: '1.0.96', d: '16/11', itens: [['corrigido', 'Moeda do popup de recompensa no tamanho certo']] },
