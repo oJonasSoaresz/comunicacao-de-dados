@@ -1737,6 +1737,12 @@
 
   /* R103: fundo novo só nas telas que substituem o menu; popups mantêm o menu atrás */
   #boot,#auth,#createBox,#roomsBox,#custom{background:linear-gradient(rgba(12,6,34,.62),rgba(12,6,34,.62)),var(--menubg) center bottom/cover no-repeat,#141033!important}
+
+  /* R107: herói e anel presos ao pedestal do fundo (mesma conta do background cover/center bottom) */
+  #mBgL{position:absolute;inset:0;container-type:size;pointer-events:none;z-index:0;overflow:hidden}
+  #mBgL>#mHeroBox{--sc:max(calc(100cqw / 1774),calc(100cqh / 887));position:absolute!important;pointer-events:auto;margin:0!important;transform:none!important;right:auto!important;bottom:auto!important;
+    width:calc(517 * var(--sc))!important;height:calc(470 * var(--sc))!important;left:calc(50cqw - 570.5 * var(--sc))!important;top:calc(100cqh - 602 * var(--sc))!important}
+  #mBgL>#mHeroBox canvas{width:100%!important;height:100%!important}
 </style>
 </head>
 <body>
@@ -1776,7 +1782,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.106</div>
+      <div class="ver">v1.0.107</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -5269,11 +5275,11 @@ function drawTagCanvases() { for (const tc of document.querySelectorAll('canvas.
     x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, c.width, c.height); x.imageSmoothingEnabled = false;
     const save = ctx; ctx = x;
     const kk = Math.max(1, Math.floor(c.height * 0.8 / 64)); // escala INTEIRA: pixel art fiel
-    try { x.save(); x.translate(Math.round(c.width / 2), (c.height - Math.max(Math.round(c.height * 0.057), 14 * kk))); x.scale(kk, kk);
+    try { x.save(); x.translate(Math.round(c.width / 2), Math.round(c.height * 0.9)); x.scale(kk, kk);
       { const pp = spr.parado, fc = pp._pes != null ? pp._pes : (pp._pes = (() => { try { const q = pp.getContext ? pp : null, cv = q || (() => { const t = makeCanvas(pp.width, pp.height); t.getContext('2d').drawImage(pp, 0, 0); return t; })(), d = cv.getContext('2d').getImageData(0, pp.height - 8, pp.width, 8).data; let sx = 0, n = 0; for (let i = 3; i < d.length; i += 4) if (d[i]) { sx += (i >> 2) % pp.width; n++; } return n ? sx / n - pp.width / 2 : 0; } catch (e) { return 0; } })());
-        x.restore(); x.save(); const cor = { pod: '#ff4d5e', res: '#4be07a', agi: '#4aa8ff' }[chosenArq] || '#ffb21e', rx = 30 * kk, ry = 3.5 * kk, cx0 = Math.round(c.width / 2 + fc * kk), cy0 = (c.height - Math.max(Math.round(c.height * 0.057), 14 * kk)) - Math.round(1 * kk); c._bx = cx0; c._by = cy0 + Math.round(1 * kk);
+        x.restore(); x.save(); const cor = { pod: '#ff4d5e', res: '#4be07a', agi: '#4aa8ff' }[chosenArq] || '#ffb21e', rx = 30 * kk, ry = 3.5 * kk, cx0 = Math.round(c.width / 2), cy0 = Math.round(c.height * 0.9) - Math.round(1 * kk); c._bx = cx0; c._by = cy0 + Math.round(1 * kk);
         x.globalAlpha = 0.25; x.fillStyle = cor; x.beginPath(); x.ellipse(cx0, cy0, rx, ry, 0, 0, 7); x.fill(); x.globalAlpha = 1; x.shadowColor = cor; x.shadowBlur = 5 * kk; x.lineWidth = Math.max(2, kk); x.strokeStyle = cor; x.stroke(); x.shadowBlur = 0;
-        x.restore(); x.save(); x.translate(Math.round(c.width / 2), (c.height - Math.max(Math.round(c.height * 0.057), 14 * kk))); x.scale(kk, kk); }
+        x.restore(); x.save(); x.translate(Math.round(c.width / 2 - fc * kk), Math.round(c.height * 0.9)); x.scale(kk, kk); }
       if (pose === 'carga2') { const kt = AURA_KIT[chosenLook.au], fr = kt ? auraKitFrames(pal.aura, chosenLook.au) : auraFramesFor(pal.aura), ks = kt ? kt.sc : 1; if (fr) { const a = kt ? fr[kt.lp[Math.floor(t / 0.08) % kt.lp.length]] : fr[2 + (Math.floor(t / 0.08) % 2)]; x.globalAlpha = 0.9; x.drawImage(a, -a.width / 2 * AURA_SC * ks, -a.height * AURA_SC * ks + (kt ? kt.dy : 3), a.width * AURA_SC * ks, a.height * AURA_SC * ks); x.globalAlpha = 1; } }
       x.drawImage(im, -Math.floor(im.width / 2), -im.height);
       if (pose === 'kiball') drawKiBall(20 + Math.sin(t * 6) * 1.5, -30, 6, pal.ki, t);
@@ -5580,14 +5586,12 @@ setInterval(() => { const p = conta.perfil; if (!conta.user || !p || p.lvl_got =
   const lv = lvOf((p.kills | 0) + (conta.pend.k | 0), (p.matches | 0) + (conta.pend.m | 0), p.xp_bonus | 0);
   if (lv > (p.lvl_got | 0)) { lvShown = 0; checkLevel(); } }, 1200);
 /* põe o personagem em cima do pedestal do fundo (o fundo é 'cover', então calcula onde o pedestal ficou) */
-function posHeroi() { const m = document.getElementById('menu'), h = document.getElementById('mHeroBox'); if (!m || !h || m.classList.contains('hidden') || !h.offsetParent) return;
-  const me = m.getBoundingClientRect(), W = me.width, H = me.height; if (!W || !H) return; // tudo em pixels de tela
-  const zm = W / (m.clientWidth || W); // zoom do fundo
-  const sc = Math.max(W / 1774, H / 887), ox = me.left + (W - 1774 * sc) / 2, oy = me.top + H - 887 * sc;
-  const cx = ox + 575 * sc, py = oy + 708 * sc, pr = h.offsetParent.getBoundingClientRect(), z = (h.offsetParent.getBoundingClientRect().width / (h.offsetParent.offsetWidth || 1)) || 1; // zoom do container do herói
-  const alt = 470 * sc / z, lar = alt * 1.1, dp = Math.min(3, devicePixelRatio || 1), kk = Math.max(1, Math.floor(alt * dp * 0.8 / 64)), mg = Math.max(Math.round(alt * dp * 0.057), 14 * kk) / dp;
-  h.style.left = ((cx - pr.left) / z - lar / 2) + 'px'; h.style.top = ((py - pr.top) / z - alt + mg) + 'px'; h.style.width = lar + 'px'; h.style.height = alt + 'px';
-  { const c = document.getElementById('mHero'); if (c && c._by != null && c.width && c.height) { const r = c.getBoundingClientRect(); if (r.width && r.height) { const bx = r.left + c._bx / c.width * r.width, by = r.top + c._by / c.height * r.height; h.style.left = (parseFloat(h.style.left) + (cx - bx) / z) + 'px'; h.style.top = (parseFloat(h.style.top) + (py - by) / z) + 'px'; } } } }
+function posHeroi() { /* R107: posição só por CSS (camada #mBgL com unidades do contêiner), igual ao fundo em qualquer aparelho */
+  const m = document.getElementById('menu'), h = document.getElementById('mHeroBox'); if (!m || !h) return;
+  let L = document.getElementById('mBgL'); if (!L) { L = document.createElement('div'); L.id = 'mBgL'; m.insertBefore(L, m.firstChild); }
+  if (h.parentNode !== L) L.appendChild(h);
+  if (!CSS.supports('width', '1cqw')) { const W = L.clientWidth, H = L.clientHeight; if (!W || !H) return; const sc = Math.max(W / 1774, H / 887);
+    h.style.width = 517 * sc + 'px'; h.style.height = 470 * sc + 'px'; h.style.left = (W / 2 - 312 * sc - 258.5 * sc) + 'px'; h.style.top = (H - 179 * sc - 423 * sc) + 'px'; } }
 addEventListener('resize', () => setTimeout(posHeroi, 60)); setInterval(posHeroi, 1000);
 const algoAberto = () => !!document.querySelector('.ovl:not(.hidden):not(#lvBox):not(#menu),#msgBox:not(.hidden),.unlk,.przfx,.baufx,.cpk,#custom:not(.hidden)');
 function checkLevel() {
@@ -5760,6 +5764,7 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.107', d: '16/11', itens: [['corrigiu', 'Personagem e anel presos ao pedestal em qualquer celular']] },
   { v: '1.0.106', d: '16/11', itens: [['novo', 'Mapa Bosque Rosa (teste)'], ['corrigiu', 'Configurações e créditos abrem por cima do menu']] },
   { v: '1.0.104', d: '16/11', itens: [['mudou', 'Novo fundo no menu e nas telas de sala, login e configurações'], ['corrigiu', 'Personagem e anel sempre no centro do pedestal']] },
   { v: '1.0.98', d: '16/11', itens: [['novo', 'Menu com cenário novo e pedestal']] },
