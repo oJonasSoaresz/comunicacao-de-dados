@@ -1782,7 +1782,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.107</div>
+      <div class="ver">v1.0.108</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -2156,7 +2156,7 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 let game; // declarado adiante
 let projectiles = []; // bolas de ki e afins em voo
 /* comandos de um lutador num quadro (teclado/toque, bot ou, no futuro, o que o jogador mandar ao servidor) */
-const emptyInput = () => ({ left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0, kiP: 0, bigP: 0, beam: 0, beamP: 0, charge: 0, chargeP: 0, dashP: 0, face: 0 });
+const emptyInput = () => ({ dodge: 0, left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0, kiP: 0, bigP: 0, beam: 0, beamP: 0, charge: 0, chargeP: 0, dashP: 0, face: 0 });
 
 const AWAKEN_HOLD = 2.0, AWAKEN_TIME = 25, RESPAWN_INVULN = 4; // invencível 4s ao renascer (no treino: nunca)
 const KAME = { charge: 0.8, total: 2.0, dps: 230 };              // especial do BASE: feixe de energia
@@ -2337,7 +2337,7 @@ class Fighter {
   /* ---------- atualização (apenas lutadores deste computador) ---------- */
   update(dt, inp) {
     this.t += dt; this.stateT -= dt; this.stateAge += dt;
-    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; if (this.invisT > 0) this.invisT -= dt; if (this.shieldT > 0) this.shieldT -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
+    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; this.dodgeCd = (this.dodgeCd || 0) - dt; if (this.invisT > 0) this.invisT -= dt; if (this.shieldT > 0) this.shieldT -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
     this.flash -= dt; this.invuln -= dt; this.hitsT -= dt; if (this.hitsT <= 0) this.hits = 0;
     this.beamPopT -= dt;
     if (this.beamPopT <= 0 && this.beamDmgAcc > 0) { popup(this.x, this.y - 58, '-' + Math.round(this.beamDmgAcc), '#ffd23a', 6); this.beamDmgAcc = 0; this.beamPopT = 0.3; }
@@ -2494,7 +2494,8 @@ class Fighter {
       }
     }
 
-    if (inp.punchP && this.punchCd <= 0) this.startPunch();
+    if (inp.dodge && this.dodgeCd <= 0) this.startDodge(inp.dodge);
+    else if (inp.punchP && this.punchCd <= 0) this.startPunch();
     else if (inp.bigP) this.useSpecial();
     else if (inp.kiP && this.kiCd <= 0) { if (this.ki >= POWERS.k[pwOf(this, 'k')].cost || this.infiniteKi) this.fireKi(); else popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
     else if (this.kit.raio === 'bola' ? inp.beamP : (inp.beam && this.state === 'idle')) this.useRaio();
@@ -2540,9 +2541,10 @@ class Fighter {
     if (stopped) { ring(this.x, this.y - 24, '#ffffff', 8, 40, 0.4); spark(this.x, this.y - 26, 10, '#ffffff', 120, 0.4); }
     if (this === game.me) { tone('triangle', 880, 880, 0.12, 0.14); setTimeout(() => tone('triangle', 1320, 1320, 0.2, 0.12), 90); }
   }
-  spend(n) { if (this.ki < n) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return false; } if (!this.infiniteKi) this.ki -= n; return true; }
+  spend(n) { if (this.ki < n) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return false; } if (!this.infiniteKi) this.ki -= n; if (this._spc && this === game.me) cineStart(this); return true; }
+  useSpecial() { this._spc = 1; try { this.useSpecial0(); } finally { this._spc = 0; } }
   /* ESPECIAL do BASE: feixe de energia (kame) · sem kit próprio: bola grande */
-  useSpecial() {
+  useSpecial0() {
     const sp = pwOf(this, 's');
     if (sp === 'rajada') { if (!this.spend(POWERS.s.rajada.cost)) return; this.serie('rajada', 9, 0.1); return; }
     if (sp === 'cegar') { if (!this.spend(POWERS.s.cegar.cost)) return; this.setState('charge', 0.3);
@@ -2667,6 +2669,9 @@ class Fighter {
     spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 6, y: h.y, vx: this.facing * 235, r: 13, dmg: 170 * this.dmgMul(), big: 1, pal: this.pal, ch: this.form }, true);
     ring(h.x, h.y, this.pal_.ki[1], 6, 40, 0.3); shake = Math.max(shake, this === game.me ? 4 : 0);
   }
+  startDodge(d) { /* R108: ESQUIVA (toque duplo para o lado): rápida, sem gastar ki, invulnerável */
+    this.dodgeCd = 0.7; this.dashDir = d; this.setState('dash', 0.2); this.invuln = Math.max(this.invuln, 0.3);
+    ring(this.x, this.y - 22, '#ffffff', 5, 24, 0.22); dust(this.x, this.y, 5); if (nearCam(this.x, this.y)) SFX.dash(); }
   startDash(mx) {
     if (!this.infiniteKi) this.ki -= 12; this.dashCd = 0.45;
     this.dashDir = mx !== 0 ? mx : this.facing; this.facing = this.dashDir;
@@ -2702,6 +2707,13 @@ class Fighter {
     if (game.hitkill && src && src !== this) p = Object.assign({}, p, { dmg: 99999 }); // HIT KILL: qualquer acerto derrota
     if (this.dead || this.invuln > 0) return false;
     const fromFront = sign(src.x - this.x) === this.facing;
+    if (this.state === 'guard' && fromFront && !p.unblock && !game.hitkill && this.stateAge < 0.22) { /* R108: DEFESA PERFEITA (defendeu no tempo certo) */
+      this.ki = Math.min(this.maxKi, this.ki + 15); this.invuln = Math.max(this.invuln, 0.35); this.vx = 0; this.flash = 0.12;
+      ring(this.x + this.facing * 12, this.y - 30, '#ffffff', 8, 46, 0.35); spark(this.x + this.facing * 12, this.y - 30, 18, '#fff3a0', 220, 0.35, 2);
+      if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 62, 'PERFEITA!', '#ffd23a', 8);
+      if (this === game.me) { hitstop = 0.16; shake = Math.max(shake, 4); }
+      return 'block';
+    }
     if (this.state === 'guard' && fromFront && !p.unblock && !game.hitkill) {
       this.hp = Math.max(1, this.hp - p.dmg * 0.15); this.vx = p.kbx * 0.35; this.ki = Math.max(0, this.ki - 4);
       this.flash = 0.05; if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 58, 'DEFESA', '#9fe8ff', 5);
@@ -2710,8 +2722,8 @@ class Fighter {
     this.hp -= p.dmg; this.lastHitBy = { id: src.id, name: src.name };
     this.setState('hurt', p.stun); this.combo = 0; this.beamLen = 0;
     this.vx = p.kbx; if (p.kby) { this.vy = p.kby; this.onGround = false; }
-    this.flash = 0.09;
-    if (this === game.me || src === game.me) { hitstop = p.kind === 'hit' ? 0.05 : 0.1; shake = Math.max(shake, p.kind === 'hit' ? 2 : 6); }
+    this.flash = 0.11; impactoFx(this, src, p.kind);
+    if (this === game.me || src === game.me) { hitstop = p.kind === 'hit' ? 0.07 : 0.13; shake = Math.max(shake, p.kind === 'hit' ? 2 : 6); }
     if (nearCam(this.x, this.y)) (p.kind === 'hit' ? SFX.hit : SFX.heavy)();
     popup(this.x + rnd(-6, 6), this.y - 58, '-' + Math.round(p.dmg), p.kind === 'hit' ? '#ffffff' : '#ffd23a', p.kind === 'hit' ? 6 : 8);
     if (src.local) { src.hits++; src.hitsT = 1.1; }
@@ -2754,9 +2766,9 @@ class Fighter {
     this.hp = Math.max(1, this.hp - dmg); this.predT = performance.now();
     this.flash = 0.09;
     if (kind === 'block') { if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 58, 'DEFESA', '#9fe8ff', 5); return; }
-    popup(this.x + rnd(-6, 6), this.y - 58, '-' + Math.round(dmg), kind === 'hit' ? '#ffffff' : '#ffd23a', kind === 'hit' ? 6 : 8);
+    impactoFx(this, src, kind); popup(this.x + rnd(-6, 6), this.y - 58, '-' + Math.round(dmg), kind === 'hit' ? '#ffffff' : '#ffd23a', kind === 'hit' ? 6 : 8);
     if (nearCam(this.x, this.y)) (kind === 'hit' ? SFX.hit : SFX.heavy)();
-    if (src === game.me) { hitstop = kind === 'hit' ? 0.05 : 0.1; shake = Math.max(shake, kind === 'hit' ? 2 : 6); src.hits++; src.hitsT = 1.1; }
+    if (src === game.me) { hitstop = kind === 'hit' ? 0.07 : 0.13; shake = Math.max(shake, kind === 'hit' ? 2 : 6); src.hits++; src.hitsT = 1.1; }
   }
   predictBeam(dt, src) {
     if (this.dead) return;
@@ -3932,6 +3944,7 @@ function teamScore() { if (!game.teams) return; const k = [0, 0]; for (const f o
 function drawHUD() {
   teamScore();
   const me = game.me; if (!me) return;
+  drawCine();
   if (blindT > 0) { blindT -= 1 / 60; ctx.fillStyle = 'rgba(255,255,250,' + clamp(blindT / 1.2, 0, 0.96) + ')'; ctx.fillRect(0, 0, VW, VH); }
   if (game.duel) {
     const d = game.duelSt, y0 = Math.round(SAFE.t) + (isTouch ? 30 : 0), ds = duelists(); // (placar do duelo fica no quadro PLACAR) // abaixo do botão do chat no celular
@@ -3980,7 +3993,7 @@ function drawHUD() {
   const footer = game.mode === 'online' ? `${net.roomName ? net.roomName.toUpperCase() + ' · ' : ''}SALA ${net.code} · ${humans}/${roomMax()} jogadores`
     : game.mode === 'treino' ? 'TREINO · energia infinita ' + (me.infiniteKi ? 'LIGADA' : 'DESLIGADA') : 'CONTRA BOTS';
   text(footer, bx, ny + 9, 5, '#cfc6ff', 'left', '#120c1c', 1);
-  if (me.hits >= 2) text(me.hits + ' HITS!', L, T + 54, 8, '#ffd23a', 'left', '#3a0d0d', 2);
+  if (me.hits >= 2) { const pz = me.hitsT > 0.95 ? 3 : 0; text(me.hits + ' HITS!', L, T + 54, 10 + pz + Math.min(4, me.hits >> 2), me.hits >= 5 ? '#ff7a3a' : '#ffd23a', 'left', '#3a0d0d', 2); }
 
   // placar (até 10 jogadores)
   const list = [...game.fighters].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths).slice(0, MAX_PLAYERS);
@@ -5764,6 +5777,7 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.108', d: '17/11', itens: [['novo', 'Esquiva: toque duas vezes para o lado'], ['novo', 'Defesa perfeita: defenda no tempo certo e não leve dano'], ['novo', 'Especial 2 com efeito de cinema'], ['mudou', 'Golpes com mais impacto e contador de combo maior']] },
   { v: '1.0.107', d: '16/11', itens: [['corrigiu', 'Personagem e anel presos ao pedestal em qualquer celular']] },
   { v: '1.0.106', d: '16/11', itens: [['novo', 'Mapa Bosque Rosa (teste)'], ['corrigiu', 'Configurações e créditos abrem por cima do menu']] },
   { v: '1.0.104', d: '16/11', itens: [['mudou', 'Novo fundo no menu e nas telas de sala, login e configurações'], ['corrigiu', 'Personagem e anel sempre no centro do pedestal']] },
@@ -5871,12 +5885,37 @@ addEventListener('keyup', e => { keys[e.code] = false; });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 const held = (...c) => c.some(k => keys[k]);
 const tap = (...c) => c.some(k => pressed[k]);
+let dgPrev = 0, dgLast = { d: 0, t: 0 };
+function toqueDuplo(l, r) { const d = r && !l ? 1 : l && !r ? -1 : 0; let o = 0;
+  if (d && d !== dgPrev) { const n = performance.now(); if (dgLast.d === d && n - dgLast.t < 260) { o = d; dgLast = { d: 0, t: 0 }; } else dgLast = { d, t: n }; }
+  dgPrev = d; return o; }
+function impactoFx(v, src, kind) { if (!nearCam(v.x, v.y)) return; const sx = src ? sign(src.x - v.x) || v.facing : v.facing, x = v.x + sx * 9, y = v.y - 30;
+  if (kind === 'hit') spark(x, y, 7, '#fff3a0', 170, 0.22, 2); else { spark(x, y, 16, '#ffd23a', 240, 0.3, 3); ring(x, y, '#ffffff', 5, 30, 0.25); } }
+/* R108: especial 2 com efeito de cinema (tela escurece, rosto em destaque, câmera lenta) */
+let cine = null;
+function cineStart(f) { cine = { f, t: 0, d: 0.95 }; if (typeof SFX !== 'undefined' && SFX.zap) SFX.zap(); }
+function drawCine() { if (!cine) return; const c = cine, f = c.f, k = c.t / c.d; if (k >= 1 || !f) { cine = null; return; }
+  const a = k < 0.15 ? k / 0.15 : k > 0.8 ? (1 - k) / 0.2 : 1;
+  ctx.save(); ctx.globalAlpha = a * 0.6; ctx.fillStyle = '#05020c'; ctx.fillRect(0, 0, VW, VH);
+  const by = VH * 0.5 - 30, sl = Math.min(1, k / 0.18), bx = -VW * (1 - sl);
+  ctx.globalAlpha = a; ctx.fillStyle = (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffd23a';
+  ctx.beginPath(); ctx.moveTo(bx, by + 8); ctx.lineTo(bx + VW, by - 6); ctx.lineTo(bx + VW, by + 54); ctx.lineTo(bx, by + 68); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = 'rgba(10,6,24,.85)'; ctx.beginPath(); ctx.moveTo(bx, by + 12); ctx.lineTo(bx + VW, by - 2); ctx.lineTo(bx + VW, by + 50); ctx.lineTo(bx, by + 64); ctx.closePath(); ctx.fill();
+  for (let i = 0; i < 7; i++) { const yy = by + 6 + ((i * 9 + c.t * 260) % 50); ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(bx + ((i * 97 + c.t * 900) % VW), yy, 26, 1); }
+  const face = f.spr && f.spr.parado; if (face) { const hb = headBox(face), S = 2.4, w = 24, fx = bx + VW * 0.22 - w * S / 2, fy = by + 29 - w * S / 2;
+    ctx.imageSmoothingEnabled = false; ctx.save(); ctx.beginPath(); ctx.rect(fx - 6, by + 4, w * S + 12, 56); ctx.clip();
+    ctx.translate(fx + w * S / 2, 0); ctx.scale(-f.facing || -1, 1); ctx.translate(-(fx + w * S / 2), 0);
+    ctx.drawImage(face, Math.round(hb.cx - w / 2), Math.round(hb.cy - w / 2 + 3), w, w, fx, fy + 2, w * S, w * S); ctx.restore(); }
+  text(dispName(f.name).toUpperCase(), bx + VW * 0.38, by + 18, 8, '#ffffff', 'left', '#120c1c', 2);
+  text('ESPECIAL!', bx + VW * 0.38, by + 34, 12, '#ffd23a', 'left', '#120c1c', 2);
+  ctx.restore(); }
 function humanInput() {
   return {
     left: held('KeyA', 'ArrowLeft'), right: held('KeyD', 'ArrowRight'),
     down: held('KeyS', 'ArrowDown'), up: held('KeyW', 'ArrowUp'), upP: tap('KeyW', 'ArrowUp'),
     punchP: tap('KeyJ'), kiP: tap('KeyK'), bigP: tap('KeyL'),
     beam: held('KeyI'), beamP: tap('KeyI'), charge: held('Space'), chargeP: tap('Space'), dashP: tap('ShiftLeft', 'ShiftRight'), face: 0,
+    dodge: toqueDuplo(held('KeyA', 'ArrowLeft'), held('KeyD', 'ArrowRight')),
   };
 }
 
@@ -7006,7 +7045,9 @@ function update(dt) {
   }
   if (game.timed && game.started && !game.ended && game.matchLeft() <= 0) endMatch();
   if (game.duel && net.role !== 'host' && game.duelSt.t > 0) game.duelSt.t -= dt; // acabou o tempo
+  if (cine) cine.t += dt;
   if (hitstop > 0) { hitstop -= dt; return; }
+  if (cine && cine.t > 0.12 && cine.t < 0.7) dt *= 0.35;
 
   const frozen = game.duel && ['count', 'end'].includes(game.duelSt.ph);
   stepWorld(dt, f => f === game.me ? (overlay || chatOpen || frozen ? emptyInput() : humanInput()) : emptyInput());
