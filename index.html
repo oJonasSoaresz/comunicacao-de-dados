@@ -1765,6 +1765,10 @@
   #boot.velha{z-index:2147483000!important;display:flex!important}#boot.velha .glogo{max-height:32vh!important;width:auto!important}
   .updbox{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:10px;padding:14px 18px;border:3px solid #ffcf3a;border-radius:14px;background:rgba(20,12,40,.9);text-align:center}
   .updbox b{color:#ffcf3a;font-size:1.1em}.updbox small{color:#dcd0ff;line-height:1.5}
+
+  /* R128 */
+  .lvxp .rwbar{height:20px!important;border-width:2px!important}
+  .lvn::before{height:7px!important}
 </style>
 </head>
 <body>
@@ -1804,7 +1808,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.127</div>
+      <div class="ver">v1.0.129</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -2182,17 +2186,17 @@ QUEB_IMG.pedra = new Image(); QUEB_IMG.pedra.src = 'data:image/png;base64,iVBORw
 function montarQuebraveis() { const st = QUEB_ESTILO[MAP_ID] || ['urna']; quebs = []; let i = 0;
   for (const x of [130, 390, 690, 1010, 1290, 1560]) if (x < WW - 30) quebs.push({ x, y: GROUND, k: st[i++ % st.length], t: 0, br: 0 });
   for (const pl of PLATFORMS) if (pl.w >= 150) quebs.push({ x: pl.x + pl.w * 0.75, y: pl.y, k: st[i++ % st.length], t: 0, br: 0 }); }
-function quebrar(q, dir) { q.br = 1; q.t = 14; const cs = QUEB_ART[q.k] || { urna: ['#7a6ab0', '#f0b030', '#3a2a60'], pedra: ['#8a80a8', '#5a5078', '#c0b8d8'], cristal: ['#ff7ab0', '#ffd0e8', '#c0407a'], toco: ['#e0607e', '#3fa8f0', '#7a2a48'] }[q.k] || ['#aaa', '#fff', '#555'];
+function quebrar(q, dir, quem) { if (quem && quem === game.me && typeof actAdd === 'function') actAdd('qbr'); q.br = 1; q.t = 14; const cs = QUEB_ART[q.k] || { urna: ['#7a6ab0', '#f0b030', '#3a2a60'], pedra: ['#8a80a8', '#5a5078', '#c0b8d8'], cristal: ['#ff7ab0', '#ffd0e8', '#c0407a'], toco: ['#e0607e', '#3fa8f0', '#7a2a48'] }[q.k] || ['#aaa', '#fff', '#555'];
   for (let n = 0; n < 14; n++) particles.push({ x: q.x + rnd(-5, 5), y: q.y - 8 + rnd(-5, 5), vx: rnd(-90, 90) + dir * 60, vy: rnd(-200, -60), g: 600, life: 0.8, max: 0.8, color: cs[n % 3], size: 2 + (Math.random() * 2 | 0) });
   if (typeof dust === 'function') dust(q.x, q.y, 4); if (nearCam(q.x, q.y) && SFX.block) SFX.block(); }
 function tickQuebraveis(dt) { if (!quebs.length || !game.fighters) return;
   for (const q of quebs) { if (q.br) { q.t -= dt; if (q.t <= 0) { q.br = 0; q.t = -0.4; } continue; } if (q.t < 0) q.t = Math.min(0, q.t + dt);
     const hw = (QUEB_IMG[q.k] && QUEB_IMG[q.k].width / 2) || 6, x0 = q.x - hw, x1 = q.x + hw, y0 = q.y - 20, y1 = q.y;
     for (const f of game.fighters) { if (f.dead) continue; const fc = f.facing || 1;
-      if (f.state === 'punch' && f.stateAge > 0.05 && f.stateAge < 0.2) { const r = 36, hx0 = fc > 0 ? f.x + 4 : f.x - r, hx1 = fc > 0 ? f.x + r : f.x - 4; if (hx0 < x1 && hx1 > x0 && f.y - 44 < y1 && f.y - 4 > y0) { quebrar(q, fc); break; } }
+      if (f.state === 'punch' && f.stateAge > 0.05 && f.stateAge < 0.2) { const r = 36, hx0 = fc > 0 ? f.x + 4 : f.x - r, hx1 = fc > 0 ? f.x + r : f.x - 4; if (hx0 < x1 && hx1 > x0 && f.y - 44 < y1 && f.y - 4 > y0) { quebrar(q, fc, f); break; } }
       if ((f.state === 'hurt' || f.state === 'dash') && Math.abs(f.vx) > 140 && Math.abs(f.x - q.x) < 12 && f.y > y0 && f.y - 40 < y1) { quebrar(q, Math.sign(f.vx)); break; } }
     if (q.br) continue;
-    for (const p of projectiles) if (!p.dead && Math.abs(p.x - q.x) < 10 && p.y > y0 - 4 && p.y < y1 + 2) { quebrar(q, Math.sign(p.vx || 1)); break; } } }
+    for (const p of projectiles) if (!p.dead && Math.abs(p.x - q.x) < 10 && p.y > y0 - 4 && p.y < y1 + 2) { quebrar(q, Math.sign(p.vx || 1), game.byId && game.byId(p.o)); break; } } }
 function drawQuebraveis(cam) { for (const q of quebs) { if (q.br) continue; const x = Math.round(q.x - cam.x), y = Math.round(q.y - cam.y); if (x < -20 || x > VW + 20 || y < -30 || y > VH + 30) continue;
     ctx.save(); if (q.t < 0) ctx.globalAlpha = 1 + q.t / 0.4; const P = (c, a, b, w, h) => { ctx.fillStyle = c; ctx.fillRect(x + a, y + b, w, h); }, im = QUEB_IMG[q.k];
     if (im && im.complete && im.width) ctx.drawImage(im, x - (im.width >> 1), y - im.height + 1);
@@ -2855,11 +2859,15 @@ class Fighter {
       return;
     }
     this.x = approach(this.x, n.x, 16, dt); this.y = approach(this.y, n.y, 16, dt);
-    this.vx = n.vx; this.vy = n.vy; this.facing = n.f; this.state = n.st; this.stateAge += dt;
+    this.vx = n.vx; this.vy = n.vy; this.facing = n.f; if (this.state !== n.st) this.stateAge = 0; this.state = n.st; this._stPrev = n.st; this.stateAge += dt;
     this.hpShown = this.hpShown > this.hp ? Math.max(this.hp, this.hpShown - 300 * dt) : this.hp;
     this.onGround = n.og;
     if (this.state === 'charge') this.auraParticles(1);
     if (this.state === 'beamwind') this.auraParticles(0.6);
+    if (this.state !== this._stPrev) { this._stPrev = this.state; this.stateAge = 0; }
+    if (this.state === 'bigwind' || this.state === 'beamwind' || (this.state === 'kame' && this.stateAge < KAME.charge)) { /* R128: os outros também veem a energia juntando nas mãos */
+      if (this.state === 'kame') this.auraParticles(0.5); const h = this.state === 'kame' ? { x: this.x - this.facing * 8, y: this.y - 28 } : this.handPos();
+      if (Math.random() < 0.85) { const a = rnd(0, 6.28), r = rnd(14, 28); particles.push({ x: h.x + Math.cos(a) * r, y: h.y + Math.sin(a) * r, vx: -Math.cos(a) * r * 3.2, vy: -Math.sin(a) * r * 3.2, life: 0.28, max: 0.28, size: 2, color: this.pal_.ki[1], glow: true }); } }
     if (this.state === 'dash') this.pushTrail(0.02);
     if (n.gl && !this.onGround) this.flyFx(dt);
     if (this.state === 'beam') { this.beamSnd -= dt; if (this.beamSnd <= 0) { this.beamSnd = 0.14; if (nearCam(this.x, this.y)) SFX.beamLoop(); } }
@@ -3345,7 +3353,25 @@ function validLook(l) {
 }
 function lookToStr(l) { return l ? [l.h || '', l.hc || '', l.t || 0, l.tc || '', l.e ? 1 : 0, l.ec || '', l.i || '', l.ic || '', l.a ? 1 : 0, l.ac || '', l.s || '', l.sc ? 1 : 0, l.xc || '', l.au || 0, l.p ? 1 : 0, l.pc || '', l.f ? 1 : 0, l.fc || '', l.c || 0, l.cc || '', l.j ? 1 : 0, l.jc || ''].join('|') : ''; }
 function strToLook(s) { if (typeof s !== 'string') return null; const [h, hc, t, tc, e, ec, i, ic, a, ac, sk, sc, xc, au, pp, pc, ff, fc, cm, cc, jj, jc] = s.split('|'); return validLook({ c: +cm || 0, cc, j: jj === '1', jc, h, hc, t: +t || 0, tc, e: e === '1', ec, i: i === '1', ic, p: pp === '1', pc, f: ff === '1', fc, a: a === '1', ac, s: sk, sc: sc === '1', xc, au: +au || 0 }); }
+/* R128: roupas e acessórios que o sorteio usa. Item novo = 1 linha aqui. on: valores possíveis · key: chave de compra (vazio = grátis) · col/cols/pfx: cor */
+const LOOK_ITENS = () => [
+  { k: 'c', on: [1, 2], key: () => '', col: 'cc', cols: SHIRT_COLORS, pfx: 'cc' },
+  { k: 'j', on: [1], key: () => '', col: 'jc', cols: JACKET_COLORS, pfx: 'jc' },
+  { k: 'p', on: [1], key: () => 'cl:1', col: 'pc', cols: PANTS_COLORS, pfx: 'pc' },
+  { k: 'f', on: [1], key: () => 'pe:1', col: 'fc', cols: SHOE_COLORS, pfx: 'fc' },
+  { k: 'sc', on: [1], key: () => 'sc:1', col: 'xc', cols: SCOUT_COLORS, pfx: 'xc' },
+  { k: 'i', on: [1], key: () => 'i:1', col: 'ic', cols: SWORD_COLORS, pfx: 'ic' },
+  { k: 'a', on: [1], key: () => 'a:1', col: 'ac', cols: HALO_COLORS, pfx: '' },
+  { k: 'au', on: [1, 2], key: v => 'au:' + v } ];
+function sortearItens(L, tem) { const pick = a => a[(Math.random() * a.length) | 0];
+  for (const it of LOOK_ITENS()) { const ops = it.on.filter(v => !tem || tem(it.key(v))); L[it.k] = ops.length && Math.random() < 0.55 ? pick(ops) : 0;
+    if (it.col) { const cs = it.cols.filter(c => !tem || !it.pfx || tem(it.pfx + ':' + c)); L[it.col] = pick(cs.length ? cs : [it.cols[0]]); } }
+  return L; }
 function randomLook() {
+  const pick = a => a[(Math.random() * a.length) | 0];
+  return validLook(sortearItens({ h: pick(HAIRS.filter(h => h.id)).id, hc: pick(HAIR_COLORS), t: pick([0, 0, 1, 2]), tc: pick(TAIL_COLORS), s: Math.random() < 0.5 ? '' : pick(SKIN_COLORS) }));
+}
+function randomLookOld() {
   const pick = a => a[(Math.random() * a.length) | 0];
   return validLook({ h: pick(HAIRS.filter(h => h.id)).id, hc: pick(HAIR_COLORS), t: pick([0, 0, 1, 2]), tc: pick(TAIL_COLORS), e: Math.random() < 0.3, ec: pick(EYE_COLORS), i: Math.random() < 0.3 ? 'sword' : '', ic: pick(SWORD_COLORS), a: Math.random() < 0.2, ac: pick(HALO_COLORS), s: Math.random() < 0.5 ? '' : pick(SKIN_COLORS) });
 }
@@ -5226,7 +5252,7 @@ function wait(msg) {
   clearTimeout(waitTO); waitTO = setTimeout(() => { waitN = 0; show('wait', false); setStatus('O servidor demorou para responder. Tente de novo.');  }, 25000);
 }
 /* R124: versão mínima — se o jogo estiver desatualizado, a tela de abertura trava até atualizar */
-const APP_VER = '1.0.127';
+const APP_VER = '1.0.129';
 const verN = v => String(v || '').split('.').map(n => +n || 0).reduce((a, n, i) => a + n * Math.pow(1000, 3 - i), 0);
 async function checarVersao() { if (!conta || !conta.sb) return false;
   const r = await Promise.race([conta.sb.rpc('versao_min'), new Promise(ok => setTimeout(() => ok({}), 6000))]);
@@ -5433,7 +5459,7 @@ let temp = null, bauBusca = false;
 function extrasMenu() {
   if (!temp) return; document.querySelectorAll('.xp2tag').forEach(t => t.classList.toggle('hidden', !temp.xp2));
   const n = document.getElementById('mName'); if (n) { let t = n.querySelector('.wkt'); if (temp.wkr) { if (!t) { t = document.createElement('em'); t.className = 'wkt'; n.appendChild(t); } t.textContent = 'TOP ' + temp.wkr; } else if (t) t.remove(); }
-  show('dotShop', lojaNova());
+  show('dotShop', lojaNova()); passeDot();
   if (temp.wkp && !extrasMenu.wk) { extrasMenu.wk = true; setTimeout(premioSemana, 1500); }
   if (temp.refs && !extrasMenu.rf) { extrasMenu.rf = true; setTimeout(avisoConvite, 2500); }
 }
@@ -5475,12 +5501,12 @@ function itemPreview(item) { // só o item, na cor escolhida, ampliado dentro do
 function bauToques(req) { // baú no centro: 3 toques (4 se vier item raro); abre na hora do último toque
   return new Promise(fim => {
     const o = document.createElement('div'); o.className = 'baufx'; let n = 0, meta = 0, res = null, feito = false;
-    req.then(r => { res = r; meta = r && r.data && r.data.tipo === 'item' ? 8 : 4; }, e => { res = { error: e }; meta = 3; });
+    req.then(r => { res = r; meta = r && r.data && (r.data.tipo === 'item' || r.data.raro) ? 8 : 4; }, e => { res = { error: e }; meta = 3; });
     o.innerHTML = '<i class="bfrays"></i><div class="bfwrap"><div class="bfbau"></div></div><b class="bftxt">TOQUE PARA ABRIR!</b><div class="bfburst"></div><div class="bfflash"></div>';
     document.getElementById('wrap').appendChild(o);
     const bau = o.querySelector('.bfbau'), fl = o.querySelector('.bfflash'); bau.addEventListener('animationend', () => bau.classList.remove('bate'));
     const flash = cls => { fl.className = 'bfflash'; void fl.offsetWidth; fl.classList.add(cls); };
-    const abre = () => { feito = true; const raro = res && res.data && res.data.tipo === 'item';
+    const abre = () => { feito = true; const raro = res && res.data && (res.data.tipo === 'item' || res.data.raro);
       o.classList.remove('quase'); o.classList.add('aberto', 'treme'); if (raro) o.classList.add('raro'); o.querySelector('.bftxt').textContent = '';
       const bs = o.querySelector('.bfburst'); let h = ''; for (let i = 0; i < 28; i++) h += '<i style="--a:' + (i * 360 / 28) + 'deg;--d:' + (60 + Math.random() * 50) + '%"></i>'; bs.innerHTML = h; bs.classList.add('on');
       flash('forte'); try { SFX.level && SFX.level(); } catch (x) {}
@@ -5498,7 +5524,7 @@ function bauToques(req) { // baú no centro: 3 toques (4 se vier item raro); abr
 }
 async function abrirBau() {
   const b = document.getElementById('bChest'); if (b.disabled) return; b.disabled = true;
-  const { data, error } = await bauToques(conta.sb.rpc('open_chest'));
+  const { data, error } = await bauToques(conta.sb.rpc('open_chest', { tem: colecaoKeys().filter(k => shop.has(k)) }));
   if (error) { drawBau(); return notice(/JA_ABERTO/.test(error.message) ? 'Você já abriu o baú hoje. Volte amanhã!' : erroRecompensa(error), 'BAÚ', 'err'); }
   { const n = Math.max(0, ((temp && temp.n) | 0) - 1); temp = { ...(temp || {}), n, chest: n > 0 || !!(temp && temp.free) }; } drawBau(); show('dotDaily', !dly || !dly.got || temp.chest);
   const box = document.querySelector('#dailyBox .card');
@@ -5575,7 +5601,11 @@ const rwHtml = r => { let h = ''; // cada prêmio numa linha (igual à trilha de
   if (r.g) h += '<span class="lvc g"><i class="gemi"></i><b>' + r.g + '</b></span>';
   if (r.bau) h += '<span class="lvc"><i class="baui"></i><b>' + r.bau + '</b></span>';
   return h; };
-let passo = null;
+let passo = null, passeDotT = 0;
+async function passeDot() { if (!conta.sb || !conta.user || Date.now() - passeDotT < 60000) return; passeDotT = Date.now();
+  const { data } = await conta.sb.rpc('my_pass'); if (!data) return; const lv = Math.min(30, Math.floor(data.sp / 60) + 1); let tem = false;
+  for (let i = 1; i <= lv && !tem; i++) if (!data.got.includes(String(i)) || (data.prem && !data.gotp.includes(String(i)))) tem = true;
+  show('dotPass', tem); }
 async function abrirPasse() { show('passBox', true); document.getElementById('passRows').innerHTML = '<div class="lvn psn sk"><div class="lvr2"></div><div class="lvb"></div><div class="lvr2"></div></div>'.repeat(8);
   const { data, error } = await conta.sb.rpc('my_pass'); if (error || !data) { document.getElementById('passRows').innerHTML = '<div class="rkempty">Passe ainda não ligado no servidor.<br>Rode o SQL COMPLETO de novo.</div>'; return; } passo = data; drawPasse(true); }
 function drawPasse(rola) {
@@ -5591,7 +5621,7 @@ function drawPasse(rola) {
     h += '<div class="lvn psn ' + st + (i === lv + 1 ? ' next' : '') + '"' + (i === lv + 1 ? ' style="--pf:' + Math.round(d.sp % 60 / 60 * 100) + '%"' : '') + '>' + cel(rf, gf, false) + '<div class="lvb">' + i + '</div>' + cel(rp, gp, true) + '</div>'; }
   const T = document.getElementById('passRows'); T.innerHTML = h;
   if (rola) requestAnimationFrame(() => { const a = T.children[Math.max(0, lv - 2)]; T.scrollLeft = a ? a.offsetLeft - 20 : 0; });
-  show('dotPass', false);
+  { let tem = false; const lv = Math.min(30, Math.floor(d.sp / 60) + 1); for (let i = 1; i <= lv && !tem; i++) if (!d.got.includes(String(i)) || (d.prem && !d.gotp.includes(String(i)))) tem = true; show('dotPass', tem); }
 }
 document.getElementById('passRows').addEventListener('click', async e => {
   const c = e.target.closest('.psc'); if (!c || !passo) return; if (c.classList.contains('ready') || c.classList.contains('got')) e.stopPropagation(); /* resgatar não abre também a prévia */ const lv = +c.dataset.lv, prem = c.dataset.p === '1', r = passRw(lv, prem, passo.mes);
@@ -5636,9 +5666,10 @@ function abrirEvento() { if (!temp || !temp.fds) return; show('evBox', true); co
   document.getElementById('bEvClaim').onclick = async () => { const b = document.getElementById('bEvClaim'); b.disabled = true; const { data, error } = await conta.sb.rpc('claim_event'); if (error) { b.disabled = false; return notice(erroRecompensa(error), 'EVENTO', 'err'); }
     temp.evgot = true; if (conta.perfil && !conta.perfil.owned.includes(data)) conta.perfil.owned.push(data); extrasMenu(); abrirEvento(); fxPanel({ cor: 'gold', seal: '<img src="' + corThumb(data) + '" alt="">', sealCls: 'prev', titulo: 'COR DO EVENTO!', sub: nomeCor(data) + '<br>já está nas paletas da customização', tempo: 2800 }); }; }
 /* coleção */
-function colecao() { const ks = HAIRS.filter(h => h.id).map(h => 'h:' + h.id).concat(TAILS.filter(t => t.id).map(t => 't:' + t.id), ['a:1', 'sc:1', 'au:1', 'au:2', 'i:1', 'cl:1', 'pe:1', 'tr:x', 'cp:1']);
+function colecaoKeys() { const ks = HAIRS.filter(h => h.id).map(h => 'h:' + h.id).concat(TAILS.filter(t => t.id).map(t => 't:' + t.id), ['a:1', 'sc:1', 'au:1', 'au:2', 'i:1', 'cl:1', 'pe:1', 'tr:x', 'cp:1']);
   for (const sl of ['k', 'r', 's']) for (const id in POWERS[sl]) if (id !== PW0[sl]) ks.push('p:' + id);
-  return { n: ks.filter(k => shop.has(k)).length, t: ks.length }; }
+  return ks; }
+function colecao() { const ks = colecaoKeys(); return { n: ks.filter(k => shop.has(k)).length, t: ks.length }; }
 function ganhouRecompensa(c, xp) { if (c) moedasGanhas(c); if (xp && conta.perfil) { conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + xp; voar('x', xp); renderConta(); } }
 function erroRecompensa(e) { const t = (e && e.message) || '';
   if (/JA_RESGATADO/.test(t)) return 'Você já resgatou esta recompensa.'; if (/NAO_CONCLUIDA/.test(t)) return 'Essa missão ainda não foi concluída.';
@@ -5899,6 +5930,8 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.129', d: '17/11', itens: [['corrigiu', 'Baú roxo também aparece para quem já tem todos os itens']] },
+  { v: '1.0.128', d: '17/11', itens: [['novo', 'Missões de quebrar objetos do mapa'], ['mudou', 'Aleatório e bots usam todas as roupas e acessórios'], ['corrigiu', 'Baú não repete item de quem já tem a coleção'], ['corrigiu', 'Carga do especial visível para os outros jogadores'], ['corrigiu', 'Aviso vermelho no passe com recompensa para pegar']] },
   { v: '1.0.127', d: '17/11', itens: [['novo', 'Item Casaquinho']] },
   { v: '1.0.126', d: '17/11', itens: [['mudou', 'Combate mais ágil: soco, andar e pulo mais rápidos'], ['mudou', 'Golpes empurram mais e respondem na hora']] },
   { v: '1.0.124', d: '17/11', itens: [['novo', 'Aviso de atualização obrigatória ao abrir o jogo'], ['mudou', 'Objetos quebráveis atrás dos lutadores']] },
@@ -6537,7 +6570,7 @@ function optCard(label, sel, draw, onPick, key) {
   if (draw.px) requestAnimationFrame(() => { const D = Math.round(c.clientWidth * Math.min(3, devicePixelRatio || 1)); if (D > 56 && D < 400) { c.width = c.height = D; const y = c.getContext('2d'); y.imageSmoothingEnabled = false; draw(y); } });
   b.onclick = () => { if (sel && key && !shop.has(key)) return tryBuy(key, label); onPick(); saveLook(); offerBuy(key, label); }; return b;
 }
-const so = (L, x) => ({ ...L, h: '', t: 0, a: 0, sc: 0, i: 0, p: 0, f: 0, au: 0, ...x }); // miniatura mostra só o item da opção
+const so = (L, x) => { const o = { ...L, h: '', t: 0, au: 0 }; for (const it of LOOK_ITENS()) o[it.k] = 0; return { ...o, ...x }; }; // miniatura mostra só o item da opção
 function partThumb(look, crop) { // miniatura em escala INTEIRA (pixel perfeito), no tamanho real do quadrinho
   const fn = x => { const im = thumbSprite(look); const [sx, sy, w] = crop(im), cw = x.canvas.width, k = Math.max(1, Math.floor(cw / w)), o = Math.round((cw - w * k) / 2);
     x.imageSmoothingEnabled = false; x.clearRect(0, 0, cw, cw); x.drawImage(im, sx, sy, w, w, o, o, w * k, w * k); };
@@ -7166,7 +7199,7 @@ loadSprites().then(() => { buildAuras(); buildMapPicker();
     L.hc = pick(ownedCols.length ? ownedCols : ['#3a3a4a']);
     L.s = pick([''].concat(mine(SKIN_COLORS))); // pele: só tons de pele (ou a original)
     L.t = pick(TAILS.map(t => t.id).filter(id => !id || shop.has('t:' + id))); L.tc = pick(ownedCols.length ? ownedCols : [TAIL_COLORS[0]]);
-    L.a = shop.has('a:1') ? pick([0, 1]) : 0; L.ac = pick(ownedCols.length ? ownedCols : [HALO_COLORS[0]]);
+    sortearItens(L, k => !k || shop.has(k)); if (L.a) L.ac = pick(ownedCols.length ? ownedCols : [HALO_COLORS[0]]);
     chosenLook = validLook(L) || chosenLook; chosenArq = ARQ_IDS[(Math.random() * ARQ_IDS.length) | 0];
     chosenFxc = { a: pick([''].concat(ownedCols)), k: pick([''].concat(ownedCols)) };
     for (const sl of ['k', 'r', 's']) chosenPw[sl] = pick(Object.keys(POWERS[sl]).filter(id => id === PW0[sl] || shop.has('p:' + id)));
