@@ -1782,7 +1782,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.108</div>
+      <div class="ver">v1.0.110</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -2154,6 +2154,28 @@ const sign = (v) => v < 0 ? -1 : 1;
 const uid = () => Math.random().toString(36).slice(2, 9);
 /* ---------------- lutador ---------------- */
 let game; // declarado adiante
+/* R110: ITENS NO MAPA — esferas temporárias: cura (regenera), ki turbo e velocidade */
+let orbs = [], orbT = 12;
+const ORB = { cura: { c: '#5aff7a', s: '+', n: 'REGENERAÇÃO!', d: 6 }, ki: { c: '#6ad8ff', s: 'K', n: 'KI TURBO!', d: 7 }, vel: { c: '#ffd23a', s: '»', n: 'VELOCIDADE!', d: 7 } };
+function orbTick(dt) { orbT -= dt; if (orbT > 0 || orbs.length >= 2 || !game.fighters || game.ended) return; orbT = 16 + Math.random() * 8;
+  const ks = Object.keys(ORB), k = ks[(Math.random() * ks.length) | 0], pl = PLATFORMS.length && Math.random() < 0.6 ? PLATFORMS[(Math.random() * PLATFORMS.length) | 0] : null;
+  const x = pl ? pl.x + 20 + Math.random() * Math.max(10, pl.w - 40) : 80 + Math.random() * (WW - 160), y = (pl ? pl.y : GROUND) - 18;
+  const m = { t: 'orb', id: uid(), x: Math.round(x), y: Math.round(y), k }; orbs.push({ id: m.id, x: m.x, y: m.y, k, t: 0 }); if (game.mode === 'online') net.send(m); }
+function orbPegar(dt) { for (const o of orbs) o.t += dt; orbs = orbs.filter(o => o.t < 18);
+  for (const f of game.fighters || []) { if (!f.local || f.dead) continue;
+    const o = orbs.find(o => Math.abs(o.x - f.x) < 18 && Math.abs(o.y - (f.y - 20)) < 26); if (!o) continue;
+    orbs = orbs.filter(q => q !== o); darBuff(f, o.k, true); if (game.mode === 'online') net.send({ t: 'orbp', id: o.id, f: f.id, k: o.k }); } }
+function darBuff(f, k, eu) { const d = ORB[k]; if (!d) return; f['b_' + k] = d.d; if (k === 'vel') f.bVel = d.d;
+  if (nearCam(f.x, f.y)) { ring(f.x, f.y - 24, d.c, 8, 40, 0.35); spark(f.x, f.y - 24, 16, d.c, 180, 0.4, 2); if (SFX.zap) SFX.zap(); }
+  popup(f.x, f.y - 66, d.n, d.c, 7); }
+function buffTick(f, dt, local) { for (const k in ORB) { const key = 'b_' + k; if (!(f[key] > 0)) continue; f[key] -= dt;
+    if (local && !f.dead) { if (k === 'cura') f.hp = Math.min(f.maxHp, f.hp + 35 * dt); if (k === 'ki' && !f.infiniteKi) f.ki = Math.min(f.maxKi, f.ki + 22 * dt); }
+    if (Math.random() < 0.25 && nearCam(f.x, f.y)) spark(f.x + rnd(-10, 10), f.y - 6 - Math.random() * 40, 1, ORB[k].c, 40, 0.4, 2); }
+  if (f.bVel > 0) f.bVel -= dt; }
+function drawOrbs(cam) { const t = performance.now() / 1000;
+  for (const o of orbs) { const d = ORB[o.k]; if (!d) continue; const x = Math.round(o.x - cam.x), y = Math.round(o.y - cam.y + Math.sin(t * 3 + o.x) * 3), pisca = o.t > 14 && ((o.t * 6) | 0) % 2;
+    if (pisca) continue; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = hexA(d.c, 0.25 + 0.1 * Math.sin(t * 5)); ctx.beginPath(); ctx.arc(x, y, 11, 0, 7); ctx.fill(); ctx.restore();
+    ctx.fillStyle = d.c; ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill(); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(x - 2, y - 2, 2, 0, 7); ctx.fill(); } }
 let projectiles = []; // bolas de ki e afins em voo
 /* comandos de um lutador num quadro (teclado/toque, bot ou, no futuro, o que o jogador mandar ao servidor) */
 const emptyInput = () => ({ dodge: 0, left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0, kiP: 0, bigP: 0, beam: 0, beamP: 0, charge: 0, chargeP: 0, dashP: 0, face: 0 });
@@ -2337,7 +2359,7 @@ class Fighter {
   /* ---------- atualização (apenas lutadores deste computador) ---------- */
   update(dt, inp) {
     this.t += dt; this.stateT -= dt; this.stateAge += dt;
-    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; this.dodgeCd = (this.dodgeCd || 0) - dt; if (this.invisT > 0) this.invisT -= dt; if (this.shieldT > 0) this.shieldT -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
+    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; this.dodgeCd = (this.dodgeCd || 0) - dt; buffTick(this, dt, true); this.guardW = this.guardW || 0; this.guardRT = (this.guardRT || 0) - dt; if (this.state !== 'guard' && this.guardRT <= 0) this.guardW = Math.max(0, this.guardW - 35 * dt); if (this.invisT > 0) this.invisT -= dt; if (this.shieldT > 0) this.shieldT -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
     this.flash -= dt; this.invuln -= dt; this.hitsT -= dt; if (this.hitsT <= 0) this.hits = 0;
     this.beamPopT -= dt;
     if (this.beamPopT <= 0 && this.beamDmgAcc > 0) { popup(this.x, this.y - 58, '-' + Math.round(this.beamDmgAcc), '#ffd23a', 6); this.beamDmgAcc = 0; this.beamPopT = 0.3; }
@@ -2457,7 +2479,7 @@ class Fighter {
         this.physics(dt, false); return;
       }
       case 'guard':
-        this.vx = approach(this.vx, 0, 14, dt);
+        this.vx = approach(this.vx, 0, 14, dt); if (this.guardW > 65 && Math.random() < 0.35) spark(this.x + this.facing * 10 + rnd(-4, 4), this.y - 30 + rnd(-8, 8), 1, '#ff6a4a', 60, 0.3, 2);
         if (inp.punchP || inp.kiP || inp.bigP || inp.dashP || inp.beam || inp.upP || inp.charge) { this.setState('idle'); break; }
         if (!inp.down || !this.onGround) this.setState('idle');
         this.physics(dt, false); return;
@@ -2468,12 +2490,12 @@ class Fighter {
     else if (!this.jumps) this.jumps = 1; // caiu da plataforma sem pular: conta como o 1º pulo
     if (mx) this.facing = mx; else if (inp.face) this.facing = inp.face;
     if (this.onGround) {
-      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1), 14, dt);
+      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1) * ((this.bVel || 0) > 0 ? 1.4 : 1), 14, dt);
       if (inp.upP && inp.down && this.onPlatform()) { this.dropT = 0.3; this.onGround = false; this.y += 2; }
       else if (inp.upP) { this.vy = -330; this.onGround = false; this.jumps = 1; if (nearCam(this.x, this.y)) SFX.jump(); dust(this.x, this.y, 6); }
       else if (inp.down && mx === 0) { this.setState('guard'); this.vx = 0; }
     } else {
-      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1), 9, dt);
+      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1) * ((this.bVel || 0) > 0 ? 1.4 : 1), 9, dt);
       // PULO: 1º toque pula, 2º toque (no ar) faz o pulo duplo, 3º toque (segurando) VOA.
       // Voando: sobe enquanto segura, gastando energia. Soltou ou acabou a energia: cai.
       if (inp.upP && this.jumps < 2 && !this.flying) {
@@ -2669,6 +2691,12 @@ class Fighter {
     spawnProjectile({ id: uid(), o: this.id, x: h.x + this.facing * 6, y: h.y, vx: this.facing * 235, r: 13, dmg: 170 * this.dmgMul(), big: 1, pal: this.pal, ch: this.form }, true);
     ring(h.x, h.y, this.pal_.ki[1], 6, 40, 0.3); shake = Math.max(shake, this === game.me ? 4 : 0);
   }
+  cansarDefesa(n) { /* R109: defender demais cansa; ao encher, a DEFESA QUEBRA e o lutador fica tonto */
+    this.guardW = (this.guardW || 0) + n; this.guardRT = 0.8; if (this.guardW < 100) return false;
+    this.guardW = 0; this.setState('hurt', 0.9); this.vx = 0; this.flash = 0.15;
+    ring(this.x, this.y - 30, '#ff6a5a', 8, 44, 0.35); spark(this.x, this.y - 30, 20, '#9fe8ff', 220, 0.4, 2);
+    if (nearCam(this.x, this.y)) SFX.heavy(); popup(this.x, this.y - 62, 'DEFESA QUEBRADA!', '#ff6a5a', 7);
+    if (this === game.me) { hitstop = 0.14; shake = Math.max(shake, 5); } return true; }
   startDodge(d) { /* R108: ESQUIVA (toque duplo para o lado): rápida, sem gastar ki, invulnerável */
     this.dodgeCd = 0.7; this.dashDir = d; this.setState('dash', 0.2); this.invuln = Math.max(this.invuln, 0.3);
     ring(this.x, this.y - 22, '#ffffff', 5, 24, 0.22); dust(this.x, this.y, 5); if (nearCam(this.x, this.y)) SFX.dash(); }
@@ -2714,9 +2742,11 @@ class Fighter {
       if (this === game.me) { hitstop = 0.16; shake = Math.max(shake, 4); }
       return 'block';
     }
+    if (this.state === 'guard' && fromFront && !p.unblock && !game.hitkill && this.cansarDefesa(16 + p.dmg * 0.12)) return 'hit';
     if (this.state === 'guard' && fromFront && !p.unblock && !game.hitkill) {
       this.hp = Math.max(1, this.hp - p.dmg * 0.15); this.vx = p.kbx * 0.35; this.ki = Math.max(0, this.ki - 4);
-      this.flash = 0.05; if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 58, 'DEFESA', '#9fe8ff', 5);
+      const gk = Math.min(1, this.guardW / 100), gc = gk > 0.65 ? '#ff5a4a' : gk > 0.35 ? '#ffb43a' : '#9fe8ff'; spark(this.x + this.facing * 12, this.y - 30, 4 + Math.round(gk * 10), gc, 120 + gk * 120, 0.3, 2);
+      this.flash = 0.05; if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 58, gk > 0.65 ? 'DEFESA!!' : 'DEFESA', gc, 5);
       return 'block';
     }
     this.hp -= p.dmg; this.lastHitBy = { id: src.id, name: src.name };
@@ -2735,7 +2765,7 @@ class Fighter {
     if (game.hitkill && src && src !== this && !isAlly(this, src)) { this.hp = 0; this.lastHitBy = { id: src.id, name: src.name }; this.die(src); return; } // HIT KILL: o raio também derrota na hora
     const fromFront = sign(src.x - this.x) === this.facing;
     if (this.state === 'guard' && fromFront) {
-      this.hp = Math.max(1, this.hp - src.beamDps() * dt * 0.2); this.vx = src.facing * 60; this.ki = Math.max(0, this.ki - 10 * dt);
+      if (this.cansarDefesa(45 * dt)) return; this.hp = Math.max(1, this.hp - src.beamDps() * dt * 0.2); this.vx = src.facing * 60; this.ki = Math.max(0, this.ki - 10 * dt);
       if (Math.random() < 0.4) spark(this.x + this.facing * 12, this.y - 30, 2, '#9fe8ff', 80, 0.2);
       return;
     }
@@ -2781,7 +2811,7 @@ class Fighter {
   }
 
   /* ---------- lutador remoto: suaviza a posição recebida ---------- */
-  updateRemote(dt) {
+  updateRemote(dt) { buffTick(this, dt, false);
     const n = this.net; if (!n) return;
     this.t += dt; this.flash -= dt;
     n.x += n.vx * dt; n.y += n.vy * dt;
@@ -3993,7 +4023,8 @@ function drawHUD() {
   const footer = game.mode === 'online' ? `${net.roomName ? net.roomName.toUpperCase() + ' · ' : ''}SALA ${net.code} · ${humans}/${roomMax()} jogadores`
     : game.mode === 'treino' ? 'TREINO · energia infinita ' + (me.infiniteKi ? 'LIGADA' : 'DESLIGADA') : 'CONTRA BOTS';
   text(footer, bx, ny + 9, 5, '#cfc6ff', 'left', '#120c1c', 1);
-  if (me.hits >= 2) { const pz = me.hitsT > 0.95 ? 3 : 0; text(me.hits + ' HITS!', L, T + 54, 10 + pz + Math.min(4, me.hits >> 2), me.hits >= 5 ? '#ff7a3a' : '#ffd23a', 'left', '#3a0d0d', 2); }
+  if (me.hits >= 2) { const el = 1.1 - me.hitsT, e = Math.max(0, 1 - el / 0.3), sc = 1 + 0.38 * e * e + 0.05 * Math.sin(performance.now() / 140), fa = Math.min(1, me.hitsT / 0.25);
+    ctx.save(); ctx.globalAlpha *= fa; ctx.translate(L, T + 58); ctx.scale(sc, sc); text(me.hits + ' HITS!', 0, -4, 10 + Math.min(4, me.hits >> 2), me.hits >= 5 ? '#ff7a3a' : '#ffd23a', 'left', '#3a0d0d', 2); ctx.restore(); }
 
   // placar (até 10 jogadores)
   const list = [...game.fighters].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths).slice(0, MAX_PLAYERS);
@@ -4102,6 +4133,7 @@ function render(dt) {
   for (const f of order) f.drawBeam(cam);
   for (const f of order) f.draw(cam);
   for (const p of projectiles) p.draw(cam);
+  drawOrbs(cam);
   lzFx = lzFx.filter(f => (f.t -= 1 / 60) > 0);
   for (const f of lzFx) { const a = f.t / 0.25, x0 = Math.min(f.x0, f.x1) - cam.x, L = Math.abs(f.x1 - f.x0), y = f.y - cam.y, w = 1 + a * 1.5;
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = hexA(f.c[2], 0.35 * a); ctx.fillRect(x0, y - 5 * w, L, 10 * w); ctx.fillStyle = hexA(f.c[1], 0.9 * a); ctx.fillRect(x0, y - 2.5 * w, L, 5 * w); ctx.fillStyle = hexA('#ffffff', a); ctx.fillRect(x0, y - w, L, 2 * w); ctx.restore(); }
@@ -4616,6 +4648,8 @@ function handleNet(m) {
     }
     case 'pj': spawnProjectile(m, false); break;
     case 'blind': applyBlind(m); break;
+    case 'orb': if (!orbs.some(o => o.id === m.id)) orbs.push({ id: m.id, x: +m.x, y: +m.y, k: m.k, t: 0 }); break;
+    case 'orbp': { orbs = orbs.filter(o => o.id !== m.id); const f = game.byId(m.f); if (f && !f.local) darBuff(f, m.k, false); break; }
     case 'hit': {
       const tg = game.byId(m.tg); if (!tg || !tg.local) return;
       const src = game.byId(m.from) || { id: m.from, name: '?', x: tg.x - sign(m.kbx) * 20, local: false };
@@ -5777,6 +5811,7 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.110', d: '17/11', itens: [['novo', 'Itens no mapa: regeneração, ki turbo e velocidade'], ['novo', 'Defender demais quebra a defesa'], ['mudou', 'Contador de combo com pulso suave']] },
   { v: '1.0.108', d: '17/11', itens: [['novo', 'Esquiva: toque duas vezes para o lado'], ['novo', 'Defesa perfeita: defenda no tempo certo e não leve dano'], ['novo', 'Especial 2 com efeito de cinema'], ['mudou', 'Golpes com mais impacto e contador de combo maior']] },
   { v: '1.0.107', d: '16/11', itens: [['corrigiu', 'Personagem e anel presos ao pedestal em qualquer celular']] },
   { v: '1.0.106', d: '16/11', itens: [['novo', 'Mapa Bosque Rosa (teste)'], ['corrigiu', 'Configurações e créditos abrem por cima do menu']] },
@@ -5915,7 +5950,6 @@ function humanInput() {
     down: held('KeyS', 'ArrowDown'), up: held('KeyW', 'ArrowUp'), upP: tap('KeyW', 'ArrowUp'),
     punchP: tap('KeyJ'), kiP: tap('KeyK'), bigP: tap('KeyL'),
     beam: held('KeyI'), beamP: tap('KeyI'), charge: held('Space'), chargeP: tap('Space'), dashP: tap('ShiftLeft', 'ShiftRight'), face: 0,
-    dodge: toqueDuplo(held('KeyA', 'ArrowLeft'), held('KeyD', 'ArrowRight')),
   };
 }
 
@@ -6171,7 +6205,7 @@ game = {
     ['achBox', 'nvBox', 'lvList', 'lvBox', 'missBox', 'dailyBox', 'rankBox', 'botBox', 'frBox'].forEach(id => show(id, false)); lvShown = 0;
     const map = mode !== 'online' ? MAP_IDS[(Math.random() * MAP_IDS.length) | 0] : net.role === 'client' ? (net.roomMap || 'canyon') : chosenMap;
     setMap(map); this.map = map;
-    this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
+    this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = []; orbs = []; orbT = 12;
     const name = playerName();
     this.fighters = []; this.bots = [];
     this.me = new Fighter({ id: 'p-' + uid() + uid(), name, pal: 0, local: true, ctrl: 'human', char: chosenChar });
@@ -7047,8 +7081,9 @@ function update(dt) {
   if (game.duel && net.role !== 'host' && game.duelSt.t > 0) game.duelSt.t -= dt; // acabou o tempo
   if (cine) cine.t += dt;
   if (hitstop > 0) { hitstop -= dt; return; }
-  if (cine && cine.t > 0.12 && cine.t < 0.7) dt *= 0.35;
 
+  if (game.mode !== 'online' || net.role === 'host') orbTick(dt);
+  orbPegar(dt);
   const frozen = game.duel && ['count', 'end'].includes(game.duelSt.ph);
   stepWorld(dt, f => f === game.me ? (overlay || chatOpen || frozen ? emptyInput() : humanInput()) : emptyInput());
   for (const p of particles) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g || 0) * dt; p.vx *= Math.pow(0.1, dt); if (!p.g) p.vy *= Math.pow(0.1, dt); }
