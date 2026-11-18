@@ -1812,6 +1812,15 @@
 
   /* R143 */
   .cswatch .pelesw{position:relative;border-radius:50%}.cswatch .pelesw span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:7px;color:#5a2a10;font-weight:bold;pointer-events:none}
+
+  /* R145: painel de recompensa padrão */
+  .unlk .przv{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin-top:2px;font-size:calc(var(--fB) * 1.5);color:#fff}
+  .unlk .przv span{display:inline-flex;align-items:center;gap:6px}.unlk .przv .vc{color:#ffcf3a}.unlk .przv .vg{color:#9fe8ff}.unlk .przv .vx{color:#c79bff}
+  .unlk .przv i.coin,.unlk .przv i.gemi,.unlk .przv i.xpi,.unlk .przv i.baui{width:1.3em!important;height:1.3em!important;background-size:contain!important}
+  .unlk.gold .unlk-seal i.sealico{width:84px!important;height:84px!important;background-size:contain!important;filter:drop-shadow(0 0 14px rgba(255,190,40,.6))}
+
+  /* R147 */
+  .unlk-seal .corsel{display:block;width:70%;height:70%;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 3px #0b0618,0 0 18px rgba(255,255,255,.35)}
 </style>
 </head>
 <body>
@@ -1851,7 +1860,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.144</div>
+      <div class="ver">v1.0.151</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -3198,23 +3207,25 @@ const PART_SRC = {
     kame1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkElEQVR4Xu3SsQ2AIBCFYZyCIegYgZkYg5kYgY4hmEJzhcYYMZq7wuL/EiuR9zhxDlBZVF9PjDHW2TvvvWmm2WZPpa967y6lZJatJuVrrWspZTr5M1kn6+VRh1v4Un63H0Kbb/Ybz9OPMd5eETloa+3onHNW56s3uJKSIYTpYH93/wEAAAAAAAAAAAAAAIDXNjOuO2gSXCCFAAAAAElFTkSuQmCC", kame2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkElEQVR4Xu3SsQ2AIBCFYZyCIegYgZkYg5kYgY4hmEJzhcYYMZq7wuL/EiuR9zhxDlBZVF9PjDHW2TvvvWmm2WZPpa967y6lZJatJuVrrWspZTr5M1kn6+VRh1v4Un63H0Kbb/Ybz9OPMd5eETloa+3onHNW56s3uJKSIYTpYH93/wEAAAAAAAAAAAAAAIDXNjOuO2gSXCCFAAAAAElFTkSuQmCC", kame3: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkElEQVR4Xu3SsQ2AIBCFYZyCIegYgZkYg5kYgY4hmEJzhcYYMZq7wuL/EiuR9zhxDlBZVF9PjDHW2TvvvWmm2WZPpa967y6lZJatJuVrrWspZTr5M1kn6+VRh1v4Un63H0Kbb/Ybz9OPMd5eETloa+3onHNW56s3uJKSIYTpYH93/wEAAAAAAAAAAAAAAIDXNjOuO2gSXCCFAAAAAElFTkSuQmCC", kame4: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAAAlElEQVR4Xu3TsQ3DIBSEYTwFQ9AxAjMxBjMxAh1DMIWtVxBZUYjk4qzE+j+JDpk7P3AOwC/b7gg3xthX53jvb8kgO+RbuXe9d5dSkmWRsZK11r2Uspzkme2z/bZkoRSulJxmWUUeI7su52nGGD9eTfshrbVXt5yzLI/sw5OVCSEsB/W37xMAAAAAAAAAAAAAAADA4xwETTto9zrkOwAAAABJRU5ErkJggg==", kame5: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAAAlElEQVR4Xu3TsQ3DIBSEYTwFQ9AxAjMxBjMxAh1DMIWtVxBZUYjk4qzE+j+JDpk7P3AOwC/b7gg3xthX53jvb8kgO+RbuXe9d5dSkmWRsZK11r2Uspzkme2z/bZkoRSulJxmWUUeI7su52nGGD9eTfshrbVXt5yzLI/sw5OVCSEsB/W37xMAAAAAAAAAAAAAAADA4xwETTto9zrkOwAAAABJRU5ErkJggg==" },
 };
 const HAIRS = [{ id: '', name: 'Careca' }, { id: 'hair1', name: 'Cabelo 1' }, { id: 'hair2', name: 'Cabelo 2' }, { id: 'hair3', name: 'Cabelo 3' }, { id: 'hair6', name: 'Lambido' }, { id: 'hair8', name: 'Touca' }, { id: 'hair11', name: 'Antena' }, { id: 'hair9', name: 'Espetado' }, { id: 'hair10', name: 'Bagunçado' }];
-const SCOUT_COLORS = ['#d8263a', '#3ccf6a', '#3f7bff', '#ffd23a', '#b06bff', '#ff7ab8', '#5cd6ff', '#ffffff'];
+const CORES_ITENS = ['#3a3a4a', '#cfcfcf', '#ffffff', '#7a4a26', '#ffd23a', '#ff8a2a', '#d8263a', '#ff7ab8', '#7a3fd6', '#2a3f8a', '#4aa8ff', '#3ccf6a']; /* R148: mesma paleta em todas as categorias de itens */
+const comPrimeira = c => [c].concat(CORES_ITENS.filter(x => x !== c));
+const SCOUT_COLORS = comPrimeira('#ffffff');
 const AURA_TIPOS = [{ id: 0, name: 'Clássica' }, { id: 1, name: 'Espetada' }, { id: 2, name: 'Simples' }];
 const EYE_COLORS = ['#d8263a', '#ff9a1f', '#ffd23a', '#3ccf6a', '#5cd6ff', '#3f7bff', '#b06bff', '#ff7ab8', '#ffffff', '#1f1f2e'];
-const HALO_COLORS = ['#ffd23a', '#ffffff', '#ff9a1f', '#ff3b3b', '#ff7ab8', '#b06bff', '#5cd6ff', '#3ccf6a'];
-const SHOE_COLORS = ['#3a3a4a', '#e8e8f0', '#d8263a', '#2a3f8a', '#7a4a26', '#3ccf6a', '#ffd23a', '#7a3fd6'];
+const HALO_COLORS = comPrimeira('#ffffff');
+const SHOE_COLORS = comPrimeira('#ffffff');
 const CORES_TEMP = ["#ff0001", "#73ff71", "#000091", "#ff8401", "#73ffb1", "#520091", "#f7ff01", "#73faf1", "#9e0091", "#73ff01", "#73b2f1", "#9e0041", "#00ff11", "#7c73f1", "#9e0b01", "#00ff91", "#c573f1", "#9e5c01", "#00e5f1", "#ff73f1", "#8e9e01", "#0062f1", "#ff73a1", "#3d9e01", "#2200f1", "#ff8571", "#009e11", "#a600f1", "#ffce71", "#009e61", "#ff00d1", "#e8ff71", "#008491", "#ff0051", "#9fff71", "#003291"], CORES_EV = ["#ff2fa1", "#1ff7c1", "#c6ff21", "#ff7a11", "#9a4dff", "#21c4ff"];
 const AD_ITENS = { 'h:hair11': { n: 4, nome: 'Cabelo Antena', h: 'hair11' } }; /* itens que só saem assistindo anúncios (item novo = 1 linha aqui e no SQL ad_itens) */
 const EXC_CORES = new Set(CORES_TEMP.concat(CORES_EV)); // cores exclusivas (passe/evento): não se compram
-const JACKET_COLORS = ['#3a3a4a', '#e8e8f0', '#d8263a', '#2a3f8a', '#3ccf6a', '#7a3fd6', '#ffd23a', '#ff8a2a'];
-const SHIRT_COLORS = ['#e8e8f0', '#3a3a4a', '#d8263a', '#2a3f8a', '#3ccf6a', '#7a3fd6', '#ffd23a', '#ff8a2a'];
-const PANTS_COLORS = ['#3a3a4a', '#2a3f8a', '#7a4a26', '#d8263a', '#3ccf6a', '#7a3fd6', '#ffd23a', '#e8e8f0'];
-const SWORD_COLORS = ['#7a3fd6', '#d8263a', '#3f7bff', '#3ccf6a', '#ffd23a', '#7a4a26', '#3a3a4a', '#ffffff'];
+const JACKET_COLORS = comPrimeira('#ffffff');
+const SHIRT_COLORS = comPrimeira('#ffffff');
+const PANTS_COLORS = comPrimeira('#ffffff');
+const SWORD_COLORS = comPrimeira('#ffffff');
 const TAILS = [{ id: 0, name: 'Sem rabo' }, { id: 1, name: 'Rabo 1' }, { id: 2, name: 'Rabo 2' }];
-const TAIL_COLORS = ['#7a4a26', '#3a3a4a', '#cfcfcf', '#ffd23a', '#e8642e', '#d8263a', '#4aa8ff', '#3ccf6a', '#b06bff', '#ff7ab8', '#ffffff'];
+const TAIL_COLORS = comPrimeira('#ffffff');
 const PELE_PADRAO = '#ffcb9d'; const corPele = L => ((L && L.s) || PELE_PADRAO).toLowerCase();
-const SKIN_COLORS = ['#ffe6d2', '#f6c99a', '#d99a62', '#a8683c', '#6e4126', '#a8e27e', '#86c2ff', '#c7a6ff', '#c9c9d4', '#ff9a8a'];
-const HAIR_COLORS = ['#cfcfcf', '#3a3a4a', '#7a4a26', '#ffd23a', '#e8642e', '#d8263a', '#4aa8ff', '#3ccf6a', '#b06bff', '#ff7ab8', '#ffffff'];
+const SKIN_COLORS = ['#ffffff', '#ffe6d2', '#f6c99a', '#d99a62', '#a8683c', '#6e4126', '#a8e27e', '#86c2ff', '#c7a6ff', '#c9c9d4', '#ff9a8a'];
+const HAIR_COLORS = comPrimeira('#ffffff');
 /* PERSONAGENS: sprites + cores da aura e dos poderes de cada um */
 const cv = document.getElementById('c');
 let ctx = cv.getContext('2d');
@@ -5010,7 +5021,7 @@ function contaAte(v) {
   coinT = requestAnimationFrame(step);
 }
 /* moedas / XP voando até o mostrador (poucas, para não pesar) */
-function voar(tipo, n) {
+function voar(tipo, n, _t) { if (document.querySelector('.unlk:not(.sai)') && (_t || 0) < 40) return setTimeout(() => voar(tipo, n, (_t || 0) + 1), 150);
   const vis = e => e && e.offsetParent !== null && e.getBoundingClientRect().width > 0;
   const cands = tipo === 'c' ? [document.querySelector('#custom:not(.hidden) .cpill .coin'), document.querySelector('#menu:not(.hidden) #coinPill .coin')] : tipo === 'g' ? [document.querySelector('#custom:not(.hidden) .cpill.gem .gemi'), document.querySelector('#menu:not(.hidden) #gemPill .gemi')] : [document.querySelector('#menu:not(.hidden) .mlv i')];
   const alvo = cands.find(vis); if (!alvo) return;
@@ -5165,12 +5176,14 @@ document.addEventListener('click', e => { if (avisoTemp()) return; if (!e.isTrus
   for (const x of document.querySelectorAll('.msgx')) { if (!x.offsetParent) continue; const b = x.getBoundingClientRect(), m = 14;
     if (e.clientX >= b.left - m && e.clientX <= b.right + m && e.clientY >= b.top - m && e.clientY <= b.bottom + m) { e.preventDefault(); e.stopPropagation(); x.click(); return; } } }, true);
 function comprouFx(nome, k) { const c = document.getElementById('custom'); if (!c || c.classList.contains('hidden')) return; desbloqFx(k, nome); }
-function desbloqFx(k, nome) { let im = ''; try { im = k ? itemThumb(k) : ''; } catch (e) {} SFX.coin && SFX.coin(); fxPanel({ cor: 'gold', seal: im ? '<img src="' + im + '" alt="">' : '', sealCls: im ? 'prev' : '', titulo: 'DESBLOQUEADO!', sub: esc(nome) + '<br>já está na customização', tempo: 2600 }); }
+function selCor(k) { const m = /^[a-z]{1,2}:(#[0-9a-f]{6})$/i.exec(k || ''); return m ? '<span class="corsel" style="background:' + m[1] + '"></span>' : ''; }
+function desbloqFx(k, nome) { const cs = selCor(k); if (cs) { SFX.coin && SFX.coin(); return fxPanel({ cor: 'gold', seal: cs, sealCls: 'prev', titulo: 'DESBLOQUEADO!', sub: esc(nome) + '<br>já está na customização', tempo: 2600 }); } let im = ''; try { im = k ? itemThumb(k) : ''; } catch (e) {} SFX.coin && SFX.coin(); fxPanel({ cor: 'gold', seal: im ? '<img src="' + im + '" alt="">' : '', sealCls: im ? 'prev' : '', titulo: 'DESBLOQUEADO!', sub: esc(nome) + '<br>já está na customização', tempo: 2600 }); }
 /* recompensa resgatada: aviso no centro da janela (sempre visível, mesmo com a lista rolada) */
 function ganhouExtra(g, bau) { if (g && conta.perfil) { conta.perfil.gems = gemsN() + g; renderGems(); if (g > 0) voar('g', g * 20); } if (bau) { temp = { ...(temp || {}), chest: true, n: ((temp && temp.n) | 0) + bau }; show('dotDaily', true); } }
+/* R146: popup pequeno de recompensa (padrão de TODAS as recompensas, inclusive vídeo) */
 function premioFx(box, c, xp, titulo, g, bau) {
   SFX.reward();
-  if (!box) return; const old = box.querySelector('.przfx'); if (old) old.remove();
+  box = box || document.querySelector('#custom:not(.hidden) .card') || document.querySelector('#menu .card') || document.getElementById('wrap'); if (!box) return; const old = box.querySelector('.przfx'); if (old) old.remove();
   const f = document.createElement('div'); f.className = 'przfx';
   f.innerHTML = '<div class="przin"><small>' + (titulo || 'RESGATADO!') + '</small><div class="przv">' + (c ? '<span class="vc">+' + c + ' <i class="coin"></i></span>' : '') + (xp ? '<span class="vx">+' + xp + ' ' + XPI + '</span>' : '') + (g ? '<span class="vg">+' + g + ' ' + GEMI + '</span>' : '') + (bau ? '<span>+' + bau + ' ' + BAUI + '</span>' : '') + '</div></div>';
   box.appendChild(f); setTimeout(() => f.remove(), 1600); try { SFX.zap(); } catch (e) {}
@@ -5192,7 +5205,7 @@ const normItem = k => { const m = /^(hc|s|tc|ac|fa|fk|xc|ic|pc|fc|c):(#[0-9a-f]{
 const priceOf = k => { k = normItem(k); if (UNLOCK[k] || GEM_PRICE[k]) return 0; return /^(h|t|a|sl|p|sc|au|i|cl|pe):/.test(k) ? PRICE.item : /^tr:/.test(k) ? PRICE.trans : PRICE.color; };
 const ITEM_PRICE = PRICE.color;
 const PALETTE = () => new Set([].concat(HAIR_COLORS, SKIN_COLORS, TAIL_COLORS, HALO_COLORS, FX_COLORS, SCOUT_COLORS, SWORD_COLORS, PANTS_COLORS, SHOE_COLORS, SHIRT_COLORS, JACKET_COLORS).map(c => c.toLowerCase()));
-const FREE_ITEMS = new Set(['h:hair1', 'c:#7a3fd6', 'c:#3a3a4a', 'c:#cfcfcf', 'c:#7a4a26', 'c:#ffd23a', 'sl:0']);
+const FREE_ITEMS = new Set(['h:hair1', 'c:#7a3fd6', 'c:#3a3a4a', 'c:#cfcfcf', 'c:#7a4a26', 'c:#ffd23a', 'c:#ffffff', 's:#ffffff', 'sl:0']);
 const shop = {
   infinite() { return !!(conta.perfil && conta.perfil.infinite); },
   has(k) {
@@ -5226,7 +5239,7 @@ const shop = {
   equip(look, fxc) {
     const L = { ...look }, F = { ...fxc };
     if (L.h && !this.has('h:' + L.h)) L.h = 'hair1';
-    if (L.h && !this.has('hc:' + L.hc) && L.hc !== corPele(L)) L.hc = '#3a3a4a';
+    if (L.h && !this.has('hc:' + L.hc) && L.hc !== corPele(L)) L.hc = '#ffffff';
     if (L.s && !this.has('s:' + L.s)) L.s = '';
     if (L.t && !this.has('t:' + L.t)) L.t = 0;
     if (L.t && !this.has('tc:' + L.tc)) L.tc = TAIL_COLORS[0];
@@ -5313,7 +5326,7 @@ function wait(msg) {
   clearTimeout(waitTO); waitTO = setTimeout(() => { waitN = 0; show('wait', false); setStatus('O servidor demorou para responder. Tente de novo.');  }, 25000);
 }
 /* R124: versão mínima — se o jogo estiver desatualizado, a tela de abertura trava até atualizar */
-const APP_VER = '1.0.144';
+const APP_VER = '1.0.151';
 const verN = v => String(v || '').split('.').map(n => +n || 0).reduce((a, n, i) => a + n * Math.pow(1000, 3 - i), 0);
 async function checarVersao() { if (!conta || !conta.sb) return false;
   const r = await Promise.race([conta.sb.rpc('versao_min'), new Promise(ok => setTimeout(() => ok({}), 6000))]);
@@ -5550,7 +5563,13 @@ function itemPreview(item) { // só o item, na cor escolhida, ampliado dentro do
   if (k === 'p') { const q = makeCanvas(56, 56); q.getContext('2d').imageSmoothingEnabled = false; drawPowerIcon(q.getContext('2d'), v); x.drawImage(q, 0, 0, 56, 56, 0, 0, 84, 84); return c.toDataURL(); }
   if (k === 'tr') { const P = [[48, 8], [22, 46], [38, 46], [30, 76], [62, 34], [44, 34], [56, 8]]; x.beginPath(); P.forEach((q, i) => i ? x.lineTo(q[0], q[1]) : x.moveTo(q[0], q[1])); x.closePath(); x.lineJoin = 'round'; x.lineWidth = 8; x.strokeStyle = '#3a1c00'; x.stroke(); x.fillStyle = '#ffd23a'; x.fill(); x.lineWidth = 2; x.strokeStyle = '#fff6b0'; x.stroke(); return c.toDataURL(); }
   if (k === 'au') { const pal = palForCustom(chosenChar, 0, chosenFxc), kt = AURA_KIT[+v], fr = kt && auraKitFrames(pal.aura, +v); im = fr && fr[kt.lp[0]]; }
-  else { const pid = k === 'h' ? v : k === 't' ? (+v === 2 ? 'tail2' : 'tail1') : k === 'a' ? 'halo' : k === 'sc' ? 'scout' : k === 'i' ? 'espada' : k === 'cl' ? 'calca' : k === 'pe' ? 'pes' : '';
+  else { const tk = { h: { h: v }, t: { t: +v }, a: { a: 1 }, sc: { sc: 1 }, i: { i: 1 }, cl: { p: 1 }, pe: { f: 1 }, cc: { c: +v || 1 }, jc: { j: 1 } }[k];
+    if (tk) { /* R149: mostrador padrão — item branco sólido com contorno preto sobre o corpo base translúcido */
+      const lk = validLook({ h: '', t: 0, ...tk }), sp = thumbPadrao(lk), sd = sp.getContext('2d').getImageData(0, 0, sp.width, sp.height).data; let a0 = 1e9, b0 = 1e9, a1 = -1, b1 = -1;
+      for (let y = 0; y < sp.height; y++) for (let q = 0; q < sp.width; q++) if (sd[(y * sp.width + q) * 4 + 3] === 255) { a0 = Math.min(a0, q); a1 = Math.max(a1, q + 1); b0 = Math.min(b0, y); b1 = Math.max(b1, y + 1); }
+      if (a1 > 0) { const cx = (a0 + a1) / 2, cy = (b0 + b1) / 2, S = Math.max(a1 - a0, b1 - b0) + 10, sx = Math.round(cx - S / 2), sy = Math.round(cy - S / 2), sc = Math.max(1, Math.floor(80 / S));
+        x.fillStyle = THUMB_BG; x.fillRect(0, 0, 84, 84); x.drawImage(sp, sx, sy, S, S, Math.round(42 - S * sc / 2), Math.round(42 - S * sc / 2), S * sc, S * sc); return c.toDataURL(); } }
+    const pid = k === 'h' ? v : k === 't' ? (+v === 2 ? 'tail2' : 'tail1') : k === 'a' ? 'halo' : k === 'sc' ? 'scout' : k === 'i' ? 'espada' : k === 'cl' ? 'calca' : k === 'pe' ? 'pes' : '';
     const col = k === 'h' ? L.hc : k === 't' ? L.tc : k === 'a' ? L.ac : k === 'i' ? L.ic : k === 'cl' ? L.pc : k === 'pe' ? L.fc : L.xc; im = pid && tintPart(pid, 'parado', col || '#ffffff'); }
   if (!im) return c.toDataURL();
   const d = im.getContext ? im.getContext('2d').getImageData(0, 0, im.width, im.height).data : null; let x0 = 0, y0 = 0, x1 = im.width, y1 = im.height;
@@ -5590,10 +5609,10 @@ async function abrirBau() {
   if (error) { drawBau(); return notice(/JA_ABERTO/.test(error.message) ? 'Você já abriu o baú hoje. Volte amanhã!' : erroRecompensa(error), 'BAÚ', 'err'); }
   { const n = Math.max(0, ((temp && temp.n) | 0) - 1); temp = { ...(temp || {}), n, chest: n > 0 || !!(temp && temp.free) }; } drawBau(); show('dotDaily', !dly || !dly.got || temp.chest);
   const box = document.querySelector('#dailyBox .card');
-  if (data.tipo === 'item') { if (conta.perfil) conta.perfil.owned = [...(conta.perfil.owned || []), data.item]; fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(data.item) + '" alt="">', sealCls: 'prev', titulo: 'ITEM RARO!', sub: esc(nomeItem(data.item)) + '<br>já está liberado na customização', tempo: 2600 }); SFX.unlock(); }
-  else if (data.tipo === 'gems') { ganhouExtra(data.v); premioFx(box, 0, 0, 'DIAMANTES!', data.v); }
-  else if (data.tipo === 'xp') { ganhouRecompensa(0, data.v); premioFx(box, 0, data.v, 'XP!'); }
-  else { ganhouRecompensa(data.v, 0); premioFx(box, data.v, 0, data.raro ? 'MUITAS MOEDAS!' : 'MOEDAS!'); }
+  if (data.tipo === 'item') { if (conta.perfil) conta.perfil.owned = [...(conta.perfil.owned || []), data.item]; fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(data.item) + '" alt="">', sealCls: 'prev', titulo: 'DESBLOQUEADO!', sub: esc(nomeItem(data.item)) + '<br>já está liberado na customização', tempo: 2600 }); SFX.unlock(); }
+  else if (data.tipo === 'gems') { ganhouExtra(data.v); premioFx(box, 0, 0, 'RECOMPENSA!', data.v); }
+  else if (data.tipo === 'xp') { ganhouRecompensa(0, data.v); premioFx(box, 0, data.v, 'RECOMPENSA!'); }
+  else { ganhouRecompensa(data.v, 0); premioFx(box, data.v, 0, data.raro ? 'RECOMPENSA RARA!' : 'RECOMPENSA!'); }
 }
 document.getElementById('bChest').onclick = abrirBau;
 setInterval(() => { if (!conta.user || !dly || game.phase === 'play') return; // bolinhas vermelhas: recalcula com o progresso local
@@ -5645,7 +5664,7 @@ async function drawConquistas(flash) {
     b.onclick = async () => { b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {} const { data, error } = await conta.sb.rpc('claim_achievement', { aid: a.id }); unwait();
       if (error) { b.disabled = false; return notice(erroRecompensa(error), 'CONQUISTAS'); }
       a.got = true; conqPegas.add(a.id); ganhouRecompensa(data.c, data.xp); ganhouExtra(data.g); drawConquistas(a.id); premioFx(document.querySelector('#achBox .card'), data.c, data.xp, 'CONQUISTA!', data.g);
-      if (ACH_ITEM[a.id]) setTimeout(() => fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemThumb(ACH_ITEM[a.id]) + '" alt="">', sealCls: 'prev', titulo: 'ITEM LIBERADO!', sub: esc(nomeItem(ACH_ITEM[a.id])) + '<br>já está na customização', tempo: 2600 }), 1700);
+      if (ACH_ITEM[a.id]) setTimeout(() => fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemThumb(ACH_ITEM[a.id]) + '" alt="">', sealCls: 'prev', titulo: 'DESBLOQUEADO!', sub: esc(nomeItem(ACH_ITEM[a.id])) + '<br>já está na customização', tempo: 2600 }), 1700);
       refreshDaily(); };
     r.appendChild(b); L.appendChild(r); }
   show('dotAch', conqProntas());
@@ -5691,7 +5710,7 @@ document.getElementById('passRows').addEventListener('click', async e => {
   if (!c.classList.contains('ready')) return;
   c.classList.remove('ready'); const { data, error } = await conta.sb.rpc('claim_pass', { lv, prem }); if (error) { c.classList.add('ready'); return notice(erroRecompensa(error), 'PASSE', 'err'); }
   (prem ? passo.gotp : passo.got).push(String(lv)); ganhouRecompensa(data.c | 0, data.xp | 0); ganhouExtra(data.g | 0, data.bau | 0);
-  if (data.item) { if (conta.perfil) conta.perfil.owned.push(data.item); fxPanel({ cor: 'gold', seal: '<img src="' + itemThumb(data.item) + '" alt="">', sealCls: 'prev', titulo: 'ITEM LIBERADO!', sub: esc(nomeItem(data.item)) + '<br>já está na customização', tempo: 2800 }); }
+  if (data.item) { if (conta.perfil) conta.perfil.owned.push(data.item); fxPanel({ cor: 'gold', seal: '<img src="' + itemThumb(data.item) + '" alt="">', sealCls: 'prev', titulo: 'DESBLOQUEADO!', sub: esc(nomeItem(data.item)) + '<br>já está na customização', tempo: 2800 }); }
   else premioFx(document.querySelector('#passBox .card'), data.c | 0, data.xp | 0, 'PASSE · NÍVEL ' + lv, data.g | 0, data.bau | 0);
   drawPasse(false); });
 document.getElementById('bPrem').onclick = async () => {
@@ -5717,7 +5736,7 @@ async function abrirLoja() { show('shopBox', true); try { localStorage.setItem('
     b.onclick = async () => { if (!shop.infinite() && wallet.n < o.p) return semMoedas(o.p - wallet.n);
       if (!await msgOpen('COMPRAR?', { kind: 'buy', html: '<div class="mitem">' + esc(nomeItem(o.k)) + '</div><span class="preco"><i class="coin"></i>' + o.p + '</span>' }, '', true, 'COMPRAR')) return;
       b.disabled = true; const { data: m, error: e } = await conta.sb.rpc('buy_offer', { item: o.k }); if (e) { b.disabled = false; return /SEM_MOEDAS/.test(e.message) ? semMoedas(o.p) : notice(erroRecompensa(e), 'LOJA', 'err'); }
-      conta.perfil.owned.push(o.k); conta.perfil.coins = m | 0; wallet.sync(); SFX.coin && SFX.coin(); fxPanel({ cor: 'gold', seal: '<img src="' + itemThumb(o.k) + '" alt="">', sealCls: 'prev', titulo: 'COMPRADO!', sub: esc(nomeItem(o.k)) + '<br>já está na customização', tempo: 2600 }); r.classList.add('own'); b.innerHTML = 'OBTIDO'; b.className = 'b'; };
+      conta.perfil.owned.push(o.k); conta.perfil.coins = m | 0; wallet.sync(); SFX.coin && SFX.coin(); fxPanel({ cor: 'gold', seal: selCor(o.k) || '<img src="' + itemThumb(o.k) + '" alt="">', sealCls: 'prev', titulo: 'COMPRADO!', sub: esc(nomeItem(o.k)) + '<br>já está na customização', tempo: 2600 }); r.classList.add('own'); b.innerHTML = 'OBTIDO'; b.className = 'b'; };
     r.appendChild(b); L.appendChild(r); }
   }
 /* evento de fim de semana */
@@ -5997,6 +6016,11 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.151', d: '18/11', itens: [['mudou', 'Personagem novo começa todo branco; itens vêm brancos e você escolhe a cor']] },
+  { v: '1.0.150', d: '18/11', itens: [['mudou', 'Fundo roxo nas miniaturas dos itens, para destacar o branco']] },
+  { v: '1.0.149', d: '18/11', itens: [['mudou', 'Loja, vídeos e desbloqueios mostram o item branco com contorno preto']] },
+  { v: '1.0.148', d: '18/11', itens: [['mudou', 'Miniaturas dos itens padronizadas (item em destaque)'], ['mudou', 'Mesmas cores em todas as categorias de itens']] },
+  { v: '1.0.146', d: '18/11', itens: [['mudou', 'Todas as recompensas usam o mesmo popup pequeno']] },
   { v: '1.0.144', d: '18/11', itens: [['corrigiu', 'Recompensa do vídeo em um popup só'], ['corrigiu', 'Popup de desbloqueio do mesmo tamanho em todas as telas']] },
   { v: '1.0.143', d: '18/11', itens: [['novo', 'Cabelo pode usar a cor da pele (grátis)'], ['mudou', 'Popups de desbloqueio e recompensa no padrão do jogo']] },
   { v: '1.0.142', d: '18/11', itens: [['mudou', 'Vídeos com recompensa em popups próprios: moedas, cristal e itens exclusivos']] },
@@ -6549,8 +6573,7 @@ setTimeout(() => anuncio.init(), 1500);
 /* ===== R138: POLÍTICA DE PRIVACIDADE ===== */
 /* ===== R139: ANÚNCIOS SÓ QUANDO O JOGADOR QUER — moedas, cristal e itens exclusivos ===== */
 let adSt = null, adOcup = false, vidPremio = null;
-function adThumb(k) { const it = AD_ITENS[k]; try { const im = thumbSprite(validLook({ h: it.h || '', hc: '#ffd23a' })), c = makeCanvas(40, 40), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
-    const w = 26, sx = Math.round(im.width / 2 - w / 2), sy = Math.max(0, im.height - 64); x.drawImage(im, sx, sy, w, w, 0, 0, 40, 40); return c.toDataURL(); } catch (e) { return ''; } }
+function adThumb(k) { try { return itemPreview(k); } catch (e) { return ''; } }
 /* R142: cada recompensa tem o seu popup (igual ao de comprar): ícone de vídeo, barra de progresso e botão */
 async function adStatus() { const { data, error } = await conta.sb.rpc('ad_status'); if (error) { notice(/function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'VÍDEO', 'err'); return null; } return data; }
 async function popVideo(tipo, item) {
@@ -6570,11 +6593,11 @@ async function popVideo(tipo, item) {
     const { data, error } = await conta.sb.rpc('ad_reward', { tipo, item: item || null });
     if (error) { await notice(/LIMITE/.test(error.message) ? 'Limite de hoje atingido. Volte amanhã!' : /ESPERE/.test(error.message) ? 'Espere alguns segundos entre um vídeo e outro.' : /function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'VÍDEO', 'err'); if (/ESPERE/.test(error.message)) continue; return; }
     const c0 = conta.perfil.coins | 0, g0 = conta.perfil.gems | 0; conta.perfil.coins = data.coins; conta.perfil.gems = data.gems; wallet.sync();
-    if (tipo === 'c') { const n = data.coins - c0; fxPanel({ cor: 'gold', seal: '<i class="coin"></i>', titulo: 'RECOMPENSA RECEBIDA!', sub: '+' + n + ' <i class="coin"></i>', tempo: 2200 }); setTimeout(() => voar('c', n), 2500); return; }
-    else if (tipo === 'g') { const n = data.gems - g0; fxPanel({ cor: 'gold', seal: '<i class="gemi"></i>', titulo: 'RECOMPENSA RECEBIDA!', sub: '+' + n + ' <i class="gemi"></i>', tempo: 2200 }); setTimeout(() => voar('g', n), 2500); return; }
+    if (tipo === 'c') { const n = data.coins - c0; premioFx(null, n, 0, 'RECOMPENSA!'); voar('c', n); return; }
+    else if (tipo === 'g') { const n = data.gems - g0; premioFx(null, 0, 0, 'RECOMPENSA!', n); voar('g', n); return; }
     else if (!data.ganhou) { const n = (data.prog || {})[item] | 0, it = AD_ITENS[item]; fxPanel({ cor: 'gold', seal: '<img src="' + adThumb(item) + '" alt="">', sealCls: 'prev', titulo: n + ' / ' + it.n + ' VÍDEOS', sub: 'faltam ' + (it.n - n) + ' para liberar ' + esc(it.nome), tempo: 2000 }); return; }
     else if (data.ganhou) { if (Array.isArray(conta.perfil.owned)) conta.perfil.owned.push(item); if (typeof applyProfile === 'function') applyProfile(conta.perfil); if (typeof SFX !== 'undefined' && SFX.ok) SFX.ok();
-      desbloqFx(item, AD_ITENS[item].nome); if (custOpen && typeof cMore === 'function') cMore(); return; }
+      desbloqFx(item, AD_ITENS[item].nome); if (custOpen) buildCustomPanel(); return; }
   } } finally { adOcup = false; } }
 const PRIV_URL = 'politica-privacidade.html';
 function abrirPrivacidade() { try { window.open(PRIV_URL, '_blank'); } catch (e) { location.href = PRIV_URL; } }
@@ -6682,7 +6705,7 @@ const SLOT_N = 3;
 const cleanFxc = c => ({ a: c && okHex(c.a) ? c.a : '', k: c && okHex(c.k) ? c.k : '' });
 const PW0 = { k: 'ki', r: 'bola', s: 'kame' };
 const cleanPw = o => ({ k: o && POWERS.k[o.k] ? o.k : 'ki', r: o && POWERS.r[o.r] ? o.r : 'bola', s: o && POWERS.s[o.s] ? o.s : 'kame' });
-const newSlot = () => ({ look: validLook({ h: 'hair1', hc: '#3a3a4a' }), fxc: { a: '', k: '' }, arq: 'eq', tr: -1, pw: { ...PW0 } });
+const newSlot = () => ({ look: validLook({ h: '', hc: '#ffffff', s: '#ffffff' }), fxc: { a: '', k: '' }, arq: 'eq', tr: -1, pw: { ...PW0 } });
 const cleanSlot = o => o && typeof o === 'object' ? { look: validLook(o.look || {}) || newSlot().look, fxc: cleanFxc(o.fxc), arq: ARQS[o.arq] ? o.arq : 'eq', tr: Number.isInteger(o.tr) && o.tr >= 0 && o.tr < 3 ? o.tr : -1, pw: cleanPw(o.pw) } : newSlot();
 let slots = [newSlot(), newSlot(), newSlot()], slotCur = 0;
 let chosenLook, chosenFxc, chosenArq;
@@ -6761,9 +6784,20 @@ function optCard(label, sel, draw, onPick, key) {
   b.onclick = () => { if (adk) { if (!sel) { onPick(); saveLook(); return; } return popVideo('i', key); } if (sel && key && !shop.has(key)) return tryBuy(key, label); onPick(); saveLook(); offerBuy(key, label); }; return b;
 }
 const so = (L, x) => { const o = { ...L, h: '', t: 0, au: 0 }; for (const it of LOOK_ITENS()) o[it.k] = 0; return { ...o, ...x }; }; // miniatura mostra só o item da opção
+const THUMB_BG = '#4d3f8f';
+const THUMB_BRANCO = l => { const o = { ...l, s: '' }; for (const k of ['hc', 'tc', 'cc', 'jc', 'pc', 'fc', 'xc', 'ic', 'ac']) o[k] = '#ffffff'; return o; };
+function thumbPadrao(look) { /* R148: corpo base branco e translúcido; o item em branco sólido por cima */
+  const key = lookToStr(look); thumbPadrao.c = thumbPadrao.c || {}; if (thumbPadrao.c[key]) return thumbPadrao.c[key];
+  const base = thumbSprite(validLook({ h: '', t: 0 })), full = thumbSprite(validLook(THUMB_BRANCO(look)));
+  const W = full.width, H = full.height, c = makeCanvas(W, H), x = c.getContext('2d');
+  const bx = makeCanvas(W, H).getContext('2d'); bx.drawImage(base, 0, 0); const bd = bx.getImageData(0, 0, W, H).data;
+  const fx = makeCanvas(W, H).getContext('2d'); fx.drawImage(full, 0, 0); const fd = fx.getImageData(0, 0, W, H), d = fd.data;
+  for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const lum = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11, dif = Math.abs(d[i] - bd[i]) + Math.abs(d[i + 1] - bd[i + 1]) + Math.abs(d[i + 2] - bd[i + 2]) + Math.abs(d[i + 3] - bd[i + 3]) > 24;
+    if (dif) { const v = lum < 70 ? 0 : Math.min(255, 110 + lum * 0.7); d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } else { const v = Math.min(255, 150 + lum * 0.45); d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 105; } }
+  x.putImageData(fd, 0, 0); c._pad = full._pad; return (thumbPadrao.c[key] = c); }
 function partThumb(look, crop) { // miniatura em escala INTEIRA (pixel perfeito), no tamanho real do quadrinho
-  const fn = x => { const im = thumbSprite(look); const [sx, sy, w] = crop(im), cw = x.canvas.width, k = Math.max(1, Math.floor(cw / w)), o = Math.round((cw - w * k) / 2);
-    x.imageSmoothingEnabled = false; x.clearRect(0, 0, cw, cw); x.drawImage(im, sx, sy, w, w, o, o, w * k, w * k); };
+  const fn = x => { const im = thumbPadrao(look); const [sx, sy, w] = crop(im), cw = x.canvas.width, k = Math.max(1, Math.floor(cw / w)), o = Math.round((cw - w * k) / 2);
+    x.imageSmoothingEnabled = false; x.fillStyle = THUMB_BG; x.fillRect(0, 0, cw, cw); x.drawImage(im, sx, sy, w, w, o, o, w * k, w * k); };
   fn.px = true; return fn;
 }
 function buildCustomPanel() {
@@ -7394,7 +7428,7 @@ loadSprites().then(() => { buildAuras(); buildMapPicker();
     const ownedCols = [...new Set(HAIR_COLORS.concat(SKIN_COLORS, TAIL_COLORS, HALO_COLORS, FX_COLORS, ((conta.perfil && conta.perfil.owned) || []).map(normItem).filter(k => k.startsWith('c:')).map(k => k.slice(2))))].filter(c => shop.has('c:' + c));
     const L = { ...chosenLook };
     L.h = pick(HAIRS.map(h => h.id).filter(id => !id || shop.has('h:' + id)));
-    L.hc = pick(ownedCols.length ? ownedCols : ['#3a3a4a']);
+    L.hc = pick(ownedCols.length ? ownedCols : ['#ffffff']);
     L.s = pick([''].concat(mine(SKIN_COLORS))); // pele: só tons de pele (ou a original)
     L.t = pick(TAILS.map(t => t.id).filter(id => !id || shop.has('t:' + id))); L.tc = pick(ownedCols.length ? ownedCols : [TAIL_COLORS[0]]);
     sortearItens(L, k => !k || shop.has(k)); if (L.a) L.ac = pick(ownedCols.length ? ownedCols : [HALO_COLORS[0]]);
