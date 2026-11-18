@@ -1771,7 +1771,47 @@
   .lvn::before{height:7px!important}
 
   /* R130 */
-  .sonhoTg.on{background:linear-gradient(#ffd23a,#ff9a1e)!important;color:#3a1a00!important;border-color:#fff3b0!important;text-shadow:none!important}
+
+  /* R138 */
+  #tutBox{position:fixed;left:50%;top:27vh;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:10px;padding:8px 14px;border:2px solid #ffcf3a;border-radius:12px;background:rgba(20,12,40,.92);max-width:80vw;pointer-events:auto}
+  #tutBox.hidden{display:none}#tutBox b{color:#fff;font-size:14px;line-height:1.3}#tutBox span{color:#ffcf3a;font-size:12px}#tutBox .b{padding:4px 10px;font-size:11px;min-height:0}
+  #tutBox.pop{animation:tutpop .35s ease-out}@keyframes tutpop{0%{transform:translateX(-50%) scale(1.25)}100%{transform:translateX(-50%) scale(1)}}
+  .privlink{display:block;text-align:center;color:#cfc6ff;font-size:11px;margin:4px 0;text-decoration:underline}
+  .jogl{display:flex;flex-direction:column;gap:6px;margin:6px 0}.jogr{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center}.jogr b{color:#fff;text-align:left;overflow:hidden;text-overflow:ellipsis}.jogr .b{padding:4px 8px;font-size:11px;min-height:0}
+
+  /* R139: recompensas por anúncio */
+  #coinPill,#gemPill{cursor:pointer}#coinPill::after,#gemPill::after{content:'+';margin-left:4px;width:16px;height:16px;line-height:16px;border-radius:50%;background:#3ccf6a;color:#fff;font-size:13px;text-align:center;box-shadow:0 2px 0 #1a6a36}
+  .adl{display:flex;flex-direction:column;gap:6px;margin:2px 0;text-align:left;flex:1 1 auto;min-height:0;overflow-y:auto;padding-right:4px}
+  .adrow{display:grid;grid-template-columns:38px 1fr auto;gap:8px;align-items:center;padding:6px 8px;border:2px solid #4a3a8a;border-radius:12px;background:rgba(30,20,60,.8)}
+  .adrow.foco{border-color:#ffcf3a;box-shadow:0 0 12px rgba(255,207,58,.35)}
+  .adico{display:flex;align-items:center;justify-content:center}#msgBox .adico i.coin,#msgBox .adico i.gemi{width:32px!important;height:32px!important;background-size:contain!important}
+  .adtx b{color:#fff;display:block;font-size:13px}.adtx small{color:#b8acec;font-size:10px}
+  .adbar{position:relative;height:14px;margin-top:4px;border:2px solid #2a1f55;border-radius:8px;background:#140a26;overflow:hidden}.adbar u{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#ffd23a,#ff9a1e);text-decoration:none}.adbar.ex u{background:linear-gradient(#c79bff,#7a3fd6)}
+  .adbar em{position:relative;display:block;text-align:center;font-style:normal;font-size:10px;color:#fff;line-height:10px;text-shadow:1px 1px 0 #000}
+  .adrow .b{padding:6px 10px;font-size:12px;min-height:0;white-space:nowrap}
+  .adh{margin:4px 0 0;color:#ffcf3a;font-size:12px}.adh small{color:#b8acec;font-weight:normal;font-size:10px;margin-left:4px}
+  .adsw{display:inline-block;width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 10px rgba(255,255,255,.4)}.adsw.big{width:56px;height:56px}
+  .adno{display:block;margin-top:8px;color:#ffb0a0}
+  .adimg{width:36px;height:36px;image-rendering:pixelated}.adimg.big{width:64px;height:64px}
+  .copt.adk{outline:2px solid #ffcf3a;position:relative}.copt .adtv,.cswatch .adtv{position:absolute;right:-4px;bottom:-4px;width:16px;height:16px;border-radius:50%;background:#d8263a;color:#fff;font-size:9px;line-height:16px;text-align:center;font-style:normal}
+
+
+  /* R142: popup de vídeo (mesmo estilo do popup de comprar) */
+  .msgc:has(.vpop) .mbadge{display:none!important}
+  .vpico{width:96px!important;height:96px!important}#msgBox .vpico>i.coin,#msgBox .vpico>i.gemi{width:84px!important;height:84px!important;min-width:84px!important;background-size:contain!important;margin:0!important;vertical-align:0!important}.vpico .adimg{width:90px!important;height:90px!important}.vpico .vidico{width:34px!important;height:34px!important;right:-6px!important;bottom:-2px!important}
+  .vpop{display:flex;flex-direction:column;align-items:center;gap:8px;white-space:normal}
+  .vpico{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center}
+  .vpico>i.coin,.vpico>i.gemi{width:54px!important;height:54px!important;background-size:contain!important}.vpico .adimg{width:60px;height:60px}
+  .vpico .vidico{position:absolute;right:-8px;bottom:-6px;width:26px;height:26px}
+  .vptx{color:#dcd0ff;line-height:1.5}.vptx i.coin,.vptx i.gemi{width:1.1em!important;height:1.1em!important;vertical-align:-0.2em;background-size:contain!important}
+  .vpop .adbar{width:min(260px,100%);height:18px}.vpop .adbar em{line-height:14px;font-size:11px}
+  .vplim{color:#ffb0a0}
+  .vidico{display:inline-block;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='%23e8283c' stroke='%23140a26' stroke-width='3'/%3E%3Cpath d='M12.5 9.8v12.4L22.8 16z' fill='%23fff'/%3E%3C/svg%3E") center/contain no-repeat;font-style:normal}
+  .unlk-seal .vidico,.przfx .vidico{width:64px;height:64px}
+  .lockb.playb{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14.5' fill='%23e8283c' stroke='%23140a26' stroke-width='3'/%3E%3Cpath d='M12.5 9.8v12.4L22.8 16z' fill='%23fff'/%3E%3C/svg%3E") center/contain no-repeat!important}
+
+  /* R143 */
+  .cswatch .pelesw{position:relative;border-radius:50%}.cswatch .pelesw span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:7px;color:#5a2a10;font-weight:bold;pointer-events:none}
 </style>
 </head>
 <body>
@@ -1811,7 +1851,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.135</div>
+      <div class="ver">v1.0.144</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -1856,6 +1896,7 @@
     <i class="unlk-rays authrays"></i>
     <form class="card authc" id="authForm" autocomplete="on">
       <div class="logo"><img class="glogo auth" id="logoAuth" alt="CustomBattle Online"><small id="authSub">entre na sua conta para jogar</small></div>
+      <a href="#" id="authPriv" class="privlink">Política de privacidade</a>
       <div class="ctabs" id="authTabs"><button type="button" data-m="in" class="sel">ENTRAR</button><button type="button" data-m="up">CRIAR CONTA</button></div>
       <div class="fld" id="authNameRow"><span>NOME</span><input id="authName" type="text" maxlength="18" placeholder="seu nome no jogo" autocomplete="nickname" autocorrect="off" spellcheck="false"></div>
       <div class="fld"><span id="authIdLbl">E-MAIL OU NOME</span><input id="authEmail" type="text" maxlength="120" placeholder="e-mail ou nome no jogo" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
@@ -1879,6 +1920,7 @@
         <button class="b pri" id="pContinue">CONTINUAR</button>
         <button class="b" id="pSettings">⚙ CONFIGURAÇÕES</button>
         <button class="b" id="pInvite">👥 CONVIDAR AMIGOS</button>
+        <button class="b" id="pPlayers">🚩 DENUNCIAR / BLOQUEAR</button>
         <button class="b" id="pExit">SAIR DA PARTIDA</button>
       </div>
     </div>
@@ -1921,8 +1963,8 @@
   </div>
   <div id="passBox" class="ovl hidden">
     <div class="card mid rw"><button type="button" class="msgx" aria-label="fechar" onclick="show('passBox', false)"></button>
-      <div class="title"><b>PASSE DA TEMPORADA</b><small id="passSub">em cima: <b class="lgf">GRÁTIS</b> · embaixo: <b class="lgp">PREMIUM</b> · cada adversário derrotado = 10 pts</small></div>
-      <div class="lvtop pstop"><div class="lvbig"><small>NÍVEL</small><b id="passLv">0</b></div><div class="lvxp"><small id="passFim">PRÓXIMO NÍVEL</small><div class="rwbar"><u id="passB"></u><em id="passT">0 / 60</em></div><small class="pshow">+10 pts por derrota</small></div>
+      <div class="title"><b>PASSE DA TEMPORADA</b><small id="passSub">em cima: <b class="lgf">GRÁTIS</b> · embaixo: <b class="lgp">PREMIUM</b> · derrota = 10 pts · partida = 5 pts · dano = 5 pts a cada 1000</small></div>
+      <div class="lvtop pstop"><div class="lvbig"><small>NÍVEL</small><b id="passLv">0</b></div><div class="lvxp"><small id="passFim">PRÓXIMO NÍVEL</small><div class="rwbar"><u id="passB"></u><em id="passT">0 / 60</em></div><small class="pshow">+10 por derrota · +5 por partida · +5 a cada 1000 de dano</small></div>
         <button type="button" class="b vio hidden" id="bPrem">PREMIUM</button></div>
       <div class="pswrap"><div class="pslbl"><span>GRÁTIS</span><span class="pp">PREMIUM</span></div><div class="lvtrail pstrail" id="passRows"></div></div>
     </div>
@@ -2031,6 +2073,7 @@
       <button type="button" class="msgx" aria-label="fechar" onclick="closeSettings()"></button><div class="title"><b>CONFIGURAÇÕES</b><small>som, controles e conta</small></div>
       <div class="setbody">
       <div class="btns two"><button class="b" id="bCode">🔑 CÓDIGO</button><button class="b" id="bCred">📜 CRÉDITOS</button></div>
+      <div class="btns two"><button class="b" id="bTut">🎓 TUTORIAL</button><button class="b" id="bPriv">📄 PRIVACIDADE</button></div>
       <div class="setsec"><h4>ÁUDIO</h4>
         <div class="set"><label>Música <span id="vMus"></span></label><input type="range" id="rMus" min="0" max="100" step="5"></div>
         <div class="set"><label>Efeitos sonoros <span id="vSfx"></span></label><input type="range" id="rSfx" min="0" max="100" step="5"></div>
@@ -2054,6 +2097,7 @@
       <div id="credList" class="credlist"></div>
     </div>
   </div>
+  <div id="tutBox" class="hidden"><span id="tutN">1/10</span><b id="tutTxt"></b><button type="button" class="b" id="tutSair" onclick="tutFim()">PULAR</button></div>
   <div id="results" class="ovl hidden">
     <div class="card small resc">
       <div class="title"><b>FIM DE JOGO</b><small id="resSub">quem derrotou mais venceu</small></div>
@@ -2154,27 +2198,6 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 /* ---------------- lutador ---------------- */
 let game; // declarado adiante
 /* R110: ITENS NO MAPA — esferas temporárias: cura (regenera), ki turbo e velocidade */
-let orbs = [], orbT = 12;
-const ORB = { cura: { c: '#5aff7a', s: '+', n: 'REGENERAÇÃO!', d: 6 }, ki: { c: '#6ad8ff', s: 'K', n: 'KI TURBO!', d: 7 }, vel: { c: '#ffd23a', s: '»', n: 'VELOCIDADE!', d: 7 } };
-function orbTick(dt) { orbT -= dt; if (orbT > 0 || orbs.length >= 2 || !game.fighters || game.ended) return; orbT = 16 + Math.random() * 8;
-  const ks = Object.keys(ORB), k = ks[(Math.random() * ks.length) | 0], pl = PLATFORMS.length && Math.random() < 0.6 ? PLATFORMS[(Math.random() * PLATFORMS.length) | 0] : null;
-  const x = pl ? pl.x + 20 + Math.random() * Math.max(10, pl.w - 40) : 80 + Math.random() * (WW - 160), y = (pl ? pl.y : GROUND) - 18;
-  const m = { t: 'orb', id: uid(), x: Math.round(x), y: Math.round(y), k }; orbs.push({ id: m.id, x: m.x, y: m.y, k, t: 0 }); if (game.mode === 'online') net.send(m); }
-function orbPegar(dt) { for (const o of orbs) o.t += dt; orbs = orbs.filter(o => o.t < 18);
-  for (const f of game.fighters || []) { if (!f.local || f.dead) continue;
-    const o = orbs.find(o => Math.abs(o.x - f.x) < 18 && Math.abs(o.y - (f.y - 20)) < 26); if (!o) continue;
-    orbs = orbs.filter(q => q !== o); darBuff(f, o.k, true); if (game.mode === 'online') net.send({ t: 'orbp', id: o.id, f: f.id, k: o.k }); } }
-function darBuff(f, k, eu) { const d = ORB[k]; if (!d) return; f['b_' + k] = d.d; if (k === 'vel') f.bVel = d.d;
-  if (nearCam(f.x, f.y)) { ring(f.x, f.y - 24, d.c, 8, 40, 0.35); spark(f.x, f.y - 24, 16, d.c, 180, 0.4, 2); if (SFX.zap) SFX.zap(); }
-  popup(f.x, f.y - 66, d.n, d.c, 7); }
-function buffTick(f, dt, local) { for (const k in ORB) { const key = 'b_' + k; if (!(f[key] > 0)) continue; f[key] -= dt;
-    if (local && !f.dead) { if (k === 'cura') f.hp = Math.min(f.maxHp, f.hp + 35 * dt); if (k === 'ki' && !f.infiniteKi) f.ki = Math.min(f.maxKi, f.ki + 22 * dt); }
-    if (Math.random() < 0.25 && nearCam(f.x, f.y)) spark(f.x + rnd(-10, 10), f.y - 6 - Math.random() * 40, 1, ORB[k].c, 40, 0.4, 2); }
-  if (f.bVel > 0) f.bVel -= dt; }
-function drawOrbs(cam) { const t = performance.now() / 1000;
-  for (const o of orbs) { const d = ORB[o.k]; if (!d) continue; const x = Math.round(o.x - cam.x), y = Math.round(o.y - cam.y + Math.sin(t * 3 + o.x) * 3), pisca = o.t > 14 && ((o.t * 6) | 0) % 2;
-    if (pisca) continue; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = hexA(d.c, 0.25 + 0.1 * Math.sin(t * 5)); ctx.beginPath(); ctx.arc(x, y, 11, 0, 7); ctx.fill(); ctx.restore();
-    ctx.fillStyle = d.c; ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill(); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(x - 2, y - 2, 2, 0, 7); ctx.fill(); } }
 /* R121: OBJETOS QUEBRÁVEIS — só estética: quebram com socos, projéteis e lutadores arremessados; voltam depois de um tempo */
 let quebs = [];
 const QUEB_ESTILO = { santuario: ['urna', 'pilar', 'lanterna'], rosa: ['cristal', 'toco', 'pedra'] };
@@ -2203,14 +2226,10 @@ function tickQuebraveis(dt) { if (!quebs.length || !game.fighters) return;
 function drawQuebraveis(cam) { for (const q of quebs) { if (q.br) continue; const x = Math.round(q.x - cam.x), y = Math.round(q.y - cam.y); if (x < -20 || x > VW + 20 || y < -30 || y > VH + 30) continue;
     ctx.save(); if (q.t < 0) ctx.globalAlpha = 1 + q.t / 0.4; const P = (c, a, b, w, h) => { ctx.fillStyle = c; ctx.fillRect(x + a, y + b, w, h); }, im = QUEB_IMG[q.k];
     if (im && im.complete && im.width) ctx.drawImage(im, x - (im.width >> 1), y - im.height + 1);
-    else if (q.k === 'urna') { P('#1a1030', -6, -15, 12, 15); P('#6a5aa0', -5, -14, 10, 13); P('#8a7ac0', -4, -13, 3, 11); P('#f0b030', -5, -11, 10, 2); P('#f0b030', -4, -4, 8, 1); P('#1a1030', -4, -16, 8, 2); P('#4a3a80', -3, -15, 6, 1); }
-    else if (q.k === 'pedra') { P('#1a1030', -7, -10, 14, 10); P('#7a70a0', -6, -9, 12, 9); P('#a098c0', -5, -8, 5, 3); P('#4a4070', -6, -2, 12, 2); P('#3a8a50', -6, -10, 4, 2); }
-    else if (q.k === 'cristal') { P('#5a1a40', -6, -12, 4, 12); P('#5a1a40', -2, -17, 5, 17); P('#5a1a40', 3, -10, 4, 10); P('#ff6aa8', -5, -11, 2, 10); P('#ff6aa8', -1, -16, 3, 15); P('#ff6aa8', 4, -9, 2, 8); P('#ffd0e8', -1, -15, 1, 6); P('#ffd0e8', 4, -8, 1, 3); }
-    else { P('#5a1a30', -7, -11, 14, 11); P('#e0607e', -6, -10, 12, 10); P('#f08aa0', -5, -9, 4, 4); P('#3fa8f0', -7, -13, 14, 3); P('#1a5ac8', -6, -11, 12, 1); }
     ctx.restore(); } }
 let projectiles = []; // bolas de ki e afins em voo
 /* comandos de um lutador num quadro (teclado/toque, bot ou, no futuro, o que o jogador mandar ao servidor) */
-const emptyInput = () => ({ dodge: 0, left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0, kiP: 0, bigP: 0, beam: 0, beamP: 0, charge: 0, chargeP: 0, dashP: 0, face: 0 });
+const emptyInput = () => ({ left: 0, right: 0, down: 0, up: 0, upP: 0, punchP: 0, kiP: 0, bigP: 0, beam: 0, beamP: 0, charge: 0, chargeP: 0, dashP: 0, face: 0 });
 
 const AWAKEN_HOLD = 2.0, AWAKEN_TIME = 25, RESPAWN_INVULN = 4; // invencível 4s ao renascer (no treino: nunca)
 const KAME = { charge: 0.8, total: 2.0, dps: 230 };              // especial do BASE: feixe de energia
@@ -2272,11 +2291,11 @@ function handleKill(m) {
   if (m.k !== m.v && game.me && m.k === game.me.id) contarKill();
   if (m.k !== m.v) {
     const victim = game.byId(m.v);
-    killBadges.push({ k: m.k, name: dispName(String(m.vn || '?')).slice(0, 12), color: victim ? victim.pal_.swatch : '#ffffff', life: 1.9, max: 1.9 });
+    if (false) killBadges.push({ k: m.k, name: dispName(String(m.vn || '?')).slice(0, 12), color: victim ? victim.pal_.swatch : '#ffffff', life: 1.9, max: 1.9 });
     if (game.me && m.k === game.me.id) { tone('square', 660, 990, 0.12, 0.12); tone('square', 990, 1320, 0.16, 0.1); }
   }
-  killfeed.unshift({ k: dispName(m.kn), v: dispName(m.vn), life: 6 });
-  if (killfeed.length > 5) killfeed.pop();
+  killfeed.unshift({ k: dispName(m.kn), v: dispName(m.vn), life: 4 });
+  if (killfeed.length > 3) killfeed.pop();
   const killer = game.byId(m.k);
   if (killer && killer.local && m.k !== m.v) killer.kills++;
   onKillHook(m); // estatísticas da conta (PARTE 3)
@@ -2392,7 +2411,7 @@ class Fighter {
   /* ---------- atualização (apenas lutadores deste computador) ---------- */
   update(dt, inp) {
     this.t += dt; this.stateT -= dt; this.stateAge += dt;
-    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; this.dodgeCd = (this.dodgeCd || 0) - dt; buffTick(this, dt, true); this.guardW = this.guardW || 0; this.guardRT = (this.guardRT || 0) - dt; if (this.state !== 'guard' && this.guardRT <= 0) this.guardW = Math.max(0, this.guardW - 35 * dt); if (this.invisT > 0) this.invisT -= dt; if (this.shieldT > 0) this.shieldT -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
+    this.punchCd -= dt; this.kiCd -= dt; this.dashCd -= dt; this.guardW = this.guardW || 0; this.guardRT = (this.guardRT || 0) - dt; if (this.state !== 'guard' && this.guardRT <= 0) this.guardW = Math.max(0, this.guardW - 35 * dt); if (this.invisT > 0) this.invisT -= dt; if (this.shieldT > 0) this.shieldT -= dt; this.comboT -= dt; this.glideT -= dt; this.dropT -= dt;
     this.flash -= dt; this.invuln -= dt; this.hitsT -= dt; if (this.hitsT <= 0) this.hits = 0;
     this.beamPopT -= dt;
     if (this.beamPopT <= 0 && this.beamDmgAcc > 0) { popup(this.x, this.y - 58, '-' + Math.round(this.beamDmgAcc), '#ffd23a', 6); this.beamDmgAcc = 0; this.beamPopT = 0.3; }
@@ -2498,7 +2517,7 @@ class Fighter {
         this.physics(dt, false, true); return;
       case 'charge': {
         this.vx = approach(this.vx, 0, 12, dt); airHover();
-        this.ki = Math.min(this.maxKi, this.ki + (SONHO() ? 30 : 14) * dt); // carga (mais rápida no modo sonho)
+        this.ki = Math.min(this.maxKi, this.ki + 21 * dt); // carga (R138: 21/s)
         if (this.ki >= this.maxKi) { this.ki = this.maxKi; this.setState('idle'); this.fullMsg(true); this.physics(dt, false); return; }
         if (!this.onGround) { this.setState('idle'); this.physics(dt, false); return; }
         this.chargeSnd -= dt; if (this.chargeSnd <= 0) { if (nearCam(this.x, this.y)) SFX.charge(); this.chargeSnd = 0.14; }
@@ -2529,12 +2548,12 @@ class Fighter {
     else if (!this.jumps) this.jumps = 1; // caiu da plataforma sem pular: conta como o 1º pulo
     if (mx) this.facing = mx; else if (inp.face) this.facing = inp.face;
     if (this.onGround) {
-      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1) * ((this.bVel || 0) > 0 ? 1.4 : 1), 14, dt);
+      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1), 14, dt);
       if (inp.upP && inp.down && this.onPlatform()) { this.dropT = 0.3; this.onGround = false; this.y += 2; }
       else if (inp.upP) { this.vy = -350; this.onGround = false; this.jumps = 1; if (nearCam(this.x, this.y)) SFX.jump(); dust(this.x, this.y, 6); }
       else if (inp.down && mx === 0) { this.setState('guard'); this.vx = 0; }
     } else {
-      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1) * ((this.bVel || 0) > 0 ? 1.4 : 1), 9, dt);
+      this.vx = approach(this.vx, mx * WALK * arqOf(this).spd * (this.awakenT > 0 ? 1.15 : 1), 9, dt);
       // PULO: 1º toque pula, 2º toque (no ar) faz o pulo duplo, 3º toque (segurando) VOA.
       // Voando: sobe enquanto segura, gastando energia. Soltou ou acabou a energia: cai.
       if (inp.upP && this.jumps < 2 && !this.flying) {
@@ -2556,8 +2575,7 @@ class Fighter {
     }
 
     if (this.buf) { if (!inp[this.buf.k]) inp = Object.assign({}, inp, { [this.buf.k]: 1 }); this.buf = null; }
-    if (inp.dodge && this.dodgeCd <= 0) this.startDodge(inp.dodge);
-    else if (inp.punchP && this.punchCd <= 0) this.startPunch();
+    if (inp.punchP && this.punchCd <= 0) this.startPunch();
     else if (inp.bigP) this.useSpecial();
     else if (inp.kiP && this.kiCd <= 0) { if (this.ki >= POWERS.k[pwOf(this, 'k')].cost || this.infiniteKi) this.fireKi(); else popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); }
     else if (this.kit.raio === 'bola' ? inp.beamP : (inp.beam && this.state === 'idle')) this.useRaio();
@@ -2606,7 +2624,7 @@ class Fighter {
   spend(n) { if (this.ki < n) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return false; } if (!this.infiniteKi) this.ki -= n; if ((this._spc || this._rai) && this === game.me && !cine) cineStart(this, this._nm, this._spc ? 2 : 1); else if (this._nm && SONHO() && !this._spc && !this._rai) nomeGolpe(this, this._nm.toUpperCase()); this._nm = null; return true; }
   useSpecial() { this._spc = 1; this._nm = (POWERS.s[pwOf(this, 's')] || {}).name; try { this.useSpecial0(); } finally { this._spc = 0; this._nm = null; } }
   useRaio() { this._rai = 1; this._nm = (POWERS.r[pwOf(this, 'r')] || {}).name; try { this.useRaio0(); } finally { this._nm = null; this._rai = 0; } }
-  quebraGuarda() { if (!this.infiniteKi && this.ki < 15) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return; } if (!this.infiniteKi) this.ki -= 15;
+  quebraGuarda() { if (!this.infiniteKi && this.ki < 22) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return; } if (!this.infiniteKi) this.ki -= 22;
     this.combo = 3; this.comboT = 0; this.qg = 1; this.punchHit = false; this.setState('punch', 0.28); this.hitSet = new Set(); this.punchCd = 0.35;
     ring(this.x + this.facing * 10, this.y - 28, '#ff6a4a', 4, 26, 0.25); if (this === game.me || nearCam(this.x, this.y)) nomeGolpe(this, 'QUEBRA-GUARDA'); if (nearCam(this.x, this.y)) SFX.heavy(); }
   /* ESPECIAL do BASE: feixe de energia (kame) · sem kit próprio: bola grande */
@@ -2684,7 +2702,7 @@ class Fighter {
     this.setState('punch', this.combo === 3 ? 0.28 : 0.2);
     this.hitSet = new Set(); this.punchCd = 0.1; this.qg = 0;
     if (SONHO()) { let alvo = null, dm = 1e9; for (const o of game.fighters) { if (o === this || o.dead || allyOf(o, this.id)) continue; const dx = o.x - this.x, d = Math.abs(dx);
-        if (d < 90 && d < dm && Math.abs(o.y - this.y) < 50 && (sign(dx) === this.facing || d < 20)) { alvo = o; dm = d; } }
+        if (d < 70 && d < dm && Math.abs(o.y - this.y) < 50 && (sign(dx) === this.facing || d < 20)) { alvo = o; dm = d; } }
       if (alvo) { this.facing = sign(alvo.x - this.x) || this.facing; if (dm > 22) this.vx = this.facing * Math.min(340, (dm - 18) * 9); if (!this.onGround) this.vy = Math.min(this.vy, 0) * 0.3; } }
     this.vx = this.facing * (this.combo === 3 ? 150 : 70);
     if (!this.onGround && this.vy < 0) this.vy *= 0.4; // socar no ar não dá impulso para cima
@@ -2746,9 +2764,6 @@ class Fighter {
     ring(this.x, this.y - 30, '#ff6a5a', 8, 44, 0.35); spark(this.x, this.y - 30, 20, '#9fe8ff', 220, 0.4, 2);
     if (nearCam(this.x, this.y)) SFX.heavy(); popup(this.x, this.y - 62, 'DEFESA QUEBRADA!', '#ff6a5a', 7);
     if (this === game.me) { hitstop = 0.14; shake = Math.max(shake, 5); } return true; }
-  startDodge(d) { /* R108: ESQUIVA (toque duplo para o lado): rápida, sem gastar ki, invulnerável */
-    this.dodgeCd = 0.7; this.dashDir = d; this.setState('dash', 0.2); this.invuln = Math.max(this.invuln, 0.3);
-    ring(this.x, this.y - 22, '#ffffff', 5, 24, 0.22); dust(this.x, this.y, 5); if (nearCam(this.x, this.y)) SFX.dash(); }
   startDash(mx) {
     if (!this.infiniteKi) this.ki -= 12; this.dashCd = 0.45;
     this.dashDir = mx !== 0 ? mx : this.facing; this.facing = this.dashDir;
@@ -2838,7 +2853,7 @@ class Fighter {
     this.vx = sign(this.x - src.x) * 170; this.vy = -230; this.onGround = false;
     if (nearCam(this.x, this.y)) SFX.ko();
     shake = Math.max(shake, this === game.me ? 8 : 3);
-    if (SONHO() && (src === game.me || this === game.me)) { slowT = 0.9; koT = 1.3; flashT = Math.max(flashT, 0.12); shake = Math.max(shake, 12); spark(this.x, this.y - 30, 40, '#ffd23a', 380, 0.7, 3); ring(this.x, this.y - 30, '#ffffff', 8, 90, 0.5); }
+    if (SONHO() && (src === game.me || this === game.me)) { slowT = 0.9; avisoCentral('K.O.!', '#ffd23a', 3, { tam: 26 }); flashT = Math.max(flashT, 0.12); shake = Math.max(shake, 12); spark(this.x, this.y - 30, 40, '#ffd23a', 380, 0.7, 3); ring(this.x, this.y - 30, '#ffffff', 8, 90, 0.5); }
     const msg = { t: 'kill', v: this.id, vn: this.name, k: src.id, kn: src.name };
     handleKill(msg); net.send(msg);
   }
@@ -2864,7 +2879,7 @@ class Fighter {
   }
 
   /* ---------- lutador remoto: suaviza a posição recebida ---------- */
-  updateRemote(dt) { buffTick(this, dt, false);
+  updateRemote(dt) {
     const n = this.net; if (!n) return;
     this.t += dt; this.flash -= dt;
     n.x += n.vx * dt; n.y += n.vy * dt;
@@ -3116,6 +3131,11 @@ const PART_SRC = {
     golpe1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA1CAYAAAAK0RhzAAABpElEQVR4Xu2W242DMBBF8Wq7oAFohj5oAGrgE37og2ZMA9Th1bU0aLAARfGwykRzJITimDDXx4+4EELxjfx8YyhgwbRhxv4L55zIbvb7dMFpoSEEd9aGOqRCgceCUZHe+/iiZVmKbdv29mEY9jHlfeu6Fhlr98Q5hkJReNM0eygC4UBZlvFOfSh83/fRam46cWNnoXhABEI4XBSObEoiauwuFBkhS/M87zlSe5iOudbEjRGwwKHPZK9t29iWTkWAdYlBygknZoxskRFedBoKkLEzWxQux9wjBzSfZikUkgIBrDdqp92yqioM+tubiEgwbotvChw+5UDXdW4cR4c7hSPbEogEywUBc38jRSwYzh9cfPTPNo8r+NSUQCxYuh4QMt0ZaQqifV3Xw3/Cq/7vIhIsDTVNU2wjg2kgrKuz0CBnJzyAv1SSV1EUMIEzKP7uMAzBe3/4fPW+9NmcurIeviuQf4dwrxTJB+SV/nd9xA7oT0NkjX0iFkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbZkwbf5zeBQr19MpZAAAAAElFTkSuQmCC", golpe2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAzCAYAAADYfStTAAABp0lEQVR4Xu2W3YmFMBBGzbJd2IA2Yx82oDX4qC/2YTOxAevI8smOjEEvRpPdQeaAXAy5mm9OfjTOuexNfL0pDNBA0lFD0hFryBhza/v9/quK+wN0zpmjNoznbhiQPBANzlq7vnCapmxZlq2967qtprxvWZa3am1SHqwYIAZcVdUWhkAokOf5+kt9KHTbtqvF0FTJDB2F4cEQBKFwUSiy94Qkhj6FIQNkZRzHbfy+LUy7UEvJDBGoOofuyVZd12ubP+UA1h2KExIquiGyQwb4YP0wgAwd2aFQIaaSnkN8OvlQOAoCsJ6onXa/oihQ9MubQ9RA3A5f7Bw+tUDTNKbve4NfCkV27xA10FMQ7OkzogfC+YGLV/toUziDT8E7RA/kz3eE83c6mmpon+d598121v8qUQP5YYZhWNvImB8E6+YoLAjZ2Xbg0yfFlWUZKo8zZH1+13XOWru7P3uv/9+Q8QV1Dnnw7zfibtAIdeUZvBBX+vM+0Q/W/ybqGpKABpKOGpKOGpKOGpKOGpKOGpKOGpKOGpKOGpKOGpKOGpKOGpKOGpLO6wz9ACV0+QM1EHvfAAAAAElFTkSuQmCC", golpe3: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAABuElEQVR4Xu2WzY2DMBCFYZUu0gBphj645JjUwJFc6INmTAPUweqhfdbEcrCRAppk55Mign/wPL/xTznPc/EN/HyDCGBCtPF/HCnL8iN2g1NOikDMPM8l2obCUB4ry/nuO8kS4pzzAtq29ePf7/el/Hq9FufzuajreqmjMIo/Akz16jgICsEzSDAMw/Kcpml5QgRhO7SB0KPEZDmCgPu+f5r1UIQUgP/SnSPErAqBG0gr6QIEkaZpvDvSEbhxtJiXQiiCaRSmFt/xRBsGT8L3vYmuEYq4XC7L+KErTCs4IgMHYYpxIvZeL9EDETldVdWyhXKXQkAUIBc4A40h03BvkoudM0wRt9vNnxHjOPotjykmwW6GfnhiQuR59G42XVG6rjv8oMsl6QiRZ0WMWIrRRayPvclyhIebBGmFcplqcuGHwe99lqwKweDcuUIoIiaIO9Tj8XjqtqsYXFFSv6JAk3i7tm19nXMO1xn/jn5rfVPjbqnf1Dj1YSni7w73cgJS39pan7w0fgpZi/0TMCHaMEe0YY5owxzRhjmiDXNEG+aINswRbZgj2jBHtGGOaMMc0YY5oo2vceQXvg38550PzK8AAAAASUVORK5CYII=", defesa: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAABpElEQVR4Xu2W0Y2EIBRFZbNd2IA2Yx82oDXwqT/2YTPYgHWwuWSfQYIzkwAT83wnMUaCyOUAoqy11RP4eUJIIEG5IUbvgFIq2075+81AYcettSpWhj7lDAm+EpQ6bYxxH13Xtdr3/SjXWh/j7ddt2zabB1X6P4qOI0jXdUdIAmFBXdfuTnVoMMZxdNZzpC1qNBbSD4yACIuLwpLt3BQz+iokGSOLy7IcuUK7mL45rBY1SsCSDz2T3b7vXVk4dQHWNQYtNWwRo2STjPkhwpCAjMZsUthUs8UPDP60DKHQFBBgvVI57cZN00BI0qaUPahv099kfPwpCoZhUNM0KdwpLM2GXGQPmgoCp7YRo0hQ/P9w+XZim9EV/lTORZGg4XpC6HDnpSmL8m3bTmfaq/opZA8ahpzn2ZWR4TAg1mVsEEDqTnsCR8BSV1VVMIV/oPuG1toaY07PV98O303tY3ID7zrgB6Ww7975P39/VO+TtlCnyIHhjmRfo3dFgnJDjHJDjHJDjHJDjHJDjHJDjHJDjHJDjHJDjHJDjHJDjHJDjHLjMUb/AF90HOyNYXMVAAAAAElFTkSuQmCC", derrotado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAAnCAYAAABaBotQAAABiklEQVR4Xu2W3Y2EIBhFZbNd2IDTjH3YgNbAo77Yh81gA9bB5pJc80l0MxGYGSacxBgJCofLj8paW30zP98sB4pg7pQE34lSKngH/H2lgN9ha606K0OfYsiBlwiys8YY1+iyLNW2bXu51nofZ1n38XgEj79KfQ6iwxBo23aXI5AEdV27O+twEIZhcCmHWCZN8ExOikIMkrgoyXRjkSzB/+SYEFOb53n38dPENA1JMWmCBKlI+Mw0u65zZf4UBVi3GKy7kkkSZHpMSHbelwNM8Cw9St5NMvlBL6efD2UpBrAeWc7dtWkaBHFrs4kuKNOTm4dETkXQ970ax1HhTkmmH0p0wVAgGvoNSRJBnF+4ZBpnm8wVcsqGkkTQXy+Q9XdSTk2Ur+t6+Oe8qn+H6IK+3DRNroyJ+mJYd2fy4O7OeQC/aqmuqqqQDM4w14bW2hpjDs9Xbcv3QvoX9PIzDfsdheQz78Wqk+Sg/ySir8FPowjmTkkwd0qCuVMSzJ2SYO6UBHOnJJg7JcHc+QPemxTebKnfXwAAAABJRU5ErkJggg==",
     arremessado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAvCAYAAAClgknJAAABlklEQVR4Xu2V0Y2DMBBE8Sld0AA0Qx80ADX4ky/6oBlogDp8GqRBlg8Ox0ZakPZJKMExzszO2hjnXPFmft4sHqgBaTQBaUQTMMZkH4GfOysYCnLOmaMx/Ocd4sEtBihmnudt0WmainVd93Fr7V4nf25d19n1M7kvMgiCwKZpdvEEJkBZltsn59Bk3/dbSjkushI4Eu8bgXCYwEUTTOcukhP4TzwrzKqP47jrDdNAG+WkkJUAQVV9eM802rbdxsIWAtg3KEaqiaQEWH1WmOKqqtr7eVmW/YhkAkfVp4nUJLLfAxTniwe4ZxIUDrAfOM7TCXNTE/jagF99bs6u6/6cJH4C+H0YBsN5PJ38lkrlawOxhIkQGIldI4YkAzi/cbElzjhKBvgtlUuSAb9fryqKfvfbCcBYeHIlgzdxylUUeOz8WWutm+d5m4Pv4VyMXa0RoytqUsxCFErRZ8K5FsQ/zsCVaL8Qd4jHekkvsieRtImfhBqQRhOQRhOQRhOQRhOQRhOQRhOQRhOQRhOQRhOQRhOQ5vUJ/AKxCF1vP3hvyQAAAABJRU5ErkJggg==", lancar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA1CAYAAAAHz2g0AAABhklEQVR4Xu2W0Y2DMBBE7dN1QQPQDH3wwyfUQAX0QTOmAepwNFYWOT4nOVhHG6R9UkRsEpjZ8YKt995cmZ8riwdqQBpNQBpNQBpNQJqvScBae2pL8PupCqaCvPc2N8e9f3EDJNI5F7Qty2K2bdvnp2nian7AltzMQTwEtm27iydgAlRVFY74TV3X7ASK9UBOPESSGRJORkpRxMAz8Sld14UpmJjn+c/5M41cxEAM1nxuTEnABNIgMzHom6Mm2Aao+jFpD9AYoPJIIDUKmqY5bIJtICa3LAgSTL2QA49amDDG/Lu5WY/RuPqoak5cXH0wDMM7ce/OP1A0AQnYBsZxDB96uqTk1vor8F468m5iG8C6jQXBTE40lg7m13U9ted5CjnmHI0xvu97CPP36nnnHN7KYYwjxvSdc6/0vyzh8cUgngykoj8hfF9qRatxT4CuSQmUvEd6raKbOQnYTSyNGpBGE5BGE5BGE5BGE5BGE5BGE5BGE5BGE5BGE5BGE5BGE5Dm8gncAGGWJwYx3TxoAAAAAElFTkSuQmCC", arremessar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAtCAYAAAAeA21aAAABxUlEQVR4Xu2XwY3CMBBF4xVdpIHQDH3kwjGpIUe40AfNJA1Qh1c/2h9NrIAQjjyzYp6EAMtA5s23Y0KMsfpmfr65eOACPAFfzr9NQAhhl937YCUAaUExxrA1huvdq3igLoDFjOM4X9D9fq8ej8cyPgzD0iM593g87tK7oHkOQEEo8HQ6LcUTSAB1Xc/PnENJfd/PKcm1oJaAreKlCBQOCXhQAtOxJyoJeFU8O8yu3263pd40DVgGuSlQSwBBVyV8zzS0bTuPpUsAYN+AzBwJxRPA7rPDsri0eMAEbHWfEnKSoHoOkPFOoQwWDrAfcJx3h6Zp0MSPN8OiAmT35eYmkVEHXdeFy+US8EwJTM8eFBWQC0TkfkdK0U1Qnu7O5/NmCtINL0UuiT0onoB0veJAk94JGH2MT9O0OvM/m/8pxQVIrtfrLARFEax1Fs7XW+Ts/CtwFNZ4VFWFzuIePv/+MAxxHMfV+2fXlX425/qzPpzzw3//QVZFQsI73ynFvTP/1ZziByFrqO4BFnABFrqgiQvQtG8BF2ChC5q4AE37FnABFrqgiQvQtG8BF2ChC5q4AE37FnABFrqgiQvQtG8BF2ChC5r8AmpMQX3SX5hPAAAAAElFTkSuQmCC",
     kame1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABpklEQVR4Xu2W3amEMBCFzWW7sAFtxj5sQGvwUV/sw2ZiA9aRywmMjEGXzQ/MLswHImaje86cSdQ456pf5u+XxQM1II0mUAJjTPJO8iohICQU5Jwzd2O4L0c8KGqAxFhr/cO3bauO4zjHp2k6vfK5bdsm19GUeg9AEAR2XXeKJ2AC1HXtzzSHTI7j6FNKcVEkgTvx3AiEwwQOMkHp5JKdwDvxVGGq+rqup94wDbRRSgpFEiBQVQ5dUxp93/uxsIUA1g2KEWsiKwGqPlWYiwvFA0rgrvpkIjaJYi8y3h4hZIaEA6wHGqfdqWkaFDRqMScb4NXni5PDWwUMw2DmeTY4kwlKL5VkA7nASO4zQJYB7N84eDXvFvETvKVSyTIQ9ivMhDsRtQ7G932/fPM8zY8h2UAoflkWP0aJhMLR93fmQOzOcwGfErlHVVWoLPZw/6xpmpy19nL99B/hvbFaom94J4T/BhOfiOHGP5kfzsl6kX0DyWvgW1AD0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0vwDtjnhI4FlPXkAAAAASUVORK5CYII=", kame2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABpklEQVR4Xu2W3amEMBCFzWW7sAFtxj5sQGvwUV/sw2ZiA9aRywmMjEGXzQ/MLswHImaje86cSdQ456pf5u+XxQM1II0mUAJjTPJO8iohICQU5Jwzd2O4L0c8KGqAxFhr/cO3bauO4zjHp2k6vfK5bdsm19GUeg9AEAR2XXeKJ2AC1HXtzzSHTI7j6FNKcVEkgTvx3AiEwwQOMkHp5JKdwDvxVGGq+rqup94wDbRRSgpFEiBQVQ5dUxp93/uxsIUA1g2KEWsiKwGqPlWYiwvFA0rgrvpkIjaJYi8y3h4hZIaEA6wHGqfdqWkaFDRqMScb4NXni5PDWwUMw2DmeTY4kwlKL5VkA7nASO4zQJYB7N84eDXvFvETvKVSyTIQ9ivMhDsRtQ7G932/fPM8zY8h2UAoflkWP0aJhMLR93fmQOzOcwGfErlHVVWoLPZw/6xpmpy19nL99B/hvbFaom94J4T/BhOfiOHGP5kfzsl6kX0DyWvgW1AD0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0vwDtjnhI4FlPXkAAAAASUVORK5CYII=", kame3: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABpklEQVR4Xu2W3amEMBCFzWW7sAFtxj5sQGvwUV/sw2ZiA9aRywmMjEGXzQ/MLswHImaje86cSdQ456pf5u+XxQM1II0mUAJjTPJO8iohICQU5Jwzd2O4L0c8KGqAxFhr/cO3bauO4zjHp2k6vfK5bdsm19GUeg9AEAR2XXeKJ2AC1HXtzzSHTI7j6FNKcVEkgTvx3AiEwwQOMkHp5JKdwDvxVGGq+rqup94wDbRRSgpFEiBQVQ5dUxp93/uxsIUA1g2KEWsiKwGqPlWYiwvFA0rgrvpkIjaJYi8y3h4hZIaEA6wHGqfdqWkaFDRqMScb4NXni5PDWwUMw2DmeTY4kwlKL5VkA7nASO4zQJYB7N84eDXvFvETvKVSyTIQ9ivMhDsRtQ7G932/fPM8zY8h2UAoflkWP0aJhMLR93fmQOzOcwGfErlHVVWoLPZw/6xpmpy19nL99B/hvbFaom94J4T/BhOfiOHGP5kfzsl6kX0DyWvgW1AD0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0mgC0vwDtjnhI4FlPXkAAAAASUVORK5CYII=", kame4: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAABoElEQVR4Xu2W3YmFMBBGzbJd2IA2Yx82oDX4qC/2YTOxAevI8gVGxqAXwckic+eAiLm5mi8nfy6EUHwDP98QElhQbZhRbbzWqHNOdDv4/S9zacNDCO6sDO2RDgmyB6VGe+/jB5dlKbZt28uHYdj7mtet61rUgct5YEDDEaRpmj0kgbCgLMt4pzrUGX3fR+tSabMZPQvJAyMgwuKisGQ7B1mMfgpJxsjiPM97rtQuhq+U1WxGCVji0DPZbds2lqVDF2Beo9MkwoobJZtkjIdIQwIyemaTwkqYzbqP8mGZQqEpIMB8pXJajauqgozHi5JoUG6TLzIcPkRB13VuHEeHO4Wl0SCJaNCnIPDTd1whHhT7Hy5u52wxuoIPZUnEg6bzCaHTlZeGLMrXdT2caa/qP0U0aBpymqZYRobTgJiXZ50AJFbaAzgC5riKooAp7IHx/cMwBO/94fnqu+l/Jdon8pJPDea/IeydRvMOulP/Th3xA8NbEZ2jb8aCasOMasOMasOMasOMasOMasOMasOMasOMasOMasOMasOMasOMauMP6goc7A0x6EgAAAAASUVORK5CYII=", kame5: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAABoElEQVR4Xu2W3YmFMBBGzbJd2IA2Yx82oDX4qC/2YTOxAevI8gVGxqAXwckic+eAiLm5mi8nfy6EUHwDP98QElhQbZhRbbzWqHNOdDv4/S9zacNDCO6sDO2RDgmyB6VGe+/jB5dlKbZt28uHYdj7mtet61rUgct5YEDDEaRpmj0kgbCgLMt4pzrUGX3fR+tSabMZPQvJAyMgwuKisGQ7B1mMfgpJxsjiPM97rtQuhq+U1WxGCVji0DPZbds2lqVDF2Beo9MkwoobJZtkjIdIQwIyemaTwkqYzbqP8mGZQqEpIMB8pXJajauqgozHi5JoUG6TLzIcPkRB13VuHEeHO4Wl0SCJaNCnIPDTd1whHhT7Hy5u52wxuoIPZUnEg6bzCaHTlZeGLMrXdT2caa/qP0U0aBpymqZYRobTgJiXZ50AJFbaAzgC5riKooAp7IHx/cMwBO/94fnqu+l/Jdon8pJPDea/IeydRvMOulP/Th3xA8NbEZ2jb8aCasOMasOMasOMasOMasOMasOMasOMasOMasOMasOMasOMasOMauMP6goc7A0x6EgAAAAASUVORK5CYII=" },
+  hair11: { parado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABSElEQVR4Xu2VMW7CMBSGbcQR2BhQx8xM7RU69ByBKluhUqUO3QoTFpBzdOgJkGBiztil3biD0bPqNEF0QHb4Fen/pAx5ieL/5ctztLVWtZlOm8MLbAANDaBpvYFu6Buc3I1rj5jv1rV9+el2pM+tMduuQpd2BDcgTIc/qrf8cMGLoiiD5Xmu5sa4+uHxoWzkfd+PEj7aNirhsyxTckhoT5qmriGp+wZjo0P/xFprF94YU77lt87ASvhTkiRx94iBWJ9QI0MszVRNeMRGbBPRDAgSvDoHvomqDanJfdbas8N9KVGGuIob1tWzK736C7/nvrbYfl+a81+CG5Bt0u809mWj1f3N32KfX6p23gDBnxCaRob4mrABNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQHAHql2U0cuMQLgAAAABJRU5ErkJggg==", frente: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAArCAYAAADMr156AAABUUlEQVR4Xu2WMU7DMBhG7YojsDGgjpk7wRUYOEcAZaNFQmJgg05YlJyjAydAKhNzRhbYegej38QhRgZlaOIM70kd4kaq/fX7X6KttQqUmhDCNwRBECE0gkbQiCiMRs1ePJ9+mR+fBz+wfH0KXmYuj850bAf3m1VvG0sShLCYfar9x7ULoKqq5oBlWaqlMW59e3HaBHL3dtBbCEnfIySEoiiUfOTwnjzPXTCy7oMaAp3iFVtr7UIwxjT/+u3k0EoIv8myzN0jjehzNEYjSwml3QyPtGOIZiRthCABtD3hw2i3Q9bkPmttVKK7IJks2zgprq7c0o3/or72aw+bj12c90+SBCGPR/9ksNcvWp1Mfzb4/K6C64FIMhpjZDSyTA1B1BAEQYTQCBpBI6IwGowGo8Fo/AeOwBE4AkfgiA4gS2SJLJElsuwAskSWyBJZIssOfAFZ7WUc66yTKQAAAABJRU5ErkJggg==", tras: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAArCAYAAADMr156AAABUUlEQVR4Xu2WMU7DMBhG7YojsDGgjpk7wRUYOEcAZaNFQmJgg05YlJyjAydAKhNzRhbYegej38QhRgZlaOIM70kd4kaq/fX7X6KttQqUmhDCNwRBECE0gkbQiCiMRs1ePJ9+mR+fBz+wfH0KXmYuj850bAf3m1VvG0sShLCYfar9x7ULoKqq5oBlWaqlMW59e3HaBHL3dtBbCEnfIySEoiiUfOTwnjzPXTCy7oMaAp3iFVtr7UIwxjT/+u3k0EoIv8myzN0jjehzNEYjSwml3QyPtGOIZiRthCABtD3hw2i3Q9bkPmttVKK7IJks2zgprq7c0o3/or72aw+bj12c90+SBCGPR/9ksNcvWp1Mfzb4/K6C64FIMhpjZDSyTA1B1BAEQYTQCBpBI6IwGowGo8Fo/AeOwBE4AkfgiA4gS2SJLJElsuwAskSWyBJZIssOfAFZ7WUc66yTKQAAAABJRU5ErkJggg==", pulo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAuCAYAAABqK0pRAAABOklEQVR4Xu2VPQ6CQBBGd4lHsLMwltRWegULz4EaOn8SEws7pXIjcg4LT2CClTWljXbeYc1sXASDCQkLTsi8hIKBsPvxmIFLKVkdsOoQAqAg2CAj2KiNkYbpNzvrj1OP9C6H1Hyf9kY8a81t6BfaivEgwLz7YM39UQWIoijeYBAEzBNC1Z+TYRxoc20VClHa+IUQrusyOGDzGsdxVDCo66Cm4Kb/7JxzFUIIEb/1tdWWEOIb27bVPWCk6KdVSbNDqKQZDdgxZaY0IwAESPaJDpO0AzW4T0qZOQTyUkqzJ1FN7S9UaaUvvM91bRfe8+73J8aDwHjVk0kuz5wNOp/FTzeWOjeI8U/rX1TS7FVAQbBBRrBBRrBBRrBBRrBBRrBBRrBBRrBBRrBBRrBBRrBBRrBBRrBBRrBRGyMvrk5lInWBi6AAAAAASUVORK5CYII=", voo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAArCAYAAADMr156AAABUUlEQVR4Xu2WMU7DMBhG7YojsDGgjpk7wRUYOEcAZaNFQmJgg05YlJyjAydAKhNzRhbYegej38QhRgZlaOIM70kd4kaq/fX7X6KttQqUmhDCNwRBECE0gkbQiCiMRs1ePJ9+mR+fBz+wfH0KXmYuj850bAf3m1VvG0sShLCYfar9x7ULoKqq5oBlWaqlMW59e3HaBHL3dtBbCEnfIySEoiiUfOTwnjzPXTCy7oMaAp3iFVtr7UIwxjT/+u3k0EoIv8myzN0jjehzNEYjSwml3QyPtGOIZiRthCABtD3hw2i3Q9bkPmttVKK7IJks2zgprq7c0o3/or72aw+bj12c90+SBCGPR/9ksNcvWp1Mfzb4/K6C64FIMhpjZDSyTA1B1BAEQYTQCBpBI6IwGowGo8Fo/AeOwBE4AkfgiA4gS2SJLJElsuwAskSWyBJZIssOfAFZ7WUc66yTKQAAAABJRU5ErkJggg==",
+    soco: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA1CAYAAAAK0RhzAAABRklEQVR4Xu2WMW7CMBSGbcQRujGgjpk7tVdg6DlCq2xApUoM3QpTLULOwcAJKsHEnJGlbL2Dq2fhNKlgwhb9o/+TMvjFiv3rc16irbWqjXTaGEpgMDRoDI3WGuuGNDF+eGo8br5dNr4lo/uhPrXebJOH3IYjaDBhcndQN4uVC1SWZbXhoijU3BhX/35+rAK+73rBQ0Vp9xIqyzIll4TxpGnqgkrdB4+JDvnnobV2oYwxlZW3Tt9KqL8kSeLmiLEYRzF685CQdXMesRfTXBRjggSqv2c+XN2e1GSetfZkU7mE4M2jjmsS+YsrTf2N49jXPjZfl+z/LEGDSTv3nc++fmo1uP1deL1XjXFkgh7F/0T05nEtGAwNGkODxtCgMTRoDA0aQ4PG0KAxNGgMDRpDg8bQoDE0aAwNGkODxtCgMTRoDA0aQ+MHWjxlMIZ+No8AAAAASUVORK5CYII=", kiball: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA1CAYAAAAK0RhzAAABRklEQVR4Xu2WMW7CMBSGbcQRujGgjpk7tVdg6DlCq2xApUoM3QpTLULOwcAJKsHEnJGlbL2Dq2fhNKlgwhb9o/+TMvjFiv3rc16irbWqjXTaGEpgMDRoDI3WGuuGNDF+eGo8br5dNr4lo/uhPrXebJOH3IYjaDBhcndQN4uVC1SWZbXhoijU3BhX/35+rAK+73rBQ0Vp9xIqyzIll4TxpGnqgkrdB4+JDvnnobV2oYwxlZW3Tt9KqL8kSeLmiLEYRzF685CQdXMesRfTXBRjggSqv2c+XN2e1GSetfZkU7mE4M2jjmsS+YsrTf2N49jXPjZfl+z/LEGDSTv3nc++fmo1uP1deL1XjXFkgh7F/0T05nEtGAwNGkODxtCgMTRoDA0aQ4PG0KAxNGgMDRpDg8bQoDE0aAwNGkODxtCgMTRoDA0aQ+MHWjxlMIZ+No8AAAAASUVORK5CYII=", carga: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABSElEQVR4Xu2VMW7CMBSGbcQR2BhQx8xM7RU69ByBKluhUqUO3QoTFpBzdOgJkGBiztil3biD0bPqNEF0QHb4Fen/pAx5ieL/5ctztLVWtZlOm8MLbAANDaBpvYFu6Buc3I1rj5jv1rV9+el2pM+tMduuQpd2BDcgTIc/qrf8cMGLoiiD5Xmu5sa4+uHxoWzkfd+PEj7aNirhsyxTckhoT5qmriGp+wZjo0P/xFprF94YU77lt87ASvhTkiRx94iBWJ9QI0MszVRNeMRGbBPRDAgSvDoHvomqDanJfdbas8N9KVGGuIob1tWzK736C7/nvrbYfl+a81+CG5Bt0u809mWj1f3N32KfX6p23gDBnxCaRob4mrABNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQHAHql2U0cuMQLgAAAABJRU5ErkJggg==", carga2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABSElEQVR4Xu2VMW7CMBSGbcQR2BhQx8xM7RU69ByBKluhUqUO3QoTFpBzdOgJkGBiztil3biD0bPqNEF0QHb4Fen/pAx5ieL/5ctztLVWtZlOm8MLbAANDaBpvYFu6Buc3I1rj5jv1rV9+el2pM+tMduuQpd2BDcgTIc/qrf8cMGLoiiD5Xmu5sa4+uHxoWzkfd+PEj7aNirhsyxTckhoT5qmriGp+wZjo0P/xFprF94YU77lt87ASvhTkiRx94iBWJ9QI0MszVRNeMRGbBPRDAgSvDoHvomqDanJfdbas8N9KVGGuIob1tWzK736C7/nvrbYfl+a81+CG5Bt0u809mWj1f3N32KfX6p23gDBnxCaRob4mrABNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQHAHql2U0cuMQLgAAAABJRU5ErkJggg==", dano: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAA0CAYAAAD19ArKAAABQUlEQVR4Xu2VMW7CMBSGbdQjdGNAjJmZyhU6cI4AylZaCYmhW2HCAnIOBk5QiU6dM3aBrXdw9SycJggGZOtHkf5PypAXJ/79yc/R1lrVRFpNDC0wOBoaR9NY4w8hpib9Ue31xdemdra+PA31pe/P9+uQaR1BwYXX3lE9rrYucFEUZaA8z9XCGFf/HQ/KBXx8t4NDRzkOJXSWZUouCetJ09QtROp+YTHRIX9OrbULbYwprb63OlZCn5MkiRsjxmNslejNKYuomveI/ZjmoxgXJHB1n/vwVftSk3HW2otNewvBzVnFNeH6zZVm/sHp3teW+8Mt+a4SFFyOO39y2OmnVs/d/4l2P6p2H5mgrXJPojcnCgZHQ+NoaBwNjaOhcTQ0jobG0dA4GhpHQ+NoaBwNjaOhcTQ0jobG0dA4GhpH01jjf3b8ZS7ysv9XAAAAAElFTkSuQmCC",
+    golpe1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA1CAYAAAAK0RhzAAABRklEQVR4Xu2WMW7CMBSGbcQRujGgjpk7tVdg6DlCq2xApUoM3QpTLULOwcAJKsHEnJGlbL2Dq2fhNKlgwhb9o/+TMvjFiv3rc16irbWqjXTaGEpgMDRoDI3WGuuGNDF+eGo8br5dNr4lo/uhPrXebJOH3IYjaDBhcndQN4uVC1SWZbXhoijU3BhX/35+rAK+73rBQ0Vp9xIqyzIll4TxpGnqgkrdB4+JDvnnobV2oYwxlZW3Tt9KqL8kSeLmiLEYRzF685CQdXMesRfTXBRjggSqv2c+XN2e1GSetfZkU7mE4M2jjmsS+YsrTf2N49jXPjZfl+z/LEGDSTv3nc++fmo1uP1deL1XjXFkgh7F/0T05nEtGAwNGkODxtCgMTRoDA0aQ4PG0KAxNGgMDRpDg8bQoDE0aAwNGkODxtCgMTRoDA0aQ+MHWjxlMIZ+No8AAAAASUVORK5CYII=", golpe2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAzCAYAAADYfStTAAABRUlEQVR4Xu2WvU7DMBSF7aqP0I0BMWbuVF6BgecIRdn6IyExsEEnLNo8BwNPUKmdOmfsAlvfwdW1cEhQGSrdhKPofFIG31iJj774OtZ7b7pEr0thBAZCh4bQoSF0+toLnF6Pa49cbFe1g24yurOn3vmyWaosRT2QMBt+mcHbewhSFEW50DzPzcK5UD/c35bBnncXKmEaO4ckTJZlRi4JEUnTNASUegysjdX+9bHWhjDOudLCU+/SS5jfJEkS5oghrU+ulS4n4aqmImJL21RjhgQJUt1HMVTVltRknvf+ZLM4l0aaQpWw+ZfzUHqMN77Hsfa6+Tx33X+iHkjacuxk/mFtzc3Vz8s/9qY2bgD1T+6/aaUptAkDoUND6NAQOjSEDg2hQ0Po0BA6NIQODaFDQ+jQEDo0hA4NoUND6NAQOjSETucMHQHJn2Us5z1XsQAAAABJRU5ErkJggg==", golpe3: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAABSElEQVR4Xu2WvU7DMBSFbcTOQLZOjJmZQOIJGNh5gwDKxM/GxkC7WS15g+4MvAKdmDMihm7wChhdC0dtiBDXatBRdD4pi+XIPvnuvYr13pshsDWEEAKDoEEjaAzGyLb2y14fnne+Mlk8rM3xq4Mzu7px/DzTHqVCHUS42V82h2TTxxCgLEtTFEWznud5WH+/OLH3LyPVpVJIChKREO0AQlVVIZiQOefbdvogOYiEqOv6x50kxO3nWyirGHTinB+b2VqpbZqkZv8thHNu03f8E2oj0tSxbCJiQZAekSf77o/2vj6x6p/GxdJ8zLsn1yqxrASx5L3vtbTURoTd045R+vRqzPFek8XvXFp7dxQm1380u94IKEnNjgiDoEEjaNAIGjSCBo2gQSNo0AgaNIIGjaBBI2jQCBo0ggaNoEEjaNAIGjSCxmCMfAFe3l3jWlUObgAAAABJRU5ErkJggg==", defesa: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAABQUlEQVR4Xu2WMW7CQBBFdxFHSEcRUbpOlVyBIucwIHckkSJRpAtUWQE+BwUnQIKK2mWapMsdNpoV69gRVGic6Ps/icKLBX48M2vrvTdtoNMGSYGiaLAoGq0p2tUq93A3qn30fL+q7WOT26E99d2z3VLlktREhcebT3O1WAfBoihKgTzPzdy5sP41vi+FXw89FUn17UUksywz8hK5SJqmQVzW4w+hjdV6MrLWBknnXFntpXPtRfI3SZKEc6So1q3b6DAS6WrZiNTVLqteVBDB6v80ylbrypqc570/OaQuRXUYVQlDZ/kUlqbxjeNxXHvbfVzqcxY1Udk+4mT1z1trBv2fi9i8m9pxA6jduv+NRofRX0JRNFgUDRZFg0XRYFE0WBQNFkWDRdFgUTRYFA0WRYNF0WBRNFgUDRZFg0XRaE3RbwHQZSrO8pw/AAAAAElFTkSuQmCC", derrotado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAAnCAYAAABaBotQAAABLklEQVR4Xu2WPQ6CQBBGd41HsLMwltRWegULz4EaOn8SEws7pXKjcg4LT2CilTWljXbeYc1sXASDDWHQIfMSCoYN7MdbZpFaa1FmKmUOB3BA6rBB6pTeYBXL0LgzSNzaP+8S+9Go3Zdpz16dtrlOCS0gMGndRW2zN8HCMIwmHgSB8JUy9cewFwVdXuq5hkPfJiCc53kCDghlcV3XBIa6fQFYSKw/GSmlCaeUiiwtKg0N4T5xHMeMAYN5L9FCmwyEjZu0gE0sk+gGAQgW/w5tyLhNqME4rXVq88kKapOJY5rJdmpKc3vhdW5r69Mta46voAWEbcB2Sj07StFtvidxuIrEOSJoS/RfKLTJ/AIOSB02SB02SB02SB02SB02SB02SB02SB02SB02SB02SJ0nheBlFGa7KPQAAAAASUVORK5CYII=",
+    arremessado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAvCAYAAAClgknJAAABPklEQVR4Xu2VPW7CQBCFdxFHoKOIKF1TJVegyDlMIneBSJFSpAtUWUF8DoqcAAkqapdpko47LJpV1rERadh1HpbeJ7nw+O+NP89aW2tVm+m0ObzABtDQAJrWG+iGvMHJzV3t8vn2vbYmP1yP9an7zzbLkMfWCGpAmA6/VW+xcsGLoihvnue5mhvj6vv727KR110/Wvgoy6iEz7JMySahPWmauoak7htsAh3yJ9Zau/DGmPItv3SurIQ/JkkSd44YiPkJRR9iaaZqwiM2mjARxYAgwatz4Juo2pCanGetPTnc5xA8xFXcsC4fXenZH/jZ97W3zdc5Of8kqAFZJv1KY5/WWo0Gvw/6+FS1/YYI+oQugehD/N+wATQ0gIYG0NAAGhpAQwNoaAANDaChATQ0gIYG0NAAGhpAQwNoaADNAfK0ZSS2AuTrAAAAAElFTkSuQmCC", lancar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA1CAYAAAAHz2g0AAABRElEQVR4Xu2WMW7CQBBFdxFHoEuBUrqmSq6QIudwiNwFIiGlSBeoWAV8jhQ5ARJU1C7TQMcdFs2KdWxECsSQL0v/SS48WN4/PM9qrffeNJlWk8MLbAANDaChATQ0gIYG0LQ1Agzu+7XXTFbz2gHr5e7JnlpnvJxdvLxKA8KwtzWdz68QvCiKMlie52biXKjvnh/LRj7WNxeHVz0LSfgsy4xcEjqSpmloSOqxQU2sxnHaWhvCO+fKf/m91fUS/pgkScIzYkDjE7raLiTNVE1ExIamCVUDggSvzkFsompDavKc9/7kcJ+D2hBXCcM6ew2lt/jD4T7WpsvNOTn/RKUB2SbjTuNHC2sebn8X/P4xtXtlVD4hJFcb4v+CDaChATQ0gIYG0NAAGhpAQwNoaAANDaChATQ0gIYG0NAAGhpAQwNoGm9gDzc6ZTAEFOsTAAAAAElFTkSuQmCC", arremessar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAtCAYAAAAeA21aAAABXklEQVR4Xu2WPU7DQBCFdyOOQEeBKF1TwRUoOIcBueNHQqKgg1SsEnyOFDkBUqioXdJAxx0WzYo1NgpVYr0n+X2SC28sed8349n4GKMbM5MxhzckQB0wctQBI28At4MQcHV83nvt9PW5dxZfHp35dft6XM23vl2IAOP68NPtzhYpeNM0bbC6rt00hLT+dXHainh429t6eOgxaOGrqnJ2WehMWZZJiK1nQUPiEf8EvfcpfAihrfL9ZD9a+L8URZGesQ4Y4hOgGYImo9sJGeuGITsB2gGGBe/OgSyh2w22Zs/FGNcOx02ADcEuadjNb9LSXf7h5z6vPa0+Nsn5LxABdszlSR9vX7w7Ofjd4PLd9e4HBvIJMEEzBFFIAMo8CxLAUgkUEoAyz4IEsFQChQSgzLMgASyVQCEBKPMsSABLJVBIAMo8CxLAUgkUEoAyz4IEsFQChQSgzLMgASyVQPENOANlIJrx1hMAAAAASUVORK5CYII=",
+    kame1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABSElEQVR4Xu2VMW7CMBSGbcQR2BhQx8xM7RU69ByBKluhUqUO3QoTFpBzdOgJkGBiztil3biD0bPqNEF0QHb4Fen/pAx5ieL/5ctztLVWtZlOm8MLbAANDaBpvYFu6Buc3I1rj5jv1rV9+el2pM+tMduuQpd2BDcgTIc/qrf8cMGLoiiD5Xmu5sa4+uHxoWzkfd+PEj7aNirhsyxTckhoT5qmriGp+wZjo0P/xFprF94YU77lt87ASvhTkiRx94iBWJ9QI0MszVRNeMRGbBPRDAgSvDoHvomqDanJfdbas8N9KVGGuIob1tWzK736C7/nvrbYfl+a81+CG5Bt0u809mWj1f3N32KfX6p23gDBnxCaRob4mrABNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQHAHql2U0cuMQLgAAAABJRU5ErkJggg==", kame2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABSElEQVR4Xu2VMW7CMBSGbcQR2BhQx8xM7RU69ByBKluhUqUO3QoTFpBzdOgJkGBiztil3biD0bPqNEF0QHb4Fen/pAx5ieL/5ctztLVWtZlOm8MLbAANDaBpvYFu6Buc3I1rj5jv1rV9+el2pM+tMduuQpd2BDcgTIc/qrf8cMGLoiiD5Xmu5sa4+uHxoWzkfd+PEj7aNirhsyxTckhoT5qmriGp+wZjo0P/xFprF94YU77lt87ASvhTkiRx94iBWJ9QI0MszVRNeMRGbBPRDAgSvDoHvomqDanJfdbas8N9KVGGuIob1tWzK736C7/nvrbYfl+a81+CG5Bt0u809mWj1f3N32KfX6p23gDBnxCaRob4mrABNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQHAHql2U0cuMQLgAAAABJRU5ErkJggg==", kame3: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAABSElEQVR4Xu2VMW7CMBSGbcQR2BhQx8xM7RU69ByBKluhUqUO3QoTFpBzdOgJkGBiztil3biD0bPqNEF0QHb4Fen/pAx5ieL/5ctztLVWtZlOm8MLbAANDaBpvYFu6Buc3I1rj5jv1rV9+el2pM+tMduuQpd2BDcgTIc/qrf8cMGLoiiD5Xmu5sa4+uHxoWzkfd+PEj7aNirhsyxTckhoT5qmriGp+wZjo0P/xFprF94YU77lt87ASvhTkiRx94iBWJ9QI0MszVRNeMRGbBPRDAgSvDoHvomqDanJfdbas8N9KVGGuIob1tWzK736C7/nvrbYfl+a81+CG5Bt0u809mWj1f3N32KfX6p23gDBnxCaRob4mrABNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQ0AAaGkBDA2hoAA0NoKEBNDSAhgbQHAHql2U0cuMQLgAAAABJRU5ErkJggg==", kame4: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAABQklEQVR4Xu2WMU7DMBSG7apHYGNAjJk7wRUYOEcAZStFQmJgazNhteQcHXoCpHbqnJGl3biD0bNwmlRhs63q7/9JGfJixfnzOc/R1lp1DgzOIaTAoGjQKBo0isYwdKDn28fOLcvNZ2ejHt886L45Z+tF6EfpEDyoMBnt1cV86QLWdd1MWFWVKo1x9Z+n+ybwdHsZNWS0fVRCFkWh5JBwnjzPXXCp+xeRCh36F1Br7UIaYxpr74MrKyGPybLMjRGjsZdukq4rodtmPWI3ldloRgUJ2P5Ofdi2XanJOGttb5MKRZRm1MY1ncWLK735C3/nvvax3oXK8y/Bg8r24Turff3S6u76MPnqW3XOExJ86Z4qSZrRKcCgaNAoGjSKBo2iQaNo0CgaNIoGjaJBo2jQKBo0igaNokGjaNAoGjSKBo2i8QvDLmUqw/rB5AAAAABJRU5ErkJggg==", kame5: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAABQklEQVR4Xu2WMU7DMBSG7apHYGNAjJk7wRUYOEcAZStFQmJgazNhteQcHXoCpHbqnJGl3biD0bNwmlRhs63q7/9JGfJixfnzOc/R1lp1DgzOIaTAoGjQKBo0isYwdKDn28fOLcvNZ2ejHt886L45Z+tF6EfpEDyoMBnt1cV86QLWdd1MWFWVKo1x9Z+n+ybwdHsZNWS0fVRCFkWh5JBwnjzPXXCp+xeRCh36F1Br7UIaYxpr74MrKyGPybLMjRGjsZdukq4rodtmPWI3ldloRgUJ2P5Ofdi2XanJOGttb5MKRZRm1MY1ncWLK735C3/nvvax3oXK8y/Bg8r24Turff3S6u76MPnqW3XOExJ86Z4qSZrRKcCgaNAoGjSKBo2iQaNo0CgaNIoGjaJBo2jQKBo0igaNokGjaNAoGjSKBo2i8QvDLmUqw/rB5AAAAABJRU5ErkJggg==" },
   scout: { parado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkUlEQVR4Xu3XQQqAMAwFUePxe8+e40sWvYARBmEeuLQkTjdWkuvP7j8P31yAZgGaBWgWoFmAZgGaBWgWoKEFqir9TD4CtsBaK20yPPZH1sNPBz+wAnvvvkKVpCbL9AGT91859346fEMW+BJ2hb7iAjQL0CxAswDNAjQL0CxAswDNAjQL0CxAswDNAjQL0CxAewDH9B5ORL5OLQAAAABJRU5ErkJggg==", frente: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAArCAYAAADMr156AAAAaUlEQVR4Xu3UwQkAIAwEwWj/PceHr4DIFTBbQsjN6u5S1XaEm0M4xMxH+Agf8cw0TMM0TOMXIxjBCEYwIgiWsIQlLGEZBEtYwhKWsAyCJSxhCUtYBsESlrCEJSyDYAlLWMISlkGwhOXsAKw1A1NP368WAAAAAElFTkSuQmCC", tras: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAArCAYAAADMr156AAAAaUlEQVR4Xu3UwQkAIAwEwWj/PceHr4DIFTBbQsjN6u5S1XaEm0M4xMxH+Agf8cw0TMM0TOMXIxjBCEYwIgiWsIQlLGEZBEtYwhKWsAyCJSxhCUtYBsESlrCEJSyDYAlLWMISlkGwhOXsAKw1A1NP368WAAAAAElFTkSuQmCC", pulo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAuCAYAAABqK0pRAAAAiUlEQVR4Xu3XsQ2AMBAEQZ7y3afrOPQBDTwEK2tHInRwrAmoJNcJ7hNGNIfQWITGIjQWobEIjUVoLEJjERpUkapKP5OXhBmy1kqbjMD8IfaI6YAXpsjeu69WJanJqD44Ofer97uYjmiIIX/AXK2vHEJjERqL0FiExiI0FqGxCI1FaCxCYxGaY4o83YMePCAc88kAAAAASUVORK5CYII=", voo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAArCAYAAADMr156AAAAaUlEQVR4Xu3UwQkAIAwEwWj/PceHr4DIFTBbQsjN6u5S1XaEm0M4xMxH+Agf8cw0TMM0TOMXIxjBCEYwIgiWsIQlLGEZBEtYwhKWsAyCJSxhCUtYBsESlrCEJSyDYAlLWMISlkGwhOXsAKw1A1NP368WAAAAAElFTkSuQmCC",
     soco: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA1CAYAAAAK0RhzAAAAlElEQVR4Xu3XwQmAQAwFUWP52+fWEcnBBiRiRuaB14XvrAcjM48/Ov84qjiMxmI0FqOxGI3FaCxGYzEai9GMKRYRWU/XCxwxbK2VpWvUiD/oGtU56Dai2N67rmJkZnSNrMO6znrk/q46R5XPh71lxFV8g8NoLEZjMRqL0ViMxmI0FqOxGI3FaCxGYzEai9FYjMZiNBeD4x5KI+j5ygAAAABJRU5ErkJggg==", kiball: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA1CAYAAAAK0RhzAAAAlElEQVR4Xu3XwQmAQAwFUWP52+fWEcnBBiRiRuaB14XvrAcjM48/Ov84qjiMxmI0FqOxGI3FaCxGYzEai9GMKRYRWU/XCxwxbK2VpWvUiD/oGtU56Dai2N67rmJkZnSNrMO6znrk/q46R5XPh71lxFV8g8NoLEZjMRqL0ViMxmI0FqOxGI3FaCxGYzEai9FYjMZiNBeD4x5KI+j5ygAAAABJRU5ErkJggg==", carga: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkUlEQVR4Xu3XQQqAMAwFUePxe8+e40sWvYARBmEeuLQkTjdWkuvP7j8P31yAZgGaBWgWoFmAZgGaBWgWoKEFqir9TD4CtsBaK20yPPZH1sNPBz+wAnvvvkKVpCbL9AGT91859346fEMW+BJ2hb7iAjQL0CxAswDNAjQL0CxAswDNAjQL0CxAswDNAjQL0CxAewDH9B5ORL5OLQAAAABJRU5ErkJggg==", carga2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkUlEQVR4Xu3XQQqAMAwFUePxe8+e40sWvYARBmEeuLQkTjdWkuvP7j8P31yAZgGaBWgWoFmAZgGaBWgWoKEFqir9TD4CtsBaK20yPPZH1sNPBz+wAnvvvkKVpCbL9AGT91859346fEMW+BJ2hb7iAjQL0CxAswDNAjQL0CxAswDNAjQL0CxAswDNAjQL0CxAewDH9B5ORL5OLQAAAABJRU5ErkJggg==", dano: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAA0CAYAAAD19ArKAAAAj0lEQVR4Xu3XwQnAIBAF0WzKt0/r2LAHC1DDiDAPchR+BnNIZOZzo/fG0cXhNIvTLE6zOM3iNIvTLE6zOM3isyIi65k9Nxwp3lrLsjr6yK9bjd4ZfLR4772uSmRmrL5EHV49u2Tc653RBR/+lyMf5x8cTrM4zeI0i9MsTrM4zeI0i9MsTrM4zeI0i9MsTvsAnFgeSFJisxQAAAAASUVORK5CYII=",
     golpe1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA1CAYAAAAK0RhzAAAAlElEQVR4Xu3XwQmAQAwFUWP52+fWEcnBBiRiRuaB14XvrAcjM48/Ov84qjiMxmI0FqOxGI3FaCxGYzEai9GMKRYRWU/XCxwxbK2VpWvUiD/oGtU56Dai2N67rmJkZnSNrMO6znrk/q46R5XPh71lxFV8g8NoLEZjMRqL0ViMxmI0FqOxGI3FaCxGYzEai9FYjMZiNBeD4x5KI+j5ygAAAABJRU5ErkJggg==", golpe2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAzCAYAAADYfStTAAAAWklEQVR4Xu3RAQ3AMAzAsO/8OXcai6iyGUQ5M/Nt8m+KeQTVOVTnUJ1DdQ7VOVTnUJ1DdQ7VOVTnUJ1DdQ7VOVTnUJ1DdQ7VOVTnUJ1DdQ7VOVTnUJ1DdesOXeL1A2OTI0pcAAAAAElFTkSuQmCC", golpe3: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAy0lEQVR4Xu3XQQrCMBCF4ZniGYQQUHSR4+Ue2fY0BVdBr5JzRFIQqrs6pX2E90E3XZSZ/tlEa63Sg6GHJRougoZF0LAIGhZBwyJoWAQNi6BhETSbFlHV+nlyzrtePc2LLIaXlJLEGKUecH8+WY5IW6IN7r1vn9m1wC9zkaVSiozjKK/rfXDOqeUnraWWU6A6z/pV4nm5zS/Pj0lCCGvn+ZtpESSbHq0jcRE0LIKGRdCwCBoWQcMiaFgEDYugYRE0LIKGRdCwCJpuirwBE1kl35bBo2sAAAAASUVORK5CYII=", defesa: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAAAkklEQVR4Xu3YwQnAIBAF0WzKt0/r2LAHGwgKyzgPchV+xlwSmfnc4L1hZHEojUVpLEpjURqL0liUxqI0FqVpVzQisp7dL7rV0DFGlt0jW/1hqJEnBi6tis456+pGZsbu0XXo7jN/Wd/liZGlzdDTWl3dkxxKY1Eai9JYlMaiNBalsSiNRWksSmNRGovSWJTmmqIfGkUeRElgn7EAAAAASUVORK5CYII=", derrotado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAAnCAYAAABaBotQAAAAg0lEQVR4Xu3YwQ2AMBADQY7y02fqMLoHHRhxjnYkvkHWhg8l6TrZffK4xsB0FExHwXQUTEfBdBRMR8F0FExHwT9UlfpxvHtcwbWWmmPcuF8WPc417DWu4N67r2hJKsfYPshxjsX73bnGtVEDvzDuiroxMB0F01EwHQXTUTAdBdMdX/ABNiIeLpwzddAAAAAASUVORK5CYII=",
@@ -3177,13 +3197,14 @@ const PART_SRC = {
     arremessado: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAvCAYAAAClgknJAAAAjklEQVR4Xu3SsQnAIBCFYTOFQ9g5gjM5hjM5gp1DOIXhCkMIMSBekeL/wE7vnqfGAFuOrdMvWmt9VtNaq95PpeBX6KdaqwkhqPRVIeFzzj2lNJ38neyT/bJUAuxaCT+MS+z2FipPeZ++9/71i8hFSylX5hijSm+VIoOEdM5NB/u7/w8AAAAAAAAAAAAAy07BADtoc3aChwAAAABJRU5ErkJggg==", lancar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA1CAYAAAAHz2g0AAAAj0lEQVR4Xu3SzQ2EIBBAYa2CIrhRAjVRBjVRAjeKoArNHDDGLDshu0Fj3pd4m+DjZ11uUGvder81xqwjSUPDv/gWfVVKWbz309pUEp9S2mKM3ZM/kzmZl09dfIaR+KZtQuubdk3n03fOfXwistGc89EcQlD71IF/k0hrbXfZx71/AAAAAAAAAAAAAAAA4D12kJ47aPT75/sAAAAASUVORK5CYII=", arremessar: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAtCAYAAAAeA21aAAAAl0lEQVR4Xu3Tyw2EIBSFYayCIthRAjVRBjVRAjuKoArNXTgxEzHO5CqT8f8SdkDO4WEM8GjTr7Rvrc29LNbay3JetvEZR6Xf1VpNCGFoXlVSPuc8p5S6N78l82S+DNUgo3xSfrUegmbmoU9qe/ve+90nLgdVSnl1jjGqZlbd7FtS0jnXXf53/x8AAAAAAAAAAAAAAADAbRZvhjtouCrl8AAAAABJRU5ErkJggg==",
     kame1: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkElEQVR4Xu3SsQ2AIBCFYZyCIegYgZkYg5kYgY4hmEJzhcYYMZq7wuL/EiuR9zhxDlBZVF9PjDHW2TvvvWmm2WZPpa967y6lZJatJuVrrWspZTr5M1kn6+VRh1v4Un63H0Kbb/Ybz9OPMd5eETloa+3onHNW56s3uJKSIYTpYH93/wEAAAAAAAAAAAAAAIDXNjOuO2gSXCCFAAAAAElFTkSuQmCC", kame2: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkElEQVR4Xu3SsQ2AIBCFYZyCIegYgZkYg5kYgY4hmEJzhcYYMZq7wuL/EiuR9zhxDlBZVF9PjDHW2TvvvWmm2WZPpa967y6lZJatJuVrrWspZTr5M1kn6+VRh1v4Un63H0Kbb/Ybz9OPMd5eETloa+3onHNW56s3uJKSIYTpYH93/wEAAAAAAAAAAAAAAIDXNjOuO2gSXCCFAAAAAElFTkSuQmCC", kame3: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA3CAYAAABKB8k/AAAAkElEQVR4Xu3SsQ2AIBCFYZyCIegYgZkYg5kYgY4hmEJzhcYYMZq7wuL/EiuR9zhxDlBZVF9PjDHW2TvvvWmm2WZPpa967y6lZJatJuVrrWspZTr5M1kn6+VRh1v4Un63H0Kbb/Ybz9OPMd5eETloa+3onHNW56s3uJKSIYTpYH93/wEAAAAAAAAAAAAAAIDXNjOuO2gSXCCFAAAAAElFTkSuQmCC", kame4: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAAAlElEQVR4Xu3TsQ3DIBSEYTwFQ9AxAjMxBjMxAh1DMIWtVxBZUYjk4qzE+j+JDpk7P3AOwC/b7gg3xthX53jvb8kgO+RbuXe9d5dSkmWRsZK11r2Uspzkme2z/bZkoRSulJxmWUUeI7su52nGGD9eTfshrbVXt5yzLI/sw5OVCSEsB/W37xMAAAAAAAAAAAAAAADA4xwETTto9zrkOwAAAABJRU5ErkJggg==", kame5: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAYAAAAN6MhFAAAAlElEQVR4Xu3TsQ3DIBSEYTwFQ9AxAjMxBjMxAh1DMIWtVxBZUYjk4qzE+j+JDpk7P3AOwC/b7gg3xthX53jvb8kgO+RbuXe9d5dSkmWRsZK11r2Uspzkme2z/bZkoRSulJxmWUUeI7su52nGGD9eTfshrbVXt5yzLI/sw5OVCSEsB/W37xMAAAAAAAAAAAAAAADA4xwETTto9zrkOwAAAABJRU5ErkJggg==" },
 };
-const HAIRS = [{ id: '', name: 'Careca' }, { id: 'hair1', name: 'Cabelo 1' }, { id: 'hair2', name: 'Cabelo 2' }, { id: 'hair3', name: 'Cabelo 3' }, { id: 'hair6', name: 'Lambido' }, { id: 'hair8', name: 'Touca' }, { id: 'hair9', name: 'Espetado' }, { id: 'hair10', name: 'Bagunçado' }];
+const HAIRS = [{ id: '', name: 'Careca' }, { id: 'hair1', name: 'Cabelo 1' }, { id: 'hair2', name: 'Cabelo 2' }, { id: 'hair3', name: 'Cabelo 3' }, { id: 'hair6', name: 'Lambido' }, { id: 'hair8', name: 'Touca' }, { id: 'hair11', name: 'Antena' }, { id: 'hair9', name: 'Espetado' }, { id: 'hair10', name: 'Bagunçado' }];
 const SCOUT_COLORS = ['#d8263a', '#3ccf6a', '#3f7bff', '#ffd23a', '#b06bff', '#ff7ab8', '#5cd6ff', '#ffffff'];
 const AURA_TIPOS = [{ id: 0, name: 'Clássica' }, { id: 1, name: 'Espetada' }, { id: 2, name: 'Simples' }];
 const EYE_COLORS = ['#d8263a', '#ff9a1f', '#ffd23a', '#3ccf6a', '#5cd6ff', '#3f7bff', '#b06bff', '#ff7ab8', '#ffffff', '#1f1f2e'];
 const HALO_COLORS = ['#ffd23a', '#ffffff', '#ff9a1f', '#ff3b3b', '#ff7ab8', '#b06bff', '#5cd6ff', '#3ccf6a'];
 const SHOE_COLORS = ['#3a3a4a', '#e8e8f0', '#d8263a', '#2a3f8a', '#7a4a26', '#3ccf6a', '#ffd23a', '#7a3fd6'];
 const CORES_TEMP = ["#ff0001", "#73ff71", "#000091", "#ff8401", "#73ffb1", "#520091", "#f7ff01", "#73faf1", "#9e0091", "#73ff01", "#73b2f1", "#9e0041", "#00ff11", "#7c73f1", "#9e0b01", "#00ff91", "#c573f1", "#9e5c01", "#00e5f1", "#ff73f1", "#8e9e01", "#0062f1", "#ff73a1", "#3d9e01", "#2200f1", "#ff8571", "#009e11", "#a600f1", "#ffce71", "#009e61", "#ff00d1", "#e8ff71", "#008491", "#ff0051", "#9fff71", "#003291"], CORES_EV = ["#ff2fa1", "#1ff7c1", "#c6ff21", "#ff7a11", "#9a4dff", "#21c4ff"];
+const AD_ITENS = { 'h:hair11': { n: 4, nome: 'Cabelo Antena', h: 'hair11' } }; /* itens que só saem assistindo anúncios (item novo = 1 linha aqui e no SQL ad_itens) */
 const EXC_CORES = new Set(CORES_TEMP.concat(CORES_EV)); // cores exclusivas (passe/evento): não se compram
 const JACKET_COLORS = ['#3a3a4a', '#e8e8f0', '#d8263a', '#2a3f8a', '#3ccf6a', '#7a3fd6', '#ffd23a', '#ff8a2a'];
 const SHIRT_COLORS = ['#e8e8f0', '#3a3a4a', '#d8263a', '#2a3f8a', '#3ccf6a', '#7a3fd6', '#ffd23a', '#ff8a2a'];
@@ -3191,6 +3212,7 @@ const PANTS_COLORS = ['#3a3a4a', '#2a3f8a', '#7a4a26', '#d8263a', '#3ccf6a', '#7
 const SWORD_COLORS = ['#7a3fd6', '#d8263a', '#3f7bff', '#3ccf6a', '#ffd23a', '#7a4a26', '#3a3a4a', '#ffffff'];
 const TAILS = [{ id: 0, name: 'Sem rabo' }, { id: 1, name: 'Rabo 1' }, { id: 2, name: 'Rabo 2' }];
 const TAIL_COLORS = ['#7a4a26', '#3a3a4a', '#cfcfcf', '#ffd23a', '#e8642e', '#d8263a', '#4aa8ff', '#3ccf6a', '#b06bff', '#ff7ab8', '#ffffff'];
+const PELE_PADRAO = '#ffcb9d'; const corPele = L => ((L && L.s) || PELE_PADRAO).toLowerCase();
 const SKIN_COLORS = ['#ffe6d2', '#f6c99a', '#d99a62', '#a8683c', '#6e4126', '#a8e27e', '#86c2ff', '#c7a6ff', '#c9c9d4', '#ff9a8a'];
 const HAIR_COLORS = ['#cfcfcf', '#3a3a4a', '#7a4a26', '#ffd23a', '#e8642e', '#d8263a', '#4aa8ff', '#3ccf6a', '#b06bff', '#ff7ab8', '#ffffff'];
 /* PERSONAGENS: sprites + cores da aura e dos poderes de cada um */
@@ -3394,10 +3416,6 @@ function randomLook() {
   const pick = a => a[(Math.random() * a.length) | 0];
   return validLook(sortearItens({ h: pick(HAIRS.filter(h => h.id)).id, hc: pick(HAIR_COLORS), t: pick([0, 0, 1, 2]), tc: pick(TAIL_COLORS), s: Math.random() < 0.5 ? '' : pick(SKIN_COLORS) }));
 }
-function randomLookOld() {
-  const pick = a => a[(Math.random() * a.length) | 0];
-  return validLook({ h: pick(HAIRS.filter(h => h.id)).id, hc: pick(HAIR_COLORS), t: pick([0, 0, 1, 2]), tc: pick(TAIL_COLORS), e: Math.random() < 0.3, ec: pick(EYE_COLORS), i: Math.random() < 0.3 ? 'sword' : '', ic: pick(SWORD_COLORS), a: Math.random() < 0.2, ac: pick(HALO_COLORS), s: Math.random() < 0.5 ? '' : pick(SKIN_COLORS) });
-}
 function hasLook(l) { return !!(l && (l.h || l.t || l.e || l.i || l.a || l.s || l.sc || l.au)); }
 function tintPart(pid, k, hex) { // cinza x cor: o claro vira a cor, o escuro continua escuro
   const key = pid + k + hex; if (tintCache[key]) return tintCache[key];
@@ -3599,10 +3617,9 @@ let particles = [], popups = [], killfeed = [];
 let shake = 0, hitstop = 0, flashT = 0;
 /* R130: MODO SONHO — só offline (treino/bots), liga na pausa ou na tela de bots. Não muda nada no online. */
 let golpeBan = null;
-function nomeGolpe(f, txt) { if (f !== game.me && !nearCam(f.x, f.y)) return; golpeBan = { txt, t: 1.0, c: (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffd23a', eu: f === game.me }; }
-let sonhoOn = (() => { try { return localStorage.getItem('adk_sonho') === '1'; } catch (e) { return false; } })(), slowT = 0, koT = 0;
+function nomeGolpe(f, txt) { if (f !== game.me && !nearCam(f.x, f.y)) return; if (f === game.me) return avisoCentral(txt, (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffd23a', 1, { tam: 11 }); golpeBan = { txt, t: 1.0, c: (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffd23a', eu: f === game.me }; }
+let slowT = 0;
 const SONHO = () => true; /* R135: o Modo Sonho virou o combate padrão (offline e online) */
-function setSonho(v) { sonhoOn = v; try { localStorage.setItem('adk_sonho', v ? '1' : '0'); } catch (e) {} document.querySelectorAll('.sonhoTg').forEach(b => { b.classList.toggle('on', v); b.textContent = '✨ MODO SONHO: ' + (v ? 'LIGADO' : 'DESLIGADO'); }); }
 function rastro(f, a) { if (!nearCam(f.x, f.y)) return; particles.push({ x: f.x + rnd(-3, 3), y: f.y - 22 + rnd(-10, 10), vx: -f.vx * 0.1, vy: 0, life: 0.22, max: 0.22, size: 3, color: a || '#ffffff', glow: true }); }
 function spark(x, y, n, color, speed = 120, life = 0.35, size = 2) {
   if (LITE) n = Math.ceil(n / 2);
@@ -3614,7 +3631,19 @@ function dust(x, y, n, dir = 0) {
   for (let i = 0; i < n; i++) particles.push({ x: x + rnd(-6, 6), y: y - rnd(0, 3), vx: rnd(-50, 50) + dir * 40, vy: rnd(-40, -5), life: rnd(0.3, 0.6), max: 0.6, size: rnd(2, 4) | 0, color: '#cdb08a', g: 40, grow: true });
 }
 function ring(x, y, color, r0 = 4, r1 = 30, life = 0.3) { particles.push({ x, y, vx: 0, vy: 0, life, max: life, ring: true, r0, r1, color }); }
-function popup(x, y, text, color = '#fff', size = 6) { popups.push({ x, y, text, color, size, life: 0.9, max: 0.9 }); }
+/* R136: menos poluição — textos de estado viram só efeito; o que é importante vai para o aviso central; dano seguido no mesmo alvo soma num número só */
+const POP_FORA = new Set(['DEFESA', 'DEFESA!!', 'PERFEITA!', 'ESQUIVA', 'LEVANTOU!', 'TELEPORTE!', 'RICOCHETE!', 'DESPERTAR!', 'PRA CIMA!', 'PRO CHÃO!', 'AGARRÃO!']);
+function popup(x, y, text, color = '#fff', size = 6) { text = String(text);
+  if (POP_FORA.has(text)) return;
+  if (text === 'DEFESA QUEBRADA!') { avisoCentral(text, '#ff6a5a', 2); return; }
+  popups.push({ x, y, text, color, size, life: 0.9, max: 0.9 }); }
+/* aviso central: um por vez, o mais importante ganha (prioridade maior substitui; igual/menor espera na fila curta) */
+let aviso = null, avisoFila = [];
+function avisoCentral(txt, cor, pri, extra) { const a = { txt, cor, pri, t: 1.3, ...extra }; if (!aviso || pri > aviso.pri) { aviso = a; avisoFila = avisoFila.filter(q => q.pri >= pri).slice(0, 1); } else if (avisoFila.length < 2 && !(aviso.txt === txt)) avisoFila.push(a); }
+function drawAviso() { if (!aviso) { if (avisoFila.length) aviso = avisoFila.shift(); else return; } const a = aviso; a.t -= 1 / 60; if (a.t <= 0) { aviso = null; return; }
+  const k = 1.3 - a.t, sc = k < 0.14 ? 1.9 - k / 0.14 * 0.9 : 1; ctx.save(); ctx.globalAlpha = Math.min(1, a.t / 0.25); ctx.translate(VW / 2, VH * 0.36); ctx.scale(sc, sc);
+  if (a.cav) { const n = Math.min(a.cav, 5), w = 13; for (let i = 0; i < n; i++) caveira(-(n - 1) * w / 2 + i * w, -22, a.cor); }
+  text(a.txt, 0, -6, a.tam || 14, a.cor, 'center', '#1a0610', 3); ctx.restore(); }
 const camView = () => game.cam;
 function nearCam(x, y) { const c = game.cam; return x > c.x - 60 && x < c.x + VW + 60 && y > c.y - 60 && y < c.y + VH + 60; }
 
@@ -4095,9 +4124,8 @@ function teamScore() { if (!game.teams) return; const k = [0, 0]; for (const f o
 function drawHUD() {
   teamScore();
   const me = game.me; if (!me) return;
-  drawCine(); drawKban();
+  drawCine(); drawAviso();
   if (golpeBan && SONHO()) { const g = golpeBan; g.t -= 1 / 60; if (g.t <= 0) golpeBan = null; else { const k = 1 - g.t, sc = k < 0.12 ? 1.6 - k / 0.12 * 0.6 : 1; ctx.save(); ctx.globalAlpha = Math.min(1, g.t / 0.25); ctx.translate(VW / 2, g.eu ? VH * 0.34 : VH * 0.4); ctx.scale(sc, sc); text(g.txt, 0, -6, g.eu ? 12 : 9, g.c, 'center', '#120c1c', 2); ctx.restore(); } }
-  if (koT > 0 && SONHO()) { const k = 1.3 - koT, sc = k < 0.15 ? 2.4 - k / 0.15 * 1.4 : 1; ctx.save(); ctx.globalAlpha = Math.min(1, koT / 0.3); ctx.translate(VW / 2, VH * 0.36); ctx.scale(sc, sc); text('K.O.!', 0, -14, 28, '#ffd23a', 'center', '#3a0d0d', 3); ctx.restore(); }
   if (blindT > 0) { blindT -= 1 / 60; ctx.fillStyle = 'rgba(255,255,250,' + clamp(blindT / 1.2, 0, 0.96) + ')'; ctx.fillRect(0, 0, VW, VH); }
   if (game.duel) {
     const d = game.duelSt, y0 = Math.round(SAFE.t) + (isTouch ? 30 : 0), ds = duelists(); // (placar do duelo fica no quadro PLACAR) // abaixo do botão do chat no celular
@@ -4258,7 +4286,6 @@ function render(dt) {
   for (const f of order) f.draw(cam);
   drawZonzo(cam);
   for (const p of projectiles) p.draw(cam);
-  drawOrbs(cam);
   lzFx = lzFx.filter(f => (f.t -= 1 / 60) > 0);
   for (const f of lzFx) { const a = f.t / 0.25, x0 = Math.min(f.x0, f.x1) - cam.x, L = Math.abs(f.x1 - f.x0), y = f.y - cam.y, w = 1 + a * 1.5;
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = hexA(f.c[2], 0.35 * a); ctx.fillRect(x0, y - 5 * w, L, 10 * w); ctx.fillStyle = hexA(f.c[1], 0.9 * a); ctx.fillRect(x0, y - 2.5 * w, L, 5 * w); ctx.fillStyle = hexA('#ffffff', a); ctx.fillRect(x0, y - w, L, 2 * w); ctx.restore(); }
@@ -4773,8 +4800,6 @@ function handleNet(m) {
     }
     case 'pj': spawnProjectile(m, false); break;
     case 'blind': applyBlind(m); break;
-    case 'orb': if (!orbs.some(o => o.id === m.id)) orbs.push({ id: m.id, x: +m.x, y: +m.y, k: m.k, t: 0 }); break;
-    case 'orbp': { orbs = orbs.filter(o => o.id !== m.id); const f = game.byId(m.f); if (f && !f.local) darBuff(f, m.k, false); break; }
     case 'hit': {
       const tg = game.byId(m.tg); if (!tg || !tg.local) return;
       const src = game.byId(m.from) || { id: m.from, name: '?', x: tg.x - sign(m.kbx) * 20, local: false };
@@ -5078,6 +5103,7 @@ function fxPanel(o) { // painel no estilo "DESBLOQUEADO!" (cor: ok | err | gold)
   const f = document.createElement('div'); f.className = 'unlk ' + (o.cor || 'ok') + (box.id === 'wrap' ? ' glob' : '');
   f.innerHTML = '<i class="unlk-rays"></i><div class="unlk-in"><div class="unlk-seal' + (o.sealCls ? ' ' + o.sealCls : '') + '">' + (o.seal || '<span class="tick"></span>') + '</div><b>' + o.titulo + '</b>' + (o.sub ? '<small>' + o.sub + '</small>' : '') + (o.btn ? '<button type="button" class="b pri">' + o.btn + '</button>' : '') + '</div>';
   const inn = f.querySelector('.unlk-in');
+  if (box.id === 'wrap') { const cc = document.querySelector('#custom .card'), z = cc ? parseFloat(getComputedStyle(cc).zoom) || 1 : 1; if (z !== 1) inn.style.zoom = z; } /* R144: mesmo tamanho em qualquer tela */
   for (let i = 0; i < 14; i++) { const c = document.createElement('i'); c.className = 'spk'; const a = i / 14 * Math.PI * 2, r = 90 + Math.random() * 60;
     c.style.setProperty('--dx', Math.cos(a) * r + 'px'); c.style.setProperty('--dy', Math.sin(a) * r * 0.7 + 'px'); c.style.animationDelay = (0.15 + Math.random() * 0.1) + 's'; inn.appendChild(c); }
   const fecha = () => { f.classList.add('sai'); setTimeout(() => f.remove(), 400); };
@@ -5138,7 +5164,8 @@ document.addEventListener('click', e => { if (avisoTemp() && e.target.closest &&
 document.addEventListener('click', e => { if (avisoTemp()) return; if (!e.isTrusted || (e.target.closest && e.target.closest('.msgx'))) return;
   for (const x of document.querySelectorAll('.msgx')) { if (!x.offsetParent) continue; const b = x.getBoundingClientRect(), m = 14;
     if (e.clientX >= b.left - m && e.clientX <= b.right + m && e.clientY >= b.top - m && e.clientY <= b.bottom + m) { e.preventDefault(); e.stopPropagation(); x.click(); return; } } }, true);
-function comprouFx(nome) { const c = document.getElementById('custom'); if (!c || c.classList.contains('hidden')) return; fxPanel({ cor: 'ok', titulo: 'DESBLOQUEADO!', sub: esc(nome) }); }
+function comprouFx(nome, k) { const c = document.getElementById('custom'); if (!c || c.classList.contains('hidden')) return; desbloqFx(k, nome); }
+function desbloqFx(k, nome) { let im = ''; try { im = k ? itemThumb(k) : ''; } catch (e) {} SFX.coin && SFX.coin(); fxPanel({ cor: 'gold', seal: im ? '<img src="' + im + '" alt="">' : '', sealCls: im ? 'prev' : '', titulo: 'DESBLOQUEADO!', sub: esc(nome) + '<br>já está na customização', tempo: 2600 }); }
 /* recompensa resgatada: aviso no centro da janela (sempre visível, mesmo com a lista rolada) */
 function ganhouExtra(g, bau) { if (g && conta.perfil) { conta.perfil.gems = gemsN() + g; renderGems(); if (g > 0) voar('g', g * 20); } if (bau) { temp = { ...(temp || {}), chest: true, n: ((temp && temp.n) | 0) + bau }; show('dotDaily', true); } }
 function premioFx(box, c, xp, titulo, g, bau) {
@@ -5154,11 +5181,11 @@ async function buyNow(k, nome, direto) {
   const nk = normItem(k);
   if (UNLOCK[nk]) return travaFx(nk, nome);
   if (GEM_PRICE[nk] && !direto) { const pg_ = msgOpen('COMPRAR?', { kind: 'buy', html: '<div class="mitem">' + esc(nome) + '</div><span class="preco">' + GEMI + GEM_PRICE[nk] + '</span>' }, '', true, 'COMPRAR'); document.getElementById('msgForm').classList.add('k-gem'); const okg = await pg_;
-    if (okg) { await shop.buy([{ k, n: nome }]); if (shop.has(k)) comprouFx(nome); } return; }
-  if (direto) return shop.buy([{ k, n: nome }]).then(() => { if (shop.has(k)) comprouFx(nome); }); // botão COMPRAR do selo: já mostra o preço
+    if (okg) { await shop.buy([{ k, n: nome }]); if (shop.has(k)) comprouFx(nome, k); } return; }
+  if (direto) return shop.buy([{ k, n: nome }]).then(() => { if (shop.has(k)) comprouFx(nome, k); }); // botão COMPRAR do selo: já mostra o preço
   const preco = shop.infinite() ? 0 : priceOf(k);
   const ok = await msgOpen('COMPRAR?', { kind: 'buy', html: '<div class="mitem">' + esc(nome) + '</div><span class="preco"><i class="coin"></i>' + preco + '</span>' }, '', true, 'COMPRAR');
-  if (ok) { await shop.buy([{ k, n: nome }]); if (shop.has(k)) comprouFx(nome); }
+  if (ok) { await shop.buy([{ k, n: nome }]); if (shop.has(k)) comprouFx(nome, k); }
 }
 /* uma cor comprada vale em TODOS os itens e slots ('c:#hex'); a transformação comprada vale em todos os slots ('tr:x') */
 const normItem = k => { const m = /^(hc|s|tc|ac|fa|fk|xc|ic|pc|fc|c):(#[0-9a-f]{6})$/i.exec(k || ''); return m ? 'c:' + m[2].toLowerCase() : /^tr:/.test(k || '') ? 'tr:x' : k; };
@@ -5180,7 +5207,7 @@ const shop = {
   items(look, fxc) {
     const L = look || {}, F = fxc || {}, out = [];
     const add = (k, n) => out.push({ k, n });
-    if (L.h) { if (L.h !== 'hair1') add('h:' + L.h, (HAIRS.find(h => h.id === L.h) || {}).name || 'Cabelo'); add('hc:' + L.hc, 'Cor do cabelo'); }
+    if (L.h) { if (L.h !== 'hair1') add('h:' + L.h, (HAIRS.find(h => h.id === L.h) || {}).name || 'Cabelo'); if (L.hc !== corPele(L)) add('hc:' + L.hc, 'Cor do cabelo'); }
     if (L.s) add('s:' + L.s, 'Cor da pele');
     if (L.t) { add('t:' + L.t, 'Rabo ' + L.t); add('tc:' + L.tc, 'Cor do rabo'); }
     if (L.a) { add('a:1', 'Auréola'); add('ac:' + L.ac, 'Cor da auréola'); }
@@ -5199,7 +5226,7 @@ const shop = {
   equip(look, fxc) {
     const L = { ...look }, F = { ...fxc };
     if (L.h && !this.has('h:' + L.h)) L.h = 'hair1';
-    if (L.h && !this.has('hc:' + L.hc)) L.hc = '#3a3a4a';
+    if (L.h && !this.has('hc:' + L.hc) && L.hc !== corPele(L)) L.hc = '#3a3a4a';
     if (L.s && !this.has('s:' + L.s)) L.s = '';
     if (L.t && !this.has('t:' + L.t)) L.t = 0;
     if (L.t && !this.has('tc:' + L.tc)) L.tc = TAIL_COLORS[0];
@@ -5286,7 +5313,7 @@ function wait(msg) {
   clearTimeout(waitTO); waitTO = setTimeout(() => { waitN = 0; show('wait', false); setStatus('O servidor demorou para responder. Tente de novo.');  }, 25000);
 }
 /* R124: versão mínima — se o jogo estiver desatualizado, a tela de abertura trava até atualizar */
-const APP_VER = '1.0.135';
+const APP_VER = '1.0.144';
 const verN = v => String(v || '').split('.').map(n => +n || 0).reduce((a, n, i) => a + n * Math.pow(1000, 3 - i), 0);
 async function checarVersao() { if (!conta || !conta.sb) return false;
   const r = await Promise.race([conta.sb.rpc('versao_min'), new Promise(ok => setTimeout(() => ok({}), 6000))]);
@@ -5310,6 +5337,7 @@ const gate = {
       checarVersao().then(r => { if (!r) ok(); }).catch(ok); return; }
     this.shown = true; show('boot', false); },
   loggedIn() { // perfil carregado
+    setTimeout(() => { if (typeof oferecerTutorial === 'function') oferecerTutorial(); }, 0);
     if (!this.sprites) return; // ainda carregando as imagens: segue quando terminar
     const wasAuth = !document.getElementById('auth').classList.contains('hidden');
     this.done(); unwaitAll();
@@ -5488,7 +5516,7 @@ const SEMANAIS = [{ id: 'wm15', t: 'Jogue 15 partidas', f: 'm', n: 15, p: 200 },
 const DIARIA = [10, 15, 20, 25, 30, 40, 0]; // dia 7 = baú
 let dly = null; const pegos = new Set(); // resgatados nesta sessão (o servidor pode demorar a refletir)
 /* ===================== BAÚ MISTERIOSO (1 por dia) ===================== */
-const ITEM_NOMES = { 'tr:x': 'Transformação', 'cp:1': 'Cor livre', 'h:hair2': 'Cabelo 2', 'h:hair3': 'Cabelo 3', 'h:hair6': 'Cabelo Lambido', 'h:hair8': 'Touca', 'h:hair9': 'Cabelo Espetado', 'h:hair10': 'Cabelo Bagunçado', 'i:1': 'Espada', 'cl:1': 'Calça', 'pe:1': 'Sapatos', 't:1': 'Rabo 1', 't:2': 'Rabo 2', 'a:1': 'Auréola', 'sc:1': 'Scouter', 'au:1': 'Aura Espetada', 'au:2': 'Aura Simples' };
+const ITEM_NOMES = { 'h:hair11': 'Cabelo Antena', 'tr:x': 'Transformação', 'cp:1': 'Cor livre', 'h:hair2': 'Cabelo 2', 'h:hair3': 'Cabelo 3', 'h:hair6': 'Cabelo Lambido', 'h:hair8': 'Touca', 'h:hair9': 'Cabelo Espetado', 'h:hair10': 'Cabelo Bagunçado', 'i:1': 'Espada', 'cl:1': 'Calça', 'pe:1': 'Sapatos', 't:1': 'Rabo 1', 't:2': 'Rabo 2', 'a:1': 'Auréola', 'sc:1': 'Scouter', 'au:1': 'Aura Espetada', 'au:2': 'Aura Simples' };
 let temp = null, bauBusca = false;
 function extrasMenu() {
   if (!temp) return; document.querySelectorAll('.xp2tag').forEach(t => t.classList.toggle('hidden', !temp.xp2));
@@ -5874,6 +5902,11 @@ async function banDraw() {
     document.getElementById('bMinV').onclick = async () => { const v = document.getElementById('iMinV').value.trim(), url = document.getElementById('iUpdU').value.trim(); wait('salvando...'); const { error } = await conta.sb.rpc('set_versao_min', { v, url }); unwait();
       if (error) return notice(/function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : /INVALIDO/.test(error.message) ? 'Versão inválida. Use números, ex.: 1.0.124' : error.message, 'OPÇÕES', 'err');
       notice(v ? 'Versão mínima: v' + v : 'Sem versão mínima.', 'OPÇÕES', 'ok'); };
+    L.insertAdjacentHTML('beforeend', '<div class="ownrow"><div><b>Denúncias</b><small>jogadores denunciados no chat/partidas</small></div><button type="button" class="b" id="bDen">VER</button></div>');
+    document.getElementById('bDen').onclick = async () => { const { data, error } = await conta.sb.rpc('list_reports'); if (error) return notice(/function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'DENÚNCIAS', 'err');
+      if (!data || !data.length) return notice('Nenhuma denúncia nova.', 'DENÚNCIAS', 'ok');
+      await msgOpen('DENÚNCIAS', { kind: 'q', html: '<div class="jogl">' + data.map(r => '<div class="mitem" style="text-align:left"><b class="amar">' + esc(r.alvo_nome || '?') + '</b> · ' + esc(r.motivo || '') + '<br><small>por ' + esc(r.de_nome || '?') + ' · ' + new Date(r.criado).toLocaleString('pt-BR') + (r.msgs ? '<br>“' + esc(r.msgs) + '”' : '') + '</small></div>').join('') + '</div>' }, '', true, 'MARCAR COMO VISTAS');
+      for (const r of data) conta.sb.rpc('report_visto', { rid: r.id }); };
     document.querySelectorAll('#xp2Seg button').forEach(b => b.onclick = async () => { wait('salvando...'); const { error } = await conta.sb.rpc('set_xp2', { m: b.dataset.v }); unwait();
       if (error) return notice(/function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'OPÇÕES', 'err');
       temp = { ...(temp || {}), xp2m: b.dataset.v }; await carregaBau(); banDraw(); notice(b.dataset.v === 'on' ? 'XP em dobro LIGADO para todos.' : b.dataset.v === 'off' ? 'XP em dobro DESLIGADO.' : 'XP em dobro automático nos fins de semana.', 'OPÇÕES', 'ok'); });
@@ -5964,6 +5997,13 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.144', d: '18/11', itens: [['corrigiu', 'Recompensa do vídeo em um popup só'], ['corrigiu', 'Popup de desbloqueio do mesmo tamanho em todas as telas']] },
+  { v: '1.0.143', d: '18/11', itens: [['novo', 'Cabelo pode usar a cor da pele (grátis)'], ['mudou', 'Popups de desbloqueio e recompensa no padrão do jogo']] },
+  { v: '1.0.142', d: '18/11', itens: [['mudou', 'Vídeos com recompensa em popups próprios: moedas, cristal e itens exclusivos']] },
+  { v: '1.0.141', d: '18/11', itens: [['corrigiu', 'Tela de recompensas cabe em qualquer celular'], ['mudou', 'Loja do dia só oferece itens que podem ser comprados e que você ainda não tem'], ['mudou', 'Código antigo removido (jogo mais leve)']] },
+  { v: '1.0.140', d: '18/11', itens: [['novo', 'Recompensas grátis: toque nas moedas ou cristais do menu'], ['novo', 'Cabelo Antena: exclusivo de anúncio']] },
+  { v: '1.0.138', d: '18/11', itens: [['novo', 'Tutorial guiado'], ['novo', 'Denunciar e bloquear jogadores'], ['novo', 'Passe também por partida e por dano'], ['mudou', 'Ajustes de equilíbrio: carga, quebra-guarda e avanço do soco']] },
+  { v: '1.0.137', d: '18/11', itens: [['mudou', 'Tela de luta mais limpa: um aviso por vez no centro']] },
   { v: '1.0.135', d: '18/11', itens: [['novo', 'Combate novo em todos os modos (antigo Modo Sonho)'], ['novo', 'Poderes com rastro de energia e impacto mais forte']] },
   { v: '1.0.134', d: '18/11', itens: [['corrigiu', 'Aviso de especial e transformação não cobre mais a luta']] },
   { v: '1.0.133', d: '18/11', itens: [['novo', 'Efeito de transformação caprichado'], ['mudou', 'Multi kill com 7,5 s entre derrotas'], ['corrigiu', 'Tontura visível para todos no online'], ['corrigiu', 'Especiais mais leves (sem travadinha)']] },
@@ -6090,10 +6130,6 @@ addEventListener('keyup', e => { keys[e.code] = false; });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 const held = (...c) => c.some(k => keys[k]);
 const tap = (...c) => c.some(k => pressed[k]);
-let dgPrev = 0, dgLast = { d: 0, t: 0 };
-function toqueDuplo(l, r) { const d = r && !l ? 1 : l && !r ? -1 : 0; let o = 0;
-  if (d && d !== dgPrev) { const n = performance.now(); if (dgLast.d === d && n - dgLast.t < 260) { o = d; dgLast = { d: 0, t: 0 }; } else dgLast = { d, t: n }; }
-  dgPrev = d; return o; }
 function impactoFx(v, src, kind) { if (!nearCam(v.x, v.y)) return; const sx = src ? sign(src.x - v.x) || v.facing : v.facing, x = v.x + sx * 9, y = v.y - 30;
   if (kind === 'hit') spark(x, y, 7, '#fff3a0', 170, 0.22, 2); else { spark(x, y, 16, '#ffd23a', 240, 0.3, 3); ring(x, y, '#ffffff', 5, 30, 0.25); } }
 /* R108: especial 2 com efeito de cinema (tela escurece, rosto em destaque, câmera lenta) */
@@ -6122,7 +6158,7 @@ function drawCine() { if (!cine) return; const c = cine, f = c.f, k = c.t / c.d;
   ctx.save(); ctx.translate(tx, cy + 3); ctx.scale(pz, pz); text(c.nome, 0, -6, c.nome.length > 14 ? 9 : 11, '#ffd23a', 'left', '#3a0d0d', 2); ctx.restore();
   ctx.restore(); }
 /* R132: sequência de derrotas (DOUBLE / TRIPLE / MULTI KILL) e tontura */
-let kstr = { n: 0, t: 0 }, kban = null, colunas = [];
+let kstr = { n: 0, t: 0 }, colunas = [];
 /* R133: transformação — coluna de luz, raios saindo do corpo, 3 ondas de choque e poeira (leve: só partículas) */
 function transFx(f) { const cor = (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffffff';
   colunas.push({ x: f.x, y: f.y, t: 0, d: 0.7, c: cor });
@@ -6134,12 +6170,8 @@ function drawColunas(cam) { for (const c of colunas) { c.t += 1 / 60; const k = 
     ctx.globalAlpha = Math.max(0, a); ctx.fillStyle = '#ffffff'; ctx.fillRect(x - w / 6, y - 260, w / 3, 260); ctx.restore(); }
   colunas = colunas.filter(c => c.t < c.d); }
 function contarKill() { const agora = performance.now(); kstr.n = agora - kstr.t < 7500 ? kstr.n + 1 : 1; kstr.t = agora;
-  if (kstr.n >= 2) { kban = { n: kstr.n, t: 1.6 }; if (SFX.zap) SFX.zap(); shake = Math.max(shake, 5); } }
-function drawKban() { if (!kban) return; kban.t -= 1 / 60; if (kban.t <= 0) { kban = null; return; } const b = kban, k = 1.6 - b.t, sc = k < 0.15 ? 2 - k / 0.15 : 1 + Math.sin(k * 8) * 0.03;
-  const nm = b.n === 2 ? 'DOUBLE KILL!' : b.n === 3 ? 'TRIPLE KILL!' : b.n === 4 ? 'QUADRA KILL!' : 'MULTI KILL!', cor = b.n === 2 ? '#ffd23a' : b.n === 3 ? '#ff8a2a' : '#ff4a6a';
-  ctx.save(); ctx.globalAlpha = Math.min(1, b.t / 0.3); ctx.translate(VW / 2, VH * 0.36); ctx.scale(sc, sc);
-  const n = Math.min(b.n, 5), w = 13; for (let i = 0; i < n; i++) caveira(-(n - 1) * w / 2 + i * w, -20, cor);
-  text(nm, 0, -4, 14, cor, 'center', '#1a0610', 3); ctx.restore(); }
+  const nm = kstr.n === 2 ? 'DOUBLE KILL!' : kstr.n === 3 ? 'TRIPLE KILL!' : kstr.n === 4 ? 'QUADRA KILL!' : 'MULTI KILL!';
+  if (kstr.n >= 2) { avisoCentral(nm, kstr.n === 2 ? '#ffd23a' : kstr.n === 3 ? '#ff8a2a' : '#ff4a6a', 3 + kstr.n, { cav: kstr.n }); if (SFX.zap) SFX.zap(); shake = Math.max(shake, 5); } }
 function caveira(x, y, cor) { const P = (a, b, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(Math.round(x + a), Math.round(y + b), w, h); };
   P(-5, -6, 10, 8, '#120c1c'); P(-4, -5, 8, 6, cor); P(-3, 1, 6, 3, '#120c1c'); P(-2, 1, 4, 2, cor); P(-3, -3, 2, 2, '#120c1c'); P(1, -3, 2, 2, '#120c1c'); P(-1, 2, 1, 1, '#120c1c'); P(1, 2, 1, 1, '#120c1c'); }
 function drawZonzo(cam) { const t = performance.now() / 1000; for (const f of game.fighters || []) { if (!(f.zonzo > 0) || f.dead) continue; f.zonzo -= 1 / 60; if (f.state !== 'hurt' && f.zonzo < 0.6) { f.zonzo = 0; continue; }
@@ -6235,7 +6267,7 @@ function postChat(txt) {
   addChat(game.me, game.me.name, txt); net.send(m); updateChatBtn();
 }
 function receiveChat(m) {
-  const f = game.byId(m.id); if (!f || f.local) return;
+  const f = game.byId(m.id); if (!f || f.local || estaBloqueado(f)) return;
   const now = performance.now();
   if (chatRecvAt[m.id] && now - chatRecvAt[m.id] < (CHAT_COOLDOWN - 0.5) * 1000) return; // anti-spam também do lado de quem recebe
   chatRecvAt[m.id] = now;
@@ -6406,7 +6438,7 @@ game = {
     ['achBox', 'nvBox', 'lvList', 'lvBox', 'missBox', 'dailyBox', 'rankBox', 'botBox', 'frBox'].forEach(id => show(id, false)); lvShown = 0;
     const map = mode !== 'online' ? MAP_IDS[(Math.random() * MAP_IDS.length) | 0] : net.role === 'client' ? (net.roomMap || 'santuario') : chosenMap;
     setMap(map); this.map = map;
-    this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = []; orbs = []; orbT = 12;
+    this.mode = mode; projectiles = []; particles = []; popups = []; killfeed = [];
     const name = playerName();
     this.fighters = []; this.bots = [];
     this.me = new Fighter({ id: 'p-' + uid() + uid(), name, pal: 0, local: true, ctrl: 'human', char: chosenChar });
@@ -6503,6 +6535,92 @@ function pickTrans() {
   show('msgList', true);
   return pr.then(v => { show('msgList', false); return v === null || v === true ? null : v; });
 }
+
+/* ===== R138: ANÚNCIOS (AdMob, só no APK). Troque pelos IDs do seu AdMob (estes são os IDs de TESTE do Google) ===== */
+const ADS = { reward: 'ca-app-pub-3940256099942544/5224354917' };
+const anuncio = { ok: false,
+  async init() { const A = window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.AdMob; if (!A) return; this.A = A;
+    try { await A.initialize({}); this.ok = true; } catch (e) {} },
+  async reward() { if (!this.ok) { fxPanel({ cor: 'gold', seal: '<i class="vidico"></i>', titulo: 'VÍDEO (SIMULADO)', sub: 'no navegador o vídeo é simulado', tempo: 1300 }); await new Promise(r => setTimeout(r, 1400)); return true; } /* navegador: simula o vídeo assistido */
+    if (!this.ok) return false; let got = false, h = null;
+    try { h = await this.A.addListener('onRewardedVideoAdReward', () => { got = true; }); await this.A.prepareRewardVideoAd({ adId: ADS.reward }); const r = await this.A.showRewardVideoAd(); if (r && (r.amount || r.type)) got = true; } catch (e) {}
+    try { h && h.remove(); } catch (e) {} return got; } };
+setTimeout(() => anuncio.init(), 1500);
+/* ===== R138: POLÍTICA DE PRIVACIDADE ===== */
+/* ===== R139: ANÚNCIOS SÓ QUANDO O JOGADOR QUER — moedas, cristal e itens exclusivos ===== */
+let adSt = null, adOcup = false, vidPremio = null;
+function adThumb(k) { const it = AD_ITENS[k]; try { const im = thumbSprite(validLook({ h: it.h || '', hc: '#ffd23a' })), c = makeCanvas(40, 40), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
+    const w = 26, sx = Math.round(im.width / 2 - w / 2), sy = Math.max(0, im.height - 64); x.drawImage(im, sx, sy, w, w, 0, 0, 40, 40); return c.toDataURL(); } catch (e) { return ''; } }
+/* R142: cada recompensa tem o seu popup (igual ao de comprar): ícone de vídeo, barra de progresso e botão */
+async function adStatus() { const { data, error } = await conta.sb.rpc('ad_status'); if (error) { notice(/function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'VÍDEO', 'err'); return null; } return data; }
+async function popVideo(tipo, item) {
+  if (!conta.sb || !conta.user) return notice('Entre na sua conta para ganhar recompensas.', 'VÍDEO', 'err');
+  if (adOcup) return; adOcup = true;
+  try { for (;;) {
+    const st = await adStatus(); if (!st) return;
+    let tit, ico, feito, max, rotulo, sub;
+    if (tipo === 'c') { tit = '+' + st.cval + ' MOEDAS'; ico = '<i class="coin"></i>'; feito = st.c; max = st.cmax; rotulo = feito + ' / ' + max + ' vídeos hoje'; sub = 'Assista um vídeo curto e ganhe ' + st.cval + ' <i class="coin"></i>'; }
+    else if (tipo === 'g') { tit = '+1 CRISTAL'; ico = '<i class="gemi"></i>'; feito = st.g; max = st.gmax; rotulo = feito + ' / ' + max + ' vídeos hoje'; sub = 'Assista um vídeo curto e ganhe 1 <i class="gemi"></i>'; }
+    else { const it = AD_ITENS[item]; if (!it) return; if (shop.has(item)) return; tit = it.nome.toUpperCase(); ico = '<img class="adimg" src="' + adThumb(item) + '">'; feito = Math.min(it.n, (st.prog || {})[item] | 0); max = it.n; rotulo = feito + ' / ' + max + ' vídeos'; sub = 'Item exclusivo: assista ' + max + ' vídeos para liberar'; }
+    const lim = tipo !== 'i' ? feito >= max : st.it >= st.itmax;
+    const html = '<div class="vpop"><div class="vpico">' + ico + '<i class="vidico"></i></div><div class="vptx">' + sub + '</div><div class="adbar' + (tipo === 'i' ? ' ex' : '') + '"><u style="width:' + Math.round(feito / max * 100) + '%"></u><em>' + rotulo + '</em></div>' + (lim ? '<small class="vplim">Limite de hoje atingido. Volte amanhã!</small>' : '') + '</div>';
+    const pr = msgOpen(tit, { kind: 'gold', html }, '', true, lim ? 'OK' : '▶ ASSISTIR VÍDEO');
+    const r = await pr; if (!r || lim) return;
+    const ok = await anuncio.reward(); if (!ok) { await notice('Assista o vídeo até o fim para ganhar a recompensa.', 'VÍDEO', 'err'); continue; }
+    const { data, error } = await conta.sb.rpc('ad_reward', { tipo, item: item || null });
+    if (error) { await notice(/LIMITE/.test(error.message) ? 'Limite de hoje atingido. Volte amanhã!' : /ESPERE/.test(error.message) ? 'Espere alguns segundos entre um vídeo e outro.' : /function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message, 'VÍDEO', 'err'); if (/ESPERE/.test(error.message)) continue; return; }
+    const c0 = conta.perfil.coins | 0, g0 = conta.perfil.gems | 0; conta.perfil.coins = data.coins; conta.perfil.gems = data.gems; wallet.sync();
+    if (tipo === 'c') { const n = data.coins - c0; fxPanel({ cor: 'gold', seal: '<i class="coin"></i>', titulo: 'RECOMPENSA RECEBIDA!', sub: '+' + n + ' <i class="coin"></i>', tempo: 2200 }); setTimeout(() => voar('c', n), 2500); return; }
+    else if (tipo === 'g') { const n = data.gems - g0; fxPanel({ cor: 'gold', seal: '<i class="gemi"></i>', titulo: 'RECOMPENSA RECEBIDA!', sub: '+' + n + ' <i class="gemi"></i>', tempo: 2200 }); setTimeout(() => voar('g', n), 2500); return; }
+    else if (!data.ganhou) { const n = (data.prog || {})[item] | 0, it = AD_ITENS[item]; fxPanel({ cor: 'gold', seal: '<img src="' + adThumb(item) + '" alt="">', sealCls: 'prev', titulo: n + ' / ' + it.n + ' VÍDEOS', sub: 'faltam ' + (it.n - n) + ' para liberar ' + esc(it.nome), tempo: 2000 }); return; }
+    else if (data.ganhou) { if (Array.isArray(conta.perfil.owned)) conta.perfil.owned.push(item); if (typeof applyProfile === 'function') applyProfile(conta.perfil); if (typeof SFX !== 'undefined' && SFX.ok) SFX.ok();
+      desbloqFx(item, AD_ITENS[item].nome); if (custOpen && typeof cMore === 'function') cMore(); return; }
+  } } finally { adOcup = false; } }
+const PRIV_URL = 'politica-privacidade.html';
+function abrirPrivacidade() { try { window.open(PRIV_URL, '_blank'); } catch (e) { location.href = PRIV_URL; } }
+/* ===== R138: DENUNCIAR / BLOQUEAR jogadores (exigência da Play Store para jogos com chat) ===== */
+const bloqueados = (() => { try { return new Set(JSON.parse(localStorage.getItem('adk_bloq') || '[]')); } catch (e) { return new Set(); } })();
+const chaveJog = f => (f && (f.uid || ('n:' + String(f.name || '').toLowerCase()))) || '';
+const estaBloqueado = f => bloqueados.has(chaveJog(f));
+function salvarBloq() { try { localStorage.setItem('adk_bloq', JSON.stringify([...bloqueados])); } catch (e) {} }
+let jogLista = [];
+async function abrirJogadores() { jogLista = (game.fighters || []).filter(f => f !== game.me && !f.isBot && !(f.ctrl || '').startsWith('ai'));
+  if (!jogLista.length) return notice('Nenhum outro jogador na sala.', 'JOGADORES');
+  const html = '<div class="jogl">' + jogLista.map((f, i) => '<div class="jogr"><b>' + esc(dispName(f.name)) + '</b><button type="button" class="b" onclick="jogBloq(' + i + ')">' + (estaBloqueado(f) ? 'DESBLOQUEAR' : 'BLOQUEAR') + '</button><button type="button" class="b dang" onclick="jogDen(' + i + ')">DENUNCIAR</button></div>').join('') + '</div><small>Bloqueado: você não vê mais o chat dessa pessoa.</small>';
+  msgOpen('JOGADORES', { kind: 'q', html }, '', true, 'FECHAR'); }
+function jogBloq(i) { const f = jogLista[i]; if (!f) return; const k = chaveJog(f); if (bloqueados.has(k)) bloqueados.delete(k); else { bloqueados.add(k); chatLog = chatLog.filter(c => c.name !== f.name); } salvarBloq(); if (msgDone) msgDone(null); setTimeout(abrirJogadores, 80); }
+async function jogDen(i) { const f = jogLista[i]; if (!f) return; if (msgDone) msgDone(null);
+  const box = document.getElementById('msgList'); box.innerHTML = ''; let esc_ = null;
+  for (const [m, t] of [['ofensa', 'Ofensa / xingamento'], ['trapaca', 'Trapaça'], ['nome', 'Nome impróprio'], ['outro', 'Outro motivo']]) { const b = document.createElement('button'); b.type = 'button'; b.className = 'copt'; b.innerHTML = '<span>' + t + '</span>'; b.onclick = () => { esc_ = m; msgDone && msgDone(m); }; box.appendChild(b); }
+  show('msgList', true); const r = await msgOpen('DENUNCIAR ' + dispName(f.name).toUpperCase(), 'Qual o motivo?', '', true); show('msgList', false); if (!esc_ || !r) return;
+  if (!conta.sb || !conta.user) return notice('Entre na sua conta para denunciar.', 'DENÚNCIA', 'err');
+  const msgs = chatLog.filter(c => c.name === f.name).slice(-6).map(c => c.txt).join(' | ');
+  const { error } = await conta.sb.rpc('report_player', { alvo: f.uid || '', nome: f.name, motivo: esc_, msgs });
+  notice(error ? (/MUITAS/.test(error.message) ? 'Você já enviou muitas denúncias. Tente mais tarde.' : /function|schema/i.test(error.message) ? 'Rode o SQL COMPLETO de novo no Supabase.' : error.message) : 'Denúncia enviada. Obrigado! A equipe vai analisar.', 'DENÚNCIA', error ? 'err' : 'ok'); }
+/* ===== R138: TUTORIAL — luta guiada contra o boneco ===== */
+const TUT = [
+  { t: 'Use o analógico para ANDAR', ok: (m, s) => (s.and = (s.and || 0) + (Math.abs(m.vx) > 60 ? 1 : 0)) > 8 },
+  { t: 'Toque em PULAR', ok: m => m.vy < -150 },
+  { t: 'Chegue perto do boneco e toque SOCO 3 vezes: COMBO!', ok: m => m.combo === 3 && m.punchHit, ini: m => { m.hits = 0; } },
+  { t: 'Toque em BOLA DE ENERGIA', ok: m => projectiles.some(p => p.o === m.id), ini: m => { m.ki = m.maxKi; } },
+  { t: 'Segure CARGA para encher o ki', ok: (m, s) => (s.cg = (s.cg || 0) + (m.state === 'charge' ? 1 : 0)) > 8, ini: m => { m.ki = 10; } },
+  { t: 'Segure DEFESA', ok: (m, s) => (s.df = (s.df || 0) + (m.state === 'guard' ? 1 : 0)) > 8 },
+  { t: 'O boneco está defendendo! Segure DEFESA e toque SOCO: QUEBRA-GUARDA', ok: m => m.qg && m.punchHit, ini: m => { m.ki = m.maxKi; }, guarda: 1 },
+  { t: 'Toque em INVESTIDA para avançar rápido', ok: m => m.state === 'dash', ini: m => { m.ki = m.maxKi; } },
+  { t: 'Use o ESPECIAL 2', ok: () => cine && cine.tipo === 2, ini: m => { m.ki = m.maxKi; } },
+  { t: 'Com o ki cheio, SEGURE CARGA até se TRANSFORMAR', ok: m => m.awakenT > 0, ini: m => { m.ki = m.maxKi; } } ];
+let tut = null;
+function iniciarTutorial() { initAudio(); net.close(); comTransicao(() => { game.start('treino'); tut = { i: -1, s: {} }; tutPasso(); show('tutBox', true); }); }
+function tutPasso() { tut.i++; tut.s = {}; const p = TUT[tut.i]; if (!p) return tutFim(); const me = game.me; if (p.ini) p.ini(me); tut.t = 0;
+  document.getElementById('tutTxt').textContent = p.t; document.getElementById('tutN').textContent = (tut.i + 1) + '/' + TUT.length; const b = document.getElementById('tutBox'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
+function tutFim() { show('tutBox', false); tut = null; try { localStorage.setItem('adk_tut', '1'); } catch (e) {} avisoCentral('TUTORIAL COMPLETO!', '#3ccf6a', 9, { tam: 13 }); if (SFX.ok) SFX.ok(); setTimeout(() => { if (game.mode === 'treino') game.toMenu(); }, 2600); }
+setInterval(() => { if (!tut || !game.me || game.phase !== 'play' || game.mode !== 'treino') { if (tut && game.phase !== 'play') { tut = null; show('tutBox', false); } return; }
+  const p = TUT[tut.i], me = game.me, d = game.bots[0] && game.bots[0].me; if (!p) return;
+  if (d) { d.hp = d.maxHp; if (p.guarda && d.state !== 'hurt') { d.facing = sign(me.x - d.x) || -1; d.setState('guard'); d.stateAge = 0.5; d.guardW = 0; } }
+  if (p.ok(me, tut.s)) { if (SFX.ok) SFX.ok(); avisoCentral('MUITO BEM!', '#3ccf6a', 1, { tam: 11 }); tutPasso(); } }, 100);
+function oferecerTutorial() { let feito = false; try { feito = localStorage.getItem('adk_tut') === '1'; } catch (e) {} if (feito) return;
+  try { localStorage.setItem('adk_tut', '1'); } catch (e) {}
+  quandoLivre(async () => { const r = await msgOpen('BEM-VINDO!', { kind: 'q', html: '<div class="mitem">Quer aprender a lutar numa <b class="amar">luta guiada de 1 minuto</b>?</div><small>Dá para fazer depois em Configurações → Tutorial.</small>' }, '', true, 'COMEÇAR'); if (r) iniciarTutorial(); }); }
 const ask = (title, text, ph) => msgOpen(title, text, ph || ' ', true);
 const msgIsOpen = () => !document.getElementById('msgBox').classList.contains('hidden');
 const chosenChar = 'base'; // único lutador (o visual é o que muda)
@@ -6634,11 +6752,13 @@ function swatches(list, cur, onPick, withDefault, pfx) {
 }
 function optCard(label, sel, draw, onPick, key) {
   const b = document.createElement('button'); b.className = 'copt' + (sel ? ' sel' : '');
-  if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb"></i>'); b.title = 'bloqueado · ' + priceOf(key) + ' moedas'; }
+  const adk = key && AD_ITENS[key] && !shop.has(key);
+  if (adk) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb playb"></i>'); b.title = 'assista ' + AD_ITENS[key].n + ' vídeos para liberar'; }
+  else if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb"></i>'); b.title = 'bloqueado · ' + priceOf(key) + ' moedas'; }
   const c = makeCanvas(56, 56), x = c.getContext('2d'); x.imageSmoothingEnabled = false; draw(x);
   b.appendChild(c); const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp);
   if (draw.px) requestAnimationFrame(() => { const D = Math.round(c.clientWidth * Math.min(3, devicePixelRatio || 1)); if (D > 56 && D < 400) { c.width = c.height = D; const y = c.getContext('2d'); y.imageSmoothingEnabled = false; draw(y); } });
-  b.onclick = () => { if (sel && key && !shop.has(key)) return tryBuy(key, label); onPick(); saveLook(); offerBuy(key, label); }; return b;
+  b.onclick = () => { if (adk) { if (!sel) { onPick(); saveLook(); return; } return popVideo('i', key); } if (sel && key && !shop.has(key)) return tryBuy(key, label); onPick(); saveLook(); offerBuy(key, label); }; return b;
 }
 const so = (L, x) => { const o = { ...L, h: '', t: 0, au: 0 }; for (const it of LOOK_ITENS()) o[it.k] = 0; return { ...o, ...x }; }; // miniatura mostra só o item da opção
 function partThumb(look, crop) { // miniatura em escala INTEIRA (pixel perfeito), no tamanho real do quadrinho
@@ -6700,7 +6820,9 @@ function buildCustomPanel() {
   } else if (custTab === 'cabelo') {
     h4('CABELO'); const g = grid();
     for (const h of HAIRS) g.appendChild(optCard(h.name, L.h === h.id, partThumb(so(L, { h: h.id, a: 0 }), head), () => { L.h = h.id; }, h.id && 'h:' + h.id));
-    h4('COR DO CABELO'); P.appendChild(swatches(HAIR_COLORS, L.hc, c => { L.hc = c; }, false, 'hc'));
+    h4('COR DO CABELO'); const sw = swatches(HAIR_COLORS, L.hc, c => { L.hc = c; }, false, 'hc');
+    { const pele = corPele(L), b = document.createElement('button'); b.type = 'button'; b.className = 'pelesw' + (L.hc === pele ? ' sel' : ''); b.style.background = pele; b.title = 'cor da pele (grátis)'; b.innerHTML = '<span>PELE</span>'; b.onclick = () => { L.hc = pele; saveLook(); cMore(); }; sw.insertBefore(b, sw.firstChild); }
+    P.appendChild(sw);
   } else if (custTab === 'corpo') {
     h4('COR DA PELE'); P.appendChild(swatches(SKIN_COLORS, L.s, c => { L.s = c; }, true, 's'));
   } else if (custTab === 'rabo') {
@@ -6944,6 +7066,11 @@ function buildMenu() {
   document.getElementById('bOpenCreate').onclick = () => { net.roomMode = 'n'; document.querySelectorAll('#roomMode button').forEach(o => o.classList.toggle('sel', o.dataset.m === 'n')); net.roomMx = MAX_PLAYERS; syncMx(); rn.value = ''; document.getElementById('roomPw').value = ''; openPop('createBox'); document.querySelector('#createForm').scrollTop = 0; const mb = document.querySelector('#maps2 button.mapb'); if (mb) mb.click(); document.getElementById('maps2').scrollLeft = 0; }; // sempre começa vazio
   document.getElementById('bChar').onclick = openCustom;
   document.getElementById('resBack').onclick = () => game.toMenu();
+  document.getElementById('bTut').onclick = () => { closeSettings(); iniciarTutorial(); };
+  document.getElementById('bPriv').onclick = abrirPrivacidade; document.getElementById('authPriv').onclick = e => { e.preventDefault(); abrirPrivacidade(); };
+  document.getElementById('pPlayers').onclick = abrirJogadores;
+  document.getElementById('coinPill').onclick = () => popVideo('c'); document.getElementById('gemPill').onclick = () => popVideo('g');
+  { const pp = document.getElementById('pPlayers'), ob = new MutationObserver(() => pp.classList.toggle('hidden', game.mode !== 'online')); ob.observe(document.getElementById('pause'), { attributes: true }); }
   document.getElementById('msgForm').addEventListener('submit', e => { e.preventDefault(); if (msgDone) msgDone(document.getElementById('msgIn').classList.contains('hidden') ? true : document.getElementById('msgIn').value); });
   document.getElementById('msgCancel').onclick = document.getElementById('msgX').onclick = () => { if (msgDone) msgDone(null); };
   document.getElementById('bCloseCreate').onclick = () => closePop('createBox');
@@ -7218,7 +7345,6 @@ function setupTouch() {
   document.getElementById('pContinue').onclick = closePause;
   document.getElementById('pSettings').onclick = () => openSettings('pause');
   document.getElementById('pExit').onclick = () => game.toMenu();
-  document.querySelectorAll('.sonhoTg').forEach(b => b.onclick = () => setSonho(!sonhoOn)); setSonho(sonhoOn);
 
   addEventListener('touchstart', () => { isTouch = true; }, { passive: true });
   // online: tocar/clicar em qualquer lugar da tela (ou espaço/enter) para renascer
@@ -7293,9 +7419,8 @@ function update(dt) {
   if (cine) cine.t += dt;
   if (hitstop > 0) { hitstop -= dt; return; }
   if (slowT > 0) { slowT -= dt; if (game.mode !== 'online') dt *= 0.3; }
-  if (koT > 0) koT -= dt;
 
-  orbPegar(dt); tickQuebraveis(dt);
+  tickQuebraveis(dt);
   const frozen = game.duel && ['count', 'end'].includes(game.duelSt.ph);
   stepWorld(dt, f => f === game.me ? (overlay || chatOpen || frozen ? emptyInput() : humanInput()) : emptyInput());
   for (const p of particles) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g || 0) * dt; p.vx *= Math.pow(0.1, dt); if (!p.g) p.vy *= Math.pow(0.1, dt); }
