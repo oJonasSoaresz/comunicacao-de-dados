@@ -1769,6 +1769,9 @@
   /* R128 */
   .lvxp .rwbar{height:20px!important;border-width:2px!important}
   .lvn::before{height:7px!important}
+
+  /* R130 */
+  .sonhoTg.on{background:linear-gradient(#ffd23a,#ff9a1e)!important;color:#3a1a00!important;border-color:#fff3b0!important;text-shadow:none!important}
 </style>
 </head>
 <body>
@@ -1808,7 +1811,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.129</div>
+      <div class="ver">v1.0.135</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -2266,6 +2269,7 @@ function deliverHit(target, p, src) {
   return blocked ? 'block' : 'hit';
 }
 function handleKill(m) {
+  if (m.k !== m.v && game.me && m.k === game.me.id) contarKill();
   if (m.k !== m.v) {
     const victim = game.byId(m.v);
     killBadges.push({ k: m.k, name: dispName(String(m.vn || '?')).slice(0, 12), color: victim ? victim.pal_.swatch : '#ffffff', life: 1.9, max: 1.9 });
@@ -2408,6 +2412,8 @@ class Fighter {
     }
     if (!this.isBeaming()) this.beamLen = 0;
 
+    if (this.voa > 0) { this.voa -= dt; if (SONHO()) rastro(this, '#ffd23a'); }
+    if (SONHO() && this.state === 'dash') rastro(this, this.pal_ && this.pal_.ki ? this.pal_.ki[1] : '#9fe8ff');
     if (this.state === 'hurt') { this.physics(dt, true); if (this.stateT <= 0) this.setState('idle'); return; }
 
     const mx = (inp.right ? 1 : 0) - (inp.left ? 1 : 0);
@@ -2492,7 +2498,7 @@ class Fighter {
         this.physics(dt, false, true); return;
       case 'charge': {
         this.vx = approach(this.vx, 0, 12, dt); airHover();
-        this.ki = Math.min(this.maxKi, this.ki + 14 * dt); // carga lenta
+        this.ki = Math.min(this.maxKi, this.ki + (SONHO() ? 30 : 14) * dt); // carga (mais rápida no modo sonho)
         if (this.ki >= this.maxKi) { this.ki = this.maxKi; this.setState('idle'); this.fullMsg(true); this.physics(dt, false); return; }
         if (!this.onGround) { this.setState('idle'); this.physics(dt, false); return; }
         this.chargeSnd -= dt; if (this.chargeSnd <= 0) { if (nearCam(this.x, this.y)) SFX.charge(); this.chargeSnd = 0.14; }
@@ -2512,6 +2518,7 @@ class Fighter {
       }
       case 'guard':
         this.vx = approach(this.vx, 0, 14, dt); if (this.guardW > 65 && Math.random() < 0.35) spark(this.x + this.facing * 10 + rnd(-4, 4), this.y - 30 + rnd(-8, 8), 1, '#ff6a4a', 60, 0.3, 2);
+        if (SONHO() && inp.punchP && this.onGround) { this.quebraGuarda(); this.physics(dt, false); return; } /* R131: DEFESA + SOCO = QUEBRA-GUARDA */
         if (inp.punchP || inp.kiP || inp.bigP || inp.dashP || inp.beam || inp.upP || inp.charge) { this.setState('idle'); break; }
         if (!inp.down || !this.onGround) this.setState('idle');
         this.physics(dt, false); return;
@@ -2585,8 +2592,8 @@ class Fighter {
     ring(this.x, this.y - 24, '#ffffff', 6, 70, 0.5); ring(this.x, this.y - 24, '#bfe9ff', 4, 45, 0.35);
     spark(this.x, this.y - 26, 30, '#ffffff', 260, 0.6, 2);
     for (let i = 0; i < 18; i++) { const d = i % 2 ? 1 : -1; particles.push({ x: this.x + d * rnd(4, 14), y: this.y - rnd(0, 4), vx: d * rnd(150, 300), vy: rnd(-50, -5), life: rnd(0.3, 0.6), max: 0.6, size: rnd(2, 5) | 0, color: '#d9bf98', g: 30, grow: true }); }
-    if (this === game.me) { shake = Math.max(shake, 4); flashT = 0.25; }
-    if (nearCam(this.x, this.y)) SFX.awaken();
+    if (this === game.me) { shake = Math.max(shake, 7); flashT = 0.3; cineStart(this, 'DESPERTAR!', 3); }
+    if (nearCam(this.x, this.y)) { SFX.awaken(); transFx(this); }
   }
   fullMsg(stopped) {
     const n = performance.now();
@@ -2596,8 +2603,12 @@ class Fighter {
     if (stopped) { ring(this.x, this.y - 24, '#ffffff', 8, 40, 0.4); spark(this.x, this.y - 26, 10, '#ffffff', 120, 0.4); }
     if (this === game.me) { tone('triangle', 880, 880, 0.12, 0.14); setTimeout(() => tone('triangle', 1320, 1320, 0.2, 0.12), 90); }
   }
-  spend(n) { if (this.ki < n) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return false; } if (!this.infiniteKi) this.ki -= n; if (this._spc && this === game.me) cineStart(this); return true; }
-  useSpecial() { this._spc = 1; try { this.useSpecial0(); } finally { this._spc = 0; } }
+  spend(n) { if (this.ki < n) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return false; } if (!this.infiniteKi) this.ki -= n; if ((this._spc || this._rai) && this === game.me && !cine) cineStart(this, this._nm, this._spc ? 2 : 1); else if (this._nm && SONHO() && !this._spc && !this._rai) nomeGolpe(this, this._nm.toUpperCase()); this._nm = null; return true; }
+  useSpecial() { this._spc = 1; this._nm = (POWERS.s[pwOf(this, 's')] || {}).name; try { this.useSpecial0(); } finally { this._spc = 0; this._nm = null; } }
+  useRaio() { this._rai = 1; this._nm = (POWERS.r[pwOf(this, 'r')] || {}).name; try { this.useRaio0(); } finally { this._nm = null; this._rai = 0; } }
+  quebraGuarda() { if (!this.infiniteKi && this.ki < 15) { popup(this.x, this.y - 60, 'POUCA ENERGIA', '#8fd8ff', 5); return; } if (!this.infiniteKi) this.ki -= 15;
+    this.combo = 3; this.comboT = 0; this.qg = 1; this.punchHit = false; this.setState('punch', 0.28); this.hitSet = new Set(); this.punchCd = 0.35;
+    ring(this.x + this.facing * 10, this.y - 28, '#ff6a4a', 4, 26, 0.25); if (this === game.me || nearCam(this.x, this.y)) nomeGolpe(this, 'QUEBRA-GUARDA'); if (nearCam(this.x, this.y)) SFX.heavy(); }
   /* ESPECIAL do BASE: feixe de energia (kame) · sem kit próprio: bola grande */
   useSpecial0() {
     const sp = pwOf(this, 's');
@@ -2618,7 +2629,7 @@ class Fighter {
     }
   }
   /* RAIO do BASE: ergue a mão, forma a bola grande e arremessa · sem kit próprio: raio contínuo (segurar) */
-  useRaio() {
+  useRaio0() {
     const rp = pwOf(this, 'r');
     if (rp === 'kienzan') { if (!this.spend(POWERS.r.kienzan.cost)) return; this.setState('kiball', 0.35);
       this.shot({ vx: this.facing * 380, saw: 1, pierce: 1, r: 15, dmg: 150 * this.dmgMul() }); if (nearCam(this.x, this.y)) SFX.bigWind(); return; }
@@ -2671,7 +2682,10 @@ class Fighter {
     if (this.comboT > 0 && this.combo === 1) this.combo = 2; else if (this.comboT > 0 && this.combo === 2 && this.punchHit) this.combo = 3; else this.combo = 1;
     this.punchHit = false;
     this.setState('punch', this.combo === 3 ? 0.28 : 0.2);
-    this.hitSet = new Set(); this.punchCd = 0.1;
+    this.hitSet = new Set(); this.punchCd = 0.1; this.qg = 0;
+    if (SONHO()) { let alvo = null, dm = 1e9; for (const o of game.fighters) { if (o === this || o.dead || allyOf(o, this.id)) continue; const dx = o.x - this.x, d = Math.abs(dx);
+        if (d < 90 && d < dm && Math.abs(o.y - this.y) < 50 && (sign(dx) === this.facing || d < 20)) { alvo = o; dm = d; } }
+      if (alvo) { this.facing = sign(alvo.x - this.x) || this.facing; if (dm > 22) this.vx = this.facing * Math.min(340, (dm - 18) * 9); if (!this.onGround) this.vy = Math.min(this.vy, 0) * 0.3; } }
     this.vx = this.facing * (this.combo === 3 ? 150 : 70);
     if (!this.onGround && this.vy < 0) this.vy *= 0.4; // socar no ar não dá impulso para cima
     if (nearCam(this.x, this.y)) SFX.swing();
@@ -2687,6 +2701,7 @@ class Fighter {
         this.hitSet.add(o.id);
         const c = this.combo;
         const p = { dmg: [0, 38, 44, 80][c] * this.dmgMul(), kbx: f * [0, 100, 115, 340][c], kby: c === 3 ? -220 : 0, stun: [0, 0.3, 0.32, 0.6][c], kind: c === 3 ? 'heavy' : 'hit' };
+        if (this.qg) { Object.assign(p, { dmg: 70 * this.dmgMul(), kbx: f * 280, kby: -200, stun: 0.85, kind: 'heavy', unblock: 1 }); if (o.state === 'guard') { popup(o.x, o.y - 66, 'DEFESA QUEBRADA!', '#ff6a5a', 7); o.zonzo = 0.85; } }
         const res = deliverHit(o, p, this);
         if (res === 'hit') this.punchHit = true;
         const px = this.x + f * 22, py = this.y - 30;
@@ -2705,6 +2720,7 @@ class Fighter {
   shot(o) { const h = this.handPos(); spawnProjectile({ id: uid(), o: this.id, x: h.x, y: h.y, vx: this.facing * 320, r: 5, dmg: 55 * this.dmgMul(), big: 0, pal: this.pal, ch: this.form, ...o }, true); }
   fireKi() {
     const k = pwOf(this, 'k');
+    { const h = this.handPos(); ring(h.x, h.y, (this.pal_ && this.pal_.ki && this.pal_.ki[1]) || '#9fe8ff', 2, 14, 0.15); spark(h.x, h.y, 5, '#ffffff', 140, 0.18, 2); if (this.onGround) this.vx -= this.facing * 45; if (this === game.me) shake = Math.max(shake, 1.2); }
     if (!this.infiniteKi) this.ki -= POWERS.k[k].cost; this.kiCd = k === 'ki' ? 0.3 : 0.45; this.setState('kiball', 0.26);
     const h = this.handPos(), m = this.dmgMul();
     if (k === 'tri') { for (const vy of [-80, 0, 80]) this.shot({ r: 4, vy, dmg: 32 * m }); }
@@ -2726,7 +2742,7 @@ class Fighter {
   }
   cansarDefesa(n) { /* R109: defender demais cansa; ao encher, a DEFESA QUEBRA e o lutador fica tonto */
     this.guardW = (this.guardW || 0) + n; this.guardRT = 0.8; if (this.guardW < 100) return false;
-    this.guardW = 0; this.setState('hurt', 0.9); this.vx = 0; this.flash = 0.15;
+    this.guardW = 0; this.setState('hurt', 0.9); this.zonzo = 0.9; this.vx = 0; this.flash = 0.15;
     ring(this.x, this.y - 30, '#ff6a5a', 8, 44, 0.35); spark(this.x, this.y - 30, 20, '#9fe8ff', 220, 0.4, 2);
     if (nearCam(this.x, this.y)) SFX.heavy(); popup(this.x, this.y - 62, 'DEFESA QUEBRADA!', '#ff6a5a', 7);
     if (this === game.me) { hitstop = 0.14; shake = Math.max(shake, 5); } return true; }
@@ -2775,6 +2791,7 @@ class Fighter {
       if (this === game.me) { hitstop = 0.16; shake = Math.max(shake, 4); }
       return 'block';
     }
+    if (this.state === 'guard' && p.unblock && p.kind === 'heavy') this.zonzo = 0.85;
     if (this.state === 'guard' && fromFront && !p.unblock && !game.hitkill && this.cansarDefesa(16 + p.dmg * 0.12)) return 'hit';
     if (this.state === 'guard' && fromFront && !p.unblock && !game.hitkill) {
       this.hp = Math.max(1, this.hp - p.dmg * 0.15); this.vx = p.kbx * 0.35; this.ki = Math.max(0, this.ki - 4);
@@ -2785,8 +2802,10 @@ class Fighter {
     this.hp -= p.dmg; this.lastHitBy = { id: src.id, name: src.name };
     this.setState('hurt', p.stun); this.combo = 0; this.beamLen = 0;
     this.vx = p.kbx; if (p.kby) { this.vy = p.kby; this.onGround = false; }
+    if (SONHO() && p.kind === 'heavy') { this.vx *= 1.35; this.vy = Math.min(this.vy, -260); this.voa = 0.5; }
     this.flash = 0.11; impactoFx(this, src, p.kind);
-    if (this === game.me || src === game.me) { hitstop = p.kind === 'hit' ? 0.07 : 0.17; shake = Math.max(shake, p.kind === 'hit' ? 2 : 6); }
+    if (this === game.me || src === game.me) { hitstop = p.kind === 'hit' ? 0.07 : 0.17; shake = Math.max(shake, p.kind === 'hit' ? 2 : 6);
+      if (SONHO()) { hitstop = p.kind === 'hit' ? 0.095 : 0.22; shake = Math.max(shake, p.kind === 'hit' ? 3.5 : 9); spark(this.x, this.y - 30, p.kind === 'hit' ? 10 : 26, '#ffffff', p.kind === 'hit' ? 200 : 320, 0.3, 3); if (p.kind !== 'hit') { ring(this.x, this.y - 30, '#ffd23a', 6, 50, 0.3); flashT = Math.max(flashT, 0.06); } } }
     if (nearCam(this.x, this.y)) (p.kind === 'hit' ? SFX.hit : SFX.heavy)();
     popup(this.x + rnd(-6, 6), this.y - 58, '-' + Math.round(p.dmg), p.kind === 'hit' ? '#ffffff' : '#ffd23a', p.kind === 'hit' ? 6 : 8);
     if (src.local) { src.hits++; src.hitsT = 1.1; }
@@ -2819,6 +2838,7 @@ class Fighter {
     this.vx = sign(this.x - src.x) * 170; this.vy = -230; this.onGround = false;
     if (nearCam(this.x, this.y)) SFX.ko();
     shake = Math.max(shake, this === game.me ? 8 : 3);
+    if (SONHO() && (src === game.me || this === game.me)) { slowT = 0.9; koT = 1.3; flashT = Math.max(flashT, 0.12); shake = Math.max(shake, 12); spark(this.x, this.y - 30, 40, '#ffd23a', 380, 0.7, 3); ring(this.x, this.y - 30, '#ffffff', 8, 90, 0.5); }
     const msg = { t: 'kill', v: this.id, vn: this.name, k: src.id, kn: src.name };
     handleKill(msg); net.send(msg);
   }
@@ -2831,7 +2851,7 @@ class Fighter {
     if (kind === 'block') { if (nearCam(this.x, this.y)) SFX.block(); popup(this.x, this.y - 58, 'DEFESA', '#9fe8ff', 5); return; }
     impactoFx(this, src, kind); popup(this.x + rnd(-6, 6), this.y - 58, '-' + Math.round(dmg), kind === 'hit' ? '#ffffff' : '#ffd23a', kind === 'hit' ? 6 : 8);
     if (nearCam(this.x, this.y)) (kind === 'hit' ? SFX.hit : SFX.heavy)();
-    if (src === game.me) { hitstop = kind === 'hit' ? 0.07 : 0.13; shake = Math.max(shake, kind === 'hit' ? 2 : 6); src.hits++; src.hitsT = 1.1; }
+    if (src === game.me) { hitstop = kind === 'hit' ? (SONHO() ? 0.095 : 0.07) : (SONHO() ? 0.22 : 0.13); shake = Math.max(shake, kind === 'hit' ? 2 : 6); src.hits++; src.hitsT = 1.1; }
   }
   predictBeam(dt, src) {
     if (this.dead) return;
@@ -2881,6 +2901,7 @@ class Fighter {
     const predicting = this.predT && performance.now() - this.predT < 600;
     if (m.hp < this.hp - 0.5 && !predicting) this.flash = 0.08;
     // enquanto a rede não confirma, mantém o dano que já mostrei (não "devolve" a vida)
+    if (m.zz) this.zonzo = Math.max(this.zonzo || 0, 0.3);
     this.awakenT = +m.aw || 0; this.uid = typeof m.u === 'string' ? m.u.slice(0, 36) : ''; // estamina vem junto (barrinha sobre a cabeça)
     this.hp = predicting ? Math.min(m.hp, this.hp) : m.hp; this.beamLen = m.bl; this.combo = m.cb; this.pose_ = m.po;
     if (prevSt !== m.st) {
@@ -2901,7 +2922,7 @@ class Fighter {
   snapshot() {
     return { t: 's', tm: this.team == null ? undefined : this.team, id: this.id, n: this.name, p: this.pal, c: this.char, x: Math.round(this.x * 10) / 10, y: Math.round(this.y * 10) / 10,
       vx: Math.round(this.vx), vy: Math.round(this.vy), f: this.facing, st: this.state, po: this.pose(), hp: Math.round(this.hp),
-      ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
+      zz: this.zonzo > 0 ? 1 : undefined, ki: Math.round(this.ki), bl: Math.round(this.beamLen), cb: this.combo, k: this.kills, d: this.deaths,
       bt: this.ctrl.startsWith('ai') ? 1 : 0,  lk: this.look ? lookToStr(this.look) : '', fc: this.fxc ? fxcToStr(this.fxc) : '', iv: this.invuln > 0 ? 1 : 0, og: this.onGround ? 1 : 0, gl: this.flying ? 1 : 0, aw: this.awakenT > 0 ? Math.max(0.1, Math.round(this.awakenT * 10) / 10) : 0, u: this === game.me && typeof conta !== 'undefined' && conta.user ? conta.user.id : '', ar: this.arq || 'eq', ivs: this.invisT > 0 ? 1 : 0, sh: this.shieldT > 0 ? 1 : 0, pz: this.paraT > 0 && this.state === 'hurt' ? 1 : 0, sk: this.state === 'rajada' && this.ser ? this.ser.kind : '', gk: this.genki ? 1 : 0 };
   }
 }
@@ -2911,6 +2932,7 @@ class Projectile {
   get col() { return (CHARS[this.ch] || CHARS.base).ki; } // simples; a PARTE 2 (visual) usa a cor escolhida pelo jogador
   update(dt) {
     this.t += dt;
+    if (nearCam(this.x, this.y) && Math.random() < (this.big ? 0.9 : 0.6)) { const c = this.col || ['#fff', '#fff']; particles.push({ x: this.x + rnd(-2, 2), y: this.y + rnd(-2, 2), vx: -(this.vx || 0) * 0.08 + rnd(-15, 15), vy: rnd(-15, 15), life: this.big ? 0.35 : 0.22, max: this.big ? 0.35 : 0.22, size: this.big ? 3 : 2, color: Math.random() < 0.5 ? c[1] : '#ffffff', glow: true }); }
     if (this.hom && this.t >= (this.hd || 0)) { // persegue o inimigo mais perto (fogos: só depois de subir)
       let best = null, bd = 1e9;
       for (const f of game.fighters) { if (f.id === this.o || f.dead || allyOf(f, this.o)) continue; const d = Math.hypot(f.x - this.x, f.y - 25 - this.y); if (d < bd) { bd = d; best = f; } }
@@ -2968,6 +2990,7 @@ class Projectile {
   }
   explode(blocked) {
     if (this.dead) return; this.dead = true;
+    if (nearCam(this.x, this.y)) { const g = this.big || this.aoe ? 1.8 : 1, c = this.col ? this.col[1] : '#fff'; spark(this.x, this.y, Math.round(14 * g), c, 240 * g, 0.4, 3); spark(this.x, this.y, Math.round(6 * g), '#ffffff', 120 * g, 0.25, 2); ring(this.x, this.y, '#ffffff', 4, 26 * g, 0.25); ring(this.x, this.y, c, 3, 40 * g, 0.35); shake = Math.max(shake, 2 * g); flashT = Math.max(flashT, g > 1 ? 0.05 : 0); }
     if (this.aoe) { // explosão em área: cada computador aplica nos SEUS lutadores
       for (const f of game.fighters) { if (!f.local || f.dead || f.id === this.o || allyOf(f, this.o) || f.invuln > 0 || (this.hitIds || []).includes(f.id)) continue;
         if (Math.hypot(f.x - this.x, f.y - 25 - this.y) < this.aoe) f.takeHit({ dmg: this.dmg * 0.75, kbx: sign(f.x - this.x) * 200, kby: -150, stun: 0.45, kind: 'heavy' }, game.byId(this.o) || { id: this.o, name: '?', x: this.x, local: false, pal_: palFor(this.ch, this.pal) }); }
@@ -3574,6 +3597,13 @@ addEventListener('click', e => { const b = e.target.closest && e.target.closest(
 /* ---------------- efeitos ---------------- */
 let particles = [], popups = [], killfeed = [];
 let shake = 0, hitstop = 0, flashT = 0;
+/* R130: MODO SONHO — só offline (treino/bots), liga na pausa ou na tela de bots. Não muda nada no online. */
+let golpeBan = null;
+function nomeGolpe(f, txt) { if (f !== game.me && !nearCam(f.x, f.y)) return; golpeBan = { txt, t: 1.0, c: (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffd23a', eu: f === game.me }; }
+let sonhoOn = (() => { try { return localStorage.getItem('adk_sonho') === '1'; } catch (e) { return false; } })(), slowT = 0, koT = 0;
+const SONHO = () => true; /* R135: o Modo Sonho virou o combate padrão (offline e online) */
+function setSonho(v) { sonhoOn = v; try { localStorage.setItem('adk_sonho', v ? '1' : '0'); } catch (e) {} document.querySelectorAll('.sonhoTg').forEach(b => { b.classList.toggle('on', v); b.textContent = '✨ MODO SONHO: ' + (v ? 'LIGADO' : 'DESLIGADO'); }); }
+function rastro(f, a) { if (!nearCam(f.x, f.y)) return; particles.push({ x: f.x + rnd(-3, 3), y: f.y - 22 + rnd(-10, 10), vx: -f.vx * 0.1, vy: 0, life: 0.22, max: 0.22, size: 3, color: a || '#ffffff', glow: true }); }
 function spark(x, y, n, color, speed = 120, life = 0.35, size = 2) {
   if (LITE) n = Math.ceil(n / 2);
   for (let i = 0; i < n; i++) { const a = rnd(0, Math.PI * 2), v = rnd(speed * 0.3, speed);
@@ -4065,7 +4095,9 @@ function teamScore() { if (!game.teams) return; const k = [0, 0]; for (const f o
 function drawHUD() {
   teamScore();
   const me = game.me; if (!me) return;
-  drawCine();
+  drawCine(); drawKban();
+  if (golpeBan && SONHO()) { const g = golpeBan; g.t -= 1 / 60; if (g.t <= 0) golpeBan = null; else { const k = 1 - g.t, sc = k < 0.12 ? 1.6 - k / 0.12 * 0.6 : 1; ctx.save(); ctx.globalAlpha = Math.min(1, g.t / 0.25); ctx.translate(VW / 2, g.eu ? VH * 0.34 : VH * 0.4); ctx.scale(sc, sc); text(g.txt, 0, -6, g.eu ? 12 : 9, g.c, 'center', '#120c1c', 2); ctx.restore(); } }
+  if (koT > 0 && SONHO()) { const k = 1.3 - koT, sc = k < 0.15 ? 2.4 - k / 0.15 * 1.4 : 1; ctx.save(); ctx.globalAlpha = Math.min(1, koT / 0.3); ctx.translate(VW / 2, VH * 0.36); ctx.scale(sc, sc); text('K.O.!', 0, -14, 28, '#ffd23a', 'center', '#3a0d0d', 3); ctx.restore(); }
   if (blindT > 0) { blindT -= 1 / 60; ctx.fillStyle = 'rgba(255,255,250,' + clamp(blindT / 1.2, 0, 0.96) + ')'; ctx.fillRect(0, 0, VW, VH); }
   if (game.duel) {
     const d = game.duelSt, y0 = Math.round(SAFE.t) + (isTouch ? 30 : 0), ds = duelists(); // (placar do duelo fica no quadro PLACAR) // abaixo do botão do chat no celular
@@ -4222,7 +4254,9 @@ function render(dt) {
   for (const f of game.fighters) f.drawShadow(cam);
   const order = game.fighters.filter(f => f !== game.me); if (game.me) order.push(game.me);
   for (const f of order) f.drawBeam(cam);
+  drawColunas(cam);
   for (const f of order) f.draw(cam);
+  drawZonzo(cam);
   for (const p of projectiles) p.draw(cam);
   drawOrbs(cam);
   lzFx = lzFx.filter(f => (f.t -= 1 / 60) > 0);
@@ -5252,7 +5286,7 @@ function wait(msg) {
   clearTimeout(waitTO); waitTO = setTimeout(() => { waitN = 0; show('wait', false); setStatus('O servidor demorou para responder. Tente de novo.');  }, 25000);
 }
 /* R124: versão mínima — se o jogo estiver desatualizado, a tela de abertura trava até atualizar */
-const APP_VER = '1.0.129';
+const APP_VER = '1.0.135';
 const verN = v => String(v || '').split('.').map(n => +n || 0).reduce((a, n, i) => a + n * Math.pow(1000, 3 - i), 0);
 async function checarVersao() { if (!conta || !conta.sb) return false;
   const r = await Promise.race([conta.sb.rpc('versao_min'), new Promise(ok => setTimeout(() => ok({}), 6000))]);
@@ -5930,6 +5964,12 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.135', d: '18/11', itens: [['novo', 'Combate novo em todos os modos (antigo Modo Sonho)'], ['novo', 'Poderes com rastro de energia e impacto mais forte']] },
+  { v: '1.0.134', d: '18/11', itens: [['corrigiu', 'Aviso de especial e transformação não cobre mais a luta']] },
+  { v: '1.0.133', d: '18/11', itens: [['novo', 'Efeito de transformação caprichado'], ['mudou', 'Multi kill com 7,5 s entre derrotas'], ['corrigiu', 'Tontura visível para todos no online'], ['corrigiu', 'Especiais mais leves (sem travadinha)']] },
+  { v: '1.0.132', d: '18/11', itens: [['novo', 'Cinema novo nos especiais 1 e 2'], ['novo', 'Double / Triple / Multi Kill'], ['novo', 'Tontura ao quebrar a defesa'], ['mudou', 'Bola de energia com mais impacto']] },
+  { v: '1.0.131', d: '18/11', itens: [['novo', 'Modo Sonho: nome dos golpes, carga rápida e QUEBRA-GUARDA (defesa + soco)']] },
+  { v: '1.0.130', d: '18/11', itens: [['novo', 'Modo Sonho (teste) no treino e contra bots']] },
   { v: '1.0.129', d: '17/11', itens: [['corrigiu', 'Baú roxo também aparece para quem já tem todos os itens']] },
   { v: '1.0.128', d: '17/11', itens: [['novo', 'Missões de quebrar objetos do mapa'], ['mudou', 'Aleatório e bots usam todas as roupas e acessórios'], ['corrigiu', 'Baú não repete item de quem já tem a coleção'], ['corrigiu', 'Carga do especial visível para os outros jogadores'], ['corrigiu', 'Aviso vermelho no passe com recompensa para pegar']] },
   { v: '1.0.127', d: '17/11', itens: [['novo', 'Item Casaquinho']] },
@@ -6058,22 +6098,52 @@ function impactoFx(v, src, kind) { if (!nearCam(v.x, v.y)) return; const sx = sr
   if (kind === 'hit') spark(x, y, 7, '#fff3a0', 170, 0.22, 2); else { spark(x, y, 16, '#ffd23a', 240, 0.3, 3); ring(x, y, '#ffffff', 5, 30, 0.25); } }
 /* R108: especial 2 com efeito de cinema (tela escurece, rosto em destaque, câmera lenta) */
 let cine = null;
-function cineStart(f) { cine = { f, t: 0, d: 0.95 }; if (typeof SFX !== 'undefined' && SFX.zap) SFX.zap(); }
+function cineStart(f, nome, tipo) { cine = { f, t: 0, d: 0.85, nome: String(nome || 'ESPECIAL').toUpperCase(), tipo: tipo || 2 }; if (typeof SFX !== 'undefined' && SFX.zap) SFX.zap(); flashT = Math.max(flashT, 0.05); }
+/* R132: corte de cinema do especial — faixa diagonal com linhas de velocidade, rosto grande com contorno de energia, nome do golpe; entra e sai deslizando */
 function drawCine() { if (!cine) return; const c = cine, f = c.f, k = c.t / c.d; if (k >= 1 || !f) { cine = null; return; }
-  const a = k < 0.15 ? k / 0.15 : k > 0.8 ? (1 - k) / 0.2 : 1;
-  ctx.save(); ctx.globalAlpha = a * 0.6; ctx.fillStyle = '#05020c'; ctx.fillRect(0, 0, VW, VH);
-  const by = VH * 0.5 - 30, sl = Math.min(1, k / 0.18), bx = -VW * (1 - sl);
-  ctx.globalAlpha = a; ctx.fillStyle = (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffd23a';
-  ctx.beginPath(); ctx.moveTo(bx, by + 8); ctx.lineTo(bx + VW, by - 6); ctx.lineTo(bx + VW, by + 54); ctx.lineTo(bx, by + 68); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = 'rgba(10,6,24,.85)'; ctx.beginPath(); ctx.moveTo(bx, by + 12); ctx.lineTo(bx + VW, by - 2); ctx.lineTo(bx + VW, by + 50); ctx.lineTo(bx, by + 64); ctx.closePath(); ctx.fill();
-  for (let i = 0; i < 7; i++) { const yy = by + 6 + ((i * 9 + c.t * 260) % 50); ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(bx + ((i * 97 + c.t * 900) % VW), yy, 26, 1); }
-  const face = f.spr && f.spr.parado; if (face) { const hb = headBox(face), S = 2.4, w = 24, fx = bx + VW * 0.22 - w * S / 2, fy = by + 29 - w * S / 2;
-    ctx.imageSmoothingEnabled = false; ctx.save(); ctx.beginPath(); ctx.rect(fx - 6, by + 4, w * S + 12, 56); ctx.clip();
-    ctx.translate(fx + w * S / 2, 0); ctx.scale(1, 1); ctx.translate(-(fx + w * S / 2), 0);
-    ctx.drawImage(face, Math.round(hb.cx - w / 2), Math.round(hb.cy - w / 2 + 3), w, w, fx, fy + 2, w * S, w * S); ctx.restore(); }
-  text(dispName(f.name).toUpperCase(), bx + VW * 0.38, by + 18, 8, '#ffffff', 'left', '#120c1c', 2);
-  text('ESPECIAL!', bx + VW * 0.38, by + 34, 12, '#ffd23a', 'left', '#120c1c', 2);
+  const cor = (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffd23a', cor2 = (f.pal_ && f.pal_.ki && f.pal_.ki[0]) || '#ff9a1e', dir = c.tipo === 1 ? -1 : 1;
+  const ent = Math.min(1, k / 0.14), sai = k > 0.82 ? (k - 0.82) / 0.18 : 0, ez = t => 1 - Math.pow(1 - t, 3);
+  const off = (1 - ez(ent)) * VW * dir + ez(sai) * -VW * 1.2 * dir, a = 1 - sai;
+  ctx.save(); /* R134: faixa compacta no alto da tela, sem escurecer o jogo (não esconde a luta) */
+  const cy = 84, h = 34, sk = 6; ctx.globalAlpha = a; ctx.translate(off, 0);
+  const faixa = (pad, fill) => { ctx.fillStyle = fill; ctx.beginPath(); ctx.moveTo(-20, cy - h / 2 + sk - pad); ctx.lineTo(VW + 20, cy - h / 2 - sk - pad); ctx.lineTo(VW + 20, cy + h / 2 - sk + pad); ctx.lineTo(-20, cy + h / 2 + sk + pad); ctx.closePath(); ctx.fill(); };
+  faixa(6, '#ffffff'); faixa(3, cor); faixa(0, '#140a26');
+  ctx.save(); ctx.clip(); if (!c.g) { c.g = ctx.createLinearGradient(0, 0, VW, 0); c.g.addColorStop(0, hexA(cor2, 0.55)); c.g.addColorStop(0.5, hexA(cor, 0.12)); c.g.addColorStop(1, 'rgba(0,0,0,0)'); } ctx.fillStyle = c.g; ctx.fillRect(-VW, 0, VW * 3, VH);
+  for (let i = 0; i < 16; i++) { const yy = cy - h + ((i * 23.7) % (h * 2)), xx = ((i * 131 + c.t * 1400 * -dir) % (VW + 80) + VW + 80) % (VW + 80) - 40; ctx.fillStyle = i % 3 ? 'rgba(255,255,255,.22)' : hexA(cor, 0.6); ctx.fillRect(xx, yy, 30 + (i % 4) * 14, i % 3 ? 1 : 2); }
+  for (let i = 0; i < 5; i++) { const r = 4 + i * 16 + (c.t * 60) % 9; ctx.strokeStyle = hexA(cor, 0.25 - i * 0.025); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(VW * 0.3, cy, r, 0, 7); ctx.stroke(); }
+  const face = f.spr && f.spr.parado; if (face) { const hb = headBox(face), S = 1.4, w = 26, fx = VW * 0.3 - w * S / 2, fy = cy - w * S / 2 + 4 + Math.sin(c.t * 30) * (k < 0.3 ? 1.5 : 0);
+    ctx.imageSmoothingEnabled = false; const sx = Math.round(hb.cx - w / 2), sy = Math.round(hb.cy - w / 2 + 3);
+    if (!c.sil) { const t = makeCanvas(w, w), tx = t.getContext('2d'); tx.drawImage(face, sx, sy, w, w, 0, 0, w, w); tx.globalCompositeOperation = 'source-in'; tx.fillStyle = '#ffffff'; tx.fillRect(0, 0, w, w); c.sil = t; }
+    ctx.globalAlpha = a * 0.8; for (const [dx, dy] of [[-2, 0], [2, 0], [0, -2], [0, 2]]) ctx.drawImage(c.sil, 0, 0, w, w, fx + dx, fy + dy, w * S, w * S); ctx.globalAlpha = a;
+    ctx.drawImage(face, sx, sy, w, w, fx, fy, w * S, w * S); }
+  ctx.restore();
+  const tx = VW * 0.3 + 26, pz = k < 0.2 ? 1 + (0.2 - k) * 2 : 1;
+  text(dispName(f.name).toUpperCase() + ' · ' + (c.tipo === 3 ? 'TRANSFORMAÇÃO' : c.tipo === 1 ? 'ESPECIAL 1' : 'ESPECIAL 2'), tx, cy - 13, 5, cor, 'left', '#120c1c', 1);
+  ctx.save(); ctx.translate(tx, cy + 3); ctx.scale(pz, pz); text(c.nome, 0, -6, c.nome.length > 14 ? 9 : 11, '#ffd23a', 'left', '#3a0d0d', 2); ctx.restore();
   ctx.restore(); }
+/* R132: sequência de derrotas (DOUBLE / TRIPLE / MULTI KILL) e tontura */
+let kstr = { n: 0, t: 0 }, kban = null, colunas = [];
+/* R133: transformação — coluna de luz, raios saindo do corpo, 3 ondas de choque e poeira (leve: só partículas) */
+function transFx(f) { const cor = (f.pal_ && f.pal_.ki && f.pal_.ki[1]) || '#ffffff';
+  colunas.push({ x: f.x, y: f.y, t: 0, d: 0.7, c: cor });
+  for (let i = 0; i < 3; i++) setTimeout(() => ring(f.x, f.y - 24, i === 1 ? cor : '#ffffff', 6, 60 + i * 30, 0.45), i * 110);
+  for (let i = 0; i < 14; i++) { const a = -Math.PI / 2 + rnd(-1.3, 1.3), v = rnd(200, 420); particles.push({ x: f.x, y: f.y - 26, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: rnd(0.25, 0.5), max: 0.5, size: 2, color: i % 2 ? '#ffffff' : cor, glow: true }); }
+  dust(f.x, f.y, 12); }
+function drawColunas(cam) { for (const c of colunas) { c.t += 1 / 60; const k = c.t / c.d, a = k < 0.2 ? k / 0.2 : 1 - (k - 0.2) / 0.8, w = 10 + 26 * Math.min(1, k * 3);
+    const x = c.x - cam.x, y = c.y - cam.y; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.max(0, a) * 0.7; ctx.fillStyle = c.c; ctx.fillRect(x - w / 2, y - 260, w, 260);
+    ctx.globalAlpha = Math.max(0, a); ctx.fillStyle = '#ffffff'; ctx.fillRect(x - w / 6, y - 260, w / 3, 260); ctx.restore(); }
+  colunas = colunas.filter(c => c.t < c.d); }
+function contarKill() { const agora = performance.now(); kstr.n = agora - kstr.t < 7500 ? kstr.n + 1 : 1; kstr.t = agora;
+  if (kstr.n >= 2) { kban = { n: kstr.n, t: 1.6 }; if (SFX.zap) SFX.zap(); shake = Math.max(shake, 5); } }
+function drawKban() { if (!kban) return; kban.t -= 1 / 60; if (kban.t <= 0) { kban = null; return; } const b = kban, k = 1.6 - b.t, sc = k < 0.15 ? 2 - k / 0.15 : 1 + Math.sin(k * 8) * 0.03;
+  const nm = b.n === 2 ? 'DOUBLE KILL!' : b.n === 3 ? 'TRIPLE KILL!' : b.n === 4 ? 'QUADRA KILL!' : 'MULTI KILL!', cor = b.n === 2 ? '#ffd23a' : b.n === 3 ? '#ff8a2a' : '#ff4a6a';
+  ctx.save(); ctx.globalAlpha = Math.min(1, b.t / 0.3); ctx.translate(VW / 2, VH * 0.36); ctx.scale(sc, sc);
+  const n = Math.min(b.n, 5), w = 13; for (let i = 0; i < n; i++) caveira(-(n - 1) * w / 2 + i * w, -20, cor);
+  text(nm, 0, -4, 14, cor, 'center', '#1a0610', 3); ctx.restore(); }
+function caveira(x, y, cor) { const P = (a, b, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(Math.round(x + a), Math.round(y + b), w, h); };
+  P(-5, -6, 10, 8, '#120c1c'); P(-4, -5, 8, 6, cor); P(-3, 1, 6, 3, '#120c1c'); P(-2, 1, 4, 2, cor); P(-3, -3, 2, 2, '#120c1c'); P(1, -3, 2, 2, '#120c1c'); P(-1, 2, 1, 1, '#120c1c'); P(1, 2, 1, 1, '#120c1c'); }
+function drawZonzo(cam) { const t = performance.now() / 1000; for (const f of game.fighters || []) { if (!(f.zonzo > 0) || f.dead) continue; f.zonzo -= 1 / 60; if (f.state !== 'hurt' && f.zonzo < 0.6) { f.zonzo = 0; continue; }
+    const hx = f.x - cam.x, hy = f.y - cam.y - 52; for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.09, x = hx + Math.cos(a) * 11, y = hy + Math.sin(a) * 3.5; ctx.fillStyle = '#120c1c'; ctx.fillRect(Math.round(x) - 2, Math.round(y) - 2, 5, 5); ctx.fillStyle = i === 1 ? '#9fe8ff' : '#ffd23a'; ctx.fillRect(Math.round(x) - 1, Math.round(y) - 2, 3, 5); ctx.fillRect(Math.round(x) - 2, Math.round(y) - 1, 5, 3); } } }
 function humanInput() {
   return {
     left: held('KeyA', 'ArrowLeft'), right: held('KeyD', 'ArrowRight'),
@@ -7148,6 +7218,8 @@ function setupTouch() {
   document.getElementById('pContinue').onclick = closePause;
   document.getElementById('pSettings').onclick = () => openSettings('pause');
   document.getElementById('pExit').onclick = () => game.toMenu();
+  document.querySelectorAll('.sonhoTg').forEach(b => b.onclick = () => setSonho(!sonhoOn)); setSonho(sonhoOn);
+
   addEventListener('touchstart', () => { isTouch = true; }, { passive: true });
   // online: tocar/clicar em qualquer lugar da tela (ou espaço/enter) para renascer
   const wantRespawn = e => {
@@ -7220,6 +7292,8 @@ function update(dt) {
   if (game.duel && net.role !== 'host' && game.duelSt.t > 0) game.duelSt.t -= dt; // acabou o tempo
   if (cine) cine.t += dt;
   if (hitstop > 0) { hitstop -= dt; return; }
+  if (slowT > 0) { slowT -= dt; if (game.mode !== 'online') dt *= 0.3; }
+  if (koT > 0) koT -= dt;
 
   orbPegar(dt); tickQuebraveis(dt);
   const frozen = game.duel && ['count', 'end'].includes(game.duelSt.ph);
