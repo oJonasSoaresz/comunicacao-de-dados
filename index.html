@@ -1075,7 +1075,8 @@
 
   /* R54: modo desempenho — corta o que mais pesa em celular simples */
   body.lite .mrays,body.lite .unlk-rays,body.lite .lvrays,body.lite .authrays,body.lite .lvray2{display:none!important}
-  body.lite *{animation-duration:0s!important;transition-duration:0s!important;text-shadow:none!important}
+  body.lite *{text-shadow:none!important}
+  body.lite :not(.baufx, .baufx *){animation-duration:0s!important;transition-duration:0s!important} /* R215: abertura do baú igual no celular e no PC */
   body.lite .ovl .card,body.lite .msgc,body.lite .unlk-in,body.lite .mb,body.lite .b{box-shadow:none!important;filter:none!important}
   body.lite .ovl{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
   .set.tgl{display:flex;align-items:center;gap:10px}.set.tgl label{flex:1;display:flex;flex-direction:column;gap:4px}.set.tgl small{color:var(--muted);font-size:calc(var(--fS) * .85);line-height:1.5}
@@ -1593,7 +1594,7 @@
   .oddn{text-align:center;font-size:calc(var(--fS) * .9);color:#9a8cc8}.oddn .coin{width:1.5em;height:1.5em;vertical-align:middle}
   #rankInfo b{font-weight:normal;color:#ffcf3a}#rankInfo .gemi{width:1.4em;height:1.4em;vertical-align:middle}
   /* abrir o baú */
-  .baufx.esp .bfwrap{opacity:0} .baufx .bfwrap{transition:opacity .18s}
+  .baufx.esp .bfwrap{opacity:0} .bfgiro.surge{animation:bfsurge .58s cubic-bezier(.3,.6,.35,1)} @keyframes bfsurge{0%{transform:rotate(360deg) scale(.2);opacity:0;filter:brightness(3)}60%{opacity:1}100%{transform:rotate(0) scale(1);filter:none}} /* R223: baú aparece girando */ .baufx .bfwrap{transition:opacity .18s}
   .baufx{position:absolute;inset:0;z-index:95;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--wh,600px) * .03);background:rgba(8,4,20,.82);cursor:pointer;touch-action:none;animation:bfin .25s ease-out}
   .baufx.sai{animation:bfout .3s ease-in forwards}
   @keyframes bfin{from{opacity:0}}@keyframes bfout{to{opacity:0}}
@@ -1609,7 +1610,7 @@
   .bfflash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
   .bfflash.on{animation:bffl .22s ease-out}.bfflash.forte{animation:bffl2 .6s ease-out}
   @keyframes bffl{0%{opacity:.55}100%{opacity:0}}@keyframes bffl2{0%{opacity:1}100%{opacity:0}}
-  body.lite .bfrays,body.lite .bfbau{animation:none}
+
   #oddsBox{z-index:66!important}
 
   /* R87: baú mais gostoso de abrir */
@@ -1835,7 +1836,12 @@
   .adsw{display:inline-block;width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 10px rgba(255,255,255,.4)}.adsw.big{width:56px;height:56px}
   .adno{display:block;margin-top:8px;color:#ffb0a0}
   .adimg{width:36px;height:36px;image-rendering:pixelated}.adimg.big{width:64px;height:64px}
-  .copt.rr2,.arq.pwcard.rr2{border-bottom:4px solid #4aa8ff!important} .copt.rr3,.arq.pwcard.rr3{border-bottom:4px solid #b06aff!important} .copt.rr4,.arq.pwcard.rr4{border-bottom:4px solid #ffb21e!important} /* R214: raridade = borda de baixo */
+  #cPanel .copt{justify-content:center} .pwq span{font-size:clamp(6px,.8vw,8px);text-align:center;line-height:1.2} .pwinfo b{color:var(--acc);font-weight:normal} /* R221 */
+  .copt.rbg{background:var(--rbg)!important} /* R224: cor lisa, sem textura */
+  #cPanel .cgrid .copt:not(.trslot){aspect-ratio:1/1;padding:0!important;gap:0!important} #cPanel .cgrid .copt:not(.trslot) canvas{width:78%!important;height:auto!important;aspect-ratio:1/1;margin:0!important} /* R223: miniatura grande e no centro exato */
+  .copt canvas.pwico{filter:drop-shadow(0 0 3px rgba(0,0,0,.85)) drop-shadow(0 0 1px #000)}
+  .copt.nada .nadat{display:flex!important;width:auto!important} #msgList .copt.nada{position:relative}
+  .copt.nada{position:relative;background:repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 9px,transparent 9px 18px),#050308!important} .copt.nada canvas{visibility:hidden} .copt.nada .nadat{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#cfc6e8;font-size:clamp(8px,1.1vw,11px);letter-spacing:1px;pointer-events:none} /* R219: slot vazio */
   #cPanel .cgrid:not(:has(.trslot)){display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px} #cPanel .cgrid:not(:has(.trslot)) .copt{width:auto;flex:none;min-width:0} /* R214: 4 por linha */
   .copt.adk{outline:2px solid #ffcf3a;position:relative}.copt .adtv,.cswatch .adtv{position:absolute;right:-4px;bottom:-4px;width:16px;height:16px;border-radius:50%;background:#d8263a;color:#fff;font-size:9px;line-height:16px;text-align:center;font-style:normal}
 
@@ -1904,7 +1910,7 @@
         <button class="ib big2" id="bFriends" title="amigos"><i class="missi amii"></i><span>AMIGOS</span><b class="dot hidden" id="dotFr"></b></button>
       </div>
       <button class="hidden" id="bSettings"></button>
-      <div class="ver">v1.0.214</div>
+      <div class="ver">v1.0.227</div>
       <div id="status" class="status"></div>
     </div>
   </div>
@@ -5210,14 +5216,15 @@ const tagCanvas = r => '<img class="tagi" src="' + TAG_SRC[r][0] + '" alt="">';
 const tagW = (r, size) => TAGS[r] ? size * 1.7 * TAGS[r].r + size * 0.5 : 0;
 function nameText(f, str, x, y, size, align, color, outline = '#120c1c', ow = 1.2) {
   let r = f && f.role !== undefined ? f.role : conta.roleOf(f);
-  r = normRole(r); if (TAGS[r]) return tagText(r, str, x, y, size, align, outline);
-  text(str, x, y, size, '#ffffff', align, outline, ow); // todos os nomes em branco
+  const cor = f && f.arq && ARQ_COR[f.arq] ? ARQ_COR[f.arq] : '#ffffff'; /* R215: nome na cor do arquétipo */
+  r = normRole(r); if (TAGS[r]) return tagText(r, str, x, y, size, align, outline, cor);
+  text(str, x, y, size, cor, align, outline, ow);
 }
-function tagText(r, str, x, y, size, align = 'left', outline = '#120c1c') {
+function tagText(r, str, x, y, size, align = 'left', outline = '#120c1c', cor = '#ffffff') {
   ctx.font = FONT(size); const th = size * 1.7, tw = tagW(r, size), w = tw + ctx.measureText(str).width;
   const x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
   const T = TAGS[r]; if (T.im.complete) ctx.drawImage(T.im, x0, y - size * 0.35, th * T.r, th);
-  text(str, x0 + tw, y, size, '#ffffff', 'left', outline, 1.2);
+  text(str, x0 + tw, y, size, cor, 'left', outline, 1.2);
 }
 function onKillHook(m) {
   if (!game.me) return;
@@ -5447,7 +5454,7 @@ async function useCode() {
     if (error) throw error;
     if (data === 'infinite') { conta.perfil.infinite = true; renderCoins(); codeOk('∞ ' + COINI + ' · tudo liberado!'); }
     else if (/^coins:\d+$/.test(data || '')) { const n = +data.slice(6); conta.perfil.coins = (conta.perfil.coins || 0) + n; conta.perfil.coins -= n; moedasGanhas(n); codeOk('+' + n + ' ' + COINI); }
-    else if (/^bau:\d+$/.test(data || '')) { const n = +data.slice(4); ganhouExtra(0, n); drawBau && drawBau(); codeOk('+' + n + ' ' + BAUI); }
+    else if (/^bau:\d+(:[cpel])?$/.test(data || '')) { const [, q, t] = data.split(':'), n = +q, sp = { p: '--baup', e: '--baue', l: '--baul' }[t]; ganhouExtra(0, n); if (temp && t && 'cpel'.indexOf(t) > 'cpel'.indexOf(temp.bt || 'c')) temp.bt = t; drawBau && drawBau(); carregaBau(); codeOk('+' + n + ' ' + (sp ? BAUI.replace('class="baui"', 'class="baui" style="background-image:var(' + sp + ')!important"') : BAUI)); } /* R216: ícone do baú na raridade do código */
     else if (/^gems:\d+$/.test(data || '')) { const n = +data.slice(5); ganhouExtra(n); codeOk('+' + n + ' ' + GEMI); }
     else if (/^xp:\d+$/.test(data || '')) { const n = +data.slice(3); conta.perfil.xp_bonus = (conta.perfil.xp_bonus | 0) + n; renderConta(); voar('x', n); codeOk('+' + n + ' ' + XPI); lvShown = 0; setTimeout(checkLevel, 600); }
     else if (data === 'reset') { // conta zerada: tudo volta ao começo
@@ -5475,7 +5482,7 @@ function wait(msg) {
   clearTimeout(waitTO); waitTO = setTimeout(() => { waitN = 0; show('wait', false); setStatus('O servidor demorou para responder. Tente de novo.');  }, 25000);
 }
 /* R124: versão mínima — se o jogo estiver desatualizado, a tela de abertura trava até atualizar */
-const APP_VER = '1.0.214';
+const APP_VER = '1.0.227';
 const verN = v => String(v || '').split('.').map(n => +n || 0).reduce((a, n, i) => a + n * Math.pow(1000, 3 - i), 0);
 async function checarVersao() { if (!conta || !conta.sb) return false;
   const r = await Promise.race([conta.sb.rpc('versao_min'), new Promise(ok => setTimeout(() => ok({}), 6000))]);
@@ -5704,12 +5711,12 @@ async function avisoConvite() {
 }
 async function carregaBau() { // só pergunta se o baú está disponível (não redesenha o menu)
   if (!conta.user || !conta.sb || bauBusca) return; bauBusca = true;
-  try { const { data, error } = await conta.sb.rpc('my_season'); temp = error || !data ? null : { chest: !!data.chest, free: !!data.free, n: data.n | 0, ach: data.ach || [], xp2: !!data.xp2, xp2m: data.xp2m || 'auto', wkp: !!data.wkp, wkr: data.wkr || 0, ref: !!data.ref, refs: !!data.refs }; if (data && data.refs) extrasMenu.rf = false; extrasMenu(); if (data && !error && conta.perfil && data.gems != null && (data.gems | 0) !== gemsN()) { conta.perfil.gems = data.gems | 0; renderGems(); } } finally { bauBusca = false; }
+  try { const { data, error } = await conta.sb.rpc('my_season'); temp = error || !data ? null : { chest: !!data.chest, free: !!data.free, n: data.n | 0, ach: data.ach || [], xp2: !!data.xp2, xp2m: data.xp2m || 'auto', wkp: !!data.wkp, wkr: data.wkr || 0, ref: !!data.ref, refs: !!data.refs }; if (data && !error) { if (temp) temp.bt = data.bt || temp.bt; if (temp && !data.bt) { try { const t = await conta.sb.rpc('chest_tier'); if (!t.error) temp.bt = t.data || 'c'; } catch (e) {} } } if (data && data.refs) extrasMenu.rf = false; extrasMenu(); if (data && !error && conta.perfil && data.gems != null && (data.gems | 0) !== gemsN()) { conta.perfil.gems = data.gems | 0; renderGems(); } } finally { bauBusca = false; }
   if (dly) show('dotDaily', !dly.got || !!(temp && temp.chest));
   if (!document.getElementById('dailyBox').classList.contains('hidden')) drawBau();
 }
 function drawBau() { const ok = !!(temp && temp.chest), b = document.getElementById('bChest'); b.disabled = !ok; b.textContent = ok ? 'ABRIR' + (temp.n > 1 ? ' (' + temp.n + ')' : '') : 'AMANHÃ';
-  document.getElementById('chestRow').classList.toggle('pronto', ok); document.getElementById('chIco').classList.toggle('aberto', !ok); document.getElementById('chSub').textContent = temp && temp.free ? 'modo dono: sempre liberado' : ok ? (temp.n > 1 ? 'você tem ' + temp.n + ' baús!' : 'pronto para abrir!') : 'volte amanhã';
+  document.getElementById('chestRow').classList.toggle('pronto', ok); { const ic = document.getElementById('chIco'), bt = ok && temp && temp.bt; ic.classList.toggle('aberto', !ok); const v = bt === 'l' ? 'var(--baul)' : bt === 'e' ? 'var(--baue)' : bt === 'p' ? 'var(--baup)' : ''; if (v) ic.style.setProperty('background-image', v, 'important'); else ic.style.removeProperty('background-image'); } /* R215: bauzinho no tipo do próximo baú */ document.getElementById('chSub').textContent = temp && temp.free ? 'modo dono: sempre liberado' : ok ? (temp.n > 1 ? 'você tem ' + temp.n + ' baús!' : 'pronto para abrir!') : 'volte amanhã';
   document.getElementById('chSub').textContent += ' · 3% de chance de PASSIVA'; }
 function itemPreview(item) { // só o item, na cor escolhida, ampliado dentro do quadrinho
   const L = validLook(chosenLook) || {}, [k, v] = item.split(':'), c = makeCanvas(84, 84), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
@@ -5734,15 +5741,16 @@ function itemPreview(item) { // só o item, na cor escolhida, ampliado dentro do
   x.drawImage(im, x0, y0, w, h, Math.round(42 - w * sc / 2), Math.round(42 - h * sc / 2), w * sc, h * sc);
   return c.toDataURL();
 }
-const BAU_T = [0, 1, 3, 6]; /* toque em que o baú sobe para prata / épico / lendário */
-function bauToques(req0) { const req = Promise.race([req0, new Promise((_, rj) => setTimeout(() => rj(new Error('SEM_RESPOSTA')), 9000))]); /* R209: nunca espera para sempre */ // baú no centro: 3 toques (4 se vier item raro); abre na hora do último toque
+const BAU_T = [0, 1, 3, 6];
+const BAU_PRE = (() => { const st = getComputedStyle(document.documentElement), ims = []; for (const v of ['--bau', '--bauo', '--baup', '--baupo', '--baue', '--baueo', '--baul', '--baulo']) { const m = /url\(["']?([^"')]+)/.exec(st.getPropertyValue(v)); if (m) { const im = new Image(); im.src = m[1]; ims.push(im.decode ? im.decode().catch(() => {}) : Promise.resolve()); } } return Promise.all(ims); })(); /* R216: pré-carrega todas as sprites do baú */ /* toque em que o baú sobe para prata / épico / lendário */
+function bauToques(req0, bt0) { const req = Promise.race([req0, new Promise((_, rj) => setTimeout(() => rj(new Error('SEM_RESPOSTA')), 9000))]); /* R209: nunca espera para sempre */ // baú no centro: 3 toques (4 se vier item raro); abre na hora do último toque
   return new Promise(fim => {
-    const o = document.createElement('div'); o.className = 'baufx'; let n = 0, meta = 0, res = null, feito = false, nivel = '', esperando = false, travaAte = 0, base = 0, alvo = 0, tier = 0; o.classList.add('esp'); const criado = performance.now();
-    req.then(r => { res = r; const d = r && r.data, it = d && d.tipo === 'item' ? String(d.item || '') : ''; /* R195: comum 1 · raro +2 · épico +3 · lendário +4 */
+    const o = document.createElement('div'); o.className = 'baufx'; let n = 0, meta = 0, res = null, feito = false, nivel = '', esperando = false, travaAte = 0, base = 0, alvo = 0, tier = 0; o.classList.add('esp'); /* R216: só aparece quando o servidor diz o tipo e a sprite já está pronta */ const criado = performance.now();
+    const pronto = req.then(async r => { await BAU_PRE; res = r; const d = r && r.data, it = d && d.tipo === 'item' ? String(d.item || '') : ''; /* R195: comum 1 · raro +2 · épico +3 · lendário +4 */
       let L = /^pv:/.test(it) ? 3 : (it || (d && d.raro)) ? 2 : (d && (d.tipo === 'gems' || (d.tipo === 'coins' && d.v >= 80))) ? 1 : 0;
-      base = d && d.bt === 'e' ? 2 : d && d.bt === 'p' ? 1 : 0; L = Math.max(L, base); alvo = L; nivel = ['', 'prata', 'raro', 'lenda'][L]; meta = [1, 3, 6, 10][L] - BAU_T[base]; tier = base; /* R214: o baú já começa no tipo recebido */
-      if (base === 1) o.classList.add('prata'); if (base === 2) o.classList.add('raro'); o.classList.remove('esp'); }, e => { res = { error: e }; meta = 1; o.classList.remove('esp'); });
-    o.innerHTML = '<i class="bfrays"></i><div class="bfwrap"><div class="bfgiro"><div class="bfbau"></div></div></div><b class="bftxt">TOQUE PARA ABRIR!</b><div class="bfburst"></div><div class="bfflash"></div>';
+      base = d && d.bt === 'l' ? 3 : d && d.bt === 'e' ? 2 : d && d.bt === 'p' ? 1 : 0; L = Math.max(L, base); alvo = L; nivel = ['', 'prata', 'raro', 'lenda'][L]; meta = [1, 3, 6, 10][L] - BAU_T[base]; tier = base; /* R214: o baú já começa no tipo recebido */
+      o.classList.remove('prata', 'raro', 'lenda'); if (base) o.classList.add(['', 'prata', 'raro', 'lenda'][base]); o.classList.remove('esp'); { const gz = o.querySelector('.bfgiro'); if (gz) { gz.classList.remove('surge'); void gz.offsetWidth; gz.classList.add('surge'); gz.addEventListener('animationend', () => { gz.classList.remove('surge'); const t = o.querySelector('.bftxt'); if (t && !n) t.classList.remove('some'); }, { once: true }); setTimeout(() => { const t = o.querySelector('.bftxt'); if (t && !n) t.classList.remove('some'); }, 700); travaAte = performance.now() + 450; } } }, e => { res = { error: e }; meta = 1; o.classList.remove('esp'); });
+    o.innerHTML = '<i class="bfrays"></i><div class="bfwrap"><div class="bfgiro"><div class="bfbau"></div></div></div><b class="bftxt some">TOQUE PARA ABRIR!</b><div class="bfburst"></div><div class="bfflash"></div>';
     document.getElementById('wrap').appendChild(o);
     const giro = o.querySelector('.bfgiro'), bau = o.querySelector('.bfbau'), fl = o.querySelector('.bfflash'); bau.addEventListener('animationend', () => bau.classList.remove('bate')); giro.addEventListener('animationend', () => giro.classList.remove('gira')); const lim = setInterval(() => { if (!o.isConnected) return clearInterval(lim); if (performance.now() > travaAte + 400) { bau.classList.remove('bate'); giro.classList.remove('gira'); } }, 300);
     const meio = fn => setTimeout(fn, 110); /* troca o baú no meio do giro */
@@ -5763,7 +5771,7 @@ function bauToques(req0) { const req = Promise.race([req0, new Promise((_, rj) =
       bau.classList.remove('bate'); void bau.offsetWidth; bau.classList.add('bate'); bau.style.setProperty('--z', 1 + n * 0.08); o.style.setProperty('--tr', n);
       try { (SFX.hit || SFX.coin)(); } catch (x) {} flash('on');
       const k = n; /* R196: cada toque usa o próprio número (toques rápidos antes da resposta do servidor não se misturam) */
-      if (!res) { esperando = true; o.querySelector('.bftxt').textContent = '...'; await req.catch(() => {}); await new Promise(r => setTimeout(r, 0)); esperando = false; } /* enquanto o servidor responde, outros toques não contam */
+      if (!res) { esperando = true; o.querySelector('.bftxt').textContent = '...'; await pronto; await new Promise(r => setTimeout(r, 0)); esperando = false; } /* enquanto o servidor responde, outros toques não contam */
       if (feito || o._ult >= k) return; o._ult = k;
       const prox = tier + 1; if (prox <= alvo && k === BAU_T[prox] - BAU_T[base]) { tier = prox; bau.classList.remove('bate'); giro.classList.remove('gira'); void giro.offsetWidth; giro.classList.add('gira'); travaAte = performance.now() + 600;
         meio(() => { o.classList.remove('prata', 'raro'); o.classList.add(['', 'prata', 'raro', 'lenda'][prox]); if (prox >= 2) o.classList.add('quase'); flash('forte'); if (prox === 3) { vibrar([40, 30, 80]); try { SFX.level && SFX.level(); } catch (x) {} } }); vibrar(prox === 3 ? 0 : 20 + prox * 5); return; }
@@ -5774,9 +5782,9 @@ function bauToques(req0) { const req = Promise.race([req0, new Promise((_, rj) =
 async function abrirBau() {
   const b = document.getElementById('bChest'); if (b.disabled) return; b.disabled = true;
   const fz = bauForca() && normRole(conta.perfil && conta.perfil.role) === 'dono', args = { tem: colecaoKeys().filter(k => shop.has(k)) }; if (fz) args.forca = true;
-  const { data, error } = await bauToques(conta.sb.rpc('open_chest', args));
+  const { data, error } = await bauToques(conta.sb.rpc('open_chest', args), temp && temp.bt);
   if (error) { drawBau(); return notice(/JA_ABERTO/.test(error.message) ? 'Você já abriu o baú hoje. Volte amanhã!' : erroRecompensa(error), 'BAÚ', 'err'); }
-  { const n = Math.max(0, ((temp && temp.n) | 0) - 1); temp = { ...(temp || {}), n, chest: n > 0 || !!(temp && temp.free) }; } drawBau(); show('dotDaily', !dly || !dly.got || temp.chest);
+  { const n = Math.max(0, ((temp && temp.n) | 0) - 1); temp = { ...(temp || {}), n, chest: n > 0 || !!(temp && temp.free) }; } drawBau(); setTimeout(() => carregaBau(), 300); show('dotDaily', !dly || !dly.got || temp.chest);
   const box = document.querySelector('#dailyBox .card');
   if (data.tipo === 'item') { if (conta.perfil) conta.perfil.owned = [...(conta.perfil.owned || []), data.item]; fxPanel({ cor: 'gold', box: document.getElementById('wrap'), seal: '<img src="' + itemPreview(data.item) + '" alt="">', sealCls: 'prev', titulo: 'DESBLOQUEADO!', sub: esc(nomeItem(data.item)) + '<br>já está liberado na customização', tempo: 2600, fixo: true }); SFX.unlock(); }
   else if (data.tipo === 'gems') { ganhouExtra(data.v); premioFx(box, 0, 0, 'RECOMPENSA!', data.v); }
@@ -5810,7 +5818,7 @@ function drawMissoes(flash) {
   const ordem = m => src.ms.includes(m.id) ? 2 : Math.min(m.n, m.v) >= m.n ? 0 : 1;
   for (const m of [...lista].sort((a, b) => ordem(a) - ordem(b))) { const v = Math.min(m.n, m.v), feita = src.ms.includes(m.id), ok = v >= m.n;
     const r = document.createElement('div'); r.className = 'rwrow' + (feita ? ' done' : ok ? ' ready' : '') + (flash === m.id ? ' flash' : '');
-    r.innerHTML = '<div class="rwi"><b>' + esc(m.t) + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div>' + (sem ? (m.c >= 200 ? premio(0, m.xp, 1, 1).replace(BAUI, '<i class="baui" style="background-image:var(--baup)!important"></i>') : premio(0, m.xp, 1, 1)) : premio(m.c, m.xp));
+    r.innerHTML = '<div class="rwi"><b>' + esc(m.t) + '</b><div class="rwbar"><u style="width:' + Math.round(v / m.n * 100) + '%"></u><em>' + v + ' / ' + m.n + '</em></div></div>' + (sem ? (m.c >= 125 ? premio(0, m.xp, 1, 1).replace(BAUI, '<i class="baui" style="background-image:var(--baup)!important"></i>') : premio(0, m.xp, 1, 1)) : premio(m.c, m.xp));
     const b = document.createElement('button'); b.type = 'button'; b.className = 'b rwb' + (feita ? ' got' : ok ? ' pri' : ''); b.disabled = feita || !ok;
     b.innerHTML = feita ? '<span class="tick"></span>FEITA' : 'RESGATAR';
     b.onclick = async () => { b.disabled = true; wait('resgatando...'); try { await conta.flushStats(); } catch (e) {} const { data, error } = await conta.sb.rpc('claim_mission', { mid: m.id }); unwait();
@@ -5827,6 +5835,11 @@ function pvTrava(id) { /* mesmo popup dos poderes bloqueados */
   const pv = PASSIVAS[id]; if (!pv) return; if (UNLOCK['pv:' + id]) return travaFx('pv:' + id, pv.n);
   const sub = PV_PASSE[id] ? 'Essa passiva é desbloqueada<br>no <u>passe premium · nível ' + PV_PASSE[id] + '</u><br>ou no <u>baú lendário</u>' : 'Essa passiva é desbloqueada<br>no <u>baú lendário</u>';
   fxPanel({ cor: 'gold', seal: '<img src="' + itemThumb('pv:' + id) + '" alt=""><i class="trvlk"></i>', sealCls: 'prev', titulo: esc(pv.n).toUpperCase(), sub, tempo: 4000 }).classList.add('trv'); }
+function infoPrevia(nome, desc, cor) { /* R226: caixa de informação na prévia (poderes), igual à das passivas */
+  const box = document.querySelector('.cprev'); if (!box) return; let d = box.querySelector('.pvprev'); if (!d) { d = document.createElement('div'); d.className = 'pvprev'; box.appendChild(d); }
+  const cv = box.querySelector('canvas'), ox = cv ? cv.offsetLeft : 6, oy = cv ? cv.offsetTop : 4, ow = cv ? cv.offsetWidth : box.clientWidth - 12;
+  d.style.cssText = 'position:absolute;left:' + (ox + 5) + 'px;width:' + (ow - 10) + 'px;box-sizing:border-box;top:' + (oy + 5) + 'px;padding:3px 6px;border-radius:7px;background:rgba(18,12,28,.72);border:1px solid ' + cor + ';pointer-events:none;z-index:2;font-size:6px;line-height:1.35;text-align:center';
+  d.innerHTML = '<b style="color:' + cor + '">' + esc(nome).toUpperCase() + '</b><br>' + esc(desc); }
 function mostraPvPrevia(id) { /* R190: a passiva aparece desenhada na prévia ao lado */
   const box = document.querySelector('.cprev'); if (!box) return; let d = box.querySelector('.pvprev'); const pv = PASSIVAS[id];
   if (!pv || custTab !== 'passiva') { if (d) d.remove(); return; }
@@ -6207,6 +6220,19 @@ const premio = (c, xp, g, bau) => '<span class="prem">' + (bau ? '<span class="p
 function actAdd(k, n = 1) { if (!conta.user || game.mode === 'preview' || game.mode === 'treino') return; const a = conta.pend.act || (conta.pend.act = {}); a[k] = (a[k] || 0) + n; }
 const ACT_DE = { guard: 'def', kiball: 'ki', dash: 'dash', awaken: 'awk', kame: 'esp', beam: 'esp', bigfire: 'esp', bigwind: 'esp', beamwind: 'esp', rajada: 'esp' };
 const NOVIDADES = [
+  { v: '1.0.227', d: '23/11', itens: [['mudou', 'Mais missões semanais dão baú prata'], ['novo', 'Informação dos poderes na prévia'], ['corrigido', 'Itens no centro do slot']] },
+  { v: '1.0.226', d: '23/11', itens: [['mudou', 'Ícones dos poderes em quadro preto arredondado']] },
+  { v: '1.0.225', d: '23/11', itens: [['mudou', 'Fundo dos slots liso de novo']] },
+  { v: '1.0.224', d: '23/11', itens: [['mudou', 'Baú aparece girando'], ['mudou', 'Itens centralizados e fundo com textura']] },
+  { v: '1.0.223', d: '23/11', itens: [['mudou', 'Ícones de poderes novos, sem nomes'], ['mudou', 'Personagem centralizado nos slots de transformação']] },
+  { v: '1.0.222', d: '23/11', itens: [['mudou', 'Poderes em quadrados com raridade'], ['corrigido', 'Slot de transformação visível']] },
+  { v: '1.0.221', d: '23/11', itens: [['mudou', 'Cor da raridade ocupa o slot inteiro']] },
+  { v: '1.0.220', d: '23/11', itens: [['mudou', 'Slots vazios com o novo visual "NADA"'], ['mudou', 'Raridade também nas auras e poderes']] },
+  { v: '1.0.219', d: '23/11', itens: [['mudou', 'Raridade pela cor do fundo da miniatura']] },
+  { v: '1.0.218', d: '23/11', itens: [['mudou', 'Raridade dos itens com brilho colorido']] },
+  { v: '1.0.217', d: '23/11', itens: [['mudou', 'Slots coloridos pela raridade'], ['corrigido', 'Baú carrega antes de aparecer']] },
+  { v: '1.0.216', d: '23/11', itens: [['corrigido', 'Ícone do baú certo na recompensa diária e nos códigos'], ['corrigido', 'Baú não troca de aparência ao abrir']] },
+  { v: '1.0.215', d: '23/11', itens: [['novo', 'Baús guardados abrem do mais raro para o mais comum'], ['novo', 'Ícone do baú mostra o tipo do próximo'], ['corrigido', 'Nome colorido nas batalhas'], ['corrigido', 'Abertura do baú igual no celular e no PC']] },
   { v: '1.0.214', d: '23/11', itens: [['novo', 'Nome na cor do arquétipo'], ['novo', 'Raridade nos itens, ordenados por raridade'], ['mudou', 'Baú já começa no tipo recebido'], ['mudou', 'Novo baú comum'], ['mudou', '4 itens por linha na customização'], ['corrigido', 'Aviso de item desbloqueado não some ao tocar']] },
   { v: '1.0.213', d: '22/11', itens: [['corrigido', 'Passiva bloqueada não fica selecionada ao sair da customização']] },
   { v: '1.0.212', d: '22/11', itens: [['corrigido', 'Passiva escolhida vale só para o personagem atual'], ['corrigido', 'Escolher um item não volta a lista para o topo']] },
@@ -6808,18 +6834,23 @@ function msgOpen(title, text, input, cancel, okLabel) {
 const notice = (text, title = 'AVISO', kind) => msgOpen(title, kind ? { kind, html: esc(String(text)).replace(/\n/g, '<br>') } : text, '', false);
 function semMoedas(falta) { fxPanel({ cor: 'err', seal: '<span class="xx"></span>', titulo: 'SEM MOEDAS!', sub: falta > 0 ? 'faltam ' + falta + ' <i class="coin"></i>' : '', tempo: 2200 }); }
 /* popup com os personagens criados para escolher a transformação */
+function personagemCentro(x, look) { const im = lookSprites(look).spr.parado, W = x.canvas.width, bb = itemBoxA(im); const k = Math.max(1, Math.floor(Math.min((W - 4) / bb.w, (W - 4) / bb.h))); x.imageSmoothingEnabled = false;
+  x.drawImage(im, bb.x, bb.y, bb.w, bb.h, Math.round((W - bb.w * k) / 2), Math.round((W - bb.h * k) / 2), bb.w * k, bb.h * k); } /* R222: personagem no centro do slot */
+function itemBoxA(im) { if (im._bbA) return im._bbA; const c = makeCanvas(im.width, im.height), g = c.getContext('2d'); g.drawImage(im, 0, 0); const d = g.getImageData(0, 0, im.width, im.height).data; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+  for (let y = 0; y < im.height; y++) for (let x = 0; x < im.width; x++) if (d[(y * im.width + x) * 4 + 3] > 20) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return (im._bbA = x1 < 0 ? { x: 0, y: 0, w: im.width, h: im.height } : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 }); }
 function pickTrans() {
   const box = document.getElementById('msgList'); box.innerHTML = '';
   const pr = msgOpen('TRANSFORMAÇÃO', 'Escolha em qual personagem você vira ao despertar:', '', true);
-  const add = (label, v, look) => {
+  const add = (label, v, look, cor) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'copt' + (v === chosenTr ? ' sel' : '');
     const c = makeCanvas(56, 56), x = c.getContext('2d'); x.imageSmoothingEnabled = false;
-    if (look) { const im = lookSprites(look).spr.parado; x.drawImage(im, Math.floor(28 - im.width / 2), Math.round(4 - (im._pad || 0))); }
-    b.appendChild(c); const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp);
+    if (look) { personagemCentro(x, look); c.style.setProperty('background', 'transparent', 'important'); b.style.setProperty('background', THUMB_BG, 'important'); }
+    b.appendChild(c); if (v === -1) { b.classList.add('nada'); b.insertAdjacentHTML('beforeend', '<span class="nadat">NADA</span>'); } else { const sp = document.createElement('span'); sp.textContent = label; if (cor) sp.style.setProperty('color', cor, 'important'); b.appendChild(sp); }
     b.onclick = () => msgDone && msgDone(v); box.appendChild(b);
   };
   add('Nenhuma', -1, null);
-  slots.forEach((o, i) => { if (i !== slotCur && shop.has('sl:' + i)) add('Slot ' + (i + 1) + ' · ' + ARQS[o.arq].name, i, shop.equip(o.look, o.fxc).look); });
+  slots.forEach((o, i) => { if (i !== slotCur && shop.has('sl:' + i)) add('Slot ' + (i + 1), i, shop.equip(o.look, o.fxc).look, ARQ_COR[o.arq]); });
   show('msgList', true);
   return pr.then(v => { show('msgList', false); return v === null || v === true ? null : v; });
 }
@@ -7073,13 +7104,13 @@ function optCard(label, sel, draw, onPick, key) {
   const adk = key && AD_ITENS[key] && !shop.has(key);
   if (adk) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb playb"></i>'); b.title = 'assista ' + AD_ITENS[key].n + ' vídeos para liberar'; }
   else if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb"></i>'); b.title = 'bloqueado · ' + priceOf(key) + ' moedas'; }
-  const c = makeCanvas(56, 56), x = c.getContext('2d'); x.imageSmoothingEnabled = false; draw(x);
-  b.appendChild(c); const semNome = key && /^(h|o|m|pv):/.test(key); if (key) b.classList.add('rr' + rarOf(key)); if (!semNome) { const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp); } else b.title = b.title || label;
-  if (draw.px) requestAnimationFrame(() => { const D = Math.round(c.clientWidth * Math.min(3, devicePixelRatio || 1)); if (D > 56 && D < 400) { c.width = c.height = D; const y = c.getContext('2d'); y.imageSmoothingEnabled = false; draw(y); } });
+  const c = makeCanvas(56, 56), x = c.getContext('2d'), bgc = label === 'Nada' || /^tr:/.test(key || '') ? '' : RAR_BG[key ? rarOf(key) : 1]; if (bgc) { c.style.setProperty('background', 'transparent', 'important'); b.style.setProperty('--rbg', bgc); b.classList.add('rbg'); } /* R220: fundo da raridade no slot inteiro */ x.imageSmoothingEnabled = false; THUMB_CUR = bgc ? 'none' : ''; draw(x); THUMB_CUR = '';
+  b.appendChild(c); const semNome = key && /^(h|o|m|pv):/.test(key); if (key) b.classList.add('rr' + rarOf(key)); if (label === 'Nada') { b.classList.add('nada'); b.insertAdjacentHTML('beforeend', '<span class="nadat">NADA</span>'); } if (!semNome && label !== 'Nada') { const sp = document.createElement('span'); sp.textContent = label; b.appendChild(sp); } else b.title = b.title || label;
+  if (draw.px) requestAnimationFrame(() => { const D = Math.round(c.clientWidth * Math.min(3, devicePixelRatio || 1)); if (D > 56 && D < 400) { c.width = c.height = D; const y = c.getContext('2d'); y.imageSmoothingEnabled = false; THUMB_CUR = bgc ? 'none' : ''; draw(y); THUMB_CUR = ''; } });
   b.onclick = () => { if (adk) { if (!sel) { onPick(); saveLook(); return; } return popVideo('i', key); } if (sel && key && !shop.has(key)) return tryBuy(key, label); onPick(); saveLook(); offerBuy(key, label); }; return b;
 }
 const so = (L, x) => { const o = { ...L, h: '', t: 0, au: 0 }; for (const it of LOOK_ITENS()) o[it.k] = 0; return { ...o, ...x }; }; // miniatura mostra só o item da opção
-const THUMB_BG = '#4d3f8f';
+const THUMB_BG = '#4d3f8f', RAR_BG = ['', '#5b5b68', '#2f5fa8', '#6b3aa8', '#a8781e']; let THUMB_CUR = ''; /* R218: fundo da miniatura = cor da raridade */
 function thumbPadrao(look) { /* R160: corpo base translúcido; o item (máscara = os pixels do próprio sprite) em branco, sem cor */
   look = validLook(look) || {}; const key = lookToStr(look); thumbPadrao.c = thumbPadrao.c || {}; if (thumbPadrao.c[key]) return thumbPadrao.c[key];
   const raw = { ...look, s: '', hc: '', xc: '', ec: '', ic: '', tc: '' }, full = thumbSprite(raw), W = full.width, H = full.height, P = full._pad || 0;
@@ -7089,13 +7120,21 @@ function thumbPadrao(look) { /* R160: corpo base translúcido; o item (máscara 
   for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const lum = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11;
     if (md[i + 3] > 0) { d[i + 3] = 255; } /* o item aparece exatamente como foi desenhado */ else { const v = Math.min(255, 150 + lum * 0.45); d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 105; } }
   x.putImageData(fd, 0, 0); c._pad = full._pad; return (thumbPadrao.c[key] = c); }
-function partThumb(look, crop) { // miniatura em escala INTEIRA (pixel perfeito), no tamanho real do quadrinho
-  const fn = x => { const im = thumbPadrao(look); const [sx, sy, w] = crop(im), cw = x.canvas.width, k = Math.max(1, Math.floor(cw / w)), o = Math.round((cw - w * k) / 2);
-    x.imageSmoothingEnabled = false; x.fillStyle = THUMB_BG; x.fillRect(0, 0, cw, cw); x.drawImage(im, sx, sy, w, w, o, o, w * k, w * k); };
+function itemBoxR(im) { if (im._bbR !== undefined) return im._bbR; const d = im.getContext('2d').getImageData(0, 0, im.width, im.height).data; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+  for (let y = 0; y < im.height; y++) for (let x = 0; x < im.width; x++) if (d[(y * im.width + x) * 4 + 3] === 255) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return (im._bbR = x1 < 0 ? null : { x0, y0, x1: x1 + 1, y1: y1 + 1 }); }
+function itemBox(im) { if (im._bb !== undefined) return im._bb; const d = im.getContext('2d').getImageData(0, 0, im.width, im.height).data; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+  for (let y = 0; y < im.height; y++) for (let x = 0; x < im.width; x++) if (d[(y * im.width + x) * 4 + 3] === 255) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return (im._bb = x1 < 0 ? null : { cx: (x0 + x1 + 1) / 2, cy: (y0 + y1 + 1) / 2 }); }
+function partThumb(look, crop) { // R223: cabeça + item sempre no centro do quadrinho (vertical e horizontal), escala inteira
+  const fn = x => { const im = thumbPadrao(look), [hx, hy, hw] = crop(im), bb = itemBoxR(im); let x0 = hx, y0 = hy, x1 = hx + hw, y1 = hy + hw;
+    if (bb) { x0 = Math.min(x0, bb.x0); y0 = Math.min(y0, bb.y0); x1 = Math.max(x1, bb.x1); y1 = Math.max(y1, bb.y1); }
+    const side = Math.max(x1 - x0, y1 - y0) + 4, cx = bb ? (bb.x0 + bb.x1) / 2 : (x0 + x1) / 2, cy = bb ? (bb.y0 + bb.y1) / 2 : (y0 + y1) / 2, /* R226: o ITEM fica no centro exato */ sx = Math.round(cx - side / 2), sy = Math.round(cy - side / 2), cw = x.canvas.width, k = Math.max(1, Math.floor(cw / side)), o = Math.round((cw - side * k) / 2);
+    x.imageSmoothingEnabled = false; if (THUMB_CUR !== 'none') { x.fillStyle = THUMB_CUR || THUMB_BG; x.fillRect(0, 0, cw, cw); } x.drawImage(im, sx, sy, side, side, o, o, side * k, side * k); };
   fn.px = true; return fn;
 }
 function buildCustomPanel() { const P0 = document.getElementById('cPanel'), st = P0 ? P0.scrollTop : 0; buildCustomPanel0(); if (P0) P0.scrollTop = st; } /* R212: tocar num item não volta a lista para o topo */
-function buildCustomPanel0() { custColarBtn(); try { if (custTab !== 'passiva') mostraPvPrevia(''); } catch (e) {}
+function buildCustomPanel0() { custColarBtn(); try { if (custTab !== 'passiva') { const d = document.querySelector('.cprev .pvprev'); if (d) d.remove(); } } catch (e) {}
   setTimeout(cMore, 30);
   document.getElementById('cName').textContent = dispName(playerName()).toUpperCase(); document.getElementById('cName').style.setProperty('color', ARQ_COR[chosenArq] || '', 'important');
   buildCharList();
@@ -7119,9 +7158,9 @@ function buildCustomPanel0() { custColarBtn(); try { if (custTab !== 'passiva') 
     const g = grid();
     g.appendChild(optCard('Nada', !(pvFoco || chosenPv), x => {}, () => { chosenPv = ''; pvFoco = ''; saveLook(); }));
     for (const [id, pv] of porRar(Object.entries(PASSIVAS), e => 'pv:' + e[0])) { const tem = shop.has('pv:' + id) || pvLivre(), foc = (pvFoco || chosenPv) === id;
-      const b = optCard(pv.n, foc, x => { const W = x.canvas.width, H = x.canvas.height; const S = Math.round(Math.min(W, H) * 0.86), im = PV_ICO[id]; x.imageSmoothingEnabled = true; if (im && im.complete) x.drawImage(im, Math.round((W - S) / 2), Math.round((H - S) / 2), S, S); else im && im.addEventListener('load', () => buildCustomPanel(), { once: true }); },
+      const b = optCard(pv.n, foc, x => { const W = x.canvas.width, H = x.canvas.height; const S = Math.round(Math.min(W, H) * 0.86), im = PV_ICO[id]; x.imageSmoothingEnabled = true; if (im && im.complete) { const X0 = Math.round((W - S) / 2), Y0 = Math.round((H - S) / 2), rr = S * 0.14; x.save(); x.beginPath(); x.roundRect ? x.roundRect(X0, Y0, S, S, rr) : x.rect(X0, Y0, S, S); x.clip(); x.drawImage(im, X0, Y0, S, S); x.restore(); x.save(); x.beginPath(); x.roundRect ? x.roundRect(X0, Y0, S, S, rr) : x.rect(X0, Y0, S, S); x.lineWidth = Math.max(2, S * 0.05); x.strokeStyle = '#0b0814'; x.stroke(); x.restore(); } else im && im.addEventListener('load', () => buildCustomPanel(), { once: true }); },
         () => { if (!tem && pvFoco === id) { pvTrava(id); return; } /* 2º toque na bloqueada: como desbloquear */
-          pvFoco = id; if (tem) chosenPv = id; saveLook(); if (typeof buildCustomPanel === 'function') buildCustomPanel(); }); b.classList.add('rr' + pv.r); { const sp = b.querySelector('span'); if (sp) sp.remove(); b.title = pv.n; }
+          pvFoco = id; if (tem) chosenPv = id; saveLook(); if (typeof buildCustomPanel === 'function') buildCustomPanel(); }); b.classList.add('rr' + pv.r, 'rbg'); b.style.setProperty('--rbg', RAR_BG[pv.r]); { const sp = b.querySelector('span'); if (sp) sp.remove(); b.title = pv.n; }
       if (!tem) { b.classList.add('lk'); const l = document.createElement('i'); l.className = 'lockb'; b.appendChild(l); }
       g.appendChild(b); }
     const n = document.createElement('div'); n.className = 'cnote'; n.textContent = 'Passivas saem no baú, no passe premium e em conquistas. Quanto mais rara, mais difícil.'; P.appendChild(n);
@@ -7134,23 +7173,26 @@ function buildCustomPanel0() { custColarBtn(); try { if (custTab !== 'passiva') 
       b.onclick = () => { chosenArq = id; saveLook(); }; g.appendChild(b);
     }
     const n = document.createElement('div'); n.className = 'cnote'; n.textContent = ARQS[chosenArq].desc; P.appendChild(n);
-  } else if (['pk', 'pr', 'ps'].includes(custTab)) {
-    const sl = custTab[1], g = document.createElement('div'); g.className = 'arqs'; P.appendChild(g);
+  } else if (['pk', 'pr', 'ps'].includes(custTab)) { /* R221: poderes em quadrados como os itens; descrição embaixo */
+    const sl = custTab[1], g = grid(); g.classList.add('pwgrid');
     for (const [id, pw] of porRar(Object.entries(POWERS[sl]), e => e[0] === PW0[sl] ? '' : 'p:' + e[0])) {
-      const key = id === PW0[sl] ? '' : 'p:' + id, b = document.createElement('button'); b.type = 'button'; b.className = 'arq pwcard' + (chosenPw[sl] === id ? ' sel' : '') + (key ? ' rr' + rarOf(key) : '');
-      const c = makeCanvas(56, 56); c.getContext('2d').imageSmoothingEnabled = false; drawPowerIcon(c.getContext('2d'), id); b.appendChild(c);
-      const tx = document.createElement('div'); tx.innerHTML = '<b>' + pw.name + '</b><span class="pwd">' + pw.desc + '</span><span class="pwd">⚡ ' + pw.cost + ' de energia</span>'; b.appendChild(tx);
+      const key = id === PW0[sl] ? '' : 'p:' + id, bg = RAR_BG[key ? rarOf(key) : 1], b = document.createElement('button'); b.type = 'button'; b.className = 'copt pwq' + (chosenPw[sl] === id ? ' sel' : '');
+      b.style.setProperty('--rbg', bg); b.classList.add('rbg');
+      const t = makeCanvas(112, 112), tx = t.getContext('2d'); tx.imageSmoothingEnabled = true; tx.scale(2, 2); drawPowerIcon(tx, id, '#0d0918');
+      const c = makeCanvas(112, 112), x = c.getContext('2d'), m = 8, Sz = 112 - 2 * m; x.save(); x.beginPath(); x.roundRect ? x.roundRect(m, m, Sz, Sz, 18) : x.rect(m, m, Sz, Sz); x.clip(); x.drawImage(t, 0, 0); x.restore();
+      x.beginPath(); x.roundRect ? x.roundRect(m, m, Sz, Sz, 18) : x.rect(m, m, Sz, Sz); x.lineWidth = 4; x.strokeStyle = '#0b0814'; x.stroke(); c.style.setProperty('background', 'transparent', 'important'); b.appendChild(c); b.title = pw.name; /* R225: ícone do poder em quadro preto arredondado dentro do slot */
       if (key && !shop.has(key)) { b.classList.add('lk'); b.insertAdjacentHTML('beforeend', '<i class="lockb"></i>'); }
       b.onclick = () => { if (chosenPw[sl] === id && key && !shop.has(key)) return tryBuy(key, pw.name); chosenPw[sl] = id; custDemo = { id, t0: performance.now() }; saveLook(); offerBuy(key, pw.name); };
       g.appendChild(b);
     }
+    { const pw = POWERS[sl][chosenPw[sl]]; if (pw) { const k = chosenPw[sl] === PW0[sl] ? '' : 'p:' + chosenPw[sl]; setTimeout(() => infoPrevia(pw.name, pw.desc + ' · ⚡ ' + pw.cost + ' de energia', RAR_COR[k ? rarOf(k) : 1]), 0); } }
   } else if (custTab === 'trans') {
     h4('TRANSFORMAÇÃO: no DESPERTAR, este lutador vira outro dos seus personagens');
     const o = chosenTr >= 0 ? slots[chosenTr] : null, k = 'tr:' + slotCur, g = grid();
-    const card = optCard(o ? 'Slot ' + (chosenTr + 1) + ' · ' + ARQS[o.arq].name : 'Vazio · toque para escolher',
-      !!o, x => { if (o) { const im = lookSprites(o.look).spr.parado; x.drawImage(im, Math.floor(28 - im.width / 2), Math.round(4 - (im._pad || 0))); } else { x.fillStyle = '#5a4a80'; x.font = FONT(20); x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('+', 28, 30); } },
+    const card = optCard(o ? 'Slot ' + (chosenTr + 1) : 'Vazio · toque para escolher',
+      !!o, x => { if (o) { personagemCentro(x, o.look); } else { x.fillStyle = '#ffffff'; x.font = 'bold 34px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('+', 28, 29); } },
       () => {}, k);
-    card.classList.add('trslot');
+    card.classList.add('trslot'); if (o) { card.style.setProperty('background', THUMB_BG, 'important'); const cv = card.querySelector('canvas'); if (cv) cv.style.setProperty('background', 'transparent', 'important'); }
     card.onclick = async () => {
       if (!shop.has(k)) { buyNow(k, 'Transformação'); return; }
       const v = await pickTrans(); if (v === null) return; chosenTr = v; saveLook();
@@ -7181,7 +7223,7 @@ function buildCustomPanel0() { custColarBtn(); try { if (custTab !== 'passiva') 
     h4('TIPO DE AURA'); const ga = grid();
     for (const tp of [AURA_TIPOS[3]].concat(AURA_TIPOS.slice(0, 3))) { const b = optCard(tp.name, (L.au || 0) === tp.id, x => { if (tp.id === 3) return; const pal = palForCustom(chosenChar, 0, chosenFxc), kt = AURA_KIT[tp.id], fr = kt ? auraKitFrames(pal.aura, tp.id) : auraFramesFor(pal.aura);
         if (!fr) return; const a = fr[kt ? kt.lp[0] : 2], k = Math.min(52 / a.width, 52 / a.height); x.drawImage(a, 28 - a.width * k / 2, 54 - a.height * k, a.width * k, a.height * k); },
-        () => { L.au = tp.id; }, tp.id && tp.id !== 3 && 'au:' + tp.id); ga.appendChild(b); }
+        () => { L.au = tp.id; }, tp.id && tp.id !== 3 && 'au:' + tp.id); { const sp = b.querySelector('span:not(.nadat)'); if (sp) sp.remove(); b.title = tp.name; } ga.appendChild(b); }
     h4('COR DA AURA (ao carregar energia)'); P.appendChild(swatches(FX_COLORS, chosenFxc.a, c => { chosenFxc.a = c; }, true, 'fa'));
     const n = document.createElement('div'); n.className = 'cnote'; n.textContent = 'P = cor original. + = escolher qualquer cor.'; P.appendChild(n);
   } else {
@@ -7342,9 +7384,9 @@ function pvTickPassiva(w, dt) {
   particles = particles.filter(p => p.life > 0); if (particles.length > 400) particles.splice(0, particles.length - 400);
   for (const p of popups) { p.life -= dt; p.y -= 22 * dt; } popups = popups.filter(p => p.life > 0);
   shake = approach(shake, 0, 8, dt); if (shake < 0.15) shake = 0; }
-function drawPowerIcon(x, id) {
+function drawPowerIcon(x, id, bg) {
   const old = ctx; ctx = x; const col = kiCols(okHex(chosenFxc.k) ? chosenFxc.k : '#5cc8ff'), t = 0.4;
-  x.fillStyle = '#100b1c'; x.fillRect(0, 0, 56, 56);
+  x.fillStyle = bg || '#100b1c'; if (bg !== 'none') x.fillRect(0, 0, 56, 56);
   const ball = (bx, by, r) => drawKiBall(bx, by, r, col, t);
   const trail = (x0, y0, x1, y1) => { x.strokeStyle = hexA(col[1], 0.5); x.lineWidth = 2; x.beginPath(); x.moveTo(x0, y0); x.lineTo(x1, y1); x.stroke(); };
   switch (id) {
@@ -7621,7 +7663,7 @@ function updateTouchUI() {
   const tc = document.getElementById('tChat'); if (tc) tc.style.display = (editMode || game.mode === 'online') ? '' : 'none';
   layoutButtons();
 }
-function show(id, on) { const el = document.getElementById(id); const abrindo = on && el.classList.contains('hidden'); el.classList.toggle('hidden', !on);
+function show(id, on) { if (!on && id === 'dailyBox' && document.querySelector('.baufx')) return; /* R215: não fecha a recompensa diária com o baú abrindo */ const el = document.getElementById(id); const abrindo = on && el.classList.contains('hidden'); el.classList.toggle('hidden', !on);
   if (abrindo && el.getAnimations) requestAnimationFrame(() => { try { el.getAnimations({ subtree: true }).forEach(a => { if (a.effect && a.effect.getTiming().iterations !== Infinity) { a.cancel(); a.play(); } }); } catch (e) {} });
   if (abrindo && el.classList.contains('ovl')) { el.scrollTop = 0; el.querySelectorAll('*').forEach(n => { if (n.scrollTop) n.scrollTop = 0; if (n.scrollLeft && !n.closest('#lvRows')) n.scrollLeft = 0; }); } } // toda tela abre no começo
 function closePop(id) { show(id, false); if (game.phase !== 'play' && conta.user && conta.perfil) show('menu', true); }
